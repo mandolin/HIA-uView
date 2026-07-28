@@ -21,6 +21,17 @@ The dependencies in this section are accepted only for the controlled local deve
 | `vite` | `5.2.8`; `sha512-OyZR+c1CE8yeHw5V5t59aXsUPPVTHMDjEZz8MgguLL/Q7NblxhZUlTu9xSPqlsUO/y+X7dlU05jdhvyycD55DA==` | MIT | Exact Vite peer aligned with the recorded official compiler fixture; development only. |
 | `vue` | `3.4.21`; `sha512-5hjyV/jLEIKD/jYl4cavMcnzKwjMKohureP8ejn3hhEjwhWIhWeuzL2kJAjzl/WyVsgPY56Sy4Z40C3lVshxXA==` | MIT | Exact Vue compiler version aligned with the recorded official fixture; development only. |
 
+## Development runtime-test dependencies
+
+The dependencies in this section are accepted only for the controlled local development scope described in [development toolchain risk disclosure](docs/development-toolchain-risk.md). They support one-shot private component behavior tests only; they must not start a Vitest UI/API/browser/watch server, become UI/Tool runtime dependencies, or be bundled in a published package.
+
+| Package | Version / integrity | License | Purpose and distribution boundary |
+| --- | --- | --- | --- |
+| `@vitejs/plugin-vue` | `5.2.4`; `sha512-7Yx/SXSOcQq5HiiV3orevHUFn+pmMB4cgbEkDYgnkUWb0WfeQ/wa2yFv6D5ICiCQOVpjA7vYDXrC7AGO8yjDHA==` | MIT | Vue SFC transform for the private Vitest chain; development only. |
+| `@vue/test-utils` | `2.4.0`; `sha512-BKB9aj1yky63/I3IwSr1FjUeHYsKXI7D6S9F378AHt7a5vC0dLkOBtSsFXoRGC/7BfHmiB9HRhT+i9xrUHoAKw==` | MIT | Private Vue component mounting and interaction assertions; development only. |
+| `jsdom` | `26.1.0`; `sha512-Cvc9WUhxSMEo4McES3P7oK3QaXldCfNWp7pl2NNeiIFlCoLr3kfq9kb1fxftiwk1FLV7CvpvDfonxtzUDeSOPg==` | MIT | Local DOM environment for one-shot component tests; development only. |
+| `vitest` | `3.2.7`; `sha512-KrxIJ62Fd89gfysR4WotlgZABiz2dqFPgqGzX7s+CwsqLFomRH7777ZcrOD6+WVAh7khPQP41A+BKbpcJFrdEg==` | MIT | One-shot private runtime-test runner; development only, no UI/API/browser/watch server. |
+
 No third-party UI source code, UI runtime dependency, asset, font, icon, theme resource, or locale resource has been incorporated into HIA-uView as of 2026-07-28.
 
 Before any reviewed upstream source is adopted, add a per-item entry here following [the source-intake policy](docs/upstream-source-intake.md). The entry must identify the source repository, package version, immutable commit, exact source path, license/notice, HIA target path, change summary and verification evidence.

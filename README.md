@@ -24,6 +24,7 @@ npm run build:fixture:mp-weixin
 See [development notes](docs/development.md), the [public architecture overview](docs/architecture.md), and [Documentation Sys usage](docs/documentation.md).
 The theme, style, accessibility, and localization boundary is documented in the [design-system contract](docs/design-system.md).
 The [Tool contract](docs/tool.md) defines the development-only CLI boundary; the initial `doctor` and `check` commands are read-only and implemented.
+The private named-export, explicit-plugin, and explicit-style boundary is documented in [runtime consumption](docs/runtime-consumption.md).
 
 ## Contributing
 

@@ -10,13 +10,14 @@
 ```bash
 npm run check
 npm test
+npm run test:runtime
 npm run docs:check
 npm run tool:doctor
 npm run tool:check
 npm run build:fixture:mp-weixin
 ```
 
-`npm run check` verifies required files, the UI/Tool package metadata, and the Documentation Sys gate. `npm test` verifies the package, component, Tool, theme, and bilingual-documentation contracts with the Node.js built-in test runner. `npm run docs:check` runs the static bilingual JSDoc check, a real HIA JSDoc generation pass, and the generated-output privacy check. `npm run tool:doctor` and `npm run tool:check` execute the first read-only Tool slice. `npm run build:fixture:mp-weixin` performs the local compiler fixture only; its generated output is ignored and is not a device or release claim. Do not add a root dependency tree for HIA-uView-Biz or any other workspace. Future UI and Tool dependencies must be installed and locked inside this repository after their license and compatibility reviews.
+`npm run check` verifies required files, the UI/Tool package metadata, and the Documentation Sys gate. `npm test` runs the Node contracts and private Vue runtime tests; `npm run test:runtime` runs only the latter. The runtime tests use one-shot `vitest run` with jsdom and do not start a Vitest UI/API/browser/watch server. `npm run docs:check` runs the static bilingual JSDoc check, a real HIA JSDoc generation pass, and the generated-output privacy check. `npm run tool:doctor` and `npm run tool:check` execute the first read-only Tool slice. `npm run build:fixture:mp-weixin` performs the local compiler fixture only; its generated output is ignored and is not a device or release claim. Do not add a root dependency tree for HIA-uView-Biz or any other workspace. Future UI and Tool dependencies must be installed and locked inside this repository after their license and compatibility reviews.
 
 ## Development toolchain risk
 

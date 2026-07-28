@@ -16,7 +16,8 @@
     "check": "node scripts/verify-workspace.mjs && npm run docs:check && npm run theme:check",
     "docs:api": "jsdoc -c docs/jsdoc.config.json",
     "docs:check": "node scripts/check-documentation.mjs && npm run docs:api && node scripts/verify-documentation-output.mjs",
-    "test": "node --test tests/verify-package-contract.test.mjs tests/verify-documentation-contract.test.mjs tests/verify-theme-contract.test.mjs tests/verify-button-contract.test.mjs tests/verify-tool-contract.test.mjs",
+    "test": "node --test tests/verify-package-contract.test.mjs tests/verify-documentation-contract.test.mjs tests/verify-theme-contract.test.mjs tests/verify-button-contract.test.mjs tests/verify-tool-contract.test.mjs && npm run test:runtime",
+    "test:runtime": "vitest run",
     "theme:check": "node scripts/check-theme.mjs",
     "tool:check": "node HIA-uView-Tool/src/cli.mjs check",
     "tool:doctor": "node HIA-uView-Tool/src/cli.mjs doctor"
@@ -33,8 +34,12 @@
     "@dcloudio/vite-plugin-uni": "3.0.0-5010520260709002",
     "@mandolin/jsdoc-plugin-hia-sys": "0.1.2",
     "@mandolin/jsdoc-theme-hia": "0.1.1",
+    "@vitejs/plugin-vue": "5.2.4",
+    "@vue/test-utils": "2.4.0",
     "jsdoc": "4.0.5",
+    "jsdom": "26.1.0",
     "vite": "5.2.8",
+    "vitest": "3.2.7",
     "vue": "3.4.21"
   }
 }

@@ -1,0 +1,5 @@
+/**
+ * @lang zh-CN HIA-uView 的显式全局样式入口；应用必须主动导入它，runtime module 与 plugin 永不隐式注入主题或全局 CSS。
+ * @lang en Explicit global-style entry for HIA-uView; an application must import it deliberately, while the runtime module and plugin never inject theme or global CSS implicitly.
+ */
+@import "./theme/hia-light.css";

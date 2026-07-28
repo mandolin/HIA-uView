@@ -29,6 +29,16 @@ const expectedPackageMetadata = [
 const packagesWithoutRuntimeDependencies = new Set(['@hia-uview/ui', '@hia-uview/tool']);
 
 /**
+ * @lang zh-CN UI 私有 runtime entry 在当前实现阶段必须公开的 source export 映射；这些映射不是已发布的 semver 兼容性承诺。
+ * @lang en Source export mappings that the private UI runtime entry must expose in the current implementation stage; these mappings are not a published semver compatibility commitment.
+ */
+const expectedUiExports = {
+  '.': './src/index.mjs',
+  './style.css': './src/style.css',
+  './theme/hia-light.css': './src/theme/hia-light.css'
+};
+
+/**
  * @lang zh-CN 读取并解析指定根目录下的 JSON 文件，供 workspace 契约校验使用。
  * @lang en Reads and parses a JSON file under the supplied root directory for workspace-contract validation.
  * @param {string} rootDirectory <lang><zh-CN>仓库根目录。</zh-CN><en>Repository root directory.</en></lang>
@@ -96,6 +106,10 @@ export async function validatePackageContracts(rootDirectory = process.cwd()) {
 
     if (packageJson.name === '@hia-uview/tool' && packageJson.bin?.['hia-uview-tool'] !== 'src/cli.mjs') {
       issues.push('HIA-uView-Tool must expose only the documented hia-uview-tool CLI entry.');
+    }
+
+    if (packageJson.name === '@hia-uview/ui' && JSON.stringify(packageJson.exports) !== JSON.stringify(expectedUiExports)) {
+      issues.push('HIA-uView-UI must expose only the documented private runtime and explicit style entries.');
     }
   }
 

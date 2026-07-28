@@ -15,7 +15,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import HiaButton from '../../../../../src/components/hia-button/hia-button.vue';
+import { HiaButton } from '../../../../../src/index.mjs';
 
 const activationCount = ref(0);
 

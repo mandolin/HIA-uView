@@ -6,5 +6,10 @@
   "license": "MIT",
   "engines": {
     "node": ">=22.0.0"
+  },
+  "exports": {
+    ".": "./src/index.mjs",
+    "./style.css": "./src/style.css",
+    "./theme/hia-light.css": "./src/theme/hia-light.css"
   }
 }

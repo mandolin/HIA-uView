@@ -19,6 +19,10 @@
 import { computed } from 'vue';
 import { resolveButtonMessage } from '../../localization/button-messages.mjs';
 
+defineOptions({
+  name: 'HiaButton'
+});
+
 const props = defineProps({
   variant: {
     type: String,
