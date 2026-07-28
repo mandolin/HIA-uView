@@ -23,6 +23,12 @@ const expectedPackageMetadata = [
 ];
 
 /**
+ * @lang zh-CN 当前实现阶段禁止 UI 与 Tool 包声明运行时 dependencies，确保编译 fixture 和开发期 Tool 不会被消费者隐式携带。
+ * @lang en Runtime dependencies are forbidden in the current implementation stage for UI and Tool packages so consumers cannot implicitly carry the compiler fixture or development-time Tool.
+ */
+const packagesWithoutRuntimeDependencies = new Set(['@hia-uview/ui', '@hia-uview/tool']);
+
+/**
  * @lang zh-CN 读取并解析指定根目录下的 JSON 文件，供 workspace 契约校验使用。
  * @lang en Reads and parses a JSON file under the supplied root directory for workspace-contract validation.
  * @param {string} rootDirectory <lang><zh-CN>仓库根目录。</zh-CN><en>Repository root directory.</en></lang>
@@ -82,6 +88,14 @@ export async function validatePackageContracts(rootDirectory = process.cwd()) {
 
     if (packageJson.engines?.node !== '>=22.0.0') {
       issues.push(`${expected.directory} must declare Node.js >=22.0.0.`);
+    }
+
+    if (packagesWithoutRuntimeDependencies.has(packageJson.name) && Object.keys(packageJson.dependencies ?? {}).length > 0) {
+      issues.push(`${expected.directory} must not declare runtime dependencies during the current implementation stage.`);
+    }
+
+    if (packageJson.name === '@hia-uview/tool' && packageJson.bin?.['hia-uview-tool'] !== 'src/cli.mjs') {
+      issues.push('HIA-uView-Tool must expose only the documented hia-uview-tool CLI entry.');
     }
   }
 

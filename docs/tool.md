@@ -1,8 +1,8 @@
 # HIA-uView-Tool contract / HIA-uView-Tool 工具契约
 
-> Status / 状态：Pre-release design contract only. `@hia-uview/tool` has no CLI implementation or published package export yet.
+> Status / 状态：Initial private `doctor` and `check` commands are implemented. `inspect` and `scaffold component` remain reserved, and `@hia-uview/tool` has no published package export.
 
-> 本文仅为预发布设计契约。`@hia-uview/tool` 尚无 CLI 实现，也尚未作为 npm 包导出。
+> 首轮私有 `doctor` 和 `check` 命令已经实现。`inspect` 与 `scaffold component` 仍为预留命令，且 `@hia-uview/tool` 尚未作为 npm 包导出。
 
 HIA-uView-Tool is a development-time companion for checking and preparing HIA-uView projects. It is never an application, UI-component, or business-framework runtime dependency.
 
@@ -10,14 +10,14 @@ HIA-uView-Tool 是用于检查和准备 HIA-uView 项目的开发期辅助工具
 
 ## Planned command surface / 计划中的命令面
 
-The future executable name is `hia-uview-tool`. The following command names are reserved by this contract; they do not exist yet.
+The executable name is `hia-uview-tool`. `doctor` and `check` currently validate the local JSON configuration, Node version, and declared component-manifest schema only. The remaining command names are reserved by this contract.
 
-未来的可执行名称为 `hia-uview-tool`。下列命令名由本契约预留，当前尚未实现。
+可执行名称为 `hia-uview-tool`。`doctor` 和 `check` 当前只校验本地 JSON 配置、Node 版本与已声明组件 manifest 的 schema。其余命令名由本契约预留。
 
 | Command / 命令 | Purpose / 用途 | Mutation / 修改行为 |
 | --- | --- | --- |
-| `doctor` | Reports supported Node/npm versions, the declared compatibility profile, and configuration problems. / 报告受支持的 Node/npm 版本、已声明兼容配置和配置问题。 | Read-only. / 只读。 |
-| `check` | Evaluates declared HIA-uView contracts, component manifests, and release fixtures. / 检查已声明的 HIA-uView 契约、组件 manifest 和发布 fixture。 | Read-only. / 只读。 |
+| `doctor` | Implemented: reports Node 22+ compatibility and declared configuration problems. / 已实现：报告 Node 22+ 兼容性和已声明配置问题。 | Read-only. / 只读。 |
+| `check` | Implemented: evaluates declared configuration and component-manifest schema. It does not yet validate release fixtures. / 已实现：检查已声明配置和组件 manifest schema；尚不验证发布 fixture。 | Read-only. / 只读。 |
 | `inspect` | Produces a bounded text or JSON report of declared metadata and diagnostics. / 生成受边界约束的声明式元数据和诊断文本/JSON 报告。 | Read-only. / 只读。 |
 | `scaffold component` | Reserved for a future component skeleton generator. / 为未来组件骨架生成器预留。 | Must require explicit `--write`; its default is dry-run. / 必须要求显式 `--write`；默认 dry-run。 |
 
@@ -27,9 +27,9 @@ No command may execute project scripts, template expressions, package-manager co
 
 ## Declarative configuration / 声明式配置
 
-The future configuration file is `hia-uview.config.json`. It is JSON validated by a versioned local schema; it is not JavaScript, TypeScript, or an executable hook. Configuration may select a project root, compatibility profile, UI locale, report format, and relative component-manifest paths.
+The configuration file is `hia-uview.config.json`. It is JSON validated by a versioned local schema; it is not JavaScript, TypeScript, or an executable hook. The first implementation accepts `projectRoot: "."` only, plus the `mp-weixin` profile, `zh-Hans`/`en` UI locale, text/JSON report format, and relative component-manifest paths.
 
-未来配置文件为 `hia-uview.config.json`。它由带版本的本地 schema 校验，是 JSON 而非 JavaScript、TypeScript 或可执行 hook。配置可选择项目根目录、兼容性配置、UI locale、报告格式和相对组件 manifest 路径。
+配置文件为 `hia-uview.config.json`。它由带版本的本地 schema 校验，是 JSON 而非 JavaScript、TypeScript 或可执行 hook。首个实现仅接受 `projectRoot: "."`，以及 `mp-weixin` 配置、`zh-Hans`/`en` UI locale、text/JSON 报告格式和相对组件 manifest 路径。
 
 ```json
 {

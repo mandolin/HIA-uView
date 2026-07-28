@@ -2,7 +2,10 @@
   "name": "@hia-uview/tool",
   "version": "0.0.0",
   "private": true,
-  "description": "Tools supporting the HIA-uView UniApp UI framework (initialization placeholder).",
+  "description": "Read-only development validation tools for the HIA-uView UniApp UI framework.",
+  "bin": {
+    "hia-uview-tool": "src/cli.mjs"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=22.0.0"

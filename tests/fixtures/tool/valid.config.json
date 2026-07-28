@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "projectRoot": ".",
+  "profile": "mp-weixin",
+  "locale": "en",
+  "report": {
+    "format": "json"
+  },
+  "componentManifests": [
+    "tests/fixtures/tool/valid.manifest.json"
+  ]
+}

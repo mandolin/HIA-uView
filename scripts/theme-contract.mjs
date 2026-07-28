@@ -25,6 +25,32 @@ const requiredReferenceTokens = new Map([
 ]);
 
 /**
+ * @lang zh-CN HiaButton 首轮必须由默认主题显式定义的组件 token，确保实现不以未记录的硬编码值替代公开主题边界。
+ * @lang en HiaButton component tokens that the default theme must explicitly define in the first slice, ensuring implementation does not replace the public theme boundary with undocumented hard-coded values.
+ */
+const requiredButtonTokens = [
+  '--hia-comp-button-primary-background',
+  '--hia-comp-button-primary-foreground',
+  '--hia-comp-button-primary-disabled-background',
+  '--hia-comp-button-primary-disabled-foreground',
+  '--hia-comp-button-secondary-background',
+  '--hia-comp-button-secondary-border',
+  '--hia-comp-button-secondary-foreground',
+  '--hia-comp-button-secondary-disabled-background',
+  '--hia-comp-button-secondary-disabled-border',
+  '--hia-comp-button-secondary-disabled-foreground',
+  '--hia-comp-button-text-background',
+  '--hia-comp-button-text-foreground',
+  '--hia-comp-button-text-disabled-foreground',
+  '--hia-comp-button-min-height: 44px',
+  '--hia-comp-button-min-height-sm: 40px',
+  '--hia-comp-button-min-height-lg: 48px',
+  '--hia-comp-button-inline-padding',
+  '--hia-comp-button-gap',
+  '--hia-comp-button-focus-ring'
+];
+
+/**
  * @lang zh-CN 解析六位十六进制颜色为 sRGB 通道；仅接受明确的默认 token 色值，避免静默接受不透明的 CSS 表达式。
  * @lang en Parses a six-digit hexadecimal color into sRGB channels; accepts only explicit default-token values to avoid silently accepting opaque CSS expressions.
  * @param {string} color <lang><zh-CN>六位十六进制 CSS 颜色。</zh-CN><en>Six-digit hexadecimal CSS color.</en></lang>
@@ -109,6 +135,12 @@ export async function validateThemeContract(rootDirectory = process.cwd()) {
 
     if (actualValue !== expectedValue) {
       issues.push(`${tokenName} must equal ${expectedValue}.`);
+    }
+  }
+
+  for (const tokenName of requiredButtonTokens) {
+    if (!css.includes(tokenName)) {
+      issues.push(`Default theme must define ${tokenName}.`);
     }
   }
 

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "profile": "mp-weixin",
+  "components": [
+    {
+      "name": "HiaButton",
+      "source": "src/components/hia-button/hia-button.vue",
+      "contract": "docs/button.md",
+      "locales": [
+        "zh-Hans",
+        "en"
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "platform": "mp-weixin",
+      "path": "fixtures/mp-weixin"
+    }
+  ]
+}

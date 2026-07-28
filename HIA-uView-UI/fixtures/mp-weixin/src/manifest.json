@@ -1,0 +1,7 @@
+{
+  "name": "HIA-uView MP Weixin Fixture",
+  "appid": "__UNI__HIAUVIEWFIXTURE",
+  "description": "Local HIA-uView compiler fixture only.",
+  "versionName": "0.0.0",
+  "versionCode": "100"
+}

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "profile": "mp-weixin",
+  "components": [
+    {
+      "name": "FixtureButton",
+      "source": "src/fixture-button.vue",
+      "contract": "docs/fixture-button.md"
+    }
+  ]
+}

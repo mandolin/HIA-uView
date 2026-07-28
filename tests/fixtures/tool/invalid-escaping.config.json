@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "projectRoot": "../outside",
+  "profile": "mp-weixin",
+  "locale": "zh-Hans",
+  "report": {
+    "format": "text"
+  },
+  "componentManifests": [
+    "../outside.json"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@hia-uview/mp-weixin-fixture",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node ../../../node_modules/@dcloudio/vite-plugin-uni/bin/uni.js build -p mp-weixin"
+  }
+}

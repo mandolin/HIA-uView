@@ -11,8 +11,12 @@ const requiredFiles = [
   'AGENTS.md',
   'LICENSE',
   'HIA-uView-UI/package.json',
+  'HIA-uView-UI/hia-uview.components.json',
   'HIA-uView-UI/src/theme/hia-light.css',
+  'HIA-uView-UI/src/components/hia-button/hia-button.vue',
   'HIA-uView-Tool/package.json',
+  'HIA-uView-Tool/src/cli.mjs',
+  'hia-uview.config.json',
   'docs/development.md',
   'docs/development-toolchain-risk.md',
   'docs/architecture.md',
@@ -20,6 +24,7 @@ const requiredFiles = [
   'docs/design-system.md',
   'docs/documentation.md',
   'docs/tool.md',
+  'docs/button.md',
   'docs/jsdoc.config.json',
   'THIRD_PARTY_NOTICES.md'
 ];

@@ -1,7 +1,7 @@
 # HiaButton component contract / HiaButton 组件契约
 
-> Status / 状态：Pre-release public contract only. `HiaButton` has no runtime implementation or published package export yet.
-> 本文仅为预发布的公开契约。`HiaButton` 尚无运行时实现，也尚未作为 npm 包导出。
+> Status / 状态：The first independent implementation and `mp-weixin` compile fixture exist. `HiaButton` remains private and has no published package export, device, or assistive-technology support claim.
+> 首个独立实现及 `mp-weixin` 编译 fixture 已存在。`HiaButton` 仍为私有实现，尚无已发布的 npm 包导出、真机或辅助技术支持声明。
 
 `HiaButton` is the first proposed generic action component for the initial UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. It represents a local user action; it is not a navigation, identity, payment, form-submission, or business-capability wrapper.
 
@@ -56,7 +56,9 @@ The component root namespace is `hia-button`. Implementations consume component 
 | `--hia-comp-button-gap` | Label and progress-indicator spacing. / 标签与进度指示器间距。 |
 | `--hia-comp-button-focus-ring` | Future focus treatment where the platform exposes a verifiable focus state. / 平台暴露可验证焦点状态时使用的后续焦点样式。 |
 
-The primary treatment maps to the documented HIA cobalt semantic action color. A solid cyan treatment must keep the documented dark foreground; it must not use white by default. Concrete component-token values and all state contrast pairs require implementation fixtures before release.
+The primary treatment maps to the documented HIA cobalt semantic action color. A solid cyan treatment must keep the documented dark foreground; it must not use white by default. The first concrete values are implemented in the HIA light theme: primary is cobalt/white, secondary is white with cobalt border and deep-navy foreground, and text is transparent with cobalt foreground. Disabled variants use neutral-50 surfaces or a secondary-text foreground plus a dashed border; loading keeps a visible localized label plus the native loading indicator and dashed border. The documented sizes have minimum heights of 40px (`sm`), 44px (`md`), and 48px (`lg`); `md` is the baseline touch target.
+
+主操作样式映射到已文档化的 HIA 钴蓝语义操作色。实底清透青样式必须使用已文档化的深色前景，默认不得使用白色。HIA 浅色主题已经实现首轮具体值：主操作为钴蓝/白色，次要操作为白底、钴蓝边框和深海军蓝前景，文字操作为透明背景和钴蓝前景。禁用变体使用 neutral-50 表面或次要文字前景并配合虚线边框；加载状态保留可见本地化文字、原生 loading 指示器和虚线边框。已文档化的尺寸最小高度为 `sm` 40px、`md` 44px、`lg` 48px；`md` 是基础触控目标。
 
 主操作样式映射到已文档化的 HIA 钴蓝语义操作色。实底清透青样式必须使用已文档化的深色前景，默认不得使用白色。具体组件 token 值以及所有状态的对比度组合，均须在发布前由实现 fixture 验证。
 
@@ -82,6 +84,10 @@ Before an implementation is released, its fixture suite must cover the following
 4. `label` rendering, default-slot text rendering, and long `zh-Hans` and English labels. / `label` 渲染、默认插槽文字渲染，以及较长的 `zh-Hans` 与英文标签。
 5. Contrast checks for every released foreground/background state pair, including the HIA cobalt primary pair and any cyan treatment. / 每个发布的前景/背景状态组合的对比度检查，包括 HIA 钴蓝主操作组合和任何清透青样式。
 6. The documented minimum touch target or equivalent spacing, plus a recorded `mp-weixin` capability observation. / 已文档化的最小触控目标或等效间距，以及一份记录在案的 `mp-weixin` 能力观察。
+
+The initial fixture compiles the states above with the locked local official CLI. It does not yet prove a WeChat DevTools, device, screen-reader, keyboard-focus, or automated pressed-state observation.
+
+首个 fixture 使用锁定的本地官方 CLI 编译上述状态。它尚未证明微信开发者工具、真机、读屏、键盘焦点或自动化按下状态观察。
 
 ## Deliberate exclusions / 有意排除项
 

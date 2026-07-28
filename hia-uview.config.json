@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "projectRoot": ".",
+  "profile": "mp-weixin",
+  "locale": "zh-Hans",
+  "report": {
+    "format": "text"
+  },
+  "componentManifests": [
+    "HIA-uView-UI/hia-uview.components.json"
+  ]
+}
