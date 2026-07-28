@@ -15,7 +15,7 @@ The repository uses npm workspaces and requires Node.js 22 or later with npm 10 
 npm run check
 ```
 
-`check` validates the workspace and package-contract baseline. `npm test` uses the Node.js built-in test runner to verify that contract. Runtime source and component APIs remain unpublished; the active compatibility profile is documented in [compatibility](docs/compatibility.md).
+`check` validates the workspace and package-contract baseline. `npm test` uses the Node.js built-in test runner to verify that contract. Runtime source and component APIs remain unpublished; the active compatibility profile is documented in [compatibility](docs/compatibility.md). The first pre-release component contract, with no implementation yet, is [HiaButton](docs/button.md).
 
 See [development notes](docs/development.md), the [public architecture overview](docs/architecture.md), and [Documentation Sys usage](docs/documentation.md).
 The theme, style, accessibility, and localization boundary is documented in the [design-system contract](docs/design-system.md).
