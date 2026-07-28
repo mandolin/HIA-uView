@@ -15,7 +15,7 @@ The repository uses npm workspaces and requires Node.js 22 or later with npm 10 
 npm run check
 ```
 
-`check` currently validates the repository baseline. Runtime source, public APIs, UniApp compatibility profiles and release tooling will be added only after their contracts and upstream-license boundaries are reviewed.
+`check` currently validates the repository baseline. Runtime source, public APIs, UniApp compatibility profiles and release tooling will be added only after their contracts and upstream-source intake records are reviewed.
 
 See [development notes](docs/development.md) and the [public architecture overview](docs/architecture.md).
 
@@ -25,4 +25,4 @@ Read `AGENTS.md` and the relevant package README before adding code, dependencie
 
 ## License
 
-License selection is pending while the project establishes a traceable upstream-reference and dependency-license policy. See [LICENSE](LICENSE).
+HIA-uView is licensed under the [MIT License](LICENSE). Any incorporated third-party code or asset retains its own required notices; see the [upstream source-intake policy](docs/upstream-source-intake.md) and [third-party notices](THIRD_PARTY_NOTICES.md).
