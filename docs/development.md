@@ -21,3 +21,7 @@ Before published package names and compatibility contracts are approved, cross-r
 ## Compatibility scope
 
 The only active compatibility profile is UniApp Vue 3 for `mp-weixin`. Do not claim App, H5, or other mini-program compatibility without an explicit profile, fixture, and validation record. See [compatibility](compatibility.md).
+
+## Design-system boundary
+
+Before adding a component, review the [design-system contract](design-system.md). Component implementations must use documented token, style, localization, and accessibility boundaries; they must not add fonts, icons, themes, or i18n runtimes without a separate source and license review.
