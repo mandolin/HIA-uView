@@ -15,6 +15,10 @@ npm run docs:check
 
 `npm run check` verifies required files, the UI/Tool package metadata, and the Documentation Sys gate. `npm test` verifies the package and bilingual-documentation contracts with the Node.js built-in test runner. `npm run docs:check` runs the static bilingual JSDoc check, a real HIA JSDoc generation pass, and the generated-output privacy check. Do not add a root dependency tree for HIA-uView-Biz or any other workspace. Future UI and Tool dependencies must be installed and locked inside this repository after their license and compatibility reviews.
 
+## Development toolchain risk
+
+The official UniApp/Vue compilation chain is accepted for a deliberately narrow, trusted local development scope. It has known upstream security findings and is not approved for a dev server, untrusted input, external CI execution, package release, or production use. Read and explicitly accept the boundaries, known facts, and progressive remediation triggers in [development toolchain risk disclosure](development-toolchain-risk.md) before installing or running the compile fixture.
+
 ## Local integration
 
 Before published package names and compatibility contracts are approved, cross-repository experiments must use a documented local link or dedicated fixture. They must not rely on an undeclared absolute path or a shared parent lockfile.

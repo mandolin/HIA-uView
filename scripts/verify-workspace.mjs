@@ -14,6 +14,7 @@ const requiredFiles = [
   'HIA-uView-UI/src/theme/hia-light.css',
   'HIA-uView-Tool/package.json',
   'docs/development.md',
+  'docs/development-toolchain-risk.md',
   'docs/architecture.md',
   'docs/compatibility.md',
   'docs/design-system.md',
