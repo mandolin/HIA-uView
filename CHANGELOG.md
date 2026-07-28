@@ -11,3 +11,4 @@ All notable user-visible changes to HIA-uView will be recorded in this file.
 - Added a development-only HIA Documentation Sys integration with bilingual JSDoc and privacy checks; no UI runtime dependency was added.
 - Added the validated HIA default light-theme foundation tokens; no component API, font, icon, or dark-theme profile is published.
 - Published the pre-release bilingual `HiaButton` contract, including independent API boundaries, state behavior, token families, localization, accessibility disclosure, and required release fixtures; no runtime implementation was added.
+- Published the pre-release HIA-uView-Tool contract for a development-only CLI, declarative configuration, stable diagnostics, write safety, privacy, and UI/runtime isolation; no Tool command was added.

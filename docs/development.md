@@ -30,3 +30,7 @@ Before adding a component, review the [design-system contract](design-system.md)
 ## Documentation Sys
 
 All new code must follow [the Documentation Sys contract](documentation.md). Documentation generation is a development-only workflow, writes only to Git-ignored `temp/documentation/`, and must not embed source fragments or absolute paths.
+
+## Tool boundary
+
+The future HIA-uView-Tool is development-only. Its pre-release CLI, declarative configuration, write safety, output, and runtime-isolation rules are defined in the [Tool contract](tool.md). No Tool command exists yet; do not substitute project scripts, executable configuration, or a package install for the documented contract.

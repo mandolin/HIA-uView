@@ -19,6 +19,7 @@ npm run check
 
 See [development notes](docs/development.md), the [public architecture overview](docs/architecture.md), and [Documentation Sys usage](docs/documentation.md).
 The theme, style, accessibility, and localization boundary is documented in the [design-system contract](docs/design-system.md).
+The pre-release [Tool contract](docs/tool.md) defines the development-only CLI boundary; no Tool command is implemented yet.
 
 ## Contributing
 

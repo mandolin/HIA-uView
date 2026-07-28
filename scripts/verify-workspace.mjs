@@ -18,6 +18,7 @@ const requiredFiles = [
   'docs/compatibility.md',
   'docs/design-system.md',
   'docs/documentation.md',
+  'docs/tool.md',
   'docs/jsdoc.config.json',
   'THIRD_PARTY_NOTICES.md'
 ];
