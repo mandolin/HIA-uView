@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "check": "node scripts/verify-workspace.mjs",
-    "test": "npm run check"
+    "test": "node --test tests/verify-package-contract.test.mjs"
   },
   "repository": {
     "type": "git",

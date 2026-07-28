@@ -15,13 +15,13 @@ The repository uses npm workspaces and requires Node.js 22 or later with npm 10 
 npm run check
 ```
 
-`check` currently validates the repository baseline. Runtime source, public APIs, UniApp compatibility profiles and release tooling will be added only after their contracts and upstream-source intake records are reviewed.
+`check` validates the workspace and package-contract baseline. `npm test` uses the Node.js built-in test runner to verify that contract. Runtime source and component APIs remain unpublished; the active compatibility profile is documented in [compatibility](docs/compatibility.md).
 
 See [development notes](docs/development.md) and the [public architecture overview](docs/architecture.md).
 
 ## Contributing
 
-Read `AGENTS.md` and the relevant package README before adding code, dependencies or assets. Public documentation must remain user-focused; design records, research, audits and task logs belong to the separate private WorkZone.
+Read `AGENTS.md` and the relevant package README before adding code, dependencies or assets. Public documentation must remain user-focused; internal planning, research, audits, and task logs are maintained separately.
 
 ## License
 
