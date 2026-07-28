@@ -1,0 +1,32 @@
+/**
+ * @component HiaLightTheme
+ * @selector :root
+ * @token ref.color.brand.cobalt
+ * @token ref.color.brand.cyan
+ * @token sys.color.action.primary
+ * @token sys.color.accent
+ * @cssprop --hia-ref-color-brand-cobalt
+ * @cssprop --hia-ref-color-brand-cyan
+ * @cssprop --hia-sys-color-action-primary
+ * @cssprop --hia-sys-color-accent
+ * @lang zh-CN HIA-uView 默认浅色主题的基础与语义颜色 token。钴蓝承担主操作和结构角色；清透青只承担强调与数据高亮角色，实底必须配深色前景。
+ * @lang en Foundational and semantic color tokens for the HIA-uView default light theme. Cobalt blue owns primary action and structure; clear cyan is limited to emphasis and data highlighting and requires a dark foreground when solid.
+ */
+:root {
+  --hia-ref-color-brand-cobalt: #0047ab;
+  --hia-ref-color-brand-cyan: #00a8d3;
+  --hia-ref-color-neutral-0: #ffffff;
+  --hia-ref-color-neutral-50: #f7f9fc;
+  --hia-ref-color-neutral-700: #27364a;
+  --hia-ref-color-neutral-950: #001b2e;
+
+  --hia-sys-color-surface: var(--hia-ref-color-neutral-0);
+  --hia-sys-color-surface-subtle: var(--hia-ref-color-neutral-50);
+  --hia-sys-color-text: var(--hia-ref-color-neutral-950);
+  --hia-sys-color-text-secondary: var(--hia-ref-color-neutral-700);
+  --hia-sys-color-action-primary: var(--hia-ref-color-brand-cobalt);
+  --hia-sys-color-on-action-primary: var(--hia-ref-color-neutral-0);
+  --hia-sys-color-accent: var(--hia-ref-color-brand-cyan);
+  --hia-sys-color-on-accent: var(--hia-ref-color-neutral-950);
+  --hia-sys-color-focus: var(--hia-ref-color-brand-cobalt);
+}

@@ -11,4 +11,6 @@ The initial compatibility profile is UniApp Vue 3 for the WeChat Mini Program pl
 
 Themes, styles, accessibility, and localization use a separate [design-system contract](design-system.md). It defines semantic boundaries and verification requirements without publishing component APIs or brand assets.
 
+Source documentation uses a development-only [HIA Documentation Sys integration](documentation.md). It is outside the UI runtime boundary and its generated artifacts are not package inputs.
+
 HIA-uView-Biz is a separate repository. It may consume a released UI version, a documented local link, or a dedicated integration fixture, but it must not import UI source files or share a parent lockfile. No component API has been published yet.

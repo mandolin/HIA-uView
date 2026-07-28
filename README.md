@@ -17,7 +17,7 @@ npm run check
 
 `check` validates the workspace and package-contract baseline. `npm test` uses the Node.js built-in test runner to verify that contract. Runtime source and component APIs remain unpublished; the active compatibility profile is documented in [compatibility](docs/compatibility.md).
 
-See [development notes](docs/development.md) and the [public architecture overview](docs/architecture.md).
+See [development notes](docs/development.md), the [public architecture overview](docs/architecture.md), and [Documentation Sys usage](docs/documentation.md).
 The theme, style, accessibility, and localization boundary is documented in the [design-system contract](docs/design-system.md).
 
 ## Contributing

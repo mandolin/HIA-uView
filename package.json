@@ -12,12 +12,20 @@
     "HIA-uView-Tool"
   ],
   "scripts": {
-    "check": "node scripts/verify-workspace.mjs",
-    "test": "node --test tests/verify-package-contract.test.mjs"
+    "check": "node scripts/verify-workspace.mjs && npm run docs:check && npm run theme:check",
+    "docs:api": "jsdoc -c docs/jsdoc.config.json",
+    "docs:check": "node scripts/check-documentation.mjs && npm run docs:api && node scripts/verify-documentation-output.mjs",
+    "test": "node --test tests/verify-package-contract.test.mjs tests/verify-documentation-contract.test.mjs tests/verify-theme-contract.test.mjs",
+    "theme:check": "node scripts/check-theme.mjs"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/mandolin/HIA-uView.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@mandolin/jsdoc-plugin-hia-sys": "0.1.2",
+    "@mandolin/jsdoc-theme-hia": "0.1.1",
+    "jsdoc": "4.0.5"
+  }
 }

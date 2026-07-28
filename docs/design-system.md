@@ -12,19 +12,19 @@ Tokens use three layers:
 | `sys` | Semantic intent such as surface, text, action, status, focus, layer, and typography | Components and application layouts should use these tokens. |
 | `comp` | A component-specific semantic token | Only the owning component and documented theme extensions may use it. |
 
-The planned CSS-variable prefixes are `--hia-ref-*`, `--hia-sys-*`, and `--hia-comp-<component>-*`. Components must not rely on hard-coded brand values when a semantic token applies. Token names and values are not published yet.
+The CSS-variable prefixes are `--hia-ref-*`, `--hia-sys-*`, and `--hia-comp-<component>-*`. Components must not rely on hard-coded brand values when a semantic token applies. The initial HIA light-theme color tokens and their validation boundary are documented in [theme](theme.md).
 
 ## Theme and style boundaries
 
 - A theme changes token values, not component structure, business copy, or application logic.
-- The initial contract covers a light theme only. Dark and high-contrast themes require their own profile and validation evidence.
+- The initial contract covers the HIA light theme only. Dark and high-contrast themes require their own profile and validation evidence.
 - A component root uses a documented `hia-<component>` namespace. Consumers customize through documented tokens, props, and slots rather than deep selectors.
 - Global styles are limited to documented token definitions and base rules. Components must not apply hidden resets or make assumptions about application-page CSS.
 - Overlay, dialog, toast, and similar stacking behavior must use semantic layer tokens rather than arbitrary `z-index` values.
 
 ## Accessibility design requirements
 
-HIA-uView will use WCAG 2.2 AA as a design and test reference; this is not a platform conformance certification.
+HIA-uView uses WCAG 2.2 AA as a component acceptance target for controllable behavior; this is not a mini-program platform or product conformance certification.
 
 - Applicable states must be perceptible without relying on color alone.
 - Icon-only actions need an accessible or visible label; errors need a recovery-oriented message.
@@ -34,6 +34,7 @@ HIA-uView will use WCAG 2.2 AA as a design and test reference; this is not a pla
 ## Localization boundary
 
 - UI text uses stable component message IDs and BCP 47 locale IDs, for example `zh-Hans` and `en`.
+- The initial UI runtime locale plan is `zh-Hans` and `en`; code-documentation locales (`zh-CN`, `en`) are a separate Documentation Sys concern.
 - Applications own business terms, page titles, tab-bar text, permissions, and domain errors. Components own only their generic UI messages.
 - A future locale adapter may provide interpolation, pluralization, dates, and numbers. HIA-uView does not select an i18n runtime yet.
 - Text must tolerate translation expansion. RTL is a future compatibility profile, not an implicit result of text alignment.
@@ -41,4 +42,4 @@ HIA-uView will use WCAG 2.2 AA as a design and test reference; this is not a pla
 
 ## Component-design checklist
 
-Before a component is published, its contract must state its compatibility profile, token usage, customization points, localization keys, accessible states, platform fallbacks, and fixture coverage.
+Before a component is published, its contract must state its compatibility profile, token usage, customization points, localization keys, accessible states, platform fallbacks, fixture coverage, and bilingual source-documentation coverage.
