@@ -4,7 +4,7 @@ HIA-uView is a UniApp UI framework focused first on robust mini-program developm
 
 | Workspace | Purpose | npm package status |
 | --- | --- | --- |
-| `HIA-uView-UI/` | UI framework, components, composables and platform adapters | `UButton`, `UStack`, `UNavBar`, `UCell`, `UInput`, `UField`, `UValidationMessage`, theme tokens, locale resolver, manifest, and `mp-weixin` compile fixture; private and not published |
+| `HIA-uView-UI/` | UI framework, components, composables and platform adapters | `UButton`, `UStack`, `UNavBar`, `UCell`, `UInput`, `UField`, `UValidationMessage`, `UModal`, `UNotice`, `UEmpty`, theme tokens, locale resolver, manifest, and `mp-weixin` compile fixture; private and not published |
 | `HIA-uView-Tool/` | Development and verification tools that support HIA-uView-UI | Initial read-only `doctor` and `check` CLI; private and not published |
 
 ## Development
@@ -19,7 +19,7 @@ npm run tool:check
 npm run build:fixture:mp-weixin
 ```
 
-`check` validates the workspace and package-contract baseline. `npm test` uses the Node.js built-in test runner to verify component, Tool, theme, and documentation contracts. Runtime source and component APIs remain private and unpublished; the active compatibility profile is documented in [compatibility](docs/compatibility.md). [UButton](docs/button.md), [UStack](docs/stack.md), [UNavBar](docs/nav-bar.md), [UCell](docs/cell.md), [UInput](docs/input.md), [UField](docs/field.md), and [UValidationMessage](docs/validation-message.md) are independently implemented with Vue runtime and compile-only fixture evidence; this does not imply a published API, device, accessibility-tree, asynchronous-validation, or cross-platform guarantee. The private pre-implementation contracts for [UModal](docs/modal.md), [UNotice](docs/notice.md), and [UEmpty](docs/empty.md) define controlled feedback and empty-data boundaries without making them runtime exports yet.
+`check` validates the workspace and package-contract baseline. `npm test` uses the Node.js built-in test runner to verify component, Tool, theme, and documentation contracts. Runtime source and component APIs remain private and unpublished; the active compatibility profile is documented in [compatibility](docs/compatibility.md). [UButton](docs/button.md), [UStack](docs/stack.md), [UNavBar](docs/nav-bar.md), [UCell](docs/cell.md), [UInput](docs/input.md), [UField](docs/field.md), [UValidationMessage](docs/validation-message.md), [UModal](docs/modal.md), [UNotice](docs/notice.md), and [UEmpty](docs/empty.md) are independently implemented with Vue runtime and compile-only fixture evidence; this does not imply a published API, device, accessibility-tree, asynchronous-validation, modal, timer, list-loading, or cross-platform guarantee.
 
 See [development notes](docs/development.md), the [public architecture overview](docs/architecture.md), and [Documentation Sys usage](docs/documentation.md).
 The theme, style, accessibility, and localization boundary is documented in the [design-system contract](docs/design-system.md).

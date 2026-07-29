@@ -1,7 +1,7 @@
 # UNotice component contract / UNotice 组件契约
 
-> Status / 状态：Private pre-implementation contract. `UNotice` is not yet a runtime export or a published package API.
-> 私有的实现前契约。`UNotice` 尚不是 runtime 导出或已发布的包 API。
+> Status / 状态：Private pre-release contract. Independent implementation, Vue runtime behavior tests, and an `mp-weixin` compile fixture exist; `UNotice` remains a private, unpublished package API.
+> 私有的预发布契约。独立实现、Vue runtime 行为测试和 `mp-weixin` 编译 fixture 已存在；`UNotice` 仍是私有、未发布的包 API。
 
 `UNotice` is a proposed controlled inline feedback display for the private UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. It shows caller-owned feedback text inside the current component tree. It is not a toast, global service, queue, timer, request result interpreter, or business notification center.
 
@@ -11,14 +11,14 @@
 
 | Prop / 属性 | Type / 类型 | Default / 默认值 | Contract / 约定 |
 | --- | --- | --- | --- |
-| `visible` | `boolean` | `false` | Caller-owned rendering state. Hidden notices render nothing and emit no dismiss intent. / 调用方自有的渲染状态。隐藏 notice 不渲染内容，也不触发 dismiss 意图。 |
+| `visible` | `boolean` | `false` | Caller-owned rendering state. Rendering additionally requires a non-empty `message`; hidden notices render nothing and emit no dismiss intent. / 调用方自有的渲染状态。渲染还要求 `message` 非空；隐藏 notice 不渲染内容，也不触发 dismiss 意图。 |
 | `tone` | `'info' \| 'success' \| 'warning' \| 'error'` | `'info'` | Constrained presentation tone. Unsupported strings render as `info`; tone never infers a backend, validation, or business result. / 受限呈现语调。不支持的字符串按 `info` 渲染；tone 绝不推断后端、校验或业务结果。 |
 | `message` | `string` | `''` | Caller-owned, already localized visible feedback text. It is not transformed, translated, cached, logged, or sent anywhere. / 调用方自有的、已本地化的可见反馈文字。它绝不被转换、翻译、缓存、记录或发送到任何位置。 |
 | `dismissText` | `string` | `''` | Optional caller-owned visible label for a dismiss-intent control. Empty text renders no dismiss control. / dismiss 意图控件的可选调用方自有可见标签。空文字不会渲染 dismiss 控件。 |
 
 | Event / 事件 | Payload / 载荷 | Contract / 约定 |
 | --- | --- | --- |
-| `dismiss` | native platform event | Emits once only when `visible` is true and a non-empty `dismissText` control is activated. It never changes `visible`, starts a timer, or removes a notice from a queue. / 仅在 `visible` 为真且非空 `dismissText` 控件被激活时恰好触发一次。它绝不改变 `visible`、启动计时器或从队列移除 notice。 |
+| `dismiss` | native platform event | Emits once only when `visible` is true, `message` is non-empty, and a non-empty `dismissText` control is activated. It never changes `visible`, starts a timer, or removes a notice from a queue. / 仅在 `visible` 为真、`message` 非空且非空 `dismissText` 控件被激活时恰好触发一次。它绝不改变 `visible`、启动计时器或从队列移除 notice。 |
 
 The first contract has no slots. It deliberately keeps message structure and feedback lifecycle explicit, rather than silently accepting arbitrary content or stateful service configuration.
 
@@ -52,6 +52,6 @@ Every visible notice must have caller-provided text and a non-color tone marker/
 
 ## Required fixtures / 实现必需 fixture
 
-Before implementation evidence is accepted, fixtures must cover hidden zero output/events, each supported tone with visible text and a non-color marker, unknown-tone normalization, optional dismiss intent, zero dismiss without control, long Chinese/English messages, and caller control of visibility. Static checks must confirm no timer, global service, queue, `Teleport`, request, storage, route, icon/font, or native `open-type` behavior.
+Before release, fixtures must expand to cover hidden/empty-message zero output/events, each supported tone with visible text and a non-color marker, unknown-tone normalization, optional dismiss intent, zero dismiss without control, long Chinese/English messages, and caller control of visibility. Static checks must confirm no timer, global service, queue, `Teleport`, request, storage, route, icon/font, or native `open-type` behavior.
 
-在接受实现证据前，fixture 必须覆盖隐藏时零输出/零事件、每个支持 tone 的可见文字和非颜色标记、未知 tone 规范化、可选 dismiss 意图、缺失控件时零 dismiss、较长中英文消息和调用方对可见性的控制。静态检查必须确认不存在计时器、全局 service、队列、`Teleport`、请求、存储、路由、图标/字体或原生 `open-type` 行为。
+发布前，fixture 必须扩展覆盖隐藏/空消息时零输出/零事件、每个支持 tone 的可见文字和非颜色标记、未知 tone 规范化、可选 dismiss 意图、缺失控件时零 dismiss、较长中英文消息和调用方对可见性的控制。静态检查必须确认不存在计时器、全局 service、队列、`Teleport`、请求、存储、路由、图标/字体或原生 `open-type` 行为。

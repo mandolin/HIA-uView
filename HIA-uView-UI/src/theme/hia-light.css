@@ -12,6 +12,9 @@
  * @token comp.input.surface
  * @token comp.field.label
  * @token comp.validation-message.validating
+ * @token comp.modal.panel
+ * @token comp.notice.info
+ * @token comp.empty.surface
  * @cssprop --u-ref-color-brand-cobalt
  * @cssprop --u-ref-color-brand-cyan
  * @cssprop --u-sys-color-action-primary
@@ -146,4 +149,59 @@
   --u-comp-validation-message-marker-width: 3px;
   --u-comp-validation-message-marker-font-weight: 700;
   --u-comp-validation-message-focus-ring: var(--u-sys-color-focus);
+
+  /* <lang><zh-CN>UModal token 组定义局部视觉 mask、panel、文字、受限几何和内部层级；它不提供系统层、外部 z-index 或焦点/滚动策略。</zh-CN><en>The UModal token group defines local visual mask, panel, text, constrained geometry, and internal layer; it provides no system layer, external z-index, or focus/scroll policy.</en></lang> */
+  --u-comp-modal-mask-surface: rgba(0, 27, 46, 0.56);
+  --u-comp-modal-panel-surface: var(--u-sys-color-surface);
+  --u-comp-modal-panel-border: var(--u-ref-color-neutral-700);
+  --u-comp-modal-foreground: var(--u-sys-color-text);
+  --u-comp-modal-title-foreground: var(--u-sys-color-text);
+  --u-comp-modal-viewport-padding: 24px;
+  --u-comp-modal-panel-padding: 20px;
+  --u-comp-modal-max-width: 480px;
+  --u-comp-modal-radius: 12px;
+  --u-comp-modal-gap: 16px;
+  --u-comp-modal-action-gap: 8px;
+  --u-comp-modal-layer: 1000;
+  --u-comp-modal-title-font-size: 18px;
+  --u-comp-modal-title-font-weight: 600;
+  --u-comp-modal-focus-ring: var(--u-sys-color-focus);
+
+  /* <lang><zh-CN>UNotice token 组以钴蓝表示 info、清透青/深色前景表示 success，并用中性文字、符号和边界区分 warning/error；不预设未审定的红色语义色。</zh-CN><en>The UNotice token group uses cobalt for info, clear cyan/dark foreground for success, and neutral text, symbols, and boundaries to distinguish warning/error; it does not predefine an unapproved red semantic color.</en></lang> */
+  --u-comp-notice-info-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-notice-info-foreground: var(--u-sys-color-action-primary);
+  --u-comp-notice-info-border: var(--u-sys-color-action-primary);
+  --u-comp-notice-success-surface: var(--u-sys-color-accent);
+  --u-comp-notice-success-foreground: var(--u-sys-color-on-accent);
+  --u-comp-notice-success-border: var(--u-sys-color-accent);
+  --u-comp-notice-warning-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-notice-warning-foreground: var(--u-sys-color-text);
+  --u-comp-notice-warning-border: var(--u-ref-color-neutral-700);
+  --u-comp-notice-error-surface: var(--u-sys-color-surface);
+  --u-comp-notice-error-foreground: var(--u-sys-color-text);
+  --u-comp-notice-error-border: var(--u-ref-color-neutral-700);
+  --u-comp-notice-gap: 8px;
+  --u-comp-notice-inline-padding: 12px;
+  --u-comp-notice-block-padding: 10px;
+  --u-comp-notice-font-size: 14px;
+  --u-comp-notice-border-width: 3px;
+  --u-comp-notice-marker-min-width: 16px;
+  --u-comp-notice-marker-font-weight: 700;
+  --u-comp-notice-focus-ring: var(--u-sys-color-focus);
+
+  /* <lang><zh-CN>UEmpty token 组建立文字优先空数据 panel 的柔和表面、虚线边界与受限间距；它不为数据、loading、分页或插图编码状态。</zh-CN><en>The UEmpty token group establishes subtle surface, dashed boundary, and constrained spacing for a text-first empty-data panel; it encodes no state for data, loading, paging, or illustration.</en></lang> */
+  --u-comp-empty-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-empty-border: var(--u-ref-color-neutral-700);
+  --u-comp-empty-foreground: var(--u-sys-color-text);
+  --u-comp-empty-title-foreground: var(--u-sys-color-text);
+  --u-comp-empty-description-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-empty-panel-padding: 24px;
+  --u-comp-empty-max-width: 420px;
+  --u-comp-empty-radius: 12px;
+  --u-comp-empty-gap: 8px;
+  --u-comp-empty-action-gap: 8px;
+  --u-comp-empty-title-font-size: 18px;
+  --u-comp-empty-title-font-weight: 600;
+  --u-comp-empty-description-font-size: 14px;
+  --u-comp-empty-focus-ring: var(--u-sys-color-focus);
 }

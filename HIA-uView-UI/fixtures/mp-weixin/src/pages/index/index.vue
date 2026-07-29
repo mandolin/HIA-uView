@@ -1,6 +1,6 @@
 <!--
-@lang zh-CN 在仅编译期的 mp-weixin fixture 中组合现有布局/展示组件和 P13 的 UInput、UField、UValidationMessage；页面只记录本地事件次数，不执行真实导航、网络、业务命令、规则执行或系统栏操作。
-@lang en Composes existing layout/presentation components and P13 UInput, UField, and UValidationMessage in the compile-only mp-weixin fixture; the page records local event counts only and performs no real navigation, network activity, business command, rule execution, or system-bar operation.
+@lang zh-CN 在仅编译期的 mp-weixin fixture 中组合现有布局/展示组件、P13 受控字段组件和 P14 的 UModal、UNotice、UEmpty；页面只记录本地事件次数和调用方可见状态，不执行真实导航、网络、业务命令、规则执行、计时器或系统栏操作。
+@lang en Composes existing layout/presentation components, P13 controlled field components, and P14 UModal, UNotice, and UEmpty in the compile-only mp-weixin fixture; the page records only local event counts and caller visibility state and performs no real navigation, network activity, business command, rule execution, timer, or system-bar operation.
 -->
 <template>
   <!-- <lang><zh-CN>页面级 stack 验证纵向布局与 token 间距，不为组件引入业务页面结构。</zh-CN><en>The page-level stack verifies vertical layout and token spacing without introducing business-page structure into components.</en></lang> -->
@@ -56,6 +56,40 @@
       <u-validation-message state="error" message="Standalone application-owned validation display." />
     </u-stack>
 
+    <!-- <lang><zh-CN>P14 反馈组覆盖应用拥有 visible、modal confirm/cancel、notice dismiss 与空态 action；组件本身不关闭、不计时、不请求或加载数据。</zh-CN><en>The P14 feedback group covers application-owned visible state, modal confirm/cancel, notice dismiss, and empty-state action; components themselves neither close, time, request, nor load data.</en></lang> -->
+    <u-stack gap="md">
+      <u-stack direction="horizontal" gap="sm" wrap>
+        <u-button label="显示确认面板" @click="showModal" />
+        <u-button variant="secondary" label="显示局部提示" @click="showNotice" />
+      </u-stack>
+
+      <u-notice
+        :visible="noticeVisible"
+        tone="success"
+        message="Caller-controlled local feedback."
+        dismiss-text="Dismiss notice"
+        @dismiss="dismissNotice"
+      />
+
+      <u-empty
+        title="没有可展示的本地数据"
+        description="该示例不读取数组、加载状态或后端响应。"
+        action-text="记录空态意图"
+        @action="recordEmptyAction"
+      />
+
+      <u-modal
+        :visible="modalVisible"
+        title="调用方控制的确认面板"
+        confirm-text="Confirm locally"
+        cancel-text="Cancel locally"
+        @confirm="recordModalConfirm"
+        @cancel="recordModalCancel"
+      >
+        <text>可见状态、关闭时机和后续流程均由当前页面 handler 决定。</text>
+      </u-modal>
+    </u-stack>
+
     <!-- <lang><zh-CN>按钮保留既有 label、disabled、loading 与长英文状态，验证新增字段组合没有回退其独立本地操作边界。</zh-CN><en>The button retains prior label, disabled, loading, and long-English states, verifying new field composition does not regress its independent local-action boundary.</en></lang> -->
     <u-stack direction="horizontal" gap="sm" wrap>
       <u-button label="保存本地草稿" @click="recordButtonClick" />
@@ -65,14 +99,14 @@
     </u-stack>
 
     <!-- <lang><zh-CN>计数区只公开 fixture 内事件是否到达；它不代表真机交互、读屏、焦点或路由结果。</zh-CN><en>The counter area exposes only whether fixture events arrived; it does not represent device interaction, screen-reader, focus, or routing results.</en></lang> -->
-    <text class="fixture-page__count">back: {{ backCount }}, action: {{ actionCount }}, cell: {{ cellClickCount }}, button: {{ buttonClickCount }}, input: {{ inputEventCount }}, focus: {{ inputFocusCount }}, blur: {{ inputBlurCount }}</text>
+    <text class="fixture-page__count">back: {{ backCount }}, action: {{ actionCount }}, cell: {{ cellClickCount }}, button: {{ buttonClickCount }}, input: {{ inputEventCount }}, focus: {{ inputFocusCount }}, blur: {{ inputBlurCount }}, modal confirm: {{ modalConfirmCount }}, modal cancel: {{ modalCancelCount }}, notice dismiss: {{ noticeDismissCount }}, empty action: {{ emptyActionCount }}</text>
   </u-stack>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 // <lang><zh-CN>从私有 runtime entry 显式导入 fixture 所需组件；页面不使用自动注册、Tool runtime 或外部包解析。</zh-CN><en>Explicitly imports fixture components from the private runtime entry; the page uses no auto-registration, Tool runtime, or external package resolution.</en></lang>
-import { UButton, UCell, UField, UInput, UNavBar, UStack, UValidationMessage } from '../../../../../src/index.mjs';
+import { UButton, UCell, UEmpty, UField, UInput, UModal, UNavBar, UNotice, UStack, UValidationMessage } from '../../../../../src/index.mjs';
 
 // <lang><zh-CN>返回意图的本地 fixture 计数；生命周期仅限当前页面实例，不持久化或执行导航。</zh-CN><en>Local fixture counter for back intent; its lifetime is limited to the current page instance and it neither persists nor navigates.</en></lang>
 const backCount = ref(0);
@@ -97,6 +131,24 @@ const inputFocusCount = ref(0);
 
 // <lang><zh-CN>已到达的失焦意图计数仅说明 fixture handler 被绑定，不触发页面校验或格式化。</zh-CN><en>Arrived blur-intent count shows only that a fixture handler is bound and starts no page validation or formatting.</en></lang>
 const inputBlurCount = ref(0);
+
+// <lang><zh-CN>modal 可见状态由当前页面拥有；组件只收到该 prop，不能自行关闭或写回它。</zh-CN><en>The current page owns modal visible state; the component receives only this prop and cannot close or write it back itself.</en></lang>
+const modalVisible = ref(false);
+
+// <lang><zh-CN>notice 可见状态由当前页面拥有；没有全局 service、队列或定时器参与该示例。</zh-CN><en>The current page owns notice visible state; no global service, queue, or timer participates in this example.</en></lang>
+const noticeVisible = ref(false);
+
+// <lang><zh-CN>已到达 modal confirm 意图的本地计数；它不代表请求完成、数据修改或页面路由。</zh-CN><en>Local count of arrived modal confirm intent; it represents no completed request, data mutation, or page route.</en></lang>
+const modalConfirmCount = ref(0);
+
+// <lang><zh-CN>已到达 modal cancel 意图的本地计数；页面 handler 决定后续可见状态。</zh-CN><en>Local count of arrived modal cancel intent; the page handler decides subsequent visible state.</en></lang>
+const modalCancelCount = ref(0);
+
+// <lang><zh-CN>已到达 notice dismiss 意图的本地计数；它不创建或移除其他 notice。</zh-CN><en>Local count of arrived notice dismiss intent; it creates or removes no other notice.</en></lang>
+const noticeDismissCount = ref(0);
+
+// <lang><zh-CN>已到达 empty action 意图的本地计数；它不读取数据数组、加载状态或后端。</zh-CN><en>Local count of arrived empty action intent; it reads no data array, loading state, or backend.</en></lang>
+const emptyActionCount = ref(0);
 
 /**
  * @lang zh-CN 记录 UNavBar 的纯 back 意图。该 handler 不读取事件、不调用导航，故不将 fixture 扩展为路由测试。
@@ -177,6 +229,75 @@ function recordInputFocus() {
 function recordInputBlur() {
   // <lang><zh-CN>递增失焦 handler 证据，保留应用未来自行决定状态更新的空间。</zh-CN><en>Increments blur-handler evidence while leaving the application free to decide future state updates itself.</en></lang>
   inputBlurCount.value += 1;
+}
+
+/**
+ * @lang zh-CN 由页面显式显示 UModal；组件本身没有可见状态写入、自动关闭或全局弹层能力。
+ * @lang en Explicitly shows UModal from the page; the component itself has no visible-state writeback, automatic close, or global-overlay capability.
+ * @returns {void} <lang><zh-CN>无返回值；只将当前页面 modal ref 设为真。</zh-CN><en>No return value; sets only the current page modal ref to true.</en></lang>
+ */
+function showModal() {
+  // <lang><zh-CN>页面写入可见状态，明确演示应用而非组件拥有 modal 生命周期。</zh-CN><en>The page writes visible state, explicitly demonstrating that the application rather than component owns modal lifecycle.</en></lang>
+  modalVisible.value = true;
+}
+
+/**
+ * @lang zh-CN 记录 UModal confirm 意图并由页面关闭该 modal；不执行数据修改、请求或路由。
+ * @lang en Records UModal confirm intent and closes that modal from the page; it performs no data mutation, request, or route.
+ * @returns {void} <lang><zh-CN>无返回值；递增本地计数并写入当前页面 modal 可见状态。</zh-CN><en>No return value; increments local count and writes current page modal visible state.</en></lang>
+ */
+function recordModalConfirm() {
+  // <lang><zh-CN>先记录已到达的纯 confirm 意图，使 fixture 可见地区分它与组件自动完成。</zh-CN><en>Records arrived pure confirm intent first so the fixture can visibly distinguish it from component automatic completion.</en></lang>
+  modalConfirmCount.value += 1;
+
+  // <lang><zh-CN>由页面而非 UModal 写入关闭状态；这不是对焦点、路由或请求结果的声明。</zh-CN><en>Writes close state from the page rather than UModal; this is no statement about focus, route, or request result.</en></lang>
+  modalVisible.value = false;
+}
+
+/**
+ * @lang zh-CN 记录 UModal cancel 意图并由页面关闭该 modal；不恢复焦点、不执行回退或业务取消。
+ * @lang en Records UModal cancel intent and closes that modal from the page; it restores no focus and performs no rollback or business cancellation.
+ * @returns {void} <lang><zh-CN>无返回值；递增本地计数并写入当前页面 modal 可见状态。</zh-CN><en>No return value; increments local count and writes current page modal visible state.</en></lang>
+ */
+function recordModalCancel() {
+  // <lang><zh-CN>记录 cancel 意图，保留其作为页面可见证据而非组件内部关闭逻辑。</zh-CN><en>Records cancel intent, retaining it as page-visible evidence rather than component-internal close logic.</en></lang>
+  modalCancelCount.value += 1;
+
+  // <lang><zh-CN>当前页面明确关闭 modal，后续流程仍完全由应用决定。</zh-CN><en>The current page explicitly closes the modal while all follow-up flow remains entirely application-decided.</en></lang>
+  modalVisible.value = false;
+}
+
+/**
+ * @lang zh-CN 由页面显式显示 UNotice；组件不生成 toast、队列或自动持续时间。
+ * @lang en Explicitly shows UNotice from the page; the component generates no toast, queue, or automatic duration.
+ * @returns {void} <lang><zh-CN>无返回值；只将当前页面 notice ref 设为真。</zh-CN><en>No return value; sets only the current page notice ref to true.</en></lang>
+ */
+function showNotice() {
+  // <lang><zh-CN>页面写入 notice 可见状态，保持 feedback 生命周期与组件展示边界分离。</zh-CN><en>The page writes notice visible state, keeping feedback lifecycle separate from component presentation boundary.</en></lang>
+  noticeVisible.value = true;
+}
+
+/**
+ * @lang zh-CN 记录 UNotice dismiss 意图并由页面隐藏它；不启动计时器、队列或其他 feedback 状态机。
+ * @lang en Records UNotice dismiss intent and hides it from the page; it starts no timer, queue, or other feedback state machine.
+ * @returns {void} <lang><zh-CN>无返回值；递增本地计数并写入当前页面 notice 可见状态。</zh-CN><en>No return value; increments local count and writes current page notice visible state.</en></lang>
+ */
+function dismissNotice() {
+  // <lang><zh-CN>先记录已到达 dismiss 意图，不将它误述为组件自动移除行为。</zh-CN><en>Records arrived dismiss intent first and does not misdescribe it as component automatic removal behavior.</en></lang>
+  noticeDismissCount.value += 1;
+
+  // <lang><zh-CN>由页面选择隐藏当前 notice；组件不会影响页面中的其他 feedback。</zh-CN><en>The page chooses to hide the current notice; the component affects no other feedback on the page.</en></lang>
+  noticeVisible.value = false;
+}
+
+/**
+ * @lang zh-CN 记录 UEmpty action 意图；不发起加载、重试、分页、滚动或数据读取。
+ * @lang en Records UEmpty action intent; it starts no loading, retry, paging, scrolling, or data read.
+ * @returns {void} <lang><zh-CN>无返回值；只递增当前页面本地计数。</zh-CN><en>No return value; increments only the current page local counter.</en></lang>
+ */
+function recordEmptyAction() {
+  // <lang><zh-CN>将空态 action 保留为可见的局部意图证据，不赋予它业务或后端含义。</zh-CN><en>Retains empty-state action as visible local intent evidence and assigns it no business or backend meaning.</en></lang>
+  emptyActionCount.value += 1;
 }
 </script>
 

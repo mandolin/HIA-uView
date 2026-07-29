@@ -21,6 +21,15 @@
       ]
     },
     {
+      "name": "u-empty",
+      "source": "src/components/u-empty/u-empty.vue",
+      "contract": "docs/empty.md",
+      "locales": [
+        "zh-Hans",
+        "en"
+      ]
+    },
+    {
       "name": "u-field",
       "source": "src/components/u-field/u-field.vue",
       "contract": "docs/field.md",
@@ -39,9 +48,27 @@
       ]
     },
     {
+      "name": "u-modal",
+      "source": "src/components/u-modal/u-modal.vue",
+      "contract": "docs/modal.md",
+      "locales": [
+        "zh-Hans",
+        "en"
+      ]
+    },
+    {
       "name": "u-nav-bar",
       "source": "src/components/u-nav-bar/u-nav-bar.vue",
       "contract": "docs/nav-bar.md",
+      "locales": [
+        "zh-Hans",
+        "en"
+      ]
+    },
+    {
+      "name": "u-notice",
+      "source": "src/components/u-notice/u-notice.vue",
+      "contract": "docs/notice.md",
       "locales": [
         "zh-Hans",
         "en"

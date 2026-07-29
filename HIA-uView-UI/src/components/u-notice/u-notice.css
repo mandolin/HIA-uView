@@ -1,0 +1,72 @@
+/**
+ * @component UNotice
+ * @selector .u-notice
+ * @token comp.notice.info
+ * @token comp.notice.success
+ * @token comp.notice.warning
+ * @token comp.notice.error
+ * @lang zh-CN UNotice 的受控 inline feedback 样式。每种 tone 通过调用方文字、符号、边界与 token 化颜色共同表达，不提供 toast、动画、计时器、队列或全局服务。
+ * @lang en Controlled inline-feedback styles for UNotice. Every tone is expressed jointly through caller text, symbol, boundary, and tokenized colors without providing toast, animation, timer, queue, or global service.
+ */
+
+/* <lang><zh-CN>基础 notice 行只建立消息、标记和可选文字 control 的局部布局，不改变页面位置或生命周期。</zh-CN><en>The base notice row establishes local layout for message, marker, and optional text control only and changes no page position or lifecycle.</en></lang> */
+.u-notice {
+  align-items: flex-start;
+  background: var(--u-comp-notice-info-surface);
+  border-left: var(--u-comp-notice-border-width) solid var(--u-comp-notice-info-border);
+  box-sizing: border-box;
+  color: var(--u-comp-notice-info-foreground);
+  display: flex;
+  font-size: var(--u-comp-notice-font-size);
+  gap: var(--u-comp-notice-gap);
+  line-height: 1.4;
+  padding: var(--u-comp-notice-block-padding) var(--u-comp-notice-inline-padding);
+}
+
+/* <lang><zh-CN>标记保留固定最小宽度，以非颜色形状补充 tone；调用方 message 仍是唯一完整的可读反馈文字。</zh-CN><en>The marker reserves fixed minimum width to supplement tone with non-color shape; caller message remains the only complete readable feedback text.</en></lang> */
+.u-notice__marker {
+  font-weight: var(--u-comp-notice-marker-font-weight);
+  min-width: var(--u-comp-notice-marker-min-width);
+  text-align: center;
+}
+
+/* <lang><zh-CN>消息允许在局部行内占据剩余宽度，不创建 toast 定位、滚动区域或内容截断策略。</zh-CN><en>The message may occupy remaining width in the local row and creates no toast positioning, scroll area, or content-truncation policy.</en></lang> */
+.u-notice__message {
+  flex: 1;
+  min-width: 0;
+}
+
+/* <lang><zh-CN>dismiss control 使用既有文字按钮的局部样式，不获得自动关闭、计时器或全局队列职责。</zh-CN><en>The dismiss control uses existing text-button local styling and acquires no automatic close, timer, or global-queue responsibility.</en></lang> */
+.u-notice__dismiss {
+  flex: 0 0 auto;
+}
+
+/* <lang><zh-CN>info 使用钴蓝结构语义与信息符号，且不将该色解释为请求或业务成功。</zh-CN><en>Info uses cobalt structural semantics and information symbol without interpreting that color as request or business success.</en></lang> */
+.u-notice--info {
+  background: var(--u-comp-notice-info-surface);
+  border-left-color: var(--u-comp-notice-info-border);
+  color: var(--u-comp-notice-info-foreground);
+}
+
+/* <lang><zh-CN>success 使用清透青表面与深色前景，符合实底清透青必须使用深色文字的主题规则。</zh-CN><en>Success uses clear-cyan surface and dark foreground, following the theme rule that solid clear cyan requires dark text.</en></lang> */
+.u-notice--success {
+  background: var(--u-comp-notice-success-surface);
+  border-left-color: var(--u-comp-notice-success-border);
+  color: var(--u-comp-notice-success-foreground);
+}
+
+/* <lang><zh-CN>warning 以点状边界和感叹号补充中性文字，避免在未审定语义色前仅以颜色表达提醒。</zh-CN><en>Warning uses dotted boundary and exclamation mark to supplement neutral text, avoiding color-only warning expression before a semantic palette is approved.</en></lang> */
+.u-notice--warning {
+  background: var(--u-comp-notice-warning-surface);
+  border-left-color: var(--u-comp-notice-warning-border);
+  border-left-style: dotted;
+  color: var(--u-comp-notice-warning-foreground);
+}
+
+/* <lang><zh-CN>error 以虚线边界和乘号补充中性深色文字，不预设未审定的红色错误色。</zh-CN><en>Error uses dashed boundary and multiplication marker to supplement deep-neutral text and does not predefine an unapproved red error color.</en></lang> */
+.u-notice--error {
+  background: var(--u-comp-notice-error-surface);
+  border-left-color: var(--u-comp-notice-error-border);
+  border-left-style: dashed;
+  color: var(--u-comp-notice-error-foreground);
+}

@@ -1,0 +1,71 @@
+/**
+ * @component UModal
+ * @selector .u-modal
+ * @token comp.modal.mask
+ * @token comp.modal.panel
+ * @lang zh-CN UModal 的受控局部视觉层样式。样式通过 token 化 mask、panel、文字和间距呈现调用方状态，不提供原生 popup、动画、焦点/滚动锁定或外部层叠配置。
+ * @lang en Controlled local visual-layer styles for UModal. Styles present caller state through tokenized mask, panel, text, and spacing without providing native popup, animation, focus/scroll lock, or external stacking configuration.
+ */
+
+/* <lang><zh-CN>根层只在本组件树内建立固定视觉覆盖和内部 token 化层级；它不是全局 portal 或系统层。</zh-CN><en>The root establishes fixed visual coverage and tokenized internal layering only within this component tree; it is not a global portal or system layer.</en></lang> */
+.u-modal {
+  align-items: center;
+  bottom: 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  padding: var(--u-comp-modal-viewport-padding);
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: var(--u-comp-modal-layer);
+}
+
+/* <lang><zh-CN>mask 只提供非交互背景分层；没有 pointer、click、动画或系统栏语义。</zh-CN><en>The mask provides non-interactive background layering only; it has no pointer, click, animation, or system-bar semantics.</en></lang> */
+.u-modal__mask {
+  background: var(--u-comp-modal-mask-surface);
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* <lang><zh-CN>panel 以受限宽度、表面、边界和内边距承载调用方内容，避免接受任意页面布局或业务视觉。</zh-CN><en>The panel carries caller content with constrained width, surface, boundary, and padding, avoiding arbitrary page layout or business visual input.</en></lang> */
+.u-modal__panel {
+  background: var(--u-comp-modal-panel-surface);
+  border: 1px solid var(--u-comp-modal-panel-border);
+  border-radius: var(--u-comp-modal-radius);
+  box-sizing: border-box;
+  color: var(--u-comp-modal-foreground);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-modal-gap);
+  max-width: var(--u-comp-modal-max-width);
+  padding: var(--u-comp-modal-panel-padding);
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+/* <lang><zh-CN>标题与内容保持文字优先的层级；组件不以图标、图片或默认业务文案填充空内容。</zh-CN><en>Title and content retain text-first hierarchy; the component fills no empty content with icon, image, or default business copy.</en></lang> */
+.u-modal__title {
+  color: var(--u-comp-modal-title-foreground);
+  font-size: var(--u-comp-modal-title-font-size);
+  font-weight: var(--u-comp-modal-title-font-weight);
+  line-height: 1.35;
+}
+
+.u-modal__content {
+  color: var(--u-comp-modal-foreground);
+  min-width: 0;
+}
+
+/* <lang><zh-CN>操作行只排列现有文字 UButton，不添加原生 form submit、open-type 或关闭逻辑。</zh-CN><en>The action row arranges existing text UButton controls only and adds no native form submit, open-type, or close logic.</en></lang> */
+.u-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--u-comp-modal-action-gap);
+  justify-content: flex-end;
+}

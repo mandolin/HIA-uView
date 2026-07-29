@@ -1,7 +1,7 @@
 # UModal component contract / UModal 组件契约
 
-> Status / 状态：Private pre-implementation contract. `UModal` is not yet a runtime export or a published package API.
-> 私有的实现前契约。`UModal` 尚不是 runtime 导出或已发布的包 API。
+> Status / 状态：Private pre-release contract. Independent implementation, Vue runtime behavior tests, and an `mp-weixin` compile fixture exist; `UModal` remains a private, unpublished package API.
+> 私有的预发布契约。独立实现、Vue runtime 行为测试和 `mp-weixin` 编译 fixture 已存在；`UModal` 仍是私有、未发布的包 API。
 
 `UModal` is a proposed controlled local modal for the private UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. An application owns whether it is visible, what it says, and what happens after any intent. The component renders local mask/panel presentation and reports only confirm or cancel intent; it does not close itself or manage an application dialog lifecycle.
 
@@ -53,6 +53,6 @@ The initial profile makes no claim about ARIA dialog semantics, focus trap or re
 
 ## Required fixtures / 实现必需 fixture
 
-Before implementation evidence is accepted, fixtures must cover hidden zero output/events, visible title/slot content, confirm-only, cancel-only, both controls, zero events for missing controls, long Chinese/English text, and explicit caller control of `visible`. Static checks must confirm the absence of native popup, `Teleport`, timer, global-service, focus/scroll, route, request, storage, or native `open-type` behavior.
+Before release, fixtures must expand to cover hidden zero output/events, visible title/slot content, confirm-only, cancel-only, both controls, zero events for missing controls, long Chinese/English text, and explicit caller control of `visible`. Static checks must confirm the absence of native popup, `Teleport`, timer, global-service, focus/scroll, route, request, storage, or native `open-type` behavior.
 
-在接受实现证据前，fixture 必须覆盖隐藏时零输出/零事件、可见标题/插槽内容、仅 confirm、仅 cancel、双控件、缺失控件时零事件、较长中英文文字以及调用方对 `visible` 的显式控制。静态检查必须确认不存在原生 popup、`Teleport`、计时器、全局 service、焦点/滚动、路由、请求、存储或原生 `open-type` 行为。
+发布前，fixture 必须扩展覆盖隐藏时零输出/零事件、可见标题/插槽内容、仅 confirm、仅 cancel、双控件、缺失控件时零事件、较长中英文文字以及调用方对 `visible` 的显式控制。静态检查必须确认不存在原生 popup、`Teleport`、计时器、全局 service、焦点/滚动、路由、请求、存储或原生 `open-type` 行为。

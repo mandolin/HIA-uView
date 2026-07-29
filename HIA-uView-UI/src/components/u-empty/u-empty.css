@@ -1,0 +1,44 @@
+/**
+ * @component UEmpty
+ * @selector .u-empty
+ * @token comp.empty.surface
+ * @token comp.empty.title
+ * @lang zh-CN UEmpty 的静态文字优先空数据展示样式。它以 token 化表面、边界、文字和 action 间距呈现调用方状态，不引入插图、图标、数据列表、加载、滚动或请求视觉。
+ * @lang en Static text-first empty-data presentation styles for UEmpty. They present caller state through tokenized surface, border, text, and action spacing without introducing illustration, icon, data list, loading, scrolling, or request visual.
+ */
+
+/* <lang><zh-CN>空态根只建立局部居中文字结构和受限 panel 几何；父级仍拥有页面布局、数据状态和是否渲染。</zh-CN><en>The empty-state root establishes only local centered text structure and constrained panel geometry; the parent still owns page layout, data state, and whether to render.</en></lang> */
+.u-empty {
+  align-items: center;
+  background: var(--u-comp-empty-surface);
+  border: 1px dashed var(--u-comp-empty-border);
+  border-radius: var(--u-comp-empty-radius);
+  box-sizing: border-box;
+  color: var(--u-comp-empty-foreground);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-empty-gap);
+  margin: 0 auto;
+  max-width: var(--u-comp-empty-max-width);
+  padding: var(--u-comp-empty-panel-padding);
+  text-align: center;
+}
+
+/* <lang><zh-CN>标题与说明分别消费主要/次级 token，保持可见文字而不以图像或默认文案表达空态。</zh-CN><en>Title and description consume primary/secondary tokens respectively, retaining visible text rather than expressing empty state through image or default copy.</en></lang> */
+.u-empty__title {
+  color: var(--u-comp-empty-title-foreground);
+  font-size: var(--u-comp-empty-title-font-size);
+  font-weight: var(--u-comp-empty-title-font-weight);
+  line-height: 1.4;
+}
+
+.u-empty__description {
+  color: var(--u-comp-empty-description-foreground);
+  font-size: var(--u-comp-empty-description-font-size);
+  line-height: 1.4;
+}
+
+/* <lang><zh-CN>action 使用现有主操作按钮并只加入局部上方间距；样式不使其成为请求、分页或路由 control。</zh-CN><en>The action uses existing primary-action button and adds local top spacing only; styling does not make it a request, paging, or route control.</en></lang> */
+.u-empty__action {
+  margin-top: var(--u-comp-empty-action-gap);
+}

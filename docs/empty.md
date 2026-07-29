@@ -1,7 +1,7 @@
 # UEmpty component contract / UEmpty 组件契约
 
-> Status / 状态：Private pre-implementation contract. `UEmpty` is not yet a runtime export or a published package API.
-> 私有的实现前契约。`UEmpty` 尚不是 runtime 导出或已发布的包 API。
+> Status / 状态：Private pre-release contract. Independent implementation, Vue runtime behavior tests, and an `mp-weixin` compile fixture exist; `UEmpty` remains a private, unpublished package API.
+> 私有的预发布契约。独立实现、Vue runtime 行为测试和 `mp-weixin` 编译 fixture 已存在；`UEmpty` 仍是私有、未发布的包 API。
 
 `UEmpty` is a proposed static empty-data presentation for the private UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. It displays caller-owned title, description, and optional action intent where an application decides there is no relevant data. It does not inspect data, infer loading completion, fetch, retry, paginate, scroll, virtualize, or generate an illustration.
 
@@ -47,6 +47,6 @@ Title, description, and action label are visible caller-owned text; the empty st
 
 ## Required fixtures / 实现必需 fixture
 
-Before implementation evidence is accepted, fixtures must cover title-only, title/description, optional action intent, zero action without control, long Chinese/English text, a parent-controlled conditional render, and composition beside existing `UStack`/`UCell` without treating either as a data list. Static checks must confirm no data array, loading/paging/scroll/virtualization, request, retry, timer, storage, route, image/icon/font, or native `open-type` behavior.
+Before release, fixtures must expand to cover title-only, title/description, optional action intent, zero action without control, long Chinese/English text, a parent-controlled conditional render, and composition beside existing `UStack`/`UCell` without treating either as a data list. Static checks must confirm no data array, loading/paging/scroll/virtualization, request, retry, timer, storage, route, image/icon/font, or native `open-type` behavior.
 
-在接受实现证据前，fixture 必须覆盖仅标题、标题/说明、可选 action 意图、缺失控件时零 action、较长中英文文字、父级受控条件渲染，以及与现有 `UStack`/`UCell` 并列组合但不把任一者当作数据列表。静态检查必须确认不存在数据数组、loading/paging/scroll/virtualization、请求、重试、计时器、存储、路由、图片/图标/字体或原生 `open-type` 行为。
+发布前，fixture 必须扩展覆盖仅标题、标题/说明、可选 action 意图、缺失控件时零 action、较长中英文文字、父级受控条件渲染，以及与现有 `UStack`/`UCell` 并列组合但不把任一者当作数据列表。静态检查必须确认不存在数据数组、loading/paging/scroll/virtualization、请求、重试、计时器、存储、路由、图片/图标/字体或原生 `open-type` 行为。
