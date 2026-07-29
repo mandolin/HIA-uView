@@ -1,0 +1,35 @@
+/**
+ * @component UInput
+ * @selector .u-input
+ * @token comp.input.surface
+ * @token comp.input.disabled
+ * @lang zh-CN UInput 的受控单行文本输入样式。样式只消费组件 token 并以边界/透明度补充禁用状态；它不改变值、输入法、规则或平台焦点生命周期。
+ * @lang en Controlled single-line text-input styles for UInput. Styles consume component tokens only and supplement disabled state with boundary/opacity; they do not change value, IME, rules, or the platform focus lifecycle.
+ */
+
+/* <lang><zh-CN>基础输入使用 token 化表面、文字、尺寸与边界，保持调用方页面布局和业务视觉在组件外部。</zh-CN><en>The base input uses tokenized surface, text, geometry, and boundary, keeping caller page layout and business visuals outside the component.</en></lang> */
+.u-input {
+  background: var(--u-comp-input-surface);
+  border: 1px solid var(--u-comp-input-border);
+  border-radius: var(--u-comp-input-radius);
+  box-sizing: border-box;
+  color: var(--u-comp-input-foreground);
+  font-size: var(--u-comp-input-font-size);
+  min-height: var(--u-comp-input-min-height);
+  padding: var(--u-comp-input-block-padding) var(--u-comp-input-inline-padding);
+  width: 100%;
+}
+
+/* <lang><zh-CN>placeholder 使用独立 token 保持次级文字层级；具体可用性仍由调用方提供的可见标签保障。</zh-CN><en>The placeholder uses an independent token to retain secondary text hierarchy; actual usability still relies on a visible label supplied by the caller.</en></lang> */
+.u-input::placeholder {
+  color: var(--u-comp-input-placeholder-foreground);
+}
+
+/* <lang><zh-CN>禁用样式增加虚线边界与透明度，确保不可用状态不只依赖颜色，也不模拟输入值被组件处理。</zh-CN><en>Disabled styling adds a dashed boundary and opacity so unavailable state does not rely on color alone and never simulates component processing of input value.</en></lang> */
+.u-input--disabled {
+  border-color: var(--u-comp-input-disabled-border);
+  border-style: dashed;
+  color: var(--u-comp-input-disabled-foreground);
+  cursor: not-allowed;
+  opacity: var(--u-comp-input-disabled-opacity);
+}

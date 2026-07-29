@@ -1,0 +1,48 @@
+/**
+ * @component UField
+ * @selector .u-field
+ * @token comp.field.label
+ * @token comp.field.help
+ * @lang zh-CN UField 的展示型字段结构样式。它以 token 化标签、帮助和间距组织调用方控件，不注入原生关联、规则结果或业务视觉。
+ * @lang en Presentational field-structure styles for UField. They organize caller controls through tokenized label, help, and spacing without injecting native linkage, rule results, or business visuals.
+ */
+
+/* <lang><zh-CN>字段根只建立纵向阅读顺序和受限间距，不控制插槽控件的宽度、值或交互。</zh-CN><en>The field root establishes only vertical reading order and constrained spacing; it controls no slotted-control width, value, or interaction.</en></lang> */
+.u-field {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-field-gap);
+}
+
+/* <lang><zh-CN>标签行将文字与必填标记并列，标记通过文字和布局补充颜色语义。</zh-CN><en>The label row places text and required marker together; the marker supplements color semantics through text and layout.</en></lang> */
+.u-field__label-row {
+  align-items: center;
+  display: flex;
+  gap: var(--u-comp-field-label-gap);
+}
+
+/* <lang><zh-CN>标签、标记和帮助各自消费组件 token，避免字段结构散布基础色或领域状态色。</zh-CN><en>Label, marker, and help each consume component tokens, avoiding foundation or domain-status colors scattered through field structure.</en></lang> */
+.u-field__label {
+  color: var(--u-comp-field-label-foreground);
+  font-size: var(--u-comp-field-label-font-size);
+  font-weight: var(--u-comp-field-label-font-weight);
+  line-height: 1.4;
+}
+
+.u-field__required-mark {
+  color: var(--u-comp-field-required-foreground);
+  font-size: var(--u-comp-field-required-font-size);
+  font-weight: var(--u-comp-field-label-font-weight);
+  line-height: 1;
+}
+
+.u-field__control {
+  min-width: 0;
+}
+
+.u-field__help {
+  color: var(--u-comp-field-help-foreground);
+  font-size: var(--u-comp-field-help-font-size);
+  line-height: 1.4;
+}

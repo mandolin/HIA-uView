@@ -1,7 +1,7 @@
 # UInput component contract / UInput 组件契约
 
-> Status / 状态：Private pre-implementation contract. `UInput` is not yet a runtime export or a published package API.
-> 私有的实现前契约。`UInput` 尚不是 runtime 导出或已发布的包 API。
+> Status / 状态：Private pre-release contract. Independent implementation, Vue runtime behavior tests, and an `mp-weixin` compile fixture exist; `UInput` remains a private, unpublished package API.
+> 私有的预发布契约。独立实现、Vue runtime 行为测试和 `mp-weixin` 编译 fixture 已存在；`UInput` 仍是私有、未发布的包 API。
 
 `UInput` is a proposed controlled single-line text input for the private UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. It renders caller-owned text state and reports local input intent back to the caller. It does not own a form model, validation rule, asynchronous work, submission, navigation, persistence, or analytics.
 
@@ -62,6 +62,6 @@ The initial `mp-weixin` evidence will cover component compilation and Vue runtim
 
 ## Required fixtures / 实现必需 fixture
 
-Before implementation evidence is accepted, fixtures must cover a caller-controlled initial value, a next-value event pair in documented order, disabled zero events, focus/blur intent, an empty and a long Chinese/English placeholder, and composition with a visible `UField` label. Static checks must confirm that the component contains no validator, submit, request, storage, route, native `open-type`, or value-logging behavior.
+Before release, fixtures must expand to cover a caller-controlled initial value, a next-value event pair in documented order, disabled zero events, focus/blur intent, an empty and a long Chinese/English placeholder, and composition with a visible `UField` label. Static checks must confirm that the component contains no validator, submit, request, storage, route, native `open-type`, or value-logging behavior.
 
-在接受实现证据前，fixture 必须覆盖调用方受控的初始值、按文档顺序触发的下一值事件对、禁用时零事件、聚焦/失焦意图、空及较长的中英文 placeholder，以及与可见 `UField` 标签的组合。静态检查必须确认组件不包含 validator、submit、请求、存储、路由、原生 `open-type` 或值日志行为。
+发布前，fixture 必须扩展覆盖调用方受控的初始值、按文档顺序触发的下一值事件对、禁用时零事件、聚焦/失焦意图、空及较长的中英文 placeholder，以及与可见 `UField` 标签的组合。静态检查必须确认组件不包含 validator、submit、请求、存储、路由、原生 `open-type` 或值日志行为。

@@ -1,7 +1,7 @@
 # UField component contract / UField 组件契约
 
-> Status / 状态：Private pre-implementation contract. `UField` is not yet a runtime export or a published package API.
-> 私有的实现前契约。`UField` 尚不是 runtime 导出或已发布的包 API。
+> Status / 状态：Private pre-release contract. Independent implementation, Vue runtime behavior tests, and an `mp-weixin` compile fixture exist; `UField` remains a private, unpublished package API.
+> 私有的预发布契约。独立实现、Vue runtime 行为测试和 `mp-weixin` 编译 fixture 已存在；`UField` 仍是私有、未发布的包 API。
 
 `UField` is a proposed presentational field structure for the private UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. It presents caller-owned label, required indication, help text, and validation display around a default-slot control. It does not own a form model, validation rule, validator lifecycle, submission, identity, backend, or business field definition.
 
@@ -45,6 +45,6 @@ The field label, required mark, help text, and validation message are visible te
 
 ## Required fixtures / 实现必需 fixture
 
-Before implementation evidence is accepted, fixtures must cover label-only structure, required indication, help text, a slotted controlled input, idle/no-message output, validating/message output, error/message output, empty-message suppression, long Chinese/English labels/messages, and the absence of events, rule execution, submission, storage, request, or backend behavior.
+Before release, fixtures must expand to cover label-only structure, required indication, help text, a slotted controlled input, idle/no-message output, validating/message output, error/message output, empty-message suppression, long Chinese/English labels/messages, and the absence of events, rule execution, submission, storage, request, or backend behavior.
 
-在接受实现证据前，fixture 必须覆盖仅标签结构、必填提示、帮助文字、插槽化受控输入、idle/无消息输出、validating/消息输出、error/消息输出、空消息抑制、较长的中英文标签/消息，以及不存在事件、规则执行、提交、存储、请求或后端行为。
+发布前，fixture 必须扩展覆盖仅标签结构、必填提示、帮助文字、插槽化受控输入、idle/无消息输出、validating/消息输出、error/消息输出、空消息抑制、较长的中英文标签/消息，以及不存在事件、规则执行、提交、存储、请求或后端行为。

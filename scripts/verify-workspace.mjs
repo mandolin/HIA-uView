@@ -1,11 +1,13 @@
-import { access } from 'node:fs/promises';
-import { resolve } from 'node:path';
-import { validatePackageContracts } from './package-contract.mjs';
-
 /**
+ * @module verify-workspace
  * @lang zh-CN 初始化质量门禁所需的最小文件集合；运行时实现开始后应由测试、类型检查和打包检查扩展。
  * @lang en Minimal files required by the initialization quality gate; extend this with tests, type checks, and package checks when implementation starts.
  */
+
+// <lang><zh-CN>导入本地文件存在性校验、路径解析和 package 契约验证；脚本不写入仓库、不执行项目代码或访问网络。</zh-CN><en>Imports local file-existence checks, path resolution, and package-contract validation; the script writes no repository file, executes no project code, and accesses no network.</en></lang>
+import { access } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { validatePackageContracts } from './package-contract.mjs';
 const requiredFiles = [
   'README.md',
   'AGENTS.md',
@@ -16,6 +18,9 @@ const requiredFiles = [
   'HIA-uView-UI/src/index.mjs',
   'HIA-uView-UI/src/style.css',
   'HIA-uView-UI/src/components/u-button/u-button.vue',
+  'HIA-uView-UI/src/components/u-input/u-input.vue',
+  'HIA-uView-UI/src/components/u-field/u-field.vue',
+  'HIA-uView-UI/src/components/u-validation-message/u-validation-message.vue',
   'HIA-uView-Tool/package.json',
   'HIA-uView-Tool/src/cli.mjs',
   'hia-uview.config.json',
@@ -28,6 +33,9 @@ const requiredFiles = [
   'docs/documentation.md',
   'docs/tool.md',
   'docs/button.md',
+  'docs/input.md',
+  'docs/field.md',
+  'docs/validation-message.md',
   'docs/jsdoc.config.json',
   'THIRD_PARTY_NOTICES.md',
   'vitest.config.mjs'

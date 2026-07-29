@@ -1,7 +1,7 @@
 # UValidationMessage component contract / UValidationMessage 组件契约
 
-> Status / 状态：Private pre-implementation contract. `UValidationMessage` is not yet a runtime export or a published package API.
-> 私有的实现前契约。`UValidationMessage` 尚不是 runtime 导出或已发布的包 API。
+> Status / 状态：Private pre-release contract. Independent implementation, Vue runtime behavior tests, and an `mp-weixin` compile fixture exist; `UValidationMessage` remains a private, unpublished package API.
+> 私有的预发布契约。独立实现、Vue runtime 行为测试和 `mp-weixin` 编译 fixture 已存在；`UValidationMessage` 仍是私有、未发布的包 API。
 
 `UValidationMessage` is a proposed independent validation-status display for the private UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. It presents an application-declared state and application-owned message. It does not infer validity, execute a validator, generate a default message, initiate asynchronous work, or submit data.
 
@@ -48,6 +48,6 @@ Each non-idle visible state must include caller-provided text and a non-color ma
 
 ## Required fixtures / 实现必需 fixture
 
-Before implementation evidence is accepted, fixtures must cover idle suppression with and without a message, validating and error messages, state-specific non-color treatment, long Chinese/English messages, composition inside `UField`, zero events, and static confirmation that no rule, validator, request, storage, logging, navigation, or backend behavior is present.
+Before release, fixtures must expand to cover idle suppression with and without a message, validating and error messages, state-specific non-color treatment, long Chinese/English messages, composition inside `UField`, zero events, and static confirmation that no rule, validator, request, storage, logging, navigation, or backend behavior is present.
 
-在接受实现证据前，fixture 必须覆盖有/无消息时的 idle 抑制、validating 与 error 消息、状态专属的非颜色样式、较长的中英文消息、在 `UField` 内组合、零事件，以及静态确认不存在 rule、validator、请求、存储、日志、导航或后端行为。
+发布前，fixture 必须扩展覆盖有/无消息时的 idle 抑制、validating 与 error 消息、状态专属的非颜色样式、较长的中英文消息、在 `UField` 内组合、零事件，以及静态确认不存在 rule、validator、请求、存储、日志、导航或后端行为。

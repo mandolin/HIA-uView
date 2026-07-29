@@ -9,6 +9,9 @@
  * @token comp.stack.gap
  * @token comp.nav-bar.surface
  * @token comp.cell.surface
+ * @token comp.input.surface
+ * @token comp.field.label
+ * @token comp.validation-message.validating
  * @cssprop --u-ref-color-brand-cobalt
  * @cssprop --u-ref-color-brand-cyan
  * @cssprop --u-sys-color-action-primary
@@ -102,4 +105,45 @@
   --u-comp-cell-value-font-size: 14px;
   --u-comp-cell-disabled-opacity: 0.6;
   --u-comp-cell-focus-ring: var(--u-sys-color-focus);
+
+  /* <lang><zh-CN>UInput token 组定义受控单行输入的中性表面、文字、提示、边界、禁用和最小输入几何；不含密码、支付或业务状态语义。</zh-CN><en>The UInput token group defines neutral surface, text, hint, boundary, disabled treatment, and minimum input geometry for a controlled single-line input; it contains no password, payment, or business-state semantics.</en></lang> */
+  --u-comp-input-surface: var(--u-sys-color-surface);
+  --u-comp-input-foreground: var(--u-sys-color-text);
+  --u-comp-input-placeholder-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-input-border: var(--u-ref-color-neutral-700);
+  --u-comp-input-disabled-border: var(--u-ref-color-neutral-700);
+  --u-comp-input-disabled-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-input-disabled-opacity: 0.65;
+  --u-comp-input-min-height: 44px;
+  --u-comp-input-inline-padding: 12px;
+  --u-comp-input-block-padding: 10px;
+  --u-comp-input-radius: 8px;
+  --u-comp-input-font-size: 16px;
+  --u-comp-input-focus-ring: var(--u-sys-color-focus);
+
+  /* <lang><zh-CN>UField token 组只定义标签、必填提示、帮助和字段内间距；它不把应用的校验状态或行业字段编码进结构层。</zh-CN><en>The UField token group defines label, required cue, help, and field-local spacing only; it encodes no application validation state or industry field in the structural layer.</en></lang> */
+  --u-comp-field-label-foreground: var(--u-sys-color-text);
+  --u-comp-field-required-foreground: var(--u-sys-color-action-primary);
+  --u-comp-field-help-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-field-gap: 8px;
+  --u-comp-field-label-gap: 4px;
+  --u-comp-field-label-font-size: 16px;
+  --u-comp-field-label-font-weight: 600;
+  --u-comp-field-required-font-size: 16px;
+  --u-comp-field-help-font-size: 14px;
+  --u-comp-field-focus-ring: var(--u-sys-color-focus);
+
+  /* <lang><zh-CN>UValidationMessage token 组以钴蓝表示进行中、以中性深色和虚线表示错误；文字、符号和边界共同传达状态，不预设未经规范批准的红色语义色。</zh-CN><en>The UValidationMessage token group uses cobalt for in-progress and deep neutral with a dashed boundary for error; text, symbol, and boundary communicate state together without predefining an unapproved red semantic color.</en></lang> */
+  --u-comp-validation-message-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-validation-message-validating-foreground: var(--u-sys-color-action-primary);
+  --u-comp-validation-message-validating-border: var(--u-sys-color-action-primary);
+  --u-comp-validation-message-error-foreground: var(--u-sys-color-text);
+  --u-comp-validation-message-error-border: var(--u-ref-color-neutral-700);
+  --u-comp-validation-message-gap: 8px;
+  --u-comp-validation-message-inline-padding: 10px;
+  --u-comp-validation-message-block-padding: 8px;
+  --u-comp-validation-message-font-size: 14px;
+  --u-comp-validation-message-marker-width: 3px;
+  --u-comp-validation-message-marker-font-weight: 700;
+  --u-comp-validation-message-focus-ring: var(--u-sys-color-focus);
 }

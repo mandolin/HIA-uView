@@ -1,0 +1,48 @@
+/**
+ * @component UValidationMessage
+ * @selector .u-validation-message
+ * @token comp.validation-message.validating
+ * @token comp.validation-message.error
+ * @lang zh-CN UValidationMessage 的独立校验消息样式。状态通过调用方文字、符号标记和边界样式共同表达，不生成默认翻译、规则或异步行为。
+ * @lang en Independent validation-message styles for UValidationMessage. State is expressed jointly through caller text, symbol marker, and boundary styling without generating default translations, rules, or asynchronous behavior.
+ */
+
+/* <lang><zh-CN>基础消息行建立文字与标记的受限布局；组件不控制字段值、宽度或页面级错误区域。</zh-CN><en>The base message row establishes constrained text/marker layout; the component controls no field value, width, or page-level error area.</en></lang> */
+.u-validation-message {
+  align-items: flex-start;
+  background: var(--u-comp-validation-message-surface);
+  border-left: var(--u-comp-validation-message-marker-width) solid var(--u-comp-validation-message-validating-border);
+  box-sizing: border-box;
+  color: var(--u-comp-validation-message-validating-foreground);
+  display: flex;
+  font-size: var(--u-comp-validation-message-font-size);
+  gap: var(--u-comp-validation-message-gap);
+  line-height: 1.4;
+  padding: var(--u-comp-validation-message-block-padding) var(--u-comp-validation-message-inline-padding);
+}
+
+/* <lang><zh-CN>标记以固定最小宽度保留状态形状，避免单独依靠前景色区分 validating 与 error。</zh-CN><en>The marker reserves fixed minimum width for state shape, avoiding reliance on foreground color alone to distinguish validating and error.</en></lang> */
+.u-validation-message__marker {
+  font-weight: var(--u-comp-validation-message-marker-font-weight);
+  min-width: var(--u-comp-validation-message-marker-width);
+  text-align: center;
+}
+
+/* <lang><zh-CN>消息文字保持调用方原文，不以 CSS 伪元素生成组件自有运行时语言。</zh-CN><en>Message text retains caller source text and uses no CSS pseudo-element to generate component-owned runtime language.</en></lang> */
+.u-validation-message__text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* <lang><zh-CN>validating 状态使用钴蓝语义色、实线边界和省略号标记，仍由调用方消息说明实际进行中的事项。</zh-CN><en>The validating state uses cobalt semantic color, solid boundary, and ellipsis marker while caller message still explains the actual in-progress matter.</en></lang> */
+.u-validation-message--validating {
+  border-left-color: var(--u-comp-validation-message-validating-border);
+  color: var(--u-comp-validation-message-validating-foreground);
+}
+
+/* <lang><zh-CN>error 状态使用独立文字/边界 token、虚线边界和感叹号标记，不把错误信息只编码为颜色。</zh-CN><en>The error state uses independent text/boundary tokens, a dashed boundary, and exclamation marker without encoding error information in color alone.</en></lang> */
+.u-validation-message--error {
+  border-left-color: var(--u-comp-validation-message-error-border);
+  border-left-style: dashed;
+  color: var(--u-comp-validation-message-error-foreground);
+}

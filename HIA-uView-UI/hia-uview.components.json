@@ -21,6 +21,24 @@
       ]
     },
     {
+      "name": "u-field",
+      "source": "src/components/u-field/u-field.vue",
+      "contract": "docs/field.md",
+      "locales": [
+        "zh-Hans",
+        "en"
+      ]
+    },
+    {
+      "name": "u-input",
+      "source": "src/components/u-input/u-input.vue",
+      "contract": "docs/input.md",
+      "locales": [
+        "zh-Hans",
+        "en"
+      ]
+    },
+    {
       "name": "u-nav-bar",
       "source": "src/components/u-nav-bar/u-nav-bar.vue",
       "contract": "docs/nav-bar.md",
@@ -33,6 +51,15 @@
       "name": "u-stack",
       "source": "src/components/u-stack/u-stack.vue",
       "contract": "docs/stack.md",
+      "locales": [
+        "zh-Hans",
+        "en"
+      ]
+    },
+    {
+      "name": "u-validation-message",
+      "source": "src/components/u-validation-message/u-validation-message.vue",
+      "contract": "docs/validation-message.md",
       "locales": [
         "zh-Hans",
         "en"

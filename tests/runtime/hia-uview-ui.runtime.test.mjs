@@ -1,15 +1,16 @@
-import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
-import { createApp } from 'vue';
-import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
-import UView, { UButton, UCell, UNavBar, UStack, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
-
 /**
  * @module hia-uview-ui.runtime.test
  * @lang zh-CN 使用真实 Vue runtime 验证当前私有组件的局部行为与显式 plugin 边界。测试不启动 Vitest UI/API、Vite dev server、网络、Tool 或小程序导航；它不替代 UniApp compiler、真机、读屏、焦点或跨端证据。
  * @lang en Uses a real Vue runtime to verify local behavior and explicit-plugin boundaries of current private components. Tests start no Vitest UI/API, Vite dev server, network, Tool, or mini-program navigation; they do not replace UniApp compiler, device, screen-reader, focus, or cross-platform evidence.
  */
+
+// <lang><zh-CN>导入本地文件读取、Vue runtime、测试工具与私有组件入口；测试只观察本地行为，不安装路由、Tool 或平台全局能力。</zh-CN><en>Imports local file reading, Vue runtime, test tools, and private component entry; tests observe local behavior only and install no router, Tool, or platform-global capability.</en></lang>
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { createApp } from 'vue';
+import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
+import UView, { UButton, UCell, UField, UInput, UNavBar, UStack, UValidationMessage, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
 
 /**
  * @lang zh-CN 验证 UButton 保持 P10/P11 的 enabled、disabled、loading、slot 与 loadingText 契约，防止 P12 registry 扩展回退既有组件行为。
@@ -182,17 +183,23 @@ it('keeps registration and style consumption explicit', async () => {
 
   expect(application.component('u-button')).toBeUndefined();
   expect(application.component('u-cell')).toBeUndefined();
+  expect(application.component('u-field')).toBeUndefined();
+  expect(application.component('u-input')).toBeUndefined();
   expect(application.component('u-nav-bar')).toBeUndefined();
   expect(application.component('u-stack')).toBeUndefined();
+  expect(application.component('u-validation-message')).toBeUndefined();
 
-  // <lang><zh-CN>显式安装是唯一注册入口；集合长度与 manifest 的四项私有组件声明一致。</zh-CN><en>Explicit installation is the only registration entry; collection length matches the manifest four private component declarations.</en></lang>
+  // <lang><zh-CN>显式安装是唯一注册入口；集合长度与 manifest 的七项私有组件声明一致。</zh-CN><en>Explicit installation is the only registration entry; collection length matches the manifest seven private component declarations.</en></lang>
   application.use(UView);
 
   expect(application.component('u-button')).toBe(UButton);
   expect(application.component('u-cell')).toBe(UCell);
+  expect(application.component('u-field')).toBe(UField);
+  expect(application.component('u-input')).toBe(UInput);
   expect(application.component('u-nav-bar')).toBe(UNavBar);
   expect(application.component('u-stack')).toBe(UStack);
-  expect(UVIEW_COMPONENTS).toHaveLength(4);
+  expect(application.component('u-validation-message')).toBe(UValidationMessage);
+  expect(UVIEW_COMPONENTS).toHaveLength(7);
 
   // <lang><zh-CN>读取 runtime entry 本文以验证 style 仍由应用显式导入，而非由 import 或 plugin 注入。</zh-CN><en>Reads runtime-entry text to verify styles remain application-explicit rather than being injected by import or plugin.</en></lang>
   const runtimeEntry = await readFile(resolve('HIA-uView-UI/src/index.mjs'), 'utf8');
