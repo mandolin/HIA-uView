@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "profile": "mp-weixin",
+  "verified": [
+    {
+      "kind": "device",
+      "target": "tests/device",
+      "scope": "device-only"
+    }
+  ],
+  "unverified": [
+    "device",
+    "device"
+  ]
+}

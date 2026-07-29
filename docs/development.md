@@ -14,10 +14,13 @@ npm run test:runtime
 npm run docs:check
 npm run tool:doctor
 npm run tool:check
+node HIA-uView-Tool/src/cli.mjs inspect components
+node HIA-uView-Tool/src/cli.mjs inspect compatibility
+node HIA-uView-Tool/src/cli.mjs check adoption --config path/to/hia-uview.config.json
 npm run build:fixture:mp-weixin
 ```
 
-`npm run check` verifies required files, the UI/Tool package metadata, and the Documentation Sys gate. `npm test` runs the Node contracts and private Vue runtime tests; `npm run test:runtime` runs only the latter. The runtime tests use one-shot `vitest run` with jsdom and do not start a Vitest UI/API/browser/watch server. `npm run docs:check` runs the static bilingual JSDoc check, a real HIA JSDoc generation pass, and the generated-output privacy check. `npm run tool:doctor` and `npm run tool:check` execute the first read-only Tool slice. `npm run build:fixture:mp-weixin` performs the local compiler fixture only; its generated output is ignored and is not a device or release claim. Do not add a root dependency tree for HIA-uView-Biz or any other workspace. Future UI and Tool dependencies must be installed and locked inside this repository after their license and compatibility reviews.
+`npm run check` verifies required files, the UI/Tool package metadata, and the Documentation Sys gate. `npm test` runs the Node contracts and private Vue runtime tests; `npm run test:runtime` runs only the latter. The runtime tests use one-shot `vitest run` with jsdom and do not start a Vitest UI/API/browser/watch server. `npm run docs:check` runs the static bilingual JSDoc check, a real HIA JSDoc generation pass, and the generated-output privacy check. `npm run tool:doctor` and `npm run tool:check` execute the default read-only Tool checks. `inspect components`, `inspect compatibility`, and `check adoption` read only declared JSON manifests; they neither scan application source nor execute builds, scripts, packages, Git, network, or DevTools. `npm run build:fixture:mp-weixin` performs the local compiler fixture only; its generated output is ignored and is not a device or release claim. Do not add a root dependency tree for HIA-uView-Biz or any other workspace. Future UI and Tool dependencies must be installed and locked inside this repository after their license and compatibility reviews.
 
 ## Development toolchain risk
 
@@ -41,4 +44,4 @@ All new code must follow [the Documentation Sys contract](documentation.md). Doc
 
 ## Tool boundary
 
-The future HIA-uView-Tool is development-only. Its pre-release CLI, declarative configuration, write safety, output, and runtime-isolation rules are defined in the [Tool contract](tool.md). No Tool command exists yet; do not substitute project scripts, executable configuration, or a package install for the documented contract.
+HIA-uView-Tool is development-only. Its implemented pre-release CLI, declarative configuration, output, and runtime-isolation rules are defined in the [Tool contract](tool.md). `scaffold component` and every write action remain unavailable. Do not substitute project scripts, executable configuration, a package install, source scanner, or Biz helper for the documented contract. The bounded [adoption metadata contract](tool-adoption.md) is UI-only; business helpers remain in HIA-uView-Biz `main-repo`.

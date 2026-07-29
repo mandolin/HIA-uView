@@ -7,9 +7,6 @@
     "format": "text"
   },
   "componentManifests": [
-    "HIA-uView-UI/hia-uview.components.json"
-  ],
-  "compatibilityManifests": [
-    "HIA-uView-UI/hia-uview.compatibility.json"
+    "tests/fixtures/tool/invalid-contract.manifest.json"
   ]
 }

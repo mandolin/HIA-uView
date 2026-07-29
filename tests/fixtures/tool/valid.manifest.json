@@ -1,11 +1,16 @@
 {
   "version": 1,
   "profile": "mp-weixin",
+  "styleEntry": "src/style.css",
   "components": [
     {
-      "name": "FixtureButton",
+      "name": "u-fixture-button",
       "source": "src/fixture-button.vue",
-      "contract": "docs/fixture-button.md"
+      "contract": "docs/fixture-button.md",
+      "locales": [
+        "zh-Hans",
+        "en"
+      ]
     }
   ]
 }

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "profile": "app",
+  "locale": "zh-Hans",
+  "componentManifest": "tests/fixtures/tool/valid.manifest.json",
+  "styleEntries": [
+    "tests/fixtures/tool/other.css"
+  ],
+  "components": [
+    "u-missing"
+  ],
+  "api": "/forbidden"
+}

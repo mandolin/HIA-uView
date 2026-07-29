@@ -8,5 +8,11 @@
   },
   "componentManifests": [
     "tests/fixtures/tool/valid.manifest.json"
+  ],
+  "adoptionManifests": [
+    "tests/fixtures/tool/valid.adoption.json"
+  ],
+  "compatibilityManifests": [
+    "tests/fixtures/tool/valid.compatibility.json"
   ]
 }

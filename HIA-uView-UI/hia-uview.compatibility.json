@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "profile": "mp-weixin",
+  "verified": [
+    {
+      "kind": "compiler-fixture",
+      "target": "HIA-uView-UI/fixtures/mp-weixin",
+      "scope": "compiler-only"
+    },
+    {
+      "kind": "jsdom-runtime",
+      "target": "tests/runtime",
+      "scope": "jsdom-only"
+    }
+  ],
+  "unverified": [
+    "app",
+    "device",
+    "h5",
+    "keyboard",
+    "other-mini-program",
+    "screen-reader",
+    "weixin-devtools"
+  ]
+}

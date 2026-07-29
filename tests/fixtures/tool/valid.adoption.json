@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "profile": "mp-weixin",
+  "locale": "en",
+  "componentManifest": "tests/fixtures/tool/valid.manifest.json",
+  "styleEntries": [
+    "tests/fixtures/tool/src/style.css"
+  ],
+  "components": [
+    "u-fixture-button"
+  ]
+}

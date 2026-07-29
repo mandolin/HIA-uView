@@ -4,12 +4,12 @@
   "profile": "mp-weixin",
   "locale": "zh-Hans",
   "report": {
-    "format": "text"
+    "format": "json"
   },
   "componentManifests": [
-    "HIA-uView-UI/hia-uview.components.json"
+    "tests/fixtures/tool/valid.manifest.json"
   ],
   "compatibilityManifests": [
-    "HIA-uView-UI/hia-uview.compatibility.json"
+    "tests/fixtures/tool/invalid.compatibility.json"
   ]
 }

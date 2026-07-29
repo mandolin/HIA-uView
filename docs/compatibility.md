@@ -11,6 +11,8 @@ HIA-uView is being designed first for **UniApp Vue 3** applications targeting th
 | App / H5 / other mini-programs | Not validated | No compatibility or fallback behavior is promised yet. |
 | UI component APIs | Not published | A future component contract will state its platform profile explicitly. |
 
+The repository's declarative `HIA-uView-UI/hia-uview.compatibility.json` records the currently available compiler-fixture and jsdom-runtime evidence, together with explicitly unverified environments. `hia-uview-tool inspect compatibility` only reports that declaration; it neither executes the named target nor upgrades it into WeChat DevTools, device, accessibility, cross-platform, or release evidence. See the [Tool contract](tool.md).
+
 ## Platform rules
 
 - A component must not silently access device or platform APIs. Platform access needs an explicit adapter, feature detection, and a documented fallback or unsupported result.

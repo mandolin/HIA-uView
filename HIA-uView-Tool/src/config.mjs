@@ -17,7 +17,9 @@ const allowedConfigurationFields = new Set([
   'profile',
   'locale',
   'report',
-  'componentManifests'
+  'componentManifests',
+  'adoptionManifests',
+  'compatibilityManifests'
 ]);
 
 /**
@@ -44,6 +46,56 @@ export function isSafeRelativePath(candidate) {
   }
 
   return !value.split('/').some((segment) => segment === '..');
+}
+
+/**
+ * @lang zh-CN 将已通过相对路径安全判断的声明归一为正斜杠形式，供跨平台 JSON 比较和稳定报告使用；此函数不解析、访问或重写文件系统。
+ * @lang en Normalizes a declaration that has passed relative-path safety checks into slash form for cross-platform JSON comparison and stable reporting; this function neither resolves, accesses, nor rewrites the file system.
+ */
+export function normalizeRelativePath(candidate) {
+  // <lang><zh-CN>保留调用方已声明的相对语义，仅移除外围空白并将 Windows 分隔符统一为 JSON 契约使用的正斜杠。</zh-CN><en>Preserve the caller-declared relative meaning while trimming outer whitespace and converting Windows separators to the slash form used by the JSON contract.</en></lang>
+  return String(candidate).trim().replaceAll('\\', '/');
+}
+
+/**
+ * @lang zh-CN 校验一个配置中的相对 manifest 路径数组；required 为真时数组不能为空，optional 数组缺席时不产生诊断。
+ * @lang en Validates a configuration array of relative manifest paths; a required array cannot be empty, while an optional array may be absent without a diagnostic.
+ */
+function validateManifestPathArray(value, fieldName, fieldDiagnosticName, pathDiagnosticName, diagnostics, required) {
+  // <lang><zh-CN>缺失的可选数组不扩大默认输入范围；调用方仅在对应命令被请求时才将其视为项目级失败。</zh-CN><en>A missing optional array does not expand the default input scope; the caller treats it as a project-level failure only when its corresponding command is requested.</en></lang>
+  if (typeof value === 'undefined' && !required) {
+    return;
+  }
+
+  // <lang><zh-CN>路径清单必须是 JSON 数组；其他类型无法逐项实施根目录边界检查。</zh-CN><en>A path declaration must be a JSON array; other types cannot receive an item-by-item project-root boundary check.</en></lang>
+  if (!Array.isArray(value) || (required && value.length === 0)) {
+    // <lang><zh-CN>以字段专属稳定代码报告 schema 问题，避免回显可能包含敏感信息的原始配置。</zh-CN><en>Report the schema problem with a field-specific stable code rather than echoing raw configuration that could contain sensitive information.</en></lang>
+    diagnostics.push(createDiagnostic(`CONFIG_${fieldDiagnosticName}_INVALID`, `Configuration ${fieldName} must be ${required ? 'a non-empty' : 'an optional'} array.`, 'invocation'));
+    return;
+  }
+
+  // <lang><zh-CN>记录已归一化路径以拒绝同一 manifest 的分隔符或空白变体，确保之后读取范围可审计。</zh-CN><en>Record normalized paths to reject separator or whitespace variants of the same manifest, keeping later read scope auditable.</en></lang>
+  const seenPaths = new Set();
+
+  // <lang><zh-CN>逐项执行安全与重复判断；无效项不会进入读取阶段。</zh-CN><en>Apply safety and duplication checks item by item; invalid entries never reach the reading stage.</en></lang>
+  for (const manifestPath of value) {
+    // <lang><zh-CN>当前 JSON 声明的候选路径；它仅用于安全校验和稳定诊断，不会被作为 shell、URL 或可执行输入。</zh-CN><en>The current candidate path declared by JSON; it serves only safety validation and stable diagnostics and is never treated as a shell, URL, or executable input.</en></lang>
+    const normalizedPath = isSafeRelativePath(manifestPath) ? normalizeRelativePath(manifestPath) : null;
+
+    // <lang><zh-CN>拒绝绝对、越界、URI 或空路径，确保 Tool 不会借 manifest 列表读取项目根外内容。</zh-CN><en>Reject absolute, escaping, URI, or empty paths so the Tool cannot read outside the project root through a manifest list.</en></lang>
+    if (!normalizedPath) {
+      diagnostics.push(createDiagnostic(`CONFIG_${pathDiagnosticName}_PATH_INVALID`, `Every ${fieldName} path must stay inside the selected project root.`, 'invocation'));
+      continue;
+    }
+
+    // <lang><zh-CN>同一规范路径只能声明一次；重复会使报告顺序和错误归属产生歧义。</zh-CN><en>Each normalized path may be declared only once; duplicates would make report order and error ownership ambiguous.</en></lang>
+    if (seenPaths.has(normalizedPath)) {
+      diagnostics.push(createDiagnostic(`CONFIG_${pathDiagnosticName}_PATH_DUPLICATE`, `${fieldName} path is declared more than once: ${normalizedPath}.`, 'invocation'));
+    }
+
+    // <lang><zh-CN>无论是否重复都记录规范路径，以便后续同值继续获得确定性重复诊断。</zh-CN><en>Record the normalized path whether or not it was duplicated so later equivalent values receive deterministic duplicate diagnostics.</en></lang>
+    seenPaths.add(normalizedPath);
+  }
 }
 
 /**
@@ -83,24 +135,14 @@ export function validateConfiguration(configuration) {
     diagnostics.push(createDiagnostic('CONFIG_REPORT_INVALID', 'Configuration report.format must be "text" or "json".', 'invocation'));
   }
 
-  if (!Array.isArray(configuration.componentManifests)) {
-    diagnostics.push(createDiagnostic('CONFIG_MANIFESTS_INVALID', 'Configuration componentManifests must be an array.', 'invocation'));
-  } else {
-    const seenPaths = new Set();
+  // <lang><zh-CN>组件 manifest 是每次 Tool 调用的最小可信输入；缺失或空清单不能安全地产生 UI 报告。</zh-CN><en>Component manifests are the minimum trusted input for every Tool invocation; a missing or empty list cannot safely produce a UI report.</en></lang>
+  validateManifestPathArray(configuration.componentManifests, 'componentManifests', 'MANIFESTS', 'MANIFEST', diagnostics, true);
 
-    for (const manifestPath of configuration.componentManifests) {
-      if (!isSafeRelativePath(manifestPath)) {
-        diagnostics.push(createDiagnostic('CONFIG_MANIFEST_PATH_INVALID', 'Every component manifest path must stay inside the selected project root.', 'invocation'));
-        continue;
-      }
+  // <lang><zh-CN>adoption manifest 仅在 adoption 检查被请求时需要存在；此处仍预先拒绝其不安全声明。</zh-CN><en>Adoption manifests need exist only when adoption checking is requested; this stage still rejects their unsafe declarations in advance.</en></lang>
+  validateManifestPathArray(configuration.adoptionManifests, 'adoptionManifests', 'ADOPTION_MANIFESTS', 'ADOPTION_MANIFEST', diagnostics, false);
 
-      if (seenPaths.has(manifestPath)) {
-        diagnostics.push(createDiagnostic('CONFIG_MANIFEST_PATH_DUPLICATE', `Component manifest path is declared more than once: ${manifestPath}.`, 'invocation'));
-      }
-
-      seenPaths.add(manifestPath);
-    }
-  }
+  // <lang><zh-CN>compatibility manifest 同样是可选输入；预校验保证 inspect 不会因一份越界声明扩大读取范围。</zh-CN><en>Compatibility manifests are likewise optional inputs; prevalidation ensures inspect cannot expand read scope through an escaping declaration.</en></lang>
+  validateManifestPathArray(configuration.compatibilityManifests, 'compatibilityManifests', 'COMPATIBILITY_MANIFESTS', 'COMPATIBILITY_MANIFEST', diagnostics, false);
 
   return diagnostics;
 }
@@ -132,54 +174,4 @@ export async function loadConfiguration(rootDirectory, configurationPath) {
   }
 
   return { configuration, diagnostics: validateConfiguration(configuration) };
-}
-
-/**
- * @lang zh-CN 只读地检查一个已声明的组件 manifest 是否满足首轮版本、平台和最小组件记录要求。
- * @lang en Read-only checks whether one declared component manifest meets the first-slice version, platform, and minimum component-record requirements.
- */
-export async function validateComponentManifest(rootDirectory, manifestPath) {
-  let content;
-
-  try {
-    content = await readFile(resolve(rootDirectory, manifestPath), 'utf8');
-  } catch (error) {
-    const code = error && error.code === 'ENOENT' ? 'MANIFEST_NOT_FOUND' : 'MANIFEST_UNREADABLE';
-    return [createDiagnostic(code, `Declared component manifest is unavailable: ${manifestPath}.`)];
-  }
-
-  let manifest;
-
-  try {
-    manifest = JSON.parse(content);
-  } catch {
-    return [createDiagnostic('MANIFEST_INVALID_JSON', `Declared component manifest is not valid JSON: ${manifestPath}.`)];
-  }
-
-  if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)) {
-    return [createDiagnostic('MANIFEST_SCHEMA_INVALID', `Declared component manifest must be a JSON object: ${manifestPath}.`)];
-  }
-
-  const diagnostics = [];
-
-  if (manifest.version !== 1) {
-    diagnostics.push(createDiagnostic('MANIFEST_VERSION_UNSUPPORTED', `Component manifest version must be 1: ${manifestPath}.`));
-  }
-
-  if (manifest.profile !== 'mp-weixin') {
-    diagnostics.push(createDiagnostic('MANIFEST_PROFILE_UNSUPPORTED', `Component manifest profile must be "mp-weixin": ${manifestPath}.`));
-  }
-
-  if (!Array.isArray(manifest.components) || manifest.components.length === 0) {
-    diagnostics.push(createDiagnostic('MANIFEST_COMPONENTS_INVALID', `Component manifest must declare at least one component: ${manifestPath}.`));
-  } else {
-    for (const component of manifest.components) {
-      if (!component || typeof component.name !== 'string' || !component.name.trim() || !isSafeRelativePath(component.source) || !isSafeRelativePath(component.contract)) {
-        diagnostics.push(createDiagnostic('MANIFEST_COMPONENT_INVALID', `Component manifest has an invalid component record: ${manifestPath}.`));
-        break;
-      }
-    }
-  }
-
-  return diagnostics;
 }

@@ -20,7 +20,9 @@
     "test:runtime": "vitest run",
     "theme:check": "node scripts/check-theme.mjs",
     "tool:check": "node HIA-uView-Tool/src/cli.mjs check",
-    "tool:doctor": "node HIA-uView-Tool/src/cli.mjs doctor"
+    "tool:doctor": "node HIA-uView-Tool/src/cli.mjs doctor",
+    "tool:inspect:components": "node HIA-uView-Tool/src/cli.mjs inspect components",
+    "tool:inspect:compatibility": "node HIA-uView-Tool/src/cli.mjs inspect compatibility"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,7 @@
 {
   "version": 1,
   "profile": "mp-weixin",
+  "styleEntry": "src/style.css",
   "components": [
     {
       "name": "u-button",

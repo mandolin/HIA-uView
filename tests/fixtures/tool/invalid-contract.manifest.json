@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "profile": "mp-weixin",
+  "styleEntry": "../escape.css",
+  "components": [
+    {
+      "name": "u-zeta",
+      "source": "src/zeta.vue",
+      "contract": "docs/zeta.md",
+      "locales": ["en"]
+    },
+    {
+      "name": "u-alpha",
+      "source": "../outside.vue",
+      "contract": "docs/alpha.md",
+      "locales": ["zh-Hans", "zh-Hans"]
+    },
+    {
+      "name": "u-alpha",
+      "source": "src/alpha.vue",
+      "contract": "docs/alpha.md",
+      "locales": ["en"]
+    }
+  ]
+}
