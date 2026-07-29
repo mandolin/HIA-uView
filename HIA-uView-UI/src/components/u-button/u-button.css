@@ -1,0 +1,95 @@
+/**
+ * @component UButton
+ * @selector .u-button
+ * @token comp.button.primary
+ * @token comp.button.secondary
+ * @token comp.button.text
+ * @token comp.button.min-height
+ * @lang zh-CN UButton 的受限首轮样式，只消费已声明的组件 token，并以尺寸、边框、文字和原生 loading 指示器共同表达状态。
+ * @lang en Constrained first-slice styles for UButton that consume only declared component tokens and express state through size, border, text, and the native loading indicator together.
+ */
+.u-button {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: var(--u-comp-button-radius);
+  box-sizing: border-box;
+  display: inline-flex;
+  font-size: var(--u-comp-button-font-size-md);
+  font-weight: 600;
+  gap: var(--u-comp-button-gap);
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: var(--u-comp-button-min-height);
+  padding: var(--u-comp-button-block-padding) var(--u-comp-button-inline-padding);
+  text-align: center;
+  text-decoration: none;
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+
+.u-button::after {
+  border: 0;
+}
+
+.u-button--block {
+  display: flex;
+  width: 100%;
+}
+
+.u-button--primary {
+  background: var(--u-comp-button-primary-background);
+  color: var(--u-comp-button-primary-foreground);
+}
+
+.u-button--secondary {
+  background: var(--u-comp-button-secondary-background);
+  border-color: var(--u-comp-button-secondary-border);
+  color: var(--u-comp-button-secondary-foreground);
+}
+
+.u-button--text {
+  background: var(--u-comp-button-text-background);
+  color: var(--u-comp-button-text-foreground);
+}
+
+.u-button--sm {
+  font-size: var(--u-comp-button-font-size-sm);
+  min-height: var(--u-comp-button-min-height-sm);
+}
+
+.u-button--lg {
+  font-size: var(--u-comp-button-font-size-lg);
+  min-height: var(--u-comp-button-min-height-lg);
+}
+
+.u-button--primary:active:not(.u-button--disabled):not(.u-button--loading),
+.u-button--secondary:active:not(.u-button--disabled):not(.u-button--loading),
+.u-button--text:active:not(.u-button--disabled):not(.u-button--loading) {
+  transform: var(--u-comp-button-pressed-transform);
+}
+
+.u-button--disabled {
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+.u-button--primary.u-button--disabled {
+  background: var(--u-comp-button-primary-disabled-background);
+  color: var(--u-comp-button-primary-disabled-foreground);
+}
+
+.u-button--secondary.u-button--disabled {
+  background: var(--u-comp-button-secondary-disabled-background);
+  border-color: var(--u-comp-button-secondary-disabled-border);
+  color: var(--u-comp-button-secondary-disabled-foreground);
+}
+
+.u-button--text.u-button--disabled {
+  color: var(--u-comp-button-text-disabled-foreground);
+}
+
+.u-button--loading {
+  border-style: dashed;
+  cursor: progress;
+  letter-spacing: 0.01em;
+}

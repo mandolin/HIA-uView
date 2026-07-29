@@ -4,7 +4,7 @@ HIA-uView is a UniApp UI framework focused first on robust mini-program developm
 
 | Workspace | Purpose | npm package status |
 | --- | --- | --- |
-| `HIA-uView-UI/` | UI framework, components, composables and platform adapters | Initial `HiaButton`, theme tokens, locale resolver, manifest, and `mp-weixin` compile fixture; private and not published |
+| `HIA-uView-UI/` | UI framework, components, composables and platform adapters | Initial `UButton`, theme tokens, locale resolver, manifest, and `mp-weixin` compile fixture; private and not published |
 | `HIA-uView-Tool/` | Development and verification tools that support HIA-uView-UI | Initial read-only `doctor` and `check` CLI; private and not published |
 
 ## Development
@@ -19,7 +19,7 @@ npm run tool:check
 npm run build:fixture:mp-weixin
 ```
 
-`check` validates the workspace and package-contract baseline. `npm test` uses the Node.js built-in test runner to verify component, Tool, theme, and documentation contracts. Runtime source and component APIs remain private and unpublished; the active compatibility profile is documented in [compatibility](docs/compatibility.md). The first independently implemented component is [HiaButton](docs/button.md), with a compile-only `mp-weixin` fixture.
+`check` validates the workspace and package-contract baseline. `npm test` uses the Node.js built-in test runner to verify component, Tool, theme, and documentation contracts. Runtime source and component APIs remain private and unpublished; the active compatibility profile is documented in [compatibility](docs/compatibility.md). The first independently implemented component is [UButton](docs/button.md), with a compile-only `mp-weixin` fixture.
 
 See [development notes](docs/development.md), the [public architecture overview](docs/architecture.md), and [Documentation Sys usage](docs/documentation.md).
 The theme, style, accessibility, and localization boundary is documented in the [design-system contract](docs/design-system.md).

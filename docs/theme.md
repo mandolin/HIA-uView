@@ -6,12 +6,12 @@ The initial HIA-uView theme is a light theme. It uses cobalt blue as the primary
 
 | Token | Value | Role |
 | --- | --- | --- |
-| `--hia-ref-color-brand-cobalt` | `#0047AB` | Brand, structure, primary action, selected state, and focus. |
-| `--hia-ref-color-brand-cyan` | `#00A8D3` | Limited emphasis, data highlighting, progress, and secondary attention. |
-| `--hia-ref-color-neutral-0` | `#FFFFFF` | Default light surface and primary-action foreground. |
-| `--hia-ref-color-neutral-950` | `#001B2E` | Primary text and accent foreground. |
+| `--u-ref-color-brand-cobalt` | `#0047AB` | Brand, structure, primary action, selected state, and focus. |
+| `--u-ref-color-brand-cyan` | `#00A8D3` | Limited emphasis, data highlighting, progress, and secondary attention. |
+| `--u-ref-color-neutral-0` | `#FFFFFF` | Default light surface and primary-action foreground. |
+| `--u-ref-color-neutral-950` | `#001B2E` | Primary text and accent foreground. |
 
-Components consume semantic tokens such as `--hia-sys-color-action-primary` and `--hia-sys-color-accent`; they must not scatter foundation color values in component rules.
+Components consume semantic tokens such as `--u-sys-color-action-primary` and `--u-sys-color-accent`; they must not scatter foundation color values in component rules.
 
 ## Readability rules
 

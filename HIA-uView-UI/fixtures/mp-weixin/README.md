@@ -1,8 +1,8 @@
 # mp-weixin 编译 fixture / mp-weixin compilation fixture
 
-该目录是 HIA-uView 首轮官方 UniApp CLI 编译证据的独立、最小应用。它直接导入本仓独立实现的 `HiaButton`，不复制 DCloud、uView 或其他上游工程的页面、配置、样式、资源或业务代码。
+该目录是 HIA-uView 首轮官方 UniApp CLI 编译证据的独立、最小应用。它直接导入本仓独立实现的 `UButton`，不复制 DCloud、uView 或其他上游工程的页面、配置、样式、资源或业务代码。
 
-This directory is an independent, minimal application for first-slice official UniApp CLI compilation evidence in HIA-uView. It directly imports this repository's independent `HiaButton` implementation and copies no pages, configuration, styles, assets, or business code from DCloud, uView, or any other upstream project.
+This directory is an independent, minimal application for first-slice official UniApp CLI compilation evidence in HIA-uView. It directly imports this repository's independent `UButton` implementation and copies no pages, configuration, styles, assets, or business code from DCloud, uView, or any other upstream project.
 
 运行 `npm run build:fixture:mp-weixin` 仅执行本地编译；不会启动开发服务器。生成目录为 `unpackage/`，已被 Git 忽略，且不构成真机、读屏、焦点、跨端或发布支持证据。
 

@@ -3,8 +3,8 @@
   "profile": "mp-weixin",
   "components": [
     {
-      "name": "HiaButton",
-      "source": "src/components/hia-button/hia-button.vue",
+      "name": "u-button",
+      "source": "src/components/u-button/u-button.vue",
       "contract": "docs/button.md",
       "locales": [
         "zh-Hans",

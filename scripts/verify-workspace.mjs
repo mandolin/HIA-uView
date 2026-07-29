@@ -15,7 +15,7 @@ const requiredFiles = [
   'HIA-uView-UI/src/theme/hia-light.css',
   'HIA-uView-UI/src/index.mjs',
   'HIA-uView-UI/src/style.css',
-  'HIA-uView-UI/src/components/hia-button/hia-button.vue',
+  'HIA-uView-UI/src/components/u-button/u-button.vue',
   'HIA-uView-Tool/package.json',
   'HIA-uView-Tool/src/cli.mjs',
   'hia-uview.config.json',

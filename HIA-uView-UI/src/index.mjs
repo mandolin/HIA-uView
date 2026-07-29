@@ -1,4 +1,4 @@
-import HiaButton from './components/hia-button/hia-button.vue';
+import UButton from './components/u-button/u-button.vue';
 
 /**
  * @module hia-uview-ui
@@ -10,20 +10,20 @@ import HiaButton from './components/hia-button/hia-button.vue';
  * @lang zh-CN 首轮可通过显式 plugin 注册的稳定组件名称与实现映射；manifest 仍只服务开发期声明校验，不承担 runtime registry 职责。
  * @lang en Stable component-name and implementation mapping registerable through the explicit first-slice plugin; the manifest remains for development-time declaration validation and is not a runtime registry.
  */
-export const HIA_UVIEW_COMPONENTS = Object.freeze([
-  Object.freeze({ name: 'HiaButton', component: HiaButton })
+export const UVIEW_COMPONENTS = Object.freeze([
+  Object.freeze({ name: 'u-button', component: UButton })
 ]);
 
 /**
  * @lang zh-CN 将首轮组件显式注册到一个 Vue application；调用者控制何时调用 `app.use`，本函数不导入样式、不修改全局状态。
  * @lang en Explicitly registers first-slice components on one Vue application; callers control when `app.use` is called, while this function imports no styles and changes no global state.
  */
-export function installHiaUView(application) {
+export function installUView(application) {
   if (!application || typeof application.component !== 'function') {
-    throw new TypeError('HiaUView install requires a Vue application with component(name, implementation).');
+    throw new TypeError('UView install requires a Vue application with component(name, implementation).');
   }
 
-  for (const { name, component } of HIA_UVIEW_COMPONENTS) {
+  for (const { name, component } of UVIEW_COMPONENTS) {
     application.component(name, component);
   }
 
@@ -31,12 +31,12 @@ export function installHiaUView(application) {
 }
 
 /**
- * @lang zh-CN 供 `app.use(HiaUView)` 显式调用的私有首轮 Vue plugin；不会自动安装或加载 theme/style entry。
- * @lang en Private first-slice Vue plugin for explicit `app.use(HiaUView)` calls; does not install automatically or load the theme/style entry.
+ * @lang zh-CN 供 `app.use(UView)` 显式调用的私有首轮 Vue plugin；不会自动安装或加载 theme/style entry。
+ * @lang en Private first-slice Vue plugin for explicit `app.use(UView)` calls; does not install automatically or load the theme/style entry.
  */
-export const HiaUView = Object.freeze({
-  install: installHiaUView
+export const UView = Object.freeze({
+  install: installUView
 });
 
-export { HiaButton };
-export default HiaUView;
+export { UButton };
+export default UView;

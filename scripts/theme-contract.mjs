@@ -18,36 +18,36 @@ const lightThemePath = 'HIA-uView-UI/src/theme/hia-light.css';
  * @lang en HIA foundational colors and values that the current default theme must declare explicitly.
  */
 const requiredReferenceTokens = new Map([
-  ['--hia-ref-color-brand-cobalt', '#0047ab'],
-  ['--hia-ref-color-brand-cyan', '#00a8d3'],
-  ['--hia-ref-color-neutral-0', '#ffffff'],
-  ['--hia-ref-color-neutral-950', '#001b2e']
+  ['--u-ref-color-brand-cobalt', '#0047ab'],
+  ['--u-ref-color-brand-cyan', '#00a8d3'],
+  ['--u-ref-color-neutral-0', '#ffffff'],
+  ['--u-ref-color-neutral-950', '#001b2e']
 ]);
 
 /**
- * @lang zh-CN HiaButton 首轮必须由默认主题显式定义的组件 token，确保实现不以未记录的硬编码值替代公开主题边界。
- * @lang en HiaButton component tokens that the default theme must explicitly define in the first slice, ensuring implementation does not replace the public theme boundary with undocumented hard-coded values.
+ * @lang zh-CN UButton 首轮必须由默认主题显式定义的组件 token，确保实现不以未记录的硬编码值替代公开主题边界。
+ * @lang en UButton component tokens that the default theme must explicitly define in the first slice, ensuring implementation does not replace the public theme boundary with undocumented hard-coded values.
  */
 const requiredButtonTokens = [
-  '--hia-comp-button-primary-background',
-  '--hia-comp-button-primary-foreground',
-  '--hia-comp-button-primary-disabled-background',
-  '--hia-comp-button-primary-disabled-foreground',
-  '--hia-comp-button-secondary-background',
-  '--hia-comp-button-secondary-border',
-  '--hia-comp-button-secondary-foreground',
-  '--hia-comp-button-secondary-disabled-background',
-  '--hia-comp-button-secondary-disabled-border',
-  '--hia-comp-button-secondary-disabled-foreground',
-  '--hia-comp-button-text-background',
-  '--hia-comp-button-text-foreground',
-  '--hia-comp-button-text-disabled-foreground',
-  '--hia-comp-button-min-height: 44px',
-  '--hia-comp-button-min-height-sm: 40px',
-  '--hia-comp-button-min-height-lg: 48px',
-  '--hia-comp-button-inline-padding',
-  '--hia-comp-button-gap',
-  '--hia-comp-button-focus-ring'
+  '--u-comp-button-primary-background',
+  '--u-comp-button-primary-foreground',
+  '--u-comp-button-primary-disabled-background',
+  '--u-comp-button-primary-disabled-foreground',
+  '--u-comp-button-secondary-background',
+  '--u-comp-button-secondary-border',
+  '--u-comp-button-secondary-foreground',
+  '--u-comp-button-secondary-disabled-background',
+  '--u-comp-button-secondary-disabled-border',
+  '--u-comp-button-secondary-disabled-foreground',
+  '--u-comp-button-text-background',
+  '--u-comp-button-text-foreground',
+  '--u-comp-button-text-disabled-foreground',
+  '--u-comp-button-min-height: 44px',
+  '--u-comp-button-min-height-sm: 40px',
+  '--u-comp-button-min-height-lg: 48px',
+  '--u-comp-button-inline-padding',
+  '--u-comp-button-gap',
+  '--u-comp-button-focus-ring'
 ];
 
 /**

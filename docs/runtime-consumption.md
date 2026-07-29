@@ -11,19 +11,19 @@ Use a named component import when an application registers only the components i
 应用只注册所需组件时，使用命名组件导入。
 
 ```js
-import { HiaButton } from '@hia-uview/ui';
+import { UButton } from '@hia-uview/ui';
 ```
 
 ## Explicit plugin / 显式 plugin
 
-Use `app.use(HiaUView)` only when deliberate registration of every currently exported HIA component is appropriate. Importing the module alone has no global registration or style side effect.
+Use `app.use(UView)` only when deliberate registration of every currently exported HIA component is appropriate. Importing the module alone has no global registration or style side effect.
 
-仅当适合有意注册当前所有已导出 HIA 组件时才使用 `app.use(HiaUView)`。单独 import module 不会产生全局注册或样式副作用。
+仅当适合有意注册当前所有已导出 HIA 组件时才使用 `app.use(UView)`。单独 import module 不会产生全局注册或样式副作用。
 
 ```js
-import HiaUView from '@hia-uview/ui';
+import UView from '@hia-uview/ui';
 
-app.use(HiaUView);
+app.use(UView);
 ```
 
 ## Explicit style entry / 显式样式入口

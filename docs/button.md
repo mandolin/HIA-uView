@@ -1,11 +1,11 @@
-# HiaButton component contract / HiaButton 组件契约
+# UButton component contract / UButton 组件契约
 
-> Status / 状态：The first independent implementation and `mp-weixin` compile fixture exist. `HiaButton` remains private and has no published package export, device, or assistive-technology support claim.
-> 首个独立实现及 `mp-weixin` 编译 fixture 已存在。`HiaButton` 仍为私有实现，尚无已发布的 npm 包导出、真机或辅助技术支持声明。
+> Status / 状态：The first independent implementation and `mp-weixin` compile fixture exist. `UButton` remains private and has no published package export, device, or assistive-technology support claim.
+> 首个独立实现及 `mp-weixin` 编译 fixture 已存在。`UButton` 仍为私有实现，尚无已发布的 npm 包导出、真机或辅助技术支持声明。
 
-`HiaButton` is the first proposed generic action component for the initial UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. It represents a local user action; it is not a navigation, identity, payment, form-submission, or business-capability wrapper.
+`UButton` is the first proposed generic action component for the initial UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. It represents a local user action; it is not a navigation, identity, payment, form-submission, or business-capability wrapper.
 
-`HiaButton` 是首个面向 UniApp Vue 3 与微信小程序（`mp-weixin`）初始兼容性配置的通用操作组件候选。它表示本地用户操作；不是导航、身份、支付、表单提交或业务能力的封装。
+`UButton` 是首个面向 UniApp Vue 3 与微信小程序（`mp-weixin`）初始兼容性配置的通用操作组件候选。它表示本地用户操作；不是导航、身份、支付、表单提交或业务能力的封装。
 
 ## Public API / 公开 API
 
@@ -23,9 +23,9 @@ The default slot is a text-label slot. When present, it supplies the visible lab
 
 默认插槽是文字标签插槽。存在时，它替代 `label` 提供可见标签，且必须解析为可见文字。首个契约不支持纯图标按钮或任意布局的按钮内容。
 
-`HiaButton` emits only `click(event)`. A normal enabled, non-loading activation emits one `click` with the platform event. Disabled and loading states emit none. The component does not add debounce, throttle, navigation, backend, or business idempotency behavior; callers own those policies.
+`UButton` emits only `click(event)`. A normal enabled, non-loading activation emits one `click` with the platform event. Disabled and loading states emit none. The component does not add debounce, throttle, navigation, backend, or business idempotency behavior; callers own those policies.
 
-`HiaButton` 仅触发 `click(event)`。正常的、启用且非加载状态的激活恰好触发一次并携带平台事件；禁用和加载状态不触发事件。组件不增加防抖、节流、导航、后端或业务幂等逻辑；这些策略由调用方负责。
+`UButton` 仅触发 `click(event)`。正常的、启用且非加载状态的激活恰好触发一次并携带平台事件；禁用和加载状态不触发事件。组件不增加防抖、节流、导航、后端或业务幂等逻辑；这些策略由调用方负责。
 
 ## States and interaction / 状态与交互
 
@@ -42,19 +42,19 @@ The component does not expose raw colors, gradients, arbitrary inline styles, na
 
 ## Theme and customization / 主题与定制
 
-The component root namespace is `hia-button`. Implementations consume component tokens rather than hard-coded colors. The first token family is:
+The component root namespace is `u-button`. Implementations consume component tokens rather than hard-coded colors. The first token family is:
 
-组件根命名空间为 `hia-button`。实现必须消费组件 token，而非硬编码颜色。首个 token 族为：
+组件根命名空间为 `u-button`。实现必须消费组件 token，而非硬编码颜色。首个 token 族为：
 
 | Token family / Token 族 | Purpose / 用途 |
 | --- | --- |
-| `--hia-comp-button-primary-*` | Primary background, foreground, pressed, and disabled treatments. / 主操作的背景、前景、按下和禁用样式。 |
-| `--hia-comp-button-secondary-*` | Secondary semantic action treatments. / 次要语义操作样式。 |
-| `--hia-comp-button-text-*` | Text-action treatments. / 文字操作样式。 |
-| `--hia-comp-button-min-height` | Minimum touch-target dimension or documented equivalent spacing. / 最小触控目标尺寸或等效的已文档化间距。 |
-| `--hia-comp-button-inline-padding` | Inline label spacing. / 标签的行内间距。 |
-| `--hia-comp-button-gap` | Label and progress-indicator spacing. / 标签与进度指示器间距。 |
-| `--hia-comp-button-focus-ring` | Future focus treatment where the platform exposes a verifiable focus state. / 平台暴露可验证焦点状态时使用的后续焦点样式。 |
+| `--u-comp-button-primary-*` | Primary background, foreground, pressed, and disabled treatments. / 主操作的背景、前景、按下和禁用样式。 |
+| `--u-comp-button-secondary-*` | Secondary semantic action treatments. / 次要语义操作样式。 |
+| `--u-comp-button-text-*` | Text-action treatments. / 文字操作样式。 |
+| `--u-comp-button-min-height` | Minimum touch-target dimension or documented equivalent spacing. / 最小触控目标尺寸或等效的已文档化间距。 |
+| `--u-comp-button-inline-padding` | Inline label spacing. / 标签的行内间距。 |
+| `--u-comp-button-gap` | Label and progress-indicator spacing. / 标签与进度指示器间距。 |
+| `--u-comp-button-focus-ring` | Future focus treatment where the platform exposes a verifiable focus state. / 平台暴露可验证焦点状态时使用的后续焦点样式。 |
 
 The primary treatment maps to the documented HIA cobalt semantic action color. A solid cyan treatment must keep the documented dark foreground; it must not use white by default. The first concrete values are implemented in the HIA light theme: primary is cobalt/white, secondary is white with cobalt border and deep-navy foreground, and text is transparent with cobalt foreground. Disabled variants use neutral-50 surfaces or a secondary-text foreground plus a dashed border; loading keeps a visible localized label plus the native loading indicator and dashed border. The documented sizes have minimum heights of 40px (`sm`), 44px (`md`), and 48px (`lg`); `md` is the baseline touch target.
 

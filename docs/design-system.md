@@ -12,13 +12,13 @@ Tokens use three layers:
 | `sys` | Semantic intent such as surface, text, action, status, focus, layer, and typography | Components and application layouts should use these tokens. |
 | `comp` | A component-specific semantic token | Only the owning component and documented theme extensions may use it. |
 
-The CSS-variable prefixes are `--hia-ref-*`, `--hia-sys-*`, and `--hia-comp-<component>-*`. Components must not rely on hard-coded brand values when a semantic token applies. The initial HIA light-theme color tokens and their validation boundary are documented in [theme](theme.md).
+The CSS-variable prefixes are `--u-ref-*`, `--u-sys-*`, and `--u-comp-<component>-*`. Components must not rely on hard-coded brand values when a semantic token applies. The initial HIA light-theme color tokens and their validation boundary are documented in [theme](theme.md).
 
 ## Theme and style boundaries
 
 - A theme changes token values, not component structure, business copy, or application logic.
 - The initial contract covers the HIA light theme only. Dark and high-contrast themes require their own profile and validation evidence.
-- A component root uses a documented `hia-<component>` namespace. Consumers customize through documented tokens, props, and slots rather than deep selectors.
+- A component root uses a documented `u-<component>` namespace. Consumers customize through documented tokens, props, and slots rather than deep selectors.
 - Global styles are limited to documented token definitions and base rules. Components must not apply hidden resets or make assumptions about application-page CSS.
 - Overlay, dialog, toast, and similar stacking behavior must use semantic layer tokens rather than arbitrary `z-index` values.
 

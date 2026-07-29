@@ -1,5 +1,5 @@
 /**
- * @component HiaLightTheme
+ * @component UViewLightTheme
  * @selector :root
  * @token ref.color.brand.cobalt
  * @token ref.color.brand.cyan
@@ -8,54 +8,54 @@
  * @token comp.button.primary
  * @token comp.button.secondary
  * @token comp.button.text
- * @cssprop --hia-ref-color-brand-cobalt
- * @cssprop --hia-ref-color-brand-cyan
- * @cssprop --hia-sys-color-action-primary
- * @cssprop --hia-sys-color-accent
- * @lang zh-CN HIA-uView 默认浅色主题的基础、语义与 HiaButton 组件 token。钴蓝承担主操作和结构角色；清透青只承担强调与数据高亮角色，实底必须配深色前景。
- * @lang en Foundational, semantic, and HiaButton component tokens for the HIA-uView default light theme. Cobalt blue owns primary action and structure; clear cyan is limited to emphasis and data highlighting and requires a dark foreground when solid.
+ * @cssprop --u-ref-color-brand-cobalt
+ * @cssprop --u-ref-color-brand-cyan
+ * @cssprop --u-sys-color-action-primary
+ * @cssprop --u-sys-color-accent
+ * @lang zh-CN HIA-uView 默认浅色主题的基础、语义与 UButton 组件 token。钴蓝承担主操作和结构角色；清透青只承担强调与数据高亮角色，实底必须配深色前景。
+ * @lang en Foundational, semantic, and UButton component tokens for the HIA-uView default light theme. Cobalt blue owns primary action and structure; clear cyan is limited to emphasis and data highlighting and requires a dark foreground when solid.
  */
 :root {
-  --hia-ref-color-brand-cobalt: #0047ab;
-  --hia-ref-color-brand-cyan: #00a8d3;
-  --hia-ref-color-neutral-0: #ffffff;
-  --hia-ref-color-neutral-50: #f7f9fc;
-  --hia-ref-color-neutral-700: #27364a;
-  --hia-ref-color-neutral-950: #001b2e;
+  --u-ref-color-brand-cobalt: #0047ab;
+  --u-ref-color-brand-cyan: #00a8d3;
+  --u-ref-color-neutral-0: #ffffff;
+  --u-ref-color-neutral-50: #f7f9fc;
+  --u-ref-color-neutral-700: #27364a;
+  --u-ref-color-neutral-950: #001b2e;
 
-  --hia-sys-color-surface: var(--hia-ref-color-neutral-0);
-  --hia-sys-color-surface-subtle: var(--hia-ref-color-neutral-50);
-  --hia-sys-color-text: var(--hia-ref-color-neutral-950);
-  --hia-sys-color-text-secondary: var(--hia-ref-color-neutral-700);
-  --hia-sys-color-action-primary: var(--hia-ref-color-brand-cobalt);
-  --hia-sys-color-on-action-primary: var(--hia-ref-color-neutral-0);
-  --hia-sys-color-accent: var(--hia-ref-color-brand-cyan);
-  --hia-sys-color-on-accent: var(--hia-ref-color-neutral-950);
-  --hia-sys-color-focus: var(--hia-ref-color-brand-cobalt);
+  --u-sys-color-surface: var(--u-ref-color-neutral-0);
+  --u-sys-color-surface-subtle: var(--u-ref-color-neutral-50);
+  --u-sys-color-text: var(--u-ref-color-neutral-950);
+  --u-sys-color-text-secondary: var(--u-ref-color-neutral-700);
+  --u-sys-color-action-primary: var(--u-ref-color-brand-cobalt);
+  --u-sys-color-on-action-primary: var(--u-ref-color-neutral-0);
+  --u-sys-color-accent: var(--u-ref-color-brand-cyan);
+  --u-sys-color-on-accent: var(--u-ref-color-neutral-950);
+  --u-sys-color-focus: var(--u-ref-color-brand-cobalt);
 
-  --hia-comp-button-primary-background: var(--hia-sys-color-action-primary);
-  --hia-comp-button-primary-foreground: var(--hia-sys-color-on-action-primary);
-  --hia-comp-button-primary-disabled-background: var(--hia-ref-color-neutral-50);
-  --hia-comp-button-primary-disabled-foreground: var(--hia-sys-color-text-secondary);
-  --hia-comp-button-secondary-background: var(--hia-sys-color-surface);
-  --hia-comp-button-secondary-border: var(--hia-sys-color-action-primary);
-  --hia-comp-button-secondary-foreground: var(--hia-sys-color-text);
-  --hia-comp-button-secondary-disabled-background: var(--hia-ref-color-neutral-50);
-  --hia-comp-button-secondary-disabled-border: var(--hia-ref-color-neutral-700);
-  --hia-comp-button-secondary-disabled-foreground: var(--hia-sys-color-text-secondary);
-  --hia-comp-button-text-background: transparent;
-  --hia-comp-button-text-foreground: var(--hia-sys-color-action-primary);
-  --hia-comp-button-text-disabled-foreground: var(--hia-sys-color-text-secondary);
-  --hia-comp-button-min-height: 44px;
-  --hia-comp-button-min-height-sm: 40px;
-  --hia-comp-button-min-height-lg: 48px;
-  --hia-comp-button-inline-padding: 16px;
-  --hia-comp-button-block-padding: 10px;
-  --hia-comp-button-gap: 8px;
-  --hia-comp-button-radius: 8px;
-  --hia-comp-button-font-size-sm: 14px;
-  --hia-comp-button-font-size-md: 16px;
-  --hia-comp-button-font-size-lg: 18px;
-  --hia-comp-button-pressed-transform: translateY(1px) scale(0.99);
-  --hia-comp-button-focus-ring: var(--hia-sys-color-focus);
+  --u-comp-button-primary-background: var(--u-sys-color-action-primary);
+  --u-comp-button-primary-foreground: var(--u-sys-color-on-action-primary);
+  --u-comp-button-primary-disabled-background: var(--u-ref-color-neutral-50);
+  --u-comp-button-primary-disabled-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-button-secondary-background: var(--u-sys-color-surface);
+  --u-comp-button-secondary-border: var(--u-sys-color-action-primary);
+  --u-comp-button-secondary-foreground: var(--u-sys-color-text);
+  --u-comp-button-secondary-disabled-background: var(--u-ref-color-neutral-50);
+  --u-comp-button-secondary-disabled-border: var(--u-ref-color-neutral-700);
+  --u-comp-button-secondary-disabled-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-button-text-background: transparent;
+  --u-comp-button-text-foreground: var(--u-sys-color-action-primary);
+  --u-comp-button-text-disabled-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-button-min-height: 44px;
+  --u-comp-button-min-height-sm: 40px;
+  --u-comp-button-min-height-lg: 48px;
+  --u-comp-button-inline-padding: 16px;
+  --u-comp-button-block-padding: 10px;
+  --u-comp-button-gap: 8px;
+  --u-comp-button-radius: 8px;
+  --u-comp-button-font-size-sm: 14px;
+  --u-comp-button-font-size-md: 16px;
+  --u-comp-button-font-size-lg: 18px;
+  --u-comp-button-pressed-transform: translateY(1px) scale(0.99);
+  --u-comp-button-focus-ring: var(--u-sys-color-focus);
 }
