@@ -56,10 +56,10 @@ const expectedPackageLicenseFiles = [
 ];
 
 /**
- * @lang zh-CN UI 子包必须忽略的本地编译 fixture 目录，避免受控开发期产物进入未来发布包。
- * @lang en Local compile-fixture directory that the UI subpackage must ignore so controlled development artifacts cannot enter a future release package.
+ * @lang zh-CN UI 子包必须忽略的本地 compile-fixture 目录和仅供 compiler 输入根使用的 adapter 文件，避免受控开发期材料进入未来发布包。
+ * @lang en Local compile-fixture directory and compiler-input-root adapter files that the UI subpackage must ignore so controlled development material cannot enter a future release package.
  */
-const requiredUiNpmIgnoreRule = 'fixtures/';
+const requiredUiNpmIgnoreRules = ['fixtures/', 'manifest.json', 'pages.json', 'main.js'];
 
 /**
  * @lang zh-CN 读取并解析指定根目录下的 JSON 文件，供 workspace 契约校验使用。
@@ -191,11 +191,13 @@ export async function validatePackageContracts(rootDirectory = process.cwd()) {
     }
   }
 
-  // <lang><zh-CN>UI fixture 仅用于受控本地编译，必须由子包自己的 ignore 文件排除；根 ignore 不会继承到子包打包。</zh-CN><en>The UI fixture is only for controlled local compilation and must be excluded by the subpackage's own ignore file; a root ignore file is not inherited by subpackage packing.</en></lang>
+  // <lang><zh-CN>UI fixture 与 compiler 输入根 adapter 仅用于受控本地编译，必须由子包自己的 ignore 文件排除；根 ignore 不会继承到子包打包。</zh-CN><en>The UI fixture and compiler-input-root adapter are only for controlled local compilation and must be excluded by the subpackage's own ignore file; a root ignore file is not inherited by subpackage packing.</en></lang>
   const uiIgnoreRules = await readNpmIgnoreRules(rootDirectory, 'HIA-uView-UI/.npmignore');
 
-  if (uiIgnoreRules === null || !uiIgnoreRules.has(requiredUiNpmIgnoreRule)) {
-    issues.push('HIA-uView-UI must exclude its local fixtures/ directory from package contents.');
+  for (const requiredRule of requiredUiNpmIgnoreRules) {
+    if (uiIgnoreRules === null || !uiIgnoreRules.has(requiredRule)) {
+      issues.push(`HIA-uView-UI must exclude its local ${requiredRule} development-only path from package contents.`);
+    }
   }
 
   return issues;

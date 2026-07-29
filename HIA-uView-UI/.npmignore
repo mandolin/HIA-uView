@@ -5,5 +5,8 @@ output/
 temp/
 unpackage/
 fixtures/
+manifest.json
+pages.json
+main.js
 *.log
 *.tgz

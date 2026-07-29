@@ -1,0 +1,85 @@
+/**
+ * @module verify-mp-weixin-fixture
+ * @lang zh-CN 在受控系统临时目录中构建并校验本仓 mp-weixin fixture；验证结束后删除唯一临时目录，不启动开发服务器、微信开发者工具、网络、预览或发布。
+ * @lang en Builds and validates the repository's mp-weixin fixture in a controlled system-temporary directory; removes the unique temporary directory after validation and starts no development server, WeChat DevTools, network, preview, or release operation.
+ */
+
+import assert from 'node:assert/strict';
+import { access, mkdtemp, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { promisify } from 'node:util';
+import { execFile as executeFile } from 'node:child_process';
+
+const execFile = promisify(executeFile);
+const repositoryDirectory = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const fixtureDirectory = resolve(repositoryDirectory, 'HIA-uView-UI/fixtures/mp-weixin');
+const uiPackageDirectory = resolve(repositoryDirectory, 'HIA-uView-UI');
+const compilerEntry = resolve(repositoryDirectory, 'node_modules/@dcloudio/vite-plugin-uni/bin/uni.js');
+
+/**
+ * @lang zh-CN 从临时微信小程序产物读取并解析一个 JSON 配置文件；读取范围仅限本函数创建的输出目录。
+ * @lang en Reads and parses one JSON configuration file from the temporary WeChat Mini Program output; read scope is limited to the output directory created by this function.
+ * @param {string} outputDirectory <lang><zh-CN>本次校验创建的绝对临时输出目录。</zh-CN><en>Absolute temporary output directory created by this validation run.</en></lang>
+ * @param {string} fileName <lang><zh-CN>所需的产物内 JSON 文件名。</zh-CN><en>Required JSON file name within the output.</en></lang>
+ * @returns {Promise<Record<string, unknown>>} <lang><zh-CN>已解析的受控配置对象。</zh-CN><en>Parsed controlled configuration object.</en></lang>
+ */
+async function readGeneratedJson(outputDirectory, fileName) {
+  const filePath = resolve(outputDirectory, fileName);
+  const content = await readFile(filePath, 'utf8');
+  return JSON.parse(content);
+}
+
+/**
+ * @lang zh-CN 构建本地 fixture 并验证微信小程序导入所需的最小生成文件；编译器 stderr（包括已知 warning）会保持可见，所有临时输出都会在 finally 中清理。
+ * @lang en Builds the local fixture and validates the minimum generated files required for WeChat Mini Program import; compiler stderr, including the known warning, remains visible and all temporary output is cleaned in finally.
+ * @returns {Promise<void>} <lang><zh-CN>无返回值；缺少预期产物或配置不符时抛出错误。</zh-CN><en>Resolves without a value and throws when expected output or configuration is missing.</en></lang>
+ */
+async function verifyMpWeixinFixture() {
+  // <lang><zh-CN>用固定前缀创建唯一系统临时目录；该目录不位于仓库内，且只由本次验证拥有。</zh-CN><en>Creates a unique system temporary directory with a fixed prefix; it is outside the repository and owned only by this validation run.</en></lang>
+  const outputDirectory = await mkdtemp(join(tmpdir(), 'hia-uview-mp-weixin-'));
+
+  try {
+    // <lang><zh-CN>以固定编译入口、固定平台和受控输出目录执行；不接受调用方参数、网络输入或发布参数。</zh-CN><en>Executes with a fixed compiler entry, platform, and controlled output directory; accepts no caller arguments, network input, or release arguments.</en></lang>
+    const { stderr } = await execFile(
+      process.execPath,
+      [compilerEntry, 'build', '-p', 'mp-weixin', '--outDir', outputDirectory],
+      {
+        cwd: fixtureDirectory,
+        env: { ...process.env, UNI_INPUT_DIR: uiPackageDirectory },
+        maxBuffer: 2 * 1024 * 1024
+      }
+    );
+
+    if (stderr) {
+      process.stderr.write(stderr);
+    }
+
+    const appConfiguration = await readGeneratedJson(outputDirectory, 'app.json');
+    assert.ok(Array.isArray(appConfiguration.pages), 'The generated app.json must declare a pages array.');
+    assert.deepEqual(appConfiguration.pages, ['fixtures/mp-weixin/src/pages/index/index'], 'The generated app.json must declare only the fixture home page.');
+    const [fixtureHomePage] = appConfiguration.pages;
+
+    // <lang><zh-CN>只检查微信小程序导入的基础配置和生成 app.json 明确声明的首页四类文件；这不触发开发者工具、模拟器或设备验证。</zh-CN><en>Checks only base WeChat Mini Program import configuration and the four home-page file types explicitly declared by generated app.json; this does not trigger DevTools, simulator, or device validation.</en></lang>
+    await Promise.all([
+      access(resolve(outputDirectory, 'app.json')),
+      access(resolve(outputDirectory, 'project.config.json')),
+      access(resolve(outputDirectory, `${fixtureHomePage}.js`)),
+      access(resolve(outputDirectory, `${fixtureHomePage}.json`)),
+      access(resolve(outputDirectory, `${fixtureHomePage}.wxml`)),
+      access(resolve(outputDirectory, `${fixtureHomePage}.wxss`))
+    ]);
+
+    const projectConfiguration = await readGeneratedJson(outputDirectory, 'project.config.json');
+
+    assert.equal(projectConfiguration.compileType, 'miniprogram', 'The generated project config must identify a Mini Program compile type.');
+    assert.equal(projectConfiguration.appid, 'touristappid', 'The generated project config must retain the fixture-only tourist AppID.');
+  } finally {
+    // <lang><zh-CN>无论编译或断言成功与否，都删除本函数刚创建的唯一临时目录；不遍历或删除仓库、用户目录或外部路径。</zh-CN><en>Deletes the unique temporary directory created by this function whether compilation or assertions succeed; never traverses or deletes repository, user, or external paths.</en></lang>
+    await rm(outputDirectory, { recursive: true, force: true, maxRetries: 2 });
+  }
+}
+
+await verifyMpWeixinFixture();
+console.log('HIA-uView mp-weixin fixture generation contract passed.');

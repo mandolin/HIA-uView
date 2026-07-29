@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "node ../../../node_modules/@dcloudio/vite-plugin-uni/bin/uni.js build -p mp-weixin"
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "@dcloudio/uni-mp-weixin": "3.0.0-5010520260709002"
   }
 }
