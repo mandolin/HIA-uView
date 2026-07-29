@@ -27,6 +27,7 @@ const allowedConfigurationFields = new Set([
  * @lang en Creates a stable diagnostic record without absolute paths, source text, or private-workspace details.
  */
 export function createDiagnostic(code, message, category = 'project') {
+  // <lang><zh-CN>冻结仅含公开 code/message/category 的最小记录，防止后续调用方附加路径、原始 JSON 或私有环境细节。</zh-CN><en>Freezes a minimal record containing only public code, message, and category, preventing later callers from appending paths, raw JSON, or private environment detail.</en></lang>
   return Object.freeze({ code, message, category });
 }
 
@@ -35,16 +36,20 @@ export function createDiagnostic(code, message, category = 'project') {
  * @lang en Determines whether a string is a repository-relative path allowed by this tool; rejects absolute paths, empty paths, null bytes, and every parent-directory escape.
  */
 export function isSafeRelativePath(candidate) {
+  // <lang><zh-CN>只有字符串候选才可能成为 JSON 路径；其他 JSON 类型在进入任何路径 API 前直接拒绝。</zh-CN><en>Only a string candidate can become a JSON path; every other JSON type is rejected before entering any path API.</en></lang>
   if (typeof candidate !== 'string') {
     return false;
   }
 
+  // <lang><zh-CN>规范值用于纯语法判断，统一空白和分隔符但不解析符号链接、不访问文件或改变调用方 JSON。</zh-CN><en>The normalized value serves pure syntax determination, unifying whitespace and separators while resolving no symlink, accessing no file, and changing no caller JSON.</en></lang>
   const value = candidate.trim().replaceAll('\\', '/');
 
+  // <lang><zh-CN>空、空字节、URI 与绝对路径无法受项目根 containment 保证，因此在分段检查前拒绝。</zh-CN><en>Empty values, null bytes, URIs, and absolute paths cannot receive project-root containment guarantees, so reject them before segment checks.</en></lang>
   if (!value || value.includes('\u0000') || value.includes('://') || isAbsolute(value)) {
     return false;
   }
 
+  // <lang><zh-CN>任何父目录片段都可能借后续 resolve 离开选定根目录；不接受“先进入再返回”的路径形式。</zh-CN><en>Any parent-directory segment could escape selected root through later resolve; do not accept a path form that enters and later returns.</en></lang>
   return !value.split('/').some((segment) => segment === '..');
 }
 
@@ -103,18 +108,23 @@ function validateManifestPathArray(value, fieldName, fieldDiagnosticName, pathDi
  * @lang en Validates a declarative configuration object and returns all actionable invocation/configuration diagnostics instead of silently ignoring unknown values.
  */
 export function validateConfiguration(configuration) {
+  // <lang><zh-CN>诊断列表按固定检查顺序累积，使 text/JSON 自动化消费者获得确定性结果。</zh-CN><en>The diagnostic list accumulates in fixed check order so text and JSON automation consumers receive deterministic results.</en></lang>
   const diagnostics = [];
 
+  // <lang><zh-CN>顶层必须是普通 JSON 对象；在形状无效时停止字段访问，避免从 primitive 或数组派生误导错误。</zh-CN><en>The top level must be a plain JSON object; stop field access on invalid shape to avoid deriving misleading errors from a primitive or array.</en></lang>
   if (!configuration || typeof configuration !== 'object' || Array.isArray(configuration)) {
     return [createDiagnostic('CONFIG_SCHEMA_INVALID', 'Configuration must be a JSON object.', 'invocation')];
   }
 
+  // <lang><zh-CN>逐项拒绝未知字段，保证 configuration 不能静默增加 hook、URL、凭据或任意执行表面。</zh-CN><en>Reject unknown fields one by one, ensuring configuration cannot silently add hooks, URLs, credentials, or an arbitrary execution surface.</en></lang>
   for (const field of Object.keys(configuration)) {
+    // <lang><zh-CN>当前字段名是公开 schema 键；诊断只回显键而不回显其可能敏感的值。</zh-CN><en>The current field name is a public schema key; diagnostics echo only the key and never its potentially sensitive value.</en></lang>
     if (!allowedConfigurationFields.has(field)) {
       diagnostics.push(createDiagnostic('CONFIG_UNKNOWN_FIELD', `Configuration field is not allowed: ${field}.`, 'invocation'));
     }
   }
 
+  // <lang><zh-CN>版本、root、profile、locale 与 report 是固定 P17 输入边界；每项独立报告以支持一次修正多项 metadata 问题。</zh-CN><en>Version, root, profile, locale, and report are fixed P17 input boundaries; report each independently so one metadata repair can address multiple issues.</en></lang>
   if (configuration.version !== 1) {
     diagnostics.push(createDiagnostic('CONFIG_VERSION_UNSUPPORTED', 'Configuration version must be 1.', 'invocation'));
   }
@@ -152,26 +162,33 @@ export function validateConfiguration(configuration) {
  * @lang en Reads and parses a constrained JSON configuration inside the invocation directory; errors return only stable diagnostics and never echo raw JSON or host paths.
  */
 export async function loadConfiguration(rootDirectory, configurationPath) {
+  // <lang><zh-CN>配置路径先通过同一安全判断，避免直接 API 调用绕过 CLI parser 的相对路径限制。</zh-CN><en>Validate configuration path through the same safety check, preventing direct API calls from bypassing CLI parser relative-path limits.</en></lang>
   if (!isSafeRelativePath(configurationPath)) {
     return { configuration: null, diagnostics: [createDiagnostic('CONFIG_PATH_INVALID', 'The configuration path must be a non-escaping relative path.', 'invocation')] };
   }
 
+  // <lang><zh-CN>content 只在本函数内短暂保存以进行 JSON.parse；不进入报告、诊断或缓存。</zh-CN><en>Content is held briefly only inside this function for JSON.parse; it enters no report, diagnostic, or cache.</en></lang>
   let content;
 
   try {
+    // <lang><zh-CN>在调用根下读取单一已声明 JSON，不枚举目录、不读取 package、源码或相邻 metadata。</zh-CN><en>Read one declared JSON under invocation root; do not enumerate directories or read package, source, or adjacent metadata.</en></lang>
     content = await readFile(resolve(rootDirectory, configurationPath), 'utf8');
   } catch (error) {
+    // <lang><zh-CN>仅区分不存在与不可读，保持错误可行动且不泄露底层路径或 I/O 异常文本。</zh-CN><en>Distinguish only missing and unreadable outcomes, keeping errors actionable without disclosing underlying path or I/O exception text.</en></lang>
     const code = error && error.code === 'ENOENT' ? 'CONFIG_NOT_FOUND' : 'CONFIG_UNREADABLE';
     return { configuration: null, diagnostics: [createDiagnostic(code, 'The declared configuration cannot be read.', 'invocation')] };
   }
 
+  // <lang><zh-CN>configuration 保存解析后的声明对象；它随后只进入纯 schema 校验，不作为可执行配置处理。</zh-CN><en>Configuration holds the parsed declaration object; it then enters only pure schema validation and is never treated as executable configuration.</en></lang>
   let configuration;
 
   try {
+    // <lang><zh-CN>使用 JSON.parse 解析数据；不支持 JavaScript、JSONC 注释、表达式、远程引用或 hook。</zh-CN><en>Parse data with JSON.parse; do not support JavaScript, JSONC comments, expressions, remote references, or hooks.</en></lang>
     configuration = JSON.parse(content);
   } catch {
     return { configuration: null, diagnostics: [createDiagnostic('CONFIG_INVALID_JSON', 'The declared configuration is not valid JSON.', 'invocation')] };
   }
 
+  // <lang><zh-CN>返回原始解析对象与完整 schema 诊断，使上层决定命令是否可继续读取进一步已声明 manifest。</zh-CN><en>Return the parsed object and complete schema diagnostics so the upper layer decides whether a command may continue reading further declared manifests.</en></lang>
   return { configuration, diagnostics: validateConfiguration(configuration) };
 }

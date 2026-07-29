@@ -9,14 +9,17 @@
  * @lang en Calculates the public Tool-contract exit-code precedence from diagnostic categories.
  */
 export function getExitCode(diagnostics) {
+  // <lang><zh-CN>Tool 自身不变量失败优先于所有项目/调用问题，因为调用者不能安全相信其余结果完整。</zh-CN><en>A Tool invariant failure takes precedence over every project or invocation issue because callers cannot safely trust completeness of remaining results.</en></lang>
   if (diagnostics.some((diagnostic) => diagnostic.category === 'tool')) {
     return 3;
   }
 
+  // <lang><zh-CN>调用或 configuration 形状错误使用独立退出码，帮助自动化区分“修正命令”与“修正项目 metadata”。</zh-CN><en>Invocation or configuration-shape errors use a separate exit code, helping automation distinguish “fix the command” from “fix project metadata.”</en></lang>
   if (diagnostics.some((diagnostic) => diagnostic.category === 'invocation')) {
     return 2;
   }
 
+  // <lang><zh-CN>剩余诊断均属于项目 metadata；无诊断时才返回成功。</zh-CN><en>Every remaining diagnostic belongs to project metadata; return success only when none exists.</en></lang>
   return diagnostics.length > 0 ? 1 : 0;
 }
 
@@ -32,6 +35,7 @@ export function createReport(command, configuration, diagnostics, details = null
     profile: configuration?.profile ?? null,
     locale: configuration?.locale ?? null,
     format: configuration?.report?.format ?? 'text',
+    // <lang><zh-CN>诊断投影移除内部 category，保留自动化稳定消费所需的公开 code/message。</zh-CN><en>The diagnostic projection removes internal category while retaining public code and message required for stable automation consumption.</en></lang>
     diagnostics: diagnostics.map(({ code, message }) => ({ code, message })),
     details
   });
@@ -84,13 +88,17 @@ function formatInspectionDetails(details) {
  * @lang en Formats a report as configuration-approved text or JSON; text emits each stable diagnostic code while JSON remains machine-readable.
  */
 export function formatReport(report, format) {
+  // <lang><zh-CN>JSON 分支直接序列化受限 report；其 details 已由 inspect 层筛选，formatter 不读取任何额外文件。</zh-CN><en>The JSON branch serializes bounded report directly; details were already filtered by inspect layer and formatter reads no additional file.</en></lang>
   if (format === 'json') {
     return `${JSON.stringify(report, null, 2)}\n`;
   }
 
+  // <lang><zh-CN>headline 概括命令和总体结果，保持 text 输出第一行稳定且不包含调用主机信息。</zh-CN><en>Headline summarizes command and overall result, keeping text-output first line stable and free of invocation-host information.</en></lang>
   const headline = `${report.command}: ${report.ok ? 'passed' : 'failed'}`;
   // <lang><zh-CN>将 inspect 元数据先格式化为受边界约束文本；doctor/check 会得到空数组，不改变既有诊断顺序。</zh-CN><en>Format inspect metadata into bounded text first; doctor and check receive an empty array, preserving existing diagnostic order.</en></lang>
   const inspectionDetails = formatInspectionDetails(report.details);
+  // <lang><zh-CN>诊断文本逐项保留稳定 code，随后才追加 inspect metadata，避免人工读者把 metadata 误看作失败原因。</zh-CN><en>Diagnostic text retains stable code item by item before inspect metadata is appended, preventing readers from mistaking metadata for failure reasons.</en></lang>
   const details = report.diagnostics.map((diagnostic) => `- ${diagnostic.code}: ${diagnostic.message}`);
+  // <lang><zh-CN>按 headline、diagnostic、inspect 的固定层次拼接并追加单一换行，便于 CLI 与 snapshot consumer 稳定比较。</zh-CN><en>Join headline, diagnostics, and inspect in fixed layers with one trailing newline for stable CLI and snapshot-consumer comparison.</en></lang>
   return `${[headline, ...details, ...inspectionDetails].join('\n')}\n`;
 }

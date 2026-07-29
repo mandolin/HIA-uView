@@ -29,7 +29,9 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-button', component: UButton }),
   // <lang><zh-CN>信息行只展示调用方文字并 emit 受限 click 意图。</zh-CN><en>The information row displays caller text only and emits constrained click intent.</en></lang>
   Object.freeze({ name: 'u-cell', component: UCell }),
+  // <lang><zh-CN>checkbox 只呈现调用方受控 checked/value 意图；group 协调由相邻 `u-checkbox-group` 显式提供。</zh-CN><en>The checkbox presents caller-controlled checked and value intent only; group coordination is explicitly provided by adjacent `u-checkbox-group`.</en></lang>
   Object.freeze({ name: 'u-checkbox', component: UCheckbox }),
+  // <lang><zh-CN>checkbox group 只计算新的字符串集合并 emit，不拥有表单、提交或业务全选语义。</zh-CN><en>The checkbox group computes and emits a new string set only and owns no form, submission, or business select-all semantics.</en></lang>
   Object.freeze({ name: 'u-checkbox-group', component: UCheckboxGroup }),
   // <lang><zh-CN>空态只展示调用方文字并 emit 可选 action 意图，不读取数据或加载状态。</zh-CN><en>The empty state displays caller text only and emits optional action intent without reading data or loading state.</en></lang>
   Object.freeze({ name: 'u-empty', component: UEmpty }),
@@ -43,7 +45,9 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-nav-bar', component: UNavBar }),
   // <lang><zh-CN>notice 只呈现调用方 message/tone 与可选 dismiss 意图，不创建全局 service 或定时器。</zh-CN><en>The notice presents caller message/tone and optional dismiss intent only and creates no global service or timer.</en></lang>
   Object.freeze({ name: 'u-notice', component: UNotice }),
+  // <lang><zh-CN>radio 只呈现调用方受控单选意图；它不取消已选项，也不持有 option 数据。</zh-CN><en>The radio presents caller-controlled single-choice intent only; it neither clears a selected item nor owns option data.</en></lang>
   Object.freeze({ name: 'u-radio', component: URadio }),
+  // <lang><zh-CN>radio group 只向直接子 radio 提供受控上下文并 emit 选择意图，不创建 picker、popup 或全局选择服务。</zh-CN><en>The radio group provides controlled context to direct child radios and emits selection intent only; it creates no picker, popup, or global selection service.</en></lang>
   Object.freeze({ name: 'u-radio-group', component: URadioGroup }),
   // <lang><zh-CN>布局原语只排列默认插槽，不拥有页面或子项语义。</zh-CN><en>The layout primitive arranges the default slot only and owns no page or child semantics.</en></lang>
   Object.freeze({ name: 'u-stack', component: UStack }),
@@ -66,6 +70,7 @@ export function installUView(application) {
 
   // <lang><zh-CN>按冻结集合的声明顺序注册每个模板名；解构出的 name 和 component 始终来自经过审阅的本地 registry。</zh-CN><en>Registers every template name in declared frozen-collection order; destructured name and component always come from the reviewed local registry.</en></lang>
   for (const { name, component } of UVIEW_COMPONENTS) {
+    // <lang><zh-CN>以一对一的模板名和实现执行 Vue 注册；每次调用只影响调用方传入的 application 实例。</zh-CN><en>Register Vue with one template-name and implementation pair; each call affects only the application instance passed by the caller.</en></lang>
     application.component(name, component);
   }
 
@@ -78,6 +83,7 @@ export function installUView(application) {
  * @lang en Private Vue plugin for explicit `app.use(UView)` calls. It delegates only to `installUView` and never loads the theme/style entry automatically.
  */
 export const UView = Object.freeze({
+  // <lang><zh-CN>plugin 的唯一生命周期入口保持为显式 install 函数，避免 import-time 注册或隐式全局状态。</zh-CN><en>The plugin's sole lifecycle entry remains the explicit install function, avoiding import-time registration or implicit global state.</en></lang>
   install: installUView
 });
 
