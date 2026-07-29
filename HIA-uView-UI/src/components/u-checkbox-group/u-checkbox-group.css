@@ -1,2 +1,14 @@
-/** @component UCheckboxGroup @selector .u-checkbox-group @lang zh-CN group 仅提供局部纵向间距。 @lang en The group provides local vertical spacing only. */
-.u-checkbox-group { display: flex; flex-direction: column; gap: var(--u-comp-choice-group-gap); }
+/**
+ * @component UCheckboxGroup
+ * @selector .u-checkbox-group
+ * @token comp.choice.group-gap
+ * @lang zh-CN UCheckboxGroup 只提供 slot 内 checkbox 的局部纵向间距，不编码 form、页面或业务布局。
+ * @lang en UCheckboxGroup provides only local vertical spacing for slot-contained checkboxes and encodes no form, page, or business layout.
+ */
+
+/* <lang><zh-CN>group 只组织当前子树的阅读顺序；其宽度、对齐和外部间距继续由调用方页面布局决定。</zh-CN><en>The group organizes reading order in the current subtree only; caller page layout continues to determine its width, alignment, and external spacing.</en></lang> */
+.u-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-choice-group-gap);
+}

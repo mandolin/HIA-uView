@@ -27,15 +27,18 @@
   transition: transform 120ms ease, opacity 120ms ease;
 }
 
+/* <lang><zh-CN>UniApp button 默认伪元素会额外绘制边界；此处清除它以使三种 token 化变体拥有单一可审计边框来源。</zh-CN><en>The UniApp button default pseudo-element can draw an extra boundary; clear it here so the three tokenized variants have one auditable border source.</en></lang> */
 .u-button::after {
   border: 0;
 }
 
+/* <lang><zh-CN>block 只扩展按钮自身宽度；不强制父容器布局、对齐或业务页面间距。</zh-CN><en>Block expands only the button's own width and never forces parent layout, alignment, or business-page spacing.</en></lang> */
 .u-button--block {
   display: flex;
   width: 100%;
 }
 
+/* <lang><zh-CN>三种变体只消费组件 token，保留文字、边界和背景的非业务化视觉差异。</zh-CN><en>The three variants consume component tokens only, retaining non-business visual distinctions among text, boundary, and background.</en></lang> */
 .u-button--primary {
   background: var(--u-comp-button-primary-background);
   color: var(--u-comp-button-primary-foreground);
@@ -52,6 +55,7 @@
   color: var(--u-comp-button-text-foreground);
 }
 
+/* <lang><zh-CN>尺寸修饰仅覆盖字号和最小高度；共享内边距和交互规则保持一致。</zh-CN><en>Size modifiers override only font size and minimum height; shared padding and interaction rules remain consistent.</en></lang> */
 .u-button--sm {
   font-size: var(--u-comp-button-font-size-sm);
   min-height: var(--u-comp-button-min-height-sm);
@@ -62,12 +66,14 @@
   min-height: var(--u-comp-button-min-height-lg);
 }
 
+/* <lang><zh-CN>pressed transform 只在可操作状态短暂提供非颜色反馈；禁用和加载按钮不会产生伪可点击暗示。</zh-CN><en>The pressed transform provides brief non-color feedback only while active; disabled and loading buttons never suggest false clickability.</en></lang> */
 .u-button--primary:active:not(.u-button--disabled):not(.u-button--loading),
 .u-button--secondary:active:not(.u-button--disabled):not(.u-button--loading),
 .u-button--text:active:not(.u-button--disabled):not(.u-button--loading) {
   transform: var(--u-comp-button-pressed-transform);
 }
 
+/* <lang><zh-CN>禁用和加载分别用虚线/光标补充视觉状态，不依赖颜色，也不改变由调用方拥有的操作状态。</zh-CN><en>Disabled and loading each supplement visual state through border/cursor rather than color alone and never change caller-owned action state.</en></lang> */
 .u-button--disabled {
   border-style: dashed;
   cursor: not-allowed;

@@ -1,5 +1,41 @@
-/** @component UCheckbox @selector .u-checkbox @lang zh-CN checkbox 以文字、方形符号与边界共同表达状态。 @lang en Checkbox expresses state through text, square symbol, and boundary together. */
-.u-checkbox { align-items: center; background: var(--u-comp-choice-surface); border: 1px solid var(--u-comp-choice-border); border-radius: var(--u-comp-choice-radius); color: var(--u-comp-choice-foreground); display: inline-flex; font-size: var(--u-comp-choice-font-size); gap: var(--u-comp-choice-gap); min-height: var(--u-comp-choice-min-height); padding: var(--u-comp-choice-block-padding) var(--u-comp-choice-inline-padding); text-align: left; }
-.u-checkbox--checked { border-color: var(--u-comp-choice-selected-border); color: var(--u-comp-choice-selected-foreground); }
-.u-checkbox--disabled { border-style: dashed; opacity: var(--u-comp-choice-disabled-opacity); }
-.u-checkbox__mark { font-weight: 700; min-width: var(--u-comp-choice-marker-width); }
+/**
+ * @component UCheckbox
+ * @selector .u-checkbox
+ * @token comp.choice.surface
+ * @token comp.choice.checked
+ * @lang zh-CN UCheckbox 以文字、方形符号和边界共同表达受控成员状态，只消费已审计的 choice theme token。
+ * @lang en UCheckbox expresses controlled membership state through text, a square symbol, and boundary together, consuming audited choice-theme tokens only.
+ */
+
+/* <lang><zh-CN>基础 checkbox 是本地原生按钮的受限 inline 布局，不引入 picker、菜单、图标资源或页面级位置规则。</zh-CN><en>The base checkbox is constrained inline layout for a local native button and introduces no picker, menu, icon asset, or page-level positioning rule.</en></lang> */
+.u-checkbox {
+  align-items: center;
+  background: var(--u-comp-choice-surface);
+  border: 1px solid var(--u-comp-choice-border);
+  border-radius: var(--u-comp-choice-radius);
+  color: var(--u-comp-choice-foreground);
+  display: inline-flex;
+  font-size: var(--u-comp-choice-font-size);
+  gap: var(--u-comp-choice-gap);
+  min-height: var(--u-comp-choice-min-height);
+  padding: var(--u-comp-choice-block-padding) var(--u-comp-choice-inline-padding);
+  text-align: left;
+}
+
+/* <lang><zh-CN>checked 以边界、文字与模板中的方形符号共同传达成员状态，不只依赖颜色，也不修改调用方集合。</zh-CN><en>Checked communicates membership through boundary, text, and the template's square symbol together, not color alone, and never modifies caller collection.</en></lang> */
+.u-checkbox--checked {
+  border-color: var(--u-comp-choice-selected-border);
+  color: var(--u-comp-choice-selected-foreground);
+}
+
+/* <lang><zh-CN>disabled 使用虚线和透明度补充不可操作状态；实际零事件仍由原生属性和 script guard 保证。</zh-CN><en>Disabled uses dashed boundary and opacity to supplement inactive state; the native attribute and script guard still guarantee actual zero events.</en></lang> */
+.u-checkbox--disabled {
+  border-style: dashed;
+  opacity: var(--u-comp-choice-disabled-opacity);
+}
+
+/* <lang><zh-CN>符号保留固定最小宽度，避免选中/未选中字符改变 label 起始位置。</zh-CN><en>The symbol retains fixed minimum width so checked/unchecked characters cannot shift the label starting position.</en></lang> */
+.u-checkbox__mark {
+  font-weight: 700;
+  min-width: var(--u-comp-choice-marker-width);
+}

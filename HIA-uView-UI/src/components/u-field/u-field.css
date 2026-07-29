@@ -30,6 +30,7 @@
   line-height: 1.4;
 }
 
+/* <lang><zh-CN>必填标记以字符和独立 token 补充标签提示；它不改变 slot 控件、执行校验或声明提交结果。</zh-CN><en>The required marker supplements the label cue through character and independent token; it changes no slot control, executes no validation, and declares no submission result.</en></lang> */
 .u-field__required-mark {
   color: var(--u-comp-field-required-foreground);
   font-size: var(--u-comp-field-required-font-size);
@@ -37,10 +38,12 @@
   line-height: 1;
 }
 
+/* <lang><zh-CN>控件容器只允许 flex 子项收缩，避免长内容溢出；它不读取或改变插槽控件的值、属性和事件。</zh-CN><en>The control container only lets a flex child shrink to avoid long-content overflow; it reads and changes none of the slotted control's value, attributes, or events.</en></lang> */
 .u-field__control {
   min-width: 0;
 }
 
+/* <lang><zh-CN>帮助文字使用次级 token，并保持与独立校验消息可同时存在的非互斥呈现。</zh-CN><en>Help text uses a secondary token and remains a non-exclusive presentation that can coexist with the independent validation message.</en></lang> */
 .u-field__help {
   color: var(--u-comp-field-help-foreground);
   font-size: var(--u-comp-field-help-font-size);

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+output/
+temp/
+unpackage/
+fixtures/
+*.log
+*.tgz
