@@ -1,0 +1,5 @@
+/** @component UCheckbox @selector .u-checkbox @lang zh-CN checkbox 以文字、方形符号与边界共同表达状态。 @lang en Checkbox expresses state through text, square symbol, and boundary together. */
+.u-checkbox { align-items: center; background: var(--u-comp-choice-surface); border: 1px solid var(--u-comp-choice-border); border-radius: var(--u-comp-choice-radius); color: var(--u-comp-choice-foreground); display: inline-flex; font-size: var(--u-comp-choice-font-size); gap: var(--u-comp-choice-gap); min-height: var(--u-comp-choice-min-height); padding: var(--u-comp-choice-block-padding) var(--u-comp-choice-inline-padding); text-align: left; }
+.u-checkbox--checked { border-color: var(--u-comp-choice-selected-border); color: var(--u-comp-choice-selected-foreground); }
+.u-checkbox--disabled { border-style: dashed; opacity: var(--u-comp-choice-disabled-opacity); }
+.u-checkbox__mark { font-weight: 700; min-width: var(--u-comp-choice-marker-width); }

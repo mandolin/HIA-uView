@@ -1,0 +1,2 @@
+/** @component URadioGroup @selector .u-radio-group @lang zh-CN group 仅提供局部纵向间距，不编码表单或业务布局。 @lang en The group provides local vertical spacing only and encodes no form or business layout. */
+.u-radio-group { display: flex; flex-direction: column; gap: var(--u-comp-choice-group-gap); }

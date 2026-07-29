@@ -1,0 +1,2 @@
+/** @component UCheckboxGroup @selector .u-checkbox-group @lang zh-CN group 仅提供局部纵向间距。 @lang en The group provides local vertical spacing only. */
+.u-checkbox-group { display: flex; flex-direction: column; gap: var(--u-comp-choice-group-gap); }

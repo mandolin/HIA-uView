@@ -204,4 +204,20 @@
   --u-comp-empty-title-font-weight: 600;
   --u-comp-empty-description-font-size: 14px;
   --u-comp-empty-focus-ring: var(--u-sys-color-focus);
+
+  /* <lang><zh-CN>choice token 组为 radio/checkbox 提供统一中性表面、钴蓝选中边界、文字符号和非颜色 disabled 呈现；它不编码 option 数据、表单或业务状态。</zh-CN><en>The choice token group provides radio/checkbox with unified neutral surface, cobalt selected boundary, text symbols, and non-color disabled presentation; it encodes no option data, form, or business state.</en></lang> */
+  --u-comp-choice-surface: var(--u-sys-color-surface);
+  --u-comp-choice-foreground: var(--u-sys-color-text);
+  --u-comp-choice-border: var(--u-ref-color-neutral-700);
+  --u-comp-choice-selected-foreground: var(--u-sys-color-action-primary);
+  --u-comp-choice-selected-border: var(--u-sys-color-action-primary);
+  --u-comp-choice-min-height: 44px;
+  --u-comp-choice-inline-padding: 12px;
+  --u-comp-choice-block-padding: 8px;
+  --u-comp-choice-gap: 8px;
+  --u-comp-choice-group-gap: 8px;
+  --u-comp-choice-radius: 8px;
+  --u-comp-choice-font-size: 16px;
+  --u-comp-choice-marker-width: 20px;
+  --u-comp-choice-disabled-opacity: 0.6;
 }

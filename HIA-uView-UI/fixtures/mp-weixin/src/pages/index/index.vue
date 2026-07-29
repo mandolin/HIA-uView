@@ -37,6 +37,16 @@
         />
       </u-field>
 
+      <!-- @lang zh-CN P16 选择组只使用页面自有字符串与字符串数组，验证 group emit/writeback 而不引入 option 数据源或业务筛选。 @lang en The P16 choice groups use page-owned string and string array only, verifying group emit/writeback without introducing option data source or business filtering. <lang><zh-CN>这些控件不改变目录 query。</zh-CN><en>These controls do not change directory query.</en></lang> -->
+      <u-radio-group :model-value="fixtureRadioValue" @update:model-value="updateFixtureRadioValue">
+        <u-radio value="local-a" label="本地单选 A / Local radio A" />
+        <u-radio value="local-b" label="本地单选 B / Local radio B" />
+      </u-radio-group>
+      <u-checkbox-group :model-value="fixtureCheckboxValues" @update:model-value="updateFixtureCheckboxValues">
+        <u-checkbox value="local-one" label="本地多选 One / Local checkbox One" />
+        <u-checkbox value="local-two" label="本地多选 Two / Local checkbox Two" />
+      </u-checkbox-group>
+
       <!-- <lang><zh-CN>独立消息仅在页面明确声明无本地匹配时呈现；它不把无结果解释为后端错误、权限结论或真实校验结果。</zh-CN><en>The independent message presents only when the page explicitly declares no local match; it does not interpret no result as a backend error, permission conclusion, or real validation result.</en></lang> -->
       <u-validation-message
         :state="catalogQueryValidationState"
@@ -112,7 +122,7 @@
 // <lang><zh-CN>导入 Vue 的局部 ref/computed 与固定本地目录 helper；页面不导入全局 store、Tool、平台 API 或外部数据访问库。</zh-CN><en>Imports Vue local ref/computed and fixed local catalog helpers; the page imports no global store, Tool, platform API, or external data-access library.</en></lang>
 import { computed, ref } from 'vue';
 // <lang><zh-CN>显式导入本仓 runtime 组件；template 编译通过 script setup 绑定这些局部实现，不使用自动注册。</zh-CN><en>Explicitly imports repository runtime components; template compilation binds these local implementations through script setup and uses no auto-registration.</en></lang>
-import { UButton, UCell, UEmpty, UField, UInput, UModal, UNavBar, UNotice, UStack, UValidationMessage } from '../../../../../src/index.mjs';
+import { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UInput, UModal, UNavBar, UNotice, URadio, URadioGroup, UStack, UValidationMessage } from '../../../../../src/index.mjs';
 // <lang><zh-CN>导入固定匿名 mock 集合与纯同步 helper；它们位于 fixture 内而非 UI runtime 或 Biz package。</zh-CN><en>Imports the fixed anonymous mock collection and pure synchronous helpers; they reside inside the fixture rather than UI runtime or a Biz package.</en></lang>
 import { LOCAL_CATALOG_RECORDS, filterLocalCatalogRecords, findLocalCatalogRecord } from './local-catalog.mjs';
 
@@ -135,6 +145,11 @@ const catalogNoticeVisible = ref(false);
 
 // <lang><zh-CN>局部 notice 的调用方文字；空初值确保页面在没有确认意图时不生成默认反馈语句。</zh-CN><en>Caller copy for the local notice; the empty initial value ensures the page generates no default feedback statement before confirmation intent.</en></lang>
 const catalogNoticeMessage = ref('');
+
+// <lang><zh-CN>P16 radio group 的页面自有受控字符串；它与目录选择、路由或业务字段无关。</zh-CN><en>Page-owned controlled string for the P16 radio group; it is unrelated to catalog selection, routing, or business field.</en></lang>
+const fixtureRadioValue = ref('local-a');
+// <lang><zh-CN>P16 checkbox group 的页面自有受控数组；页面替换整个数组而不 mutate group 输入。</zh-CN><en>Page-owned controlled array for the P16 checkbox group; the page replaces the whole array rather than mutating group input.</en></lang>
+const fixtureCheckboxValues = ref(['local-one']);
 
 // <lang><zh-CN>由当前受控 query 同步派生的本地目录投影；helper 不访问网络、缓存或异步数据源。</zh-CN><en>Local catalog projection synchronously derived from the current controlled query; the helper accesses no network, cache, or asynchronous data source.</en></lang>
 const filteredCatalogRecords = computed(() => filterLocalCatalogRecords(LOCAL_CATALOG_RECORDS, catalogQuery.value));
@@ -285,6 +300,28 @@ function dismissCatalogNotice() {
   // <lang><zh-CN>由页面关闭 visible，并清空调用方文字以避免下次显式显示时保留旧的本地意图说明。</zh-CN><en>The page closes visible and clears caller copy to avoid retaining old local-intent explanation on a future explicit show.</en></lang>
   catalogNoticeVisible.value = false;
   catalogNoticeMessage.value = '';
+}
+
+/**
+ * @lang zh-CN 写回 radio group 报告的未修改本地 value；不把选择解释为目录查询或业务流程。
+ * @lang en Writes back the unchanged local value reported by radio group; it does not interpret selection as catalog query or business flow.
+ * @param {string} nextValue <lang><zh-CN>group emit 的下一本地键。</zh-CN><en>Next local key emitted by the group.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只更新页面 ref。</zh-CN><en>No return value; updates page ref only.</en></lang>
+ */
+function updateFixtureRadioValue(nextValue) {
+  // <lang><zh-CN>页面拥有单选写回，group 不会自行修改 modelValue。</zh-CN><en>The page owns radio writeback; the group never modifies modelValue itself.</en></lang>
+  fixtureRadioValue.value = nextValue;
+}
+
+/**
+ * @lang zh-CN 替换 checkbox group 报告的新数组；不排序、持久化或把成员关系解释为权限。
+ * @lang en Replaces the new array reported by checkbox group; it neither sorts, persists, nor interprets membership as permission.
+ * @param {string[]} nextValues <lang><zh-CN>group emit 的下一本地集合。</zh-CN><en>Next local collection emitted by the group.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只更新页面 ref。</zh-CN><en>No return value; updates page ref only.</en></lang>
+ */
+function updateFixtureCheckboxValues(nextValues) {
+  // <lang><zh-CN>替换 ref 值保留调用方数组所有权。</zh-CN><en>Replacing ref value retains caller ownership of the array.</en></lang>
+  fixtureCheckboxValues.value = nextValues;
 }
 </script>
 

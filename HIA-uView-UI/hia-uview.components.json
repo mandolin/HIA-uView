@@ -21,6 +21,18 @@
       ]
     },
     {
+      "name": "u-checkbox",
+      "source": "src/components/u-checkbox/u-checkbox.vue",
+      "contract": "docs/checkbox.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-checkbox-group",
+      "source": "src/components/u-checkbox-group/u-checkbox-group.vue",
+      "contract": "docs/checkbox-group.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-empty",
       "source": "src/components/u-empty/u-empty.vue",
       "contract": "docs/empty.md",
@@ -73,6 +85,18 @@
         "zh-Hans",
         "en"
       ]
+    },
+    {
+      "name": "u-radio",
+      "source": "src/components/u-radio/u-radio.vue",
+      "contract": "docs/radio.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-radio-group",
+      "source": "src/components/u-radio-group/u-radio-group.vue",
+      "contract": "docs/radio-group.md",
+      "locales": ["zh-Hans", "en"]
     },
     {
       "name": "u-stack",

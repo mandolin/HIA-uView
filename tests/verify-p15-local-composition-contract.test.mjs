@@ -79,7 +79,7 @@ test('keeps fixture composition and source boundaries explicit', async () => {
   ]);
 
   // <lang><zh-CN>组合源码必须保留当前 10 个组件和目录/查询/详情结构，而不通过新组件或自动注册扩展 runtime 表面。</zh-CN><en>Composition source must retain the current ten components and directory/query/detail structure without expanding runtime surface through new components or auto-registration.</en></lang>
-  assert.match(fixtureSource, /UButton, UCell, UEmpty, UField, UInput, UModal, UNavBar, UNotice, UStack, UValidationMessage/);
+  assert.match(fixtureSource, /UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UInput, UModal, UNavBar, UNotice, URadio, URadioGroup, UStack, UValidationMessage/);
   assert.match(fixtureSource, /v-for="record in filteredCatalogRecords"/);
   assert.match(fixtureSource, /@update:model-value="updateCatalogQuery"/);
   assert.match(fixtureSource, /@click="selectCatalogRecord\(record\.id\)"/);

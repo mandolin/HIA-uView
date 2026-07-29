@@ -10,7 +10,7 @@ import { resolve } from 'node:path';
 import { createApp } from 'vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import UView, { UButton, UCell, UEmpty, UField, UInput, UModal, UNavBar, UNotice, UStack, UValidationMessage, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
+import UView, { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UInput, UModal, UNavBar, UNotice, URadio, URadioGroup, UStack, UValidationMessage, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
 
 /**
  * @lang zh-CN 验证 UButton 保持 P10/P11 的 enabled、disabled、loading、slot 与 loadingText 契约，防止 P12 registry 扩展回退既有组件行为。
@@ -183,12 +183,16 @@ it('keeps registration and style consumption explicit', async () => {
 
   expect(application.component('u-button')).toBeUndefined();
   expect(application.component('u-cell')).toBeUndefined();
+  expect(application.component('u-checkbox')).toBeUndefined();
+  expect(application.component('u-checkbox-group')).toBeUndefined();
   expect(application.component('u-empty')).toBeUndefined();
   expect(application.component('u-field')).toBeUndefined();
   expect(application.component('u-input')).toBeUndefined();
   expect(application.component('u-modal')).toBeUndefined();
   expect(application.component('u-nav-bar')).toBeUndefined();
   expect(application.component('u-notice')).toBeUndefined();
+  expect(application.component('u-radio')).toBeUndefined();
+  expect(application.component('u-radio-group')).toBeUndefined();
   expect(application.component('u-stack')).toBeUndefined();
   expect(application.component('u-validation-message')).toBeUndefined();
 
@@ -197,15 +201,19 @@ it('keeps registration and style consumption explicit', async () => {
 
   expect(application.component('u-button')).toBe(UButton);
   expect(application.component('u-cell')).toBe(UCell);
+  expect(application.component('u-checkbox')).toBe(UCheckbox);
+  expect(application.component('u-checkbox-group')).toBe(UCheckboxGroup);
   expect(application.component('u-empty')).toBe(UEmpty);
   expect(application.component('u-field')).toBe(UField);
   expect(application.component('u-input')).toBe(UInput);
   expect(application.component('u-modal')).toBe(UModal);
   expect(application.component('u-nav-bar')).toBe(UNavBar);
   expect(application.component('u-notice')).toBe(UNotice);
+  expect(application.component('u-radio')).toBe(URadio);
+  expect(application.component('u-radio-group')).toBe(URadioGroup);
   expect(application.component('u-stack')).toBe(UStack);
   expect(application.component('u-validation-message')).toBe(UValidationMessage);
-  expect(UVIEW_COMPONENTS).toHaveLength(10);
+  expect(UVIEW_COMPONENTS).toHaveLength(14);
 
   // <lang><zh-CN>读取 runtime entry 本文以验证 style 仍由应用显式导入，而非由 import 或 plugin 注入。</zh-CN><en>Reads runtime-entry text to verify styles remain application-explicit rather than being injected by import or plugin.</en></lang>
   const runtimeEntry = await readFile(resolve('HIA-uView-UI/src/index.mjs'), 'utf8');

@@ -1,0 +1,5 @@
+/** @component URadio @selector .u-radio @lang zh-CN radio 通过文字与圆形符号共同表达选中状态，只消费受审 theme token。 @lang en Radio expresses selected state through text and circular symbol together and consumes audited theme tokens only. */
+.u-radio { align-items: center; background: var(--u-comp-choice-surface); border: 1px solid var(--u-comp-choice-border); border-radius: var(--u-comp-choice-radius); color: var(--u-comp-choice-foreground); display: inline-flex; font-size: var(--u-comp-choice-font-size); gap: var(--u-comp-choice-gap); min-height: var(--u-comp-choice-min-height); padding: var(--u-comp-choice-block-padding) var(--u-comp-choice-inline-padding); text-align: left; }
+.u-radio--selected { border-color: var(--u-comp-choice-selected-border); color: var(--u-comp-choice-selected-foreground); }
+.u-radio--disabled { border-style: dashed; opacity: var(--u-comp-choice-disabled-opacity); }
+.u-radio__mark { font-weight: 700; min-width: var(--u-comp-choice-marker-width); }
