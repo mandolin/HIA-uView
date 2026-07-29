@@ -9,7 +9,7 @@ HIA-uView is an npm monorepo with a deliberately small initial boundary.
 
 The initial compatibility profile is UniApp Vue 3 for the WeChat Mini Program platform (`mp-weixin`). App and web support may be added through explicit compatibility profiles rather than assumptions embedded in components. See [compatibility](compatibility.md).
 
-Themes, styles, accessibility, and localization use a separate [design-system contract](design-system.md). It defines semantic boundaries and verification requirements without publishing a versioned external runtime API or brand assets. [UButton](button.md) is the first private implementation and retains its explicit pre-release contract.
+Themes, styles, accessibility, and localization use a separate [design-system contract](design-system.md). It defines semantic boundaries and verification requirements without publishing a versioned external runtime API or brand assets. [UButton](button.md) is the first private implementation; [UStack](stack.md), [UNavBar](nav-bar.md), and [UCell](cell.md) define the next private component boundaries. All retain explicit pre-release contracts.
 
 Source documentation uses a development-only [HIA Documentation Sys integration](documentation.md). It is outside the UI runtime boundary and its generated artifacts are not package inputs.
 

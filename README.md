@@ -19,7 +19,7 @@ npm run tool:check
 npm run build:fixture:mp-weixin
 ```
 
-`check` validates the workspace and package-contract baseline. `npm test` uses the Node.js built-in test runner to verify component, Tool, theme, and documentation contracts. Runtime source and component APIs remain private and unpublished; the active compatibility profile is documented in [compatibility](docs/compatibility.md). The first independently implemented component is [UButton](docs/button.md), with a compile-only `mp-weixin` fixture.
+`check` validates the workspace and package-contract baseline. `npm test` uses the Node.js built-in test runner to verify component, Tool, theme, and documentation contracts. Runtime source and component APIs remain private and unpublished; the active compatibility profile is documented in [compatibility](docs/compatibility.md). [UButton](docs/button.md) is independently implemented; [UStack](docs/stack.md), [UNavBar](docs/nav-bar.md), and [UCell](docs/cell.md) have pre-release contracts and do not yet imply a published API.
 
 See [development notes](docs/development.md), the [public architecture overview](docs/architecture.md), and [Documentation Sys usage](docs/documentation.md).
 The theme, style, accessibility, and localization boundary is documented in the [design-system contract](docs/design-system.md).
