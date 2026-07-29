@@ -1,0 +1,63 @@
+/**
+ * @component UCell
+ * @selector .u-cell
+ * @token comp.cell.surface
+ * @token comp.cell.interaction
+ * @lang zh-CN UCell 的通用信息行样式。它通过 token 化文字、边界和禁用处理表达状态，不生成链接箭头、图标或业务布局。
+ * @lang en Generic information-row styles for UCell. They express state through tokenized text, boundaries, and disabled treatment without generating link arrows, icons, or business layout.
+ */
+
+/* <lang><zh-CN>基础行在不改变页面宽度的前提下排列左侧内容与可选右侧值，并为最小触控/信息高度保留 token 化边界。</zh-CN><en>The base row arranges left content and an optional right value without changing page width, while retaining a tokenized boundary for minimum touch/information height.</en></lang> */
+.u-cell {
+  align-items: center;
+  background: var(--u-comp-cell-surface);
+  border-bottom: 1px solid var(--u-comp-cell-border);
+  box-sizing: border-box;
+  color: var(--u-comp-cell-foreground);
+  display: flex;
+  gap: var(--u-comp-cell-gap);
+  justify-content: space-between;
+  min-height: var(--u-comp-cell-min-height);
+  padding: var(--u-comp-cell-block-padding) var(--u-comp-cell-inline-padding);
+}
+
+/* <lang><zh-CN>内容区允许标签和说明纵向排列，并使用最小宽度约束使右侧值可以在窄容器中保持自己的布局位置。</zh-CN><en>The content area permits vertical label/description arrangement and uses a minimum-width constraint so the right value can retain its layout position in narrow containers.</en></lang> */
+.u-cell__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--u-comp-cell-content-gap);
+  min-width: 0;
+}
+
+/* <lang><zh-CN>标签、说明和值分别消费主要、次要和值文字 token，避免在信息行规则中散布 HIA 基础色。</zh-CN><en>Label, description, and value consume primary, secondary, and value-text tokens respectively, preventing HIA foundation colors from being scattered through information-row rules.</en></lang> */
+.u-cell__label {
+  color: var(--u-comp-cell-foreground);
+  font-size: var(--u-comp-cell-label-font-size);
+  line-height: 1.4;
+}
+
+.u-cell__description {
+  color: var(--u-comp-cell-description-foreground);
+  font-size: var(--u-comp-cell-description-font-size);
+  line-height: 1.35;
+}
+
+.u-cell__value {
+  color: var(--u-comp-cell-value-foreground);
+  font-size: var(--u-comp-cell-value-font-size);
+  line-height: 1.4;
+  text-align: right;
+}
+
+/* <lang><zh-CN>可点击行只提供弱视觉提示，不把它表述为链接或导航；实际目的仍由应用收到 click 后决定。</zh-CN><en>A clickable row provides only a light visual cue and does not present itself as a link or navigation; the application still decides actual purpose after receiving click.</en></lang> */
+.u-cell--clickable {
+  cursor: pointer;
+}
+
+/* <lang><zh-CN>禁用可点击行增加虚线边界和降低透明度文字，确保不可用状态不只依赖颜色。</zh-CN><en>A disabled clickable row adds a dashed boundary and reduced-opacity text so unavailable state does not rely on color alone.</en></lang> */
+.u-cell--disabled {
+  border-bottom-style: dashed;
+  cursor: not-allowed;
+  opacity: var(--u-comp-cell-disabled-opacity);
+}

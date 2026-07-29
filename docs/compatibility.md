@@ -6,8 +6,8 @@ HIA-uView is being designed first for **UniApp Vue 3** applications targeting th
 
 | Area | Current status | Contract |
 | --- | --- | --- |
-| UniApp runtime | Planned and documented | Vue 3 APIs and UniApp semantics are the initial target. |
-| WeChat Mini Program | Planned and documented | Components and fixtures will be reviewed against `mp-weixin` first. |
+| UniApp runtime | Compiler-verified only | Vue 3 APIs and UniApp semantics are the initial target; runtime behavior remains separately scoped. |
+| WeChat Mini Program | Compiler-verified only | The current fixture builds `mp-weixin`; it is not WeChat DevTools, device, focus, screen-reader, or release evidence. |
 | App / H5 / other mini-programs | Not validated | No compatibility or fallback behavior is promised yet. |
 | UI component APIs | Not published | A future component contract will state its platform profile explicitly. |
 

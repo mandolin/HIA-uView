@@ -1,0 +1,60 @@
+/**
+ * @component UNavBar
+ * @selector .u-nav-bar
+ * @token comp.nav-bar.surface
+ * @token comp.nav-bar.control
+ * @lang zh-CN UNavBar 的展示型三列布局和文字 control 样式；不依赖系统栏、图标、字体或全局页面 reset。
+ * @lang en Presentation-only three-column layout and text-control styles for UNavBar; they depend on no system bar, icon, font, or global page reset.
+ */
+
+/* <lang><zh-CN>根栏使用固定的 token 化最小高度、表面和边界，以在不读取安全区的前提下提供可预测的展示区域。</zh-CN><en>The root bar uses tokenized minimum height, surface, and boundary to provide a predictable presentation area without reading safe-area data.</en></lang> */
+.u-nav-bar {
+  align-items: center;
+  background: var(--u-comp-nav-bar-surface);
+  border-bottom: 1px solid var(--u-comp-nav-bar-border);
+  box-sizing: border-box;
+  color: var(--u-comp-nav-bar-foreground);
+  display: flex;
+  gap: var(--u-comp-nav-bar-gap);
+  min-height: var(--u-comp-nav-bar-min-height);
+  padding: var(--u-comp-nav-bar-block-padding) var(--u-comp-nav-bar-inline-padding);
+}
+
+/* <lang><zh-CN>两侧容器各占相等弹性空间，使中间标题在没有路由或系统栏测量的情况下保持视觉居中。</zh-CN><en>Side containers each take equal flexible space so the center title stays visually centered without route or system-bar measurements.</en></lang> */
+.u-nav-bar__side {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.u-nav-bar__side--left {
+  justify-content: flex-start;
+}
+
+.u-nav-bar__side--right {
+  justify-content: flex-end;
+}
+
+/* <lang><zh-CN>标题保留自己的等宽布局列并允许文本自然换行；组件不通过截断推断业务标题优先级。</zh-CN><en>The title retains its own equal-width layout column and permits natural text wrapping; the component does not infer business-title priority through truncation.</en></lang> */
+.u-nav-bar__title {
+  flex: 1;
+  font-size: var(--u-comp-nav-bar-title-font-size);
+  font-weight: var(--u-comp-nav-bar-title-font-weight);
+  min-width: 0;
+  text-align: center;
+}
+
+/* <lang><zh-CN>内建 control 是带可见文字的原生按钮；样式只消费 control token，并移除小程序默认伪元素边框以保持组件边界一致。</zh-CN><en>The built-in control is a native button with visible text; styling consumes control tokens only and removes the mini-program default pseudo-element border to keep the component boundary consistent.</en></lang> */
+.u-nav-bar__control {
+  background: transparent;
+  color: var(--u-comp-nav-bar-control-foreground);
+  font-size: var(--u-comp-nav-bar-control-font-size);
+  line-height: 1.25;
+  margin: 0;
+  min-height: var(--u-comp-nav-bar-control-min-height);
+  padding: 0;
+}
+
+.u-nav-bar__control::after {
+  border: 0;
+}

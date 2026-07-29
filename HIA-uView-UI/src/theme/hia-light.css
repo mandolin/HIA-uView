@@ -6,23 +6,29 @@
  * @token sys.color.action.primary
  * @token sys.color.accent
  * @token comp.button.primary
- * @token comp.button.secondary
- * @token comp.button.text
+ * @token comp.stack.gap
+ * @token comp.nav-bar.surface
+ * @token comp.cell.surface
  * @cssprop --u-ref-color-brand-cobalt
  * @cssprop --u-ref-color-brand-cyan
  * @cssprop --u-sys-color-action-primary
  * @cssprop --u-sys-color-accent
- * @lang zh-CN HIA-uView 默认浅色主题的基础、语义与 UButton 组件 token。钴蓝承担主操作和结构角色；清透青只承担强调与数据高亮角色，实底必须配深色前景。
- * @lang en Foundational, semantic, and UButton component tokens for the HIA-uView default light theme. Cobalt blue owns primary action and structure; clear cyan is limited to emphasis and data highlighting and requires a dark foreground when solid.
+ * @lang zh-CN HIA-uView 默认浅色主题的基础、语义和组件 token。钴蓝承担主操作/结构；清透青只承担强调与数据高亮，实底必须配深色前景。主题只映射 token 值，不引入业务语义、导航或平台状态。
+ * @lang en Foundational, semantic, and component tokens for the HIA-uView default light theme. Cobalt blue owns primary action/structure; clear cyan is limited to emphasis and data highlighting and requires a dark foreground when solid. The theme maps token values only and introduces no business semantics, navigation, or platform state.
  */
+
 :root {
+  /* <lang><zh-CN>品牌基础色保留 HIA 色彩规范的钴蓝和清透青原始值；组件只能经语义/组件 token 消费它们。</zh-CN><en>Brand foundation colors retain the HIA color-guide cobalt and clear-cyan source values; components consume them only through semantic/component tokens.</en></lang> */
   --u-ref-color-brand-cobalt: #0047ab;
   --u-ref-color-brand-cyan: #00a8d3;
+
+  /* <lang><zh-CN>中性色提供表面、次级边界、次级文字和主文字的受限基础值；不直接表达业务状态。</zh-CN><en>Neutral colors provide constrained foundations for surfaces, secondary boundaries, secondary text, and primary text; they do not directly express business state.</en></lang> */
   --u-ref-color-neutral-0: #ffffff;
   --u-ref-color-neutral-50: #f7f9fc;
   --u-ref-color-neutral-700: #27364a;
   --u-ref-color-neutral-950: #001b2e;
 
+  /* <lang><zh-CN>语义层把基础色映射为跨组件可读的表面、文字、主操作、强调与焦点意图；组件不散布基础色值。</zh-CN><en>The semantic layer maps foundation colors to cross-component surface, text, primary-action, emphasis, and focus intent; components do not scatter foundation values.</en></lang> */
   --u-sys-color-surface: var(--u-ref-color-neutral-0);
   --u-sys-color-surface-subtle: var(--u-ref-color-neutral-50);
   --u-sys-color-text: var(--u-ref-color-neutral-950);
@@ -33,6 +39,7 @@
   --u-sys-color-on-accent: var(--u-ref-color-neutral-950);
   --u-sys-color-focus: var(--u-ref-color-brand-cobalt);
 
+  /* <lang><zh-CN>UButton token 组维持 P10 的主、次、文字、禁用、尺寸和按下契约；所有颜色均回溯到当前语义层。</zh-CN><en>The UButton token group retains the P10 primary, secondary, text, disabled, size, and pressed contract; every color traces back to the current semantic layer.</en></lang> */
   --u-comp-button-primary-background: var(--u-sys-color-action-primary);
   --u-comp-button-primary-foreground: var(--u-sys-color-on-action-primary);
   --u-comp-button-primary-disabled-background: var(--u-ref-color-neutral-50);
@@ -58,4 +65,41 @@
   --u-comp-button-font-size-lg: 18px;
   --u-comp-button-pressed-transform: translateY(1px) scale(0.99);
   --u-comp-button-focus-ring: var(--u-sys-color-focus);
+
+  /* <lang><zh-CN>UStack 只公开离散间距级别；none 由组件样式显式归零，因此主题无需伪造零值 token。</zh-CN><en>UStack exposes discrete spacing levels only; none is explicitly reset by component styles, so the theme need not invent a zero-value token.</en></lang> */
+  --u-comp-stack-gap-sm: 8px;
+  --u-comp-stack-gap-md: 12px;
+  --u-comp-stack-gap-lg: 16px;
+
+  /* <lang><zh-CN>UNavBar token 定义展示型栏的表面、三列间距、文字 control 和最小高度；不编码安全区、状态栏或路由语义。</zh-CN><en>UNavBar tokens define the presentation bar surface, three-column spacing, text controls, and minimum height; they encode no safe-area, system-bar, or route semantics.</en></lang> */
+  --u-comp-nav-bar-surface: var(--u-sys-color-surface);
+  --u-comp-nav-bar-foreground: var(--u-sys-color-text);
+  --u-comp-nav-bar-border: var(--u-ref-color-neutral-50);
+  --u-comp-nav-bar-min-height: 48px;
+  --u-comp-nav-bar-inline-padding: 16px;
+  --u-comp-nav-bar-block-padding: 8px;
+  --u-comp-nav-bar-gap: 8px;
+  --u-comp-nav-bar-title-font-size: 18px;
+  --u-comp-nav-bar-title-font-weight: 600;
+  --u-comp-nav-bar-control-foreground: var(--u-sys-color-action-primary);
+  --u-comp-nav-bar-control-font-size: 16px;
+  --u-comp-nav-bar-control-min-height: 40px;
+  --u-comp-nav-bar-focus-ring: var(--u-sys-color-focus);
+
+  /* <lang><zh-CN>UCell token 将一般信息行的主要/次要/值文字、边界、间距与非颜色禁用处理封装在组件层，避免借用业务状态色。</zh-CN><en>UCell tokens encapsulate general information-row primary/secondary/value text, boundary, spacing, and non-color disabled treatment at component level, avoiding business-status colors.</en></lang> */
+  --u-comp-cell-surface: var(--u-sys-color-surface);
+  --u-comp-cell-foreground: var(--u-sys-color-text);
+  --u-comp-cell-description-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-cell-value-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-cell-border: var(--u-ref-color-neutral-50);
+  --u-comp-cell-min-height: 48px;
+  --u-comp-cell-inline-padding: 16px;
+  --u-comp-cell-block-padding: 12px;
+  --u-comp-cell-gap: 12px;
+  --u-comp-cell-content-gap: 4px;
+  --u-comp-cell-label-font-size: 16px;
+  --u-comp-cell-description-font-size: 14px;
+  --u-comp-cell-value-font-size: 14px;
+  --u-comp-cell-disabled-opacity: 0.6;
+  --u-comp-cell-focus-ring: var(--u-sys-color-focus);
 }

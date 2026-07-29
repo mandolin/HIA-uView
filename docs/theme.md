@@ -13,6 +13,15 @@ The initial HIA-uView theme is a light theme. It uses cobalt blue as the primary
 
 Components consume semantic tokens such as `--u-sys-color-action-primary` and `--u-sys-color-accent`; they must not scatter foundation color values in component rules.
 
+## Component token groups
+
+| Component / 组件 | Token family / Token 族 | Boundary / 边界 |
+| --- | --- | --- |
+| `UButton` | `--u-comp-button-*` | Local action, loading, disabled, size, and text treatment. / 本地操作、加载、禁用、尺寸和文字处理。 |
+| `UStack` | `--u-comp-stack-*` | Discrete layout gaps only; it does not define page geometry. / 仅定义离散布局间距，不定义页面几何。 |
+| `UNavBar` | `--u-comp-nav-bar-*` | Presentation surface and text controls; no route, system-bar, icon, or font semantics. / 展示表面和文字控制项；没有路由、系统栏、图标或字体语义。 |
+| `UCell` | `--u-comp-cell-*` | Generic information-row surface, text, spacing, and non-color disabled treatment. / 通用信息行表面、文字、间距和非颜色禁用处理。 |
+
 ## Readability rules
 
 - Cobalt `#0047AB` with white foreground is checked as a normal-text pair against the WCAG 2.2 AA 4.5:1 threshold.

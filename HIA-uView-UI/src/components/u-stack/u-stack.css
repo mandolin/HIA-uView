@@ -1,0 +1,78 @@
+/**
+ * @component UStack
+ * @selector .u-stack
+ * @token comp.stack.gap
+ * @lang zh-CN UStack 的受限 flex 样式。布局语义完全由组件 props 映射到局部类，不注入全局 reset、页面尺寸或子项样式。
+ * @lang en Constrained flex styles for UStack. Layout semantics map from component props to local classes only; the component injects no global reset, page sizing, or child styling.
+ */
+
+/* <lang><zh-CN>基础容器建立可组合的 flex 上下文，并限制盒模型以让间距 token 在页面样式变化时保持可预测。</zh-CN><en>The base container establishes a composable flex context and constrains the box model so spacing tokens remain predictable when page styles change.</en></lang> */
+.u-stack {
+  box-sizing: border-box;
+  display: flex;
+}
+
+/* <lang><zh-CN>方向类只选择主轴；它不改变插槽子项的顺序、宽高或业务语义。</zh-CN><en>Direction classes select the main axis only; they do not change slot-child order, dimensions, or business semantics.</en></lang> */
+.u-stack--vertical {
+  flex-direction: column;
+}
+
+.u-stack--horizontal {
+  flex-direction: row;
+}
+
+/* <lang><zh-CN>间距类仅消费已文档化的组件 token；none 显式归零，避免依赖未记录的浏览器默认值。</zh-CN><en>Gap classes consume documented component tokens only; none explicitly resets spacing instead of relying on undocumented browser defaults.</en></lang> */
+.u-stack--gap-none {
+  gap: 0;
+}
+
+.u-stack--gap-sm {
+  gap: var(--u-comp-stack-gap-sm);
+}
+
+.u-stack--gap-md {
+  gap: var(--u-comp-stack-gap-md);
+}
+
+.u-stack--gap-lg {
+  gap: var(--u-comp-stack-gap-lg);
+}
+
+/* <lang><zh-CN>交叉轴类一一映射 align-items；stretch 保留为显式默认值，防止父级样式的默认推断改变布局契约。</zh-CN><en>Cross-axis classes map one to one to align-items; stretch remains an explicit default so parent-style assumptions cannot change the layout contract.</en></lang> */
+.u-stack--align-start {
+  align-items: flex-start;
+}
+
+.u-stack--align-center {
+  align-items: center;
+}
+
+.u-stack--align-end {
+  align-items: flex-end;
+}
+
+.u-stack--align-stretch {
+  align-items: stretch;
+}
+
+/* <lang><zh-CN>主轴分布类只使用四个契约值；不暴露任意 flex 值，以便 fixture 和跨组件组合可审计。</zh-CN><en>Main-axis distribution classes use only four contract values; arbitrary flex values stay excluded so fixtures and cross-component composition remain auditable.</en></lang> */
+.u-stack--justify-start {
+  justify-content: flex-start;
+}
+
+.u-stack--justify-center {
+  justify-content: center;
+}
+
+.u-stack--justify-end {
+  justify-content: flex-end;
+}
+
+.u-stack--justify-between {
+  justify-content: space-between;
+}
+
+/* <lang><zh-CN>换行仅由显式布尔 prop 启用，默认不改变主轴上的子项顺序。</zh-CN><en>Wrapping is enabled only by the explicit boolean prop and does not change child order on the main axis by default.</en></lang> */
+.u-stack--wrap {
+  flex-wrap: wrap;
+}
