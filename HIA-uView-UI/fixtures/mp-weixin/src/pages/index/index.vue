@@ -1,319 +1,318 @@
 <!--
-@lang zh-CN 在仅编译期的 mp-weixin fixture 中组合现有布局/展示组件、P13 受控字段组件和 P14 的 UModal、UNotice、UEmpty；页面只记录本地事件次数和调用方可见状态，不执行真实导航、网络、业务命令、规则执行、计时器或系统栏操作。
-@lang en Composes existing layout/presentation components, P13 controlled field components, and P14 UModal, UNotice, and UEmpty in the compile-only mp-weixin fixture; the page records only local event counts and caller visibility state and performs no real navigation, network activity, business command, rule execution, timer, or system-bar operation.
+@lang zh-CN 在仅编译期的 `mp-weixin` fixture 中组合现有 HIA-uView 组件，演示固定匿名 mock 的目录、受控同步查询、详情投影、空态 reset 与调用方控制的确认/反馈状态。页面不执行网络、路由、身份、持久化、异步数据、分页、计时器或平台系统操作。
+@lang en Composes existing HIA-uView components in the compile-only `mp-weixin` fixture to demonstrate a fixed anonymous mock directory, controlled synchronous query, detail projection, empty-state reset, and caller-controlled confirmation/feedback state. The page performs no network, routing, identity, persistence, asynchronous data, paging, timer, or platform-system operation.
 -->
 <template>
-  <!-- <lang><zh-CN>页面级 stack 验证纵向布局与 token 间距，不为组件引入业务页面结构。</zh-CN><en>The page-level stack verifies vertical layout and token spacing without introducing business-page structure into components.</en></lang> -->
+  <!-- <lang><zh-CN>页面级 stack 只提供局部纵向布局，目录/查询/详情的状态与流程仍归当前调用方页面所有。</zh-CN><en>The page-level stack provides local vertical layout only; state and flow for directory, query, and detail remain owned by the current caller page.</en></lang> -->
   <u-stack class="fixture-page" gap="lg">
-    <!-- <lang><zh-CN>导航栏示例证明 back/action 只进入本地计数 handler；没有 route、path 或 uni.navigate 调用。</zh-CN><en>The navigation-bar example proves back/action enter local counter handlers only; it contains no route, path, or uni.navigate call.</en></lang> -->
+    <!-- <lang><zh-CN>导航栏 action 只重置当前页面的本地查询；它不创建返回栈、目标地址或任何平台导航。</zh-CN><en>The navigation-bar action resets only the current page local query; it creates no back stack, destination, or platform navigation.</en></lang> -->
     <u-nav-bar
-      title="HIA-uView fixture"
-      :show-back="true"
-      back-text="返回"
-      action-text="Save"
-      @action="recordAction"
-      @back="recordBack"
+      title="本地目录示例 / Local catalog"
+      action-text="重置查询 / Reset query"
+      @action="resetCatalogQuery"
     />
 
-    <!-- <lang><zh-CN>信息行组合覆盖纯展示、描述/值、启用 click、禁用 click 与较长双语文字；不把 click 解释为导航。</zh-CN><en>The information-row group covers display-only, description/value, enabled click, disabled click, and long bilingual text; it does not interpret click as navigation.</en></lang> -->
-    <u-stack gap="sm">
-      <u-cell label="本地信息行" />
-      <u-cell label="同步状态" description="只展示调用方文字" value="待处理" />
-      <u-cell label="记录本地意图" :clickable="true" @click="recordCellClick" />
-      <u-cell label="暂不可用" :clickable="true" :disabled="true" value="Disabled" />
-      <u-cell
-        label="A deliberately long English information-row label for compile-only layout evidence"
-        description="较长中文说明文本用于证明组件不会生成或截断业务文案。"
-        value="Long value"
-      />
-    </u-stack>
+    <!-- <lang><zh-CN>notice 只呈现页面在确认本地意图后显式写入的消息和可见状态；它不表示保存、请求或业务完成。</zh-CN><en>The notice presents only the message and visibility explicitly written by the page after local intent confirmation; it represents no save, request, or business completion.</en></lang> -->
+    <u-notice
+      :visible="catalogNoticeVisible"
+      tone="success"
+      :message="catalogNoticeMessage"
+      dismiss-text="关闭提示 / Dismiss"
+      @dismiss="dismissCatalogNotice"
+    />
 
-    <!-- <lang><zh-CN>受控字段组覆盖调用方写回值、必填提示、帮助、error 显示、validating 显示、disabled guard 与独立消息；示例不执行规则或完成操作。</zh-CN><en>The controlled-field group covers caller value writeback, required cue, help, error display, validating display, disabled guard, and independent message; the example executes no rule or completion action.</en></lang> -->
-    <u-stack gap="md">
+    <!-- <lang><zh-CN>查询 field 组合调用方 label、help、受控 input 与独立消息；输入不会触发远程查询、规则执行或持久化。</zh-CN><en>The query field composes caller label, help, controlled input, and independent message; input triggers no remote query, rule execution, or persistence.</en></lang> -->
+    <u-stack class="fixture-catalog" gap="md">
       <u-field
-        label="本地查询关键词"
+        label="本地目录查询 / Local catalog query"
         :required="true"
-        help-text="由页面持有输入值与校验消息。"
-        validation-state="error"
-        validation-message="请由应用提供可查询的关键词。"
+        help-text="仅同步筛选固定匿名 mock 文字。"
       >
+        <!-- <lang><zh-CN>受控 input 将未修改字符串交还给页面；只有页面 handler 可以写入 query ref 并决定是否清除选择/反馈。</zh-CN><en>The controlled input returns the unmodified string to the page; only the page handler can write the query ref and decide whether to clear selection or feedback.</en></lang> -->
         <u-input
-          :model-value="inputValue"
-          placeholder="输入关键词"
-          @update:model-value="updateInputValue"
-          @input="recordInput"
-          @focus="recordInputFocus"
-          @blur="recordInputBlur"
+          class="fixture-catalog__query"
+          :model-value="catalogQuery"
+          placeholder="输入样例文字 / Enter sample text"
+          @update:model-value="updateCatalogQuery"
         />
       </u-field>
-      <u-field
-        label="正在检查的演示字段"
-        validation-state="validating"
-        validation-message="Checking the caller-owned value…"
-      >
-        <u-input model-value="Unavailable while controlled by the page" :disabled="true" />
-      </u-field>
-      <u-validation-message state="error" message="Standalone application-owned validation display." />
-    </u-stack>
 
-    <!-- <lang><zh-CN>P14 反馈组覆盖应用拥有 visible、modal confirm/cancel、notice dismiss 与空态 action；组件本身不关闭、不计时、不请求或加载数据。</zh-CN><en>The P14 feedback group covers application-owned visible state, modal confirm/cancel, notice dismiss, and empty-state action; components themselves neither close, time, request, nor load data.</en></lang> -->
-    <u-stack gap="md">
-      <u-stack direction="horizontal" gap="sm" wrap>
-        <u-button label="显示确认面板" @click="showModal" />
-        <u-button variant="secondary" label="显示局部提示" @click="showNotice" />
+      <!-- <lang><zh-CN>独立消息仅在页面明确声明无本地匹配时呈现；它不把无结果解释为后端错误、权限结论或真实校验结果。</zh-CN><en>The independent message presents only when the page explicitly declares no local match; it does not interpret no result as a backend error, permission conclusion, or real validation result.</en></lang> -->
+      <u-validation-message
+        :state="catalogQueryValidationState"
+        :message="catalogQueryValidationMessage"
+      />
+
+      <!-- <lang><zh-CN>目录投影只在没有 selected identifier 时显示，使用当前同步派生数组的调用方文字；每一行 click 只选择本地 ID。</zh-CN><en>The directory projection displays only while there is no selected identifier and uses caller copy from the current synchronously derived array; every row click selects only a local ID.</en></lang> -->
+      <u-stack v-if="!isCatalogDetailVisible" gap="sm">
+        <!-- <lang><zh-CN>每条信息行展示匿名 mock 的 title、description 与通用 category，不把这些文字转换为领域模型、URL 或数据访问参数。</zh-CN><en>Every information row presents anonymous mock title, description, and generic category without turning that copy into a domain model, URL, or data-access parameter.</en></lang> -->
+        <u-cell
+          v-for="record in filteredCatalogRecords"
+          :key="record.id"
+          class="fixture-catalog__entry"
+          :label="record.title"
+          :description="record.description"
+          :value="record.category"
+          :clickable="true"
+          @click="selectCatalogRecord(record.id)"
+        />
+
+        <!-- <lang><zh-CN>空态由页面根据派生数组决定；其 action 只请求页面重置本地 query，不加载、重试或滚动任何数据。</zh-CN><en>The page decides empty state from the derived array; its action only asks the page to reset local query and neither loads, retries, nor scrolls any data.</en></lang> -->
+        <u-empty
+          v-if="filteredCatalogRecords.length === 0"
+          title="没有本地匹配项 / No local matches"
+          description="请重置当前页面查询以恢复固定 mock 目录。"
+          action-text="重置本地查询 / Reset local query"
+          @action="resetCatalogQuery"
+        />
       </u-stack>
 
-      <u-notice
-        :visible="noticeVisible"
-        tone="success"
-        message="Caller-controlled local feedback."
-        dismiss-text="Dismiss notice"
-        @dismiss="dismissNotice"
-      />
+      <!-- <lang><zh-CN>详情投影只在 selected identifier 匹配固定本地记录时显示；它是页面内条件渲染，不创建 route、URL、加载或缓存。</zh-CN><en>The detail projection displays only when selected identifier matches a fixed local record; it is in-page conditional rendering and creates no route, URL, loading, or cache.</en></lang> -->
+      <u-stack v-else class="fixture-catalog__detail" gap="sm">
+        <!-- <lang><zh-CN>三条展示行复用同一 selected record 的调用方文字，使详情仍不需要新增详情组件、对象协议或业务字段。</zh-CN><en>The three display rows reuse caller copy from one selected record, keeping detail free of a new detail component, object protocol, or business field.</en></lang> -->
+        <u-cell label="标题 / Title" :value="selectedCatalogRecord.title" />
+        <u-cell label="说明 / Description" :value="selectedCatalogRecord.description" />
+        <u-cell label="分类 / Category" :value="selectedCatalogRecord.category" />
 
-      <u-empty
-        title="没有可展示的本地数据"
-        description="该示例不读取数组、加载状态或后端响应。"
-        action-text="记录空态意图"
-        @action="recordEmptyAction"
-      />
+        <!-- <lang><zh-CN>两个按钮都只进入页面 handler：返回清除选择，记录本地意图仅显示受控 modal；它们不保存、导航或访问外部状态。</zh-CN><en>Both buttons enter page handlers only: return clears selection, while recording local intent only shows a controlled modal; neither saves, navigates, nor accesses external state.</en></lang> -->
+        <u-stack direction="horizontal" gap="sm" wrap>
+          <u-button
+            class="fixture-catalog__return"
+            variant="secondary"
+            label="返回目录 / Back to catalog"
+            @click="returnToCatalog"
+          />
+          <u-button
+            class="fixture-catalog__intent"
+            label="记录本地意图 / Record local intent"
+            @click="openCatalogIntentModal"
+          />
+        </u-stack>
+      </u-stack>
 
+      <!-- <lang><zh-CN>modal 的可见状态和 confirm/cancel 后续均由页面拥有；slot 只说明当前本地样例，不发起任何数据操作。</zh-CN><en>The page owns modal visibility and all confirm/cancel follow-up; the slot only explains the current local sample and starts no data operation.</en></lang> -->
       <u-modal
-        :visible="modalVisible"
-        title="调用方控制的确认面板"
-        confirm-text="Confirm locally"
-        cancel-text="Cancel locally"
-        @confirm="recordModalConfirm"
-        @cancel="recordModalCancel"
+        :visible="catalogModalVisible"
+        title="确认本地意图 / Confirm local intent"
+        confirm-text="确认 / Confirm"
+        cancel-text="取消 / Cancel"
+        @confirm="confirmCatalogIntent"
+        @cancel="cancelCatalogIntent"
       >
-        <text>可见状态、关闭时机和后续流程均由当前页面 handler 决定。</text>
+        <text v-if="selectedCatalogRecord">当前选择仅保留在此页面：{{ selectedCatalogRecord.title }}</text>
       </u-modal>
     </u-stack>
 
-    <!-- <lang><zh-CN>按钮保留既有 label、disabled、loading 与长英文状态，验证新增字段组合没有回退其独立本地操作边界。</zh-CN><en>The button retains prior label, disabled, loading, and long-English states, verifying new field composition does not regress its independent local-action boundary.</en></lang> -->
-    <u-stack direction="horizontal" gap="sm" wrap>
-      <u-button label="保存本地草稿" @click="recordButtonClick" />
-      <u-button variant="secondary" :disabled="true" label="暂不可用" />
-      <u-button variant="text" :loading="true" label="正在同步" />
-      <u-button size="lg" label="Continue with a deliberately long English action label" />
-    </u-stack>
-
-    <!-- <lang><zh-CN>计数区只公开 fixture 内事件是否到达；它不代表真机交互、读屏、焦点或路由结果。</zh-CN><en>The counter area exposes only whether fixture events arrived; it does not represent device interaction, screen-reader, focus, or routing results.</en></lang> -->
-    <text class="fixture-page__count">back: {{ backCount }}, action: {{ actionCount }}, cell: {{ cellClickCount }}, button: {{ buttonClickCount }}, input: {{ inputEventCount }}, focus: {{ inputFocusCount }}, blur: {{ inputBlurCount }}, modal confirm: {{ modalConfirmCount }}, modal cancel: {{ modalCancelCount }}, notice dismiss: {{ noticeDismissCount }}, empty action: {{ emptyActionCount }}</text>
+    <!-- <lang><zh-CN>计数文字只显示当前同步派生记录数和是否有选择，供 compiler/runtime 组合观察；它不表示结果总量、权限、分页或服务端状态。</zh-CN><en>The counter text displays only the current synchronously derived record count and whether there is a selection for compiler/runtime composition observation; it represents no total result count, permission, paging, or server state.</en></lang> -->
+    <text class="fixture-page__summary">本地匹配数 / Local matches: {{ filteredCatalogRecords.length }}；已选择 / Selected: {{ isCatalogDetailVisible ? 'yes' : 'no' }}</text>
   </u-stack>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-// <lang><zh-CN>从私有 runtime entry 显式导入 fixture 所需组件；页面不使用自动注册、Tool runtime 或外部包解析。</zh-CN><en>Explicitly imports fixture components from the private runtime entry; the page uses no auto-registration, Tool runtime, or external package resolution.</en></lang>
+// <lang><zh-CN>导入 Vue 的局部 ref/computed 与固定本地目录 helper；页面不导入全局 store、Tool、平台 API 或外部数据访问库。</zh-CN><en>Imports Vue local ref/computed and fixed local catalog helpers; the page imports no global store, Tool, platform API, or external data-access library.</en></lang>
+import { computed, ref } from 'vue';
+// <lang><zh-CN>显式导入本仓 runtime 组件；template 编译通过 script setup 绑定这些局部实现，不使用自动注册。</zh-CN><en>Explicitly imports repository runtime components; template compilation binds these local implementations through script setup and uses no auto-registration.</en></lang>
 import { UButton, UCell, UEmpty, UField, UInput, UModal, UNavBar, UNotice, UStack, UValidationMessage } from '../../../../../src/index.mjs';
+// <lang><zh-CN>导入固定匿名 mock 集合与纯同步 helper；它们位于 fixture 内而非 UI runtime 或 Biz package。</zh-CN><en>Imports the fixed anonymous mock collection and pure synchronous helpers; they reside inside the fixture rather than UI runtime or a Biz package.</en></lang>
+import { LOCAL_CATALOG_RECORDS, filterLocalCatalogRecords, findLocalCatalogRecord } from './local-catalog.mjs';
 
-// <lang><zh-CN>返回意图的本地 fixture 计数；生命周期仅限当前页面实例，不持久化或执行导航。</zh-CN><en>Local fixture counter for back intent; its lifetime is limited to the current page instance and it neither persists nor navigates.</en></lang>
-const backCount = ref(0);
+// <lang><zh-CN>声明稳定页面组件名，便于 compiler/runtime 诊断定位当前 fixture，而不形成可公开消费的应用 API。</zh-CN><en>Declares a stable page component name so compiler/runtime diagnostics can locate this fixture without forming a publicly consumable application API.</en></lang>
+defineOptions({
+  name: 'fixture-local-catalog-page'
+});
 
-// <lang><zh-CN>右侧操作意图的本地 fixture 计数；用于 compiler/runtime 组合示例而非业务命令。</zh-CN><en>Local fixture counter for right-action intent; used for compiler/runtime composition evidence rather than a business command.</en></lang>
-const actionCount = ref(0);
+// <lang><zh-CN>调用方拥有的受控查询字符串；它只在当前页面实例存活，不写入 storage、URL 或共享状态。</zh-CN><en>Caller-owned controlled query string; it lives only for the current page instance and writes to no storage, URL, or shared state.</en></lang>
+const catalogQuery = ref('');
 
-// <lang><zh-CN>启用 UCell click 的本地 fixture 计数；禁用和不可点击行不得改变该值。</zh-CN><en>Local fixture counter for enabled UCell click; disabled and non-clickable rows must not change this value.</en></lang>
-const cellClickCount = ref(0);
+// <lang><zh-CN>调用方拥有的本地选择键；`null` 明确表示目录视图，不自动选择固定集合的第一项。</zh-CN><en>Caller-owned local selection key; `null` explicitly represents directory view and never auto-selects the first fixed-collection item.</en></lang>
+const selectedCatalogIdentifier = ref(null);
 
-// <lang><zh-CN>启用 UButton click 的本地 fixture 计数；它保留 P10/P11 按钮行为的组合证据。</zh-CN><en>Local fixture counter for enabled UButton click; it retains composition evidence for P10/P11 button behavior.</en></lang>
-const buttonClickCount = ref(0);
+// <lang><zh-CN>确认 modal 的调用方可见状态；组件只能呈现它并 emit intent，不能自行关闭或写回。</zh-CN><en>Caller visible state for the confirmation modal; the component may only present it and emit intent and cannot close or write it back itself.</en></lang>
+const catalogModalVisible = ref(false);
 
-// <lang><zh-CN>受控输入的页面自有字符串；只有页面 handler 写回它，组件自身不持久化或修改该状态。</zh-CN><en>Page-owned string for the controlled input; only the page handler writes it back, while the component itself neither persists nor modifies this state.</en></lang>
-const inputValue = ref('Caller-owned initial value');
+// <lang><zh-CN>局部 notice 的调用方可见状态；没有全局 feedback service、队列或自动消失机制。</zh-CN><en>Caller visible state for the local notice; there is no global feedback service, queue, or automatic-disappearance mechanism.</en></lang>
+const catalogNoticeVisible = ref(false);
 
-// <lang><zh-CN>已到达的 input 意图计数仅供编译组合证据显示，不代表规则、网络或数据完成结果。</zh-CN><en>Arrived input-intent count is displayed only as compilation-composition evidence and represents no rule, network, or data-completion result.</en></lang>
-const inputEventCount = ref(0);
+// <lang><zh-CN>局部 notice 的调用方文字；空初值确保页面在没有确认意图时不生成默认反馈语句。</zh-CN><en>Caller copy for the local notice; the empty initial value ensures the page generates no default feedback statement before confirmation intent.</en></lang>
+const catalogNoticeMessage = ref('');
 
-// <lang><zh-CN>已到达的聚焦意图计数仅说明 fixture handler 被绑定，不证明真机焦点或无障碍树行为。</zh-CN><en>Arrived focus-intent count shows only that a fixture handler is bound and proves no device-focus or accessibility-tree behavior.</en></lang>
-const inputFocusCount = ref(0);
+// <lang><zh-CN>由当前受控 query 同步派生的本地目录投影；helper 不访问网络、缓存或异步数据源。</zh-CN><en>Local catalog projection synchronously derived from the current controlled query; the helper accesses no network, cache, or asynchronous data source.</en></lang>
+const filteredCatalogRecords = computed(() => filterLocalCatalogRecords(LOCAL_CATALOG_RECORDS, catalogQuery.value));
 
-// <lang><zh-CN>已到达的失焦意图计数仅说明 fixture handler 被绑定，不触发页面校验或格式化。</zh-CN><en>Arrived blur-intent count shows only that a fixture handler is bound and starts no page validation or formatting.</en></lang>
-const inputBlurCount = ref(0);
+// <lang><zh-CN>由当前 selection key 同步取得详情源；无匹配保持 `null`，不创建回退记录或数据加载。</zh-CN><en>Synchronously obtains detail source from the current selection key; no match remains `null` and creates no fallback record or data load.</en></lang>
+const selectedCatalogRecord = computed(() => findLocalCatalogRecord(LOCAL_CATALOG_RECORDS, selectedCatalogIdentifier.value));
 
-// <lang><zh-CN>modal 可见状态由当前页面拥有；组件只收到该 prop，不能自行关闭或写回它。</zh-CN><en>The current page owns modal visible state; the component receives only this prop and cannot close or write it back itself.</en></lang>
-const modalVisible = ref(false);
+// <lang><zh-CN>详情可见性只由本地详情源是否存在推导，避免以 query、目录长度或业务状态猜测页面视图。</zh-CN><en>Detail visibility derives only from whether a local detail source exists, avoiding view inference from query, directory length, or business state.</en></lang>
+const isCatalogDetailVisible = computed(() => selectedCatalogRecord.value !== null);
 
-// <lang><zh-CN>notice 可见状态由当前页面拥有；没有全局 service、队列或定时器参与该示例。</zh-CN><en>The current page owns notice visible state; no global service, queue, or timer participates in this example.</en></lang>
-const noticeVisible = ref(false);
+// <lang><zh-CN>无本地匹配时由页面提供独立可见文字；空 query 不产生消息，使初始目录不被误述为校验失败。</zh-CN><en>Provides independent visible copy from the page when there is no local match; an empty query creates no message so the initial directory is not misdescribed as a validation failure.</en></lang>
+const catalogQueryValidationMessage = computed(() => {
+  // <lang><zh-CN>空白 query 只表示查看完整固定目录，因此保持零独立消息。</zh-CN><en>An empty query only means viewing the complete fixed directory and therefore retains zero independent message.</en></lang>
+  if (catalogQuery.value.trim().length === 0) {
+    return '';
+  }
 
-// <lang><zh-CN>已到达 modal confirm 意图的本地计数；它不代表请求完成、数据修改或页面路由。</zh-CN><en>Local count of arrived modal confirm intent; it represents no completed request, data mutation, or page route.</en></lang>
-const modalConfirmCount = ref(0);
+  // <lang><zh-CN>无匹配时返回调用方文字；它描述本地投影，不报告网络、权限或服务端校验。</zh-CN><en>Returns caller copy when there is no match; it describes local projection and reports no network, permission, or server validation.</en></lang>
+  return filteredCatalogRecords.value.length === 0
+    ? '当前本地查询没有匹配项 / The current local query has no matches.'
+    : '';
+});
 
-// <lang><zh-CN>已到达 modal cancel 意图的本地计数；页面 handler 决定后续可见状态。</zh-CN><en>Local count of arrived modal cancel intent; the page handler decides subsequent visible state.</en></lang>
-const modalCancelCount = ref(0);
-
-// <lang><zh-CN>已到达 notice dismiss 意图的本地计数；它不创建或移除其他 notice。</zh-CN><en>Local count of arrived notice dismiss intent; it creates or removes no other notice.</en></lang>
-const noticeDismissCount = ref(0);
-
-// <lang><zh-CN>已到达 empty action 意图的本地计数；它不读取数据数组、加载状态或后端。</zh-CN><en>Local count of arrived empty action intent; it reads no data array, loading state, or backend.</en></lang>
-const emptyActionCount = ref(0);
+// <lang><zh-CN>独立消息 state 只在页面确有文字时为 error；该样式选择不把无结果扩大为组件或后端错误判断。</zh-CN><en>The independent-message state is error only while the page has copy; this style choice does not expand no result into a component or backend error judgment.</en></lang>
+const catalogQueryValidationState = computed(() => (catalogQueryValidationMessage.value.length > 0 ? 'error' : 'idle'));
 
 /**
- * @lang zh-CN 记录 UNavBar 的纯 back 意图。该 handler 不读取事件、不调用导航，故不将 fixture 扩展为路由测试。
- * @lang en Records UNavBar pure back intent. This handler reads no event and calls no navigation, so it does not expand the fixture into a routing test.
- * @returns {void} <lang><zh-CN>无返回值；只递增当前页面的本地计数。</zh-CN><en>No return value; increments the current page local counter only.</en></lang>
+ * @lang zh-CN 接收受控 UInput 的下一字符串，并由页面显式写入 query。每次查询变化都会清除本地选择和当前反馈，避免详情或确认文字与新投影混合；不执行请求、规则或持久化。
+ * @lang en Receives the next string from controlled UInput and explicitly writes it as page query. Every query change clears local selection and current feedback, preventing detail or confirmation copy from mixing with a new projection; it performs no request, rule, or persistence.
+ * @param {string} nextQuery <lang><zh-CN>UInput 未修改地报告的候选字符串。</zh-CN><en>Candidate string reported unchanged by UInput.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写当前页面 ref。</zh-CN><en>No return value; writes current-page refs only.</en></lang>
  */
-function recordBack() {
-  // <lang><zh-CN>将一次已到达的 back 意图记录为可见数字，不赋予它任何导航含义。</zh-CN><en>Records one arrived back intent as a visible number without assigning it navigation meaning.</en></lang>
-  backCount.value += 1;
+function updateCatalogQuery(nextQuery) {
+  // <lang><zh-CN>页面拥有 query 写回，使 UInput 不形成自己的筛选状态或缓存。</zh-CN><en>The page owns query writeback so UInput forms no filtering state or cache of its own.</en></lang>
+  catalogQuery.value = nextQuery;
+
+  // <lang><zh-CN>新投影不继承旧详情选择，避免将当前 visible 详情误称为新查询的匹配结果。</zh-CN><en>A new projection inherits no old detail selection, avoiding mislabeling the currently visible detail as a match for the new query.</en></lang>
+  selectedCatalogIdentifier.value = null;
+
+  // <lang><zh-CN>查询变化同时收起局部反馈和确认面板；页面而非 feedback 组件决定这些状态变化。</zh-CN><en>A query change also hides local feedback and confirmation panel; the page rather than feedback components decides these state changes.</en></lang>
+  catalogModalVisible.value = false;
+  catalogNoticeVisible.value = false;
+  catalogNoticeMessage.value = '';
 }
 
 /**
- * @lang zh-CN 记录 UNavBar 的纯 action 意图，保持其与业务命令和网络副作用隔离。
- * @lang en Records UNavBar pure action intent while keeping it isolated from business commands and network side effects.
- * @returns {void} <lang><zh-CN>无返回值；只递增当前页面的本地计数。</zh-CN><en>No return value; increments the current page local counter only.</en></lang>
+ * @lang zh-CN 选择一个固定本地目录记录用于详情投影。只有精确存在的 identifier 才可写入页面 state；未知标识保持现状，不生成详情、错误、请求或日志。
+ * @lang en Selects one fixed local catalog record for detail projection. Only an exactly existing identifier may write page state; an unknown identifier retains current state and generates no detail, error, request, or log.
+ * @param {string} identifier <lang><zh-CN>被点击信息行所属的固定本地记录键。</zh-CN><en>Fixed local record key belonging to the clicked information row.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；符合 guard 时只更新当前页面 selection/feedback refs。</zh-CN><en>No return value; when the guard passes, updates only current-page selection/feedback refs.</en></lang>
  */
-function recordAction() {
-  // <lang><zh-CN>将一次已到达的 action 意图记录为本地证据，而不决定后续业务处理。</zh-CN><en>Records one arrived action intent as local evidence without deciding subsequent business handling.</en></lang>
-  actionCount.value += 1;
+function selectCatalogRecord(identifier) {
+  // <lang><zh-CN>先确认 identifier 属于固定 mock，避免页面把任意字符串变成未定义详情状态。</zh-CN><en>First confirms the identifier belongs to fixed mock, preventing the page from turning an arbitrary string into undefined detail state.</en></lang>
+  const matchedRecord = findLocalCatalogRecord(LOCAL_CATALOG_RECORDS, identifier);
+
+  // <lang><zh-CN>未知键保持零副作用；fixture 不尝试加载、替换或恢复任何记录。</zh-CN><en>An unknown key retains zero side effect; the fixture attempts to load, replace, or recover no record.</en></lang>
+  if (matchedRecord === null) {
+    return;
+  }
+
+  // <lang><zh-CN>页面写入已确认的本地键，详情 computed 随后负责纯同步投影。</zh-CN><en>The page writes the confirmed local key and the detail computed subsequently performs pure synchronous projection.</en></lang>
+  selectedCatalogIdentifier.value = identifier;
+
+  // <lang><zh-CN>新选择清除上一条本地反馈，避免 notice 文案被误认为当前详情的结果。</zh-CN><en>A new selection clears prior local feedback, avoiding a notice message being mistaken for the current detail result.</en></lang>
+  catalogNoticeVisible.value = false;
+  catalogNoticeMessage.value = '';
 }
 
 /**
- * @lang zh-CN 记录符合 UCell clickable/disabled guard 的 click；页面不把该事件转换为 URL、route 或表单行为。
- * @lang en Records a click that passed the UCell clickable/disabled guard; the page does not turn this event into a URL, route, or form behavior.
- * @returns {void} <lang><zh-CN>无返回值；只递增当前页面的本地计数。</zh-CN><en>No return value; increments the current page local counter only.</en></lang>
+ * @lang zh-CN 清除当前页面 query、选择、确认面板和局部反馈，以恢复固定 mock 目录。它不重新获取数据、不清除外部缓存，也不改变任何共享或持久化状态。
+ * @lang en Clears current-page query, selection, confirmation panel, and local feedback to restore the fixed mock directory. It refetches no data, clears no external cache, and changes no shared or persistent state.
+ * @returns {void} <lang><zh-CN>无返回值；只重置当前页面 refs。</zh-CN><en>No return value; resets current-page refs only.</en></lang>
  */
-function recordCellClick() {
-  // <lang><zh-CN>递增受 guard 保护的点击证据，供 fixture 页面以可见文字展示。</zh-CN><en>Increments guarded-click evidence for visible fixture-page display.</en></lang>
-  cellClickCount.value += 1;
+function resetCatalogQuery() {
+  // <lang><zh-CN>回到空 query，使同步 helper 按固定集合原始顺序投影全部匿名记录。</zh-CN><en>Returns to empty query so the synchronous helper projects every anonymous record in fixed collection order.</en></lang>
+  catalogQuery.value = '';
+
+  // <lang><zh-CN>重置操作不保留旧详情或 feedback，以保持目录状态只反映当前页面的本地集合。</zh-CN><en>The reset retains no old detail or feedback, keeping directory state reflective only of the current page local collection.</en></lang>
+  selectedCatalogIdentifier.value = null;
+  catalogModalVisible.value = false;
+  catalogNoticeVisible.value = false;
+  catalogNoticeMessage.value = '';
 }
 
 /**
- * @lang zh-CN 记录符合 UButton enabled/loading guard 的 click，保持首个组件纵切的本地行为证据。
- * @lang en Records a click that passed the UButton enabled/loading guard, preserving local behavior evidence for the first component vertical slice.
- * @returns {void} <lang><zh-CN>无返回值；只递增当前页面的本地计数。</zh-CN><en>No return value; increments the current page local counter only.</en></lang>
+ * @lang zh-CN 从详情投影返回目录投影。它只清除 local selection 和确认面板，不改变 query，因而当前同步筛选结果仍由页面 query 决定。
+ * @lang en Returns from detail projection to directory projection. It clears only local selection and confirmation panel and does not change query, so current synchronous filtered results remain decided by page query.
+ * @returns {void} <lang><zh-CN>无返回值；只更新当前页面 selection/modal refs。</zh-CN><en>No return value; updates current-page selection/modal refs only.</en></lang>
  */
-function recordButtonClick() {
-  // <lang><zh-CN>递增按钮点击证据，不发起保存、网络请求或其他业务副作用。</zh-CN><en>Increments button-click evidence and starts no save, network request, or other business side effect.</en></lang>
-  buttonClickCount.value += 1;
+function returnToCatalog() {
+  // <lang><zh-CN>清除选择键以显示目录；这不是 URL、历史记录或平台返回操作。</zh-CN><en>Clears the selection key to display the directory; this is not a URL, history, or platform-back operation.</en></lang>
+  selectedCatalogIdentifier.value = null;
+
+  // <lang><zh-CN>详情离开时收起确认面板，避免没有详情上下文的 modal 留在页面上。</zh-CN><en>Hides the confirmation panel when detail is left, avoiding a modal remaining on the page without detail context.</en></lang>
+  catalogModalVisible.value = false;
 }
 
 /**
- * @lang zh-CN 接收 UInput 报告的未修改下一字符串，并由页面显式写回受控值；该示例不检查内容或启动后续流程。
- * @lang en Receives the unmodified next string reported by UInput and explicitly writes it back as the controlled value; this example does not inspect content or start follow-up flow.
- * @param {string} nextValue <lang><zh-CN>UInput 通过 `update:modelValue` 事件报告的候选字符串。</zh-CN><en>Candidate string reported by UInput through the `update:modelValue` event.</en></lang>
- * @returns {void} <lang><zh-CN>无返回值；只更新当前页面的受控 ref。</zh-CN><en>No return value; updates only the current page controlled ref.</en></lang>
+ * @lang zh-CN 在存在本地详情选择时由页面显示确认 modal。没有选择时保持零输出，避免把 action button 的直接 handler 调用转换为隐式默认对象。
+ * @lang en Shows confirmation modal from the page while a local detail selection exists. With no selection it retains zero output, avoiding turning a direct action-button handler call into an implicit default object.
+ * @returns {void} <lang><zh-CN>无返回值；符合 guard 时只写当前页面 modal ref。</zh-CN><en>No return value; when the guard passes, writes only the current-page modal ref.</en></lang>
  */
-function updateInputValue(nextValue) {
-  // <lang><zh-CN>页面明确拥有写回动作，使组件不会隐式形成自己的表单状态或缓存。</zh-CN><en>The page explicitly owns the writeback action so the component cannot implicitly form its own form state or cache.</en></lang>
-  inputValue.value = nextValue;
+function openCatalogIntentModal() {
+  // <lang><zh-CN>详情缺失时没有可确认的本地意图；页面不创建 modal 或推断记录。</zh-CN><en>With detail absent there is no local intent to confirm; the page creates no modal and infers no record.</en></lang>
+  if (selectedCatalogRecord.value === null) {
+    return;
+  }
+
+  // <lang><zh-CN>应用显式写入 visible，保持 UModal 只负责呈现 props 与 emit intent 的既有边界。</zh-CN><en>The application explicitly writes visible, preserving UModal's existing boundary of presenting props and emitting intent only.</en></lang>
+  catalogModalVisible.value = true;
 }
 
 /**
- * @lang zh-CN 记录一次已到达的 UInput input 意图，不读取输入值或将其用于规则、网络或持久化。
- * @lang en Records one arrived UInput input intent without reading its value or using it for rules, network, or persistence.
- * @returns {void} <lang><zh-CN>无返回值；只递增当前页面本地计数。</zh-CN><en>No return value; increments only the current page local counter.</en></lang>
+ * @lang zh-CN 记录当前详情的纯本地 confirm 意图：页面关闭 modal，并展示一条调用方 notice。它不修改 mock 记录、不保存、不请求，也不将 intent 描述为业务完成。
+ * @lang en Records pure local confirm intent for current detail: the page closes modal and presents one caller notice. It mutates no mock record, saves nothing, requests nothing, and describes no intent as business completion.
+ * @returns {void} <lang><zh-CN>无返回值；符合 guard 时只更新当前页面 modal/notice refs。</zh-CN><en>No return value; when the guard passes, updates only current-page modal/notice refs.</en></lang>
  */
-function recordInput() {
-  // <lang><zh-CN>递增本地 input 证据，保持 fixture 对业务状态和后端完全无知。</zh-CN><en>Increments local input evidence while keeping the fixture fully unaware of business state and backend.</en></lang>
-  inputEventCount.value += 1;
+function confirmCatalogIntent() {
+  // <lang><zh-CN>确认必须仍有详情来源；若 selection 已清除，则不生成误导性的本地 feedback。</zh-CN><en>Confirmation must still have a detail source; if selection has been cleared, no misleading local feedback is generated.</en></lang>
+  if (selectedCatalogRecord.value === null) {
+    return;
+  }
+
+  // <lang><zh-CN>页面而非 UModal 决定关闭时机；关闭只影响当前局部可见状态。</zh-CN><en>The page rather than UModal decides close timing; closing affects only current local visible state.</en></lang>
+  catalogModalVisible.value = false;
+
+  // <lang><zh-CN>notice 文字明确把结果限定为本地 intent 记录，并仅引用当前固定匿名展示标题。</zh-CN><en>The notice copy explicitly limits its result to local-intent recording and references only the current fixed anonymous display title.</en></lang>
+  catalogNoticeMessage.value = `已记录本地意图 / Local intent recorded: ${selectedCatalogRecord.value.title}`;
+  catalogNoticeVisible.value = true;
 }
 
 /**
- * @lang zh-CN 记录一次已到达的 UInput focus 意图；不自动设置焦点或主张平台焦点能力。
- * @lang en Records one arrived UInput focus intent; it neither sets focus automatically nor claims platform focus capability.
- * @returns {void} <lang><zh-CN>无返回值；只递增当前页面本地计数。</zh-CN><en>No return value; increments only the current page local counter.</en></lang>
+ * @lang zh-CN 响应 modal cancel 意图并由页面隐藏它。它不回滚数据、不恢复焦点、不返回历史，也不产生 notice。
+ * @lang en Responds to modal cancel intent and hides it from the page. It rolls back no data, restores no focus, returns no history, and produces no notice.
+ * @returns {void} <lang><zh-CN>无返回值；只更新当前页面 modal ref。</zh-CN><en>No return value; updates only the current-page modal ref.</en></lang>
  */
-function recordInputFocus() {
-  // <lang><zh-CN>递增聚焦 handler 证据，而不把它解释为键盘、读屏或真机观察。</zh-CN><en>Increments focus-handler evidence without interpreting it as keyboard, screen-reader, or device observation.</en></lang>
-  inputFocusCount.value += 1;
+function cancelCatalogIntent() {
+  // <lang><zh-CN>页面明确隐藏 modal，保留详情和 query 供调用方继续查看或自行决定后续流程。</zh-CN><en>The page explicitly hides modal while retaining detail and query for the caller to continue viewing or independently decide follow-up flow.</en></lang>
+  catalogModalVisible.value = false;
 }
 
 /**
- * @lang zh-CN 记录一次已到达的 UInput blur 意图；不据此运行规则、格式化或完成动作。
- * @lang en Records one arrived UInput blur intent; it runs no rule, formatting, or completion action from it.
- * @returns {void} <lang><zh-CN>无返回值；只递增当前页面本地计数。</zh-CN><en>No return value; increments only the current page local counter.</en></lang>
+ * @lang zh-CN 响应 notice dismiss 意图并清除当前页面 feedback。它不影响详情、目录、query 或其他可能存在的页面反馈。
+ * @lang en Responds to notice dismiss intent and clears current-page feedback. It affects no detail, directory, query, or any other possible page feedback.
+ * @returns {void} <lang><zh-CN>无返回值；只更新当前页面 notice refs。</zh-CN><en>No return value; updates only current-page notice refs.</en></lang>
  */
-function recordInputBlur() {
-  // <lang><zh-CN>递增失焦 handler 证据，保留应用未来自行决定状态更新的空间。</zh-CN><en>Increments blur-handler evidence while leaving the application free to decide future state updates itself.</en></lang>
-  inputBlurCount.value += 1;
-}
-
-/**
- * @lang zh-CN 由页面显式显示 UModal；组件本身没有可见状态写入、自动关闭或全局弹层能力。
- * @lang en Explicitly shows UModal from the page; the component itself has no visible-state writeback, automatic close, or global-overlay capability.
- * @returns {void} <lang><zh-CN>无返回值；只将当前页面 modal ref 设为真。</zh-CN><en>No return value; sets only the current page modal ref to true.</en></lang>
- */
-function showModal() {
-  // <lang><zh-CN>页面写入可见状态，明确演示应用而非组件拥有 modal 生命周期。</zh-CN><en>The page writes visible state, explicitly demonstrating that the application rather than component owns modal lifecycle.</en></lang>
-  modalVisible.value = true;
-}
-
-/**
- * @lang zh-CN 记录 UModal confirm 意图并由页面关闭该 modal；不执行数据修改、请求或路由。
- * @lang en Records UModal confirm intent and closes that modal from the page; it performs no data mutation, request, or route.
- * @returns {void} <lang><zh-CN>无返回值；递增本地计数并写入当前页面 modal 可见状态。</zh-CN><en>No return value; increments local count and writes current page modal visible state.</en></lang>
- */
-function recordModalConfirm() {
-  // <lang><zh-CN>先记录已到达的纯 confirm 意图，使 fixture 可见地区分它与组件自动完成。</zh-CN><en>Records arrived pure confirm intent first so the fixture can visibly distinguish it from component automatic completion.</en></lang>
-  modalConfirmCount.value += 1;
-
-  // <lang><zh-CN>由页面而非 UModal 写入关闭状态；这不是对焦点、路由或请求结果的声明。</zh-CN><en>Writes close state from the page rather than UModal; this is no statement about focus, route, or request result.</en></lang>
-  modalVisible.value = false;
-}
-
-/**
- * @lang zh-CN 记录 UModal cancel 意图并由页面关闭该 modal；不恢复焦点、不执行回退或业务取消。
- * @lang en Records UModal cancel intent and closes that modal from the page; it restores no focus and performs no rollback or business cancellation.
- * @returns {void} <lang><zh-CN>无返回值；递增本地计数并写入当前页面 modal 可见状态。</zh-CN><en>No return value; increments local count and writes current page modal visible state.</en></lang>
- */
-function recordModalCancel() {
-  // <lang><zh-CN>记录 cancel 意图，保留其作为页面可见证据而非组件内部关闭逻辑。</zh-CN><en>Records cancel intent, retaining it as page-visible evidence rather than component-internal close logic.</en></lang>
-  modalCancelCount.value += 1;
-
-  // <lang><zh-CN>当前页面明确关闭 modal，后续流程仍完全由应用决定。</zh-CN><en>The current page explicitly closes the modal while all follow-up flow remains entirely application-decided.</en></lang>
-  modalVisible.value = false;
-}
-
-/**
- * @lang zh-CN 由页面显式显示 UNotice；组件不生成 toast、队列或自动持续时间。
- * @lang en Explicitly shows UNotice from the page; the component generates no toast, queue, or automatic duration.
- * @returns {void} <lang><zh-CN>无返回值；只将当前页面 notice ref 设为真。</zh-CN><en>No return value; sets only the current page notice ref to true.</en></lang>
- */
-function showNotice() {
-  // <lang><zh-CN>页面写入 notice 可见状态，保持 feedback 生命周期与组件展示边界分离。</zh-CN><en>The page writes notice visible state, keeping feedback lifecycle separate from component presentation boundary.</en></lang>
-  noticeVisible.value = true;
-}
-
-/**
- * @lang zh-CN 记录 UNotice dismiss 意图并由页面隐藏它；不启动计时器、队列或其他 feedback 状态机。
- * @lang en Records UNotice dismiss intent and hides it from the page; it starts no timer, queue, or other feedback state machine.
- * @returns {void} <lang><zh-CN>无返回值；递增本地计数并写入当前页面 notice 可见状态。</zh-CN><en>No return value; increments local count and writes current page notice visible state.</en></lang>
- */
-function dismissNotice() {
-  // <lang><zh-CN>先记录已到达 dismiss 意图，不将它误述为组件自动移除行为。</zh-CN><en>Records arrived dismiss intent first and does not misdescribe it as component automatic removal behavior.</en></lang>
-  noticeDismissCount.value += 1;
-
-  // <lang><zh-CN>由页面选择隐藏当前 notice；组件不会影响页面中的其他 feedback。</zh-CN><en>The page chooses to hide the current notice; the component affects no other feedback on the page.</en></lang>
-  noticeVisible.value = false;
-}
-
-/**
- * @lang zh-CN 记录 UEmpty action 意图；不发起加载、重试、分页、滚动或数据读取。
- * @lang en Records UEmpty action intent; it starts no loading, retry, paging, scrolling, or data read.
- * @returns {void} <lang><zh-CN>无返回值；只递增当前页面本地计数。</zh-CN><en>No return value; increments only the current page local counter.</en></lang>
- */
-function recordEmptyAction() {
-  // <lang><zh-CN>将空态 action 保留为可见的局部意图证据，不赋予它业务或后端含义。</zh-CN><en>Retains empty-state action as visible local intent evidence and assigns it no business or backend meaning.</en></lang>
-  emptyActionCount.value += 1;
+function dismissCatalogNotice() {
+  // <lang><zh-CN>由页面关闭 visible，并清空调用方文字以避免下次显式显示时保留旧的本地意图说明。</zh-CN><en>The page closes visible and clears caller copy to avoid retaining old local-intent explanation on a future explicit show.</en></lang>
+  catalogNoticeVisible.value = false;
+  catalogNoticeMessage.value = '';
 }
 </script>
 
 <style>
 /**
- * @lang zh-CN fixture 页面只使用局部布局与文字样式，避免将业务 CSS、图标、字体或未经审计资源带入 compiler evidence。
- * @lang en The fixture page uses local layout and text styles only, preventing business CSS, icons, fonts, or unaudited resources from entering compiler evidence.
+ * @lang zh-CN fixture 页面只使用局部布局、边界和文字样式，避免把业务 CSS、图标、字体或未经审计资源带入 compiler/runtime 组合证据。
+ * @lang en The fixture page uses only local layout, boundary, and text styles, preventing business CSS, icons, fonts, or unaudited resources from entering compiler/runtime composition evidence.
  */
 
-/* <lang><zh-CN>页面容器提供编译示例所需的内边距，不覆盖组件的 token 化结构或页面全局 reset。</zh-CN><en>The page container provides padding required by the compilation example without overriding component tokenized structure or a global page reset.</en></lang> */
+/* <lang><zh-CN>页面容器提供 compile-only 示例所需内边距，不覆盖组件 token 化结构或添加全局 reset。</zh-CN><en>The page container provides padding required by the compile-only example without overriding component tokenized structure or adding a global reset.</en></lang> */
 .fixture-page {
   padding: 20px;
 }
 
-/* <lang><zh-CN>事件计数采用系统主要文字色，确保辅助证据不引入新的视觉或业务主题。</zh-CN><en>Event counters use the system primary text color so auxiliary evidence introduces no new visual or business theme.</en></lang> */
-.fixture-page__count {
-  color: var(--u-sys-color-text);
+/* <lang><zh-CN>目录组合以局部最大宽度避免超长 mock 文字紧贴页面边缘；该样式不代表生产布局或跨端断点承诺。</zh-CN><en>The catalog composition uses a local maximum width so long mock copy does not touch page edges; this style represents no production-layout or cross-platform breakpoint promise.</en></lang> */
+.fixture-catalog {
+  max-width: 640px;
+}
+
+/* <lang><zh-CN>详情区域以 token 边界与内边距区别于目录行，不通过图片、图标或硬编码品牌色表达状态。</zh-CN><en>The detail area uses token border and padding to distinguish itself from directory rows and expresses no state through images, icons, or hard-coded brand colors.</en></lang> */
+.fixture-catalog__detail {
+  padding: var(--u-sys-space-md);
+  border: 1px solid var(--u-sys-color-border);
+  border-radius: var(--u-sys-radius-md);
+}
+
+/* <lang><zh-CN>摘要文字使用系统次要文字 token，明确其仅是 fixture 观察辅助而非业务统计组件。</zh-CN><en>Summary text uses the system secondary-text token, making clear that it is fixture observation aid only rather than a business-statistics component.</en></lang> */
+.fixture-page__summary {
+  color: var(--u-sys-color-text-secondary);
 }
 </style>
