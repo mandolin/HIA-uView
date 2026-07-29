@@ -8,6 +8,11 @@
 import { access } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { validatePackageContracts } from './package-contract.mjs';
+
+/**
+ * @lang zh-CN 初始化质量门禁必须存在的稳定仓库内相对文件。该冻结前清单把公开消费说明、组件源码、主题、Tool 和 Documentation Sys 配置保持在同一基础完整性检查内，而不读取仓库外路径。
+ * @lang en Stable repository-relative files that must exist for the initialization quality gate. This pre-frozen list keeps public consumption guidance, component source, theme, Tool, and Documentation Sys configuration in one baseline integrity check without reading paths outside the repository.
+ */
 const requiredFiles = [
   'README.md',
   'AGENTS.md',
@@ -30,6 +35,7 @@ const requiredFiles = [
   'docs/development.md',
   'docs/development-toolchain-risk.md',
   'docs/runtime-consumption.md',
+  'docs/local-composition.md',
   'docs/architecture.md',
   'docs/compatibility.md',
   'docs/design-system.md',
