@@ -13,6 +13,7 @@ import { validateDocumentationContract } from '../scripts/documentation-contract
  * @lang en Verifies that the current repository has no contract drift in HIA JSDoc configuration, language tags, or governed source documentation blocks.
  */
 test('validates the bilingual Documentation Sys contract', async () => {
+  // <lang><zh-CN>运行不写入仓库的文档契约检查，断言当前配置和受管源码没有可报告偏差。</zh-CN><en>Runs the repository-nonwriting documentation contract check and asserts that current configuration and governed source have no reportable drift.</en></lang>
   const issues = await validateDocumentationContract();
   assert.deepEqual(issues, []);
 });

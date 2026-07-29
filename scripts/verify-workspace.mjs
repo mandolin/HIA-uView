@@ -74,6 +74,7 @@ const requiredFiles = [
  * @returns {Promise<void>} <lang><zh-CN>无返回值；失败时抛出文件访问错误。</zh-CN><en>Resolves without a value and throws an access error on failure.</en></lang>
  */
 async function verifyRequiredFiles() {
+  // <lang><zh-CN>从当前仓库根解析每个白名单相对路径；不接受调用方路径、glob 或仓库外遍历。</zh-CN><en>Resolves every allowlisted relative path from the current repository root; accepts no caller path, glob, or traversal outside the repository.</en></lang>
   await Promise.all(requiredFiles.map((relativePath) => access(resolve(process.cwd(), relativePath))));
 }
 
@@ -83,9 +84,11 @@ async function verifyRequiredFiles() {
  * @returns {Promise<void>} <lang><zh-CN>无返回值；发现契约问题时抛出错误。</zh-CN><en>Resolves without a value and throws when a contract issue is found.</en></lang>
  */
 async function verifyPackageContracts() {
+  // <lang><zh-CN>收集 package 元数据和分发边界问题；校验函数不执行 UI、Tool、compiler 或项目代码。</zh-CN><en>Collects package-metadata and distribution-boundary issues; the validation function executes no UI, Tool, compiler, or project code.</en></lang>
   const issues = await validatePackageContracts();
 
   if (issues.length > 0) {
+    // <lang><zh-CN>按单行问题输出稳定失败文本，不泄露依赖目录、用户路径或 package 内容正文。</zh-CN><en>Outputs stable failure text per issue without leaking dependency directories, user paths, or package-content body.</en></lang>
     throw new Error(`HIA-uView package contract failed:\n${issues.map((issue) => `- ${issue}`).join('\n')}`);
   }
 }

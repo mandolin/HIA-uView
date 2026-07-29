@@ -13,7 +13,10 @@ import { contrastRatio, validateThemeContract } from '../scripts/theme-contract.
  * @lang en Verifies the theme-token values and contrast baselines for primary-action and accent foregrounds.
  */
 test('validates the HIA default light-theme contract', async () => {
+  // <lang><zh-CN>先收集 theme contract 的全部静态问题；空列表不表示设备、读屏或跨端主题已经验证。</zh-CN><en>First collects every static theme-contract issue; an empty list does not mean device, screen-reader, or cross-platform theme validation is complete.</en></lang>
   const issues = await validateThemeContract();
+
+  // <lang><zh-CN>断言公开的两组文字/背景基线仍满足当前 AA 数值门槛，避免 token 存在但可读性回退。</zh-CN><en>Asserts that the two public text/background baselines still meet the current AA numeric threshold, preventing token presence with readability regression.</en></lang>
   assert.deepEqual(issues, []);
   assert.ok(contrastRatio('#0047ab', '#ffffff') >= 4.5);
   assert.ok(contrastRatio('#00a8d3', '#001b2e') >= 4.5);
