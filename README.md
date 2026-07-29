@@ -4,7 +4,7 @@ HIA-uView is a UniApp UI framework focused first on robust mini-program developm
 
 | Workspace | Purpose | npm package status |
 | --- | --- | --- |
-| `HIA-uView-UI/` | UI framework, components, composables and platform adapters | `UButton`, `UStack`, `UNavBar`, `UCell`, `UInput`, `UField`, `UValidationMessage`, `UModal`, `UNotice`, `UEmpty`, theme tokens, locale resolver, manifest, and `mp-weixin` compile fixture; private and not published |
+| `HIA-uView-UI/` | UI framework, components, composables and platform adapters | `UButton`, `UStack`, `UNavBar`, `UCell`, `UInput`, `UField`, `UValidationMessage`, `UModal`, `UNotice`, `UEmpty`, `URadio`, `URadioGroup`, `UCheckbox`, `UCheckboxGroup`, theme tokens, locale resolver, manifest, and `mp-weixin` compile fixture; private and not published |
 | `HIA-uView-Tool/` | Development and verification tools that support HIA-uView-UI | Initial read-only `doctor` and `check` CLI; private and not published |
 
 ## Development

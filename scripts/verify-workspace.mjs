@@ -48,6 +48,10 @@ const requiredFiles = [
   'docs/modal.md',
   'docs/notice.md',
   'docs/empty.md',
+  'docs/radio.md',
+  'docs/radio-group.md',
+  'docs/checkbox.md',
+  'docs/checkbox-group.md',
   'docs/jsdoc.config.json',
   'THIRD_PARTY_NOTICES.md',
   'vitest.config.mjs'

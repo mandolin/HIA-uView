@@ -1,6 +1,6 @@
 # HIA-uView-UI
 
-This workspace contains the initial private HIA-uView UniApp UI implementation: `UButton`, `UStack`, `UNavBar`, `UCell`, `UInput`, `UField`, `UValidationMessage`, `UModal`, `UNotice`, `UEmpty`, the constrained UButton loading-message resolver, HIA theme tokens, a component manifest, and a compile-only `mp-weixin` fixture. It is not published and has no versioned external package API yet.
+This workspace contains the initial private HIA-uView UniApp UI implementation and pre-release contracts for `UButton`, `UStack`, `UNavBar`, `UCell`, `UInput`, `UField`, `UValidationMessage`, `UModal`, `UNotice`, `UEmpty`, `URadio`, `URadioGroup`, `UCheckbox`, and `UCheckboxGroup`, plus the constrained UButton loading-message resolver, HIA theme tokens, a component manifest, and a compile-only `mp-weixin` fixture. It is not published and has no versioned external package API yet.
 
 The initial target profile is UniApp Vue 3 on the WeChat Mini Program platform. App, H5, and other mini-program targets are not validated or promised yet. See the repository [compatibility profile](../docs/compatibility.md) and [HIA light-theme contract](../docs/theme.md).
 
