@@ -11,14 +11,14 @@ Use a named component import when an application registers only the components i
 应用只注册所需组件时，使用命名组件导入。
 
 ```js
-import { UButton, UCell, UEmpty, UField, UInput, UModal, UNavBar, UNotice, UStack, UValidationMessage } from '@hia-uview/ui';
+import { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UInput, UModal, UNavBar, UNotice, URadio, URadioGroup, UStack, UValidationMessage } from '@hia-uview/ui';
 ```
 
 ## Explicit plugin / 显式 plugin
 
-Use `app.use(UView)` only when deliberate registration of every currently exported HIA component is appropriate. The current private collection is `u-button`, `u-cell`, `u-empty`, `u-field`, `u-input`, `u-modal`, `u-nav-bar`, `u-notice`, `u-stack`, and `u-validation-message`. Importing the module alone has no global registration or style side effect.
+Use `app.use(UView)` only when deliberate registration of every currently exported HIA component is appropriate. The current private collection is `u-button`, `u-cell`, `u-checkbox`, `u-checkbox-group`, `u-empty`, `u-field`, `u-input`, `u-modal`, `u-nav-bar`, `u-notice`, `u-radio`, `u-radio-group`, `u-stack`, and `u-validation-message`. Importing the module alone has no global registration or style side effect.
 
-仅当适合有意注册当前所有已导出 HIA 组件时才使用 `app.use(UView)`。当前私有集合为 `u-button`、`u-cell`、`u-empty`、`u-field`、`u-input`、`u-modal`、`u-nav-bar`、`u-notice`、`u-stack` 和 `u-validation-message`。单独 import module 不会产生全局注册或样式副作用。
+仅当适合有意注册当前所有已导出 HIA 组件时才使用 `app.use(UView)`。当前私有集合为 `u-button`、`u-cell`、`u-checkbox`、`u-checkbox-group`、`u-empty`、`u-field`、`u-input`、`u-modal`、`u-nav-bar`、`u-notice`、`u-radio`、`u-radio-group`、`u-stack` 和 `u-validation-message`。单独 import module 不会产生全局注册或样式副作用。
 
 ```js
 import UView from '@hia-uview/ui';
