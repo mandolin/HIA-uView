@@ -20,11 +20,12 @@ const allowedCompatibilityFields = new Set(['version', 'profile', 'verified', 'u
 const allowedVerifiedEvidenceFields = new Set(['kind', 'target', 'scope']);
 
 /**
- * @lang zh-CN P17 可呈现的低层验证种类及其唯一允许的限制范围；这些值明确排除 DevTools、设备和发布认证。
- * @lang en Low-level verification kinds P17 may present and their sole allowed limited scopes; these values explicitly exclude DevTools, device, and release certification.
+ * @lang zh-CN Tool 可呈现的低层验证种类及其唯一允许的限制范围；P20 的本机 DevTools fixture 证据仍明确排除真机、完整无障碍、跨端和发布认证。
+ * @lang en Low-level verification kinds the Tool may present and their sole allowed limited scopes; P20 local DevTools fixture evidence still explicitly excludes device, complete accessibility, cross-platform, and release certification.
  */
 const verifiedEvidenceScopes = new Map([
   ['compiler-fixture', 'compiler-only'],
+  ['devtools-fixture', 'local-fixture-only'],
   ['jsdom-runtime', 'jsdom-only']
 ]);
 

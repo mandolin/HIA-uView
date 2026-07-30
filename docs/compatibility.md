@@ -7,11 +7,11 @@ HIA-uView is being designed first for **UniApp Vue 3** applications targeting th
 | Area | Current status | Contract |
 | --- | --- | --- |
 | UniApp runtime | Compiler-verified only | Vue 3 APIs and UniApp semantics are the initial target; runtime behavior remains separately scoped. |
-| WeChat Mini Program | Compiler-verified only | The current fixture builds `mp-weixin`; it is not WeChat DevTools, device, focus, screen-reader, or release evidence. |
+| WeChat Mini Program | Compiler-verified and locally observed DevTools fixture | The current fixture builds `mp-weixin`; its generated project was manually imported into local WeChat DevTools with `touristappid`, where the simulator rendered the fixture and the Issues panel showed zero issues. This is not device, focus, screen-reader, production AppID, review, or release evidence. |
 | App / H5 / other mini-programs | Not validated | No compatibility or fallback behavior is promised yet. |
 | UI component APIs | Not published | A future component contract will state its platform profile explicitly. |
 
-The repository's declarative `HIA-uView-UI/hia-uview.compatibility.json` records the currently available compiler-fixture and jsdom-runtime evidence, together with explicitly unverified environments. `hia-uview-tool inspect compatibility` only reports that declaration; it neither executes the named target nor upgrades it into WeChat DevTools, device, accessibility, cross-platform, or release evidence. See the [Tool contract](tool.md).
+The repository's declarative `HIA-uView-UI/hia-uview.compatibility.json` records compiler-fixture, local-DevTools-fixture, and jsdom-runtime evidence, together with explicitly unverified environments. `hia-uview-tool inspect compatibility` only reports that declaration; it neither executes the named target nor upgrades local DevTools fixture evidence into device, accessibility, cross-platform, review, or release evidence. See the [Tool contract](tool.md).
 
 ## Platform rules
 

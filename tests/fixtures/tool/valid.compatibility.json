@@ -8,6 +8,11 @@
       "scope": "compiler-only"
     },
     {
+      "kind": "devtools-fixture",
+      "target": "tests/fixtures/tool/devtools",
+      "scope": "local-fixture-only"
+    },
+    {
       "kind": "jsdom-runtime",
       "target": "tests/fixtures/tool/runtime",
       "scope": "jsdom-only"
@@ -19,7 +24,6 @@
     "h5",
     "keyboard",
     "other-mini-program",
-    "screen-reader",
-    "weixin-devtools"
+    "screen-reader"
   ]
 }

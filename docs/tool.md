@@ -91,9 +91,9 @@ Route names, pages, domain modules, API endpoints, credentials, identity provide
 
 路由名称、页面、领域模块、API endpoint、凭据、身份提供方、hooks、模板表达式、脚本路径、数据模型和业务配置均是无效 adoption 字段。任何业务导向 manifest 或辅助工具由 HIA-uView-Biz 在 `main-repo` 中拥有。
 
-The compatibility evidence manifest records bounded evidence rather than platform claims. `verified` records only `compiler-fixture` or `jsdom-runtime` evidence with a safe relative target and its limited scope. `unverified` records the remaining explicitly named environments; a report never infers validation for a missing environment.
+The compatibility evidence manifest records bounded evidence rather than platform claims. `verified` records only `compiler-fixture`, `devtools-fixture`, or `jsdom-runtime` evidence with a safe relative target and its limited scope. `devtools-fixture` is limited to a manually observed local fixture; it is not device, accessibility, review, or release evidence. `unverified` records the remaining explicitly named environments; a report never infers validation for a missing environment.
 
-compatibility evidence manifest 记录受限证据，而非平台声明。`verified` 仅记录带安全相对 target 及有限 scope 的 `compiler-fixture` 或 `jsdom-runtime` evidence。`unverified` 记录其余明确命名的环境；报告绝不为缺失环境推断验证。
+compatibility evidence manifest 记录受限证据，而非平台声明。`verified` 仅记录带安全相对 target 及有限 scope 的 `compiler-fixture`、`devtools-fixture` 或 `jsdom-runtime` evidence。`devtools-fixture` 只表示人工观察的本机 fixture，不是设备、无障碍、审核或发布证据。`unverified` 记录其余明确命名的环境；报告绝不为缺失环境推断验证。
 
 ```json
 {
@@ -101,9 +101,10 @@ compatibility evidence manifest 记录受限证据，而非平台声明。`verif
   "profile": "mp-weixin",
   "verified": [
     { "kind": "compiler-fixture", "target": "fixtures/mp-weixin", "scope": "compiler-only" },
+    { "kind": "devtools-fixture", "target": "fixtures/mp-weixin", "scope": "local-fixture-only" },
     { "kind": "jsdom-runtime", "target": "tests/runtime", "scope": "jsdom-only" }
   ],
-  "unverified": ["app", "device", "h5", "screen-reader", "weixin-devtools"]
+  "unverified": ["app", "device", "h5", "screen-reader"]
 }
 ```
 

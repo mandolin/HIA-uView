@@ -20,6 +20,6 @@ Read the full [local composition contract](local-composition.md) before reusing 
 
 ## Evidence boundary / 证据边界
 
-`npm run build:fixture:mp-weixin` provides only local compiler evidence. `npm test` runs Node contracts and Vue/jsdom runtime checks. Neither command starts a development server or proves WeChat DevTools, physical devices, screen readers, focus/keyboard behavior, App/H5/other mini-program targets, package publication, or release readiness. The declared evidence is also available through `npm run tool:inspect:compatibility`.
+`npm run build:fixture:mp-weixin` provides only local compiler evidence. `npm test` runs Node contracts and Vue/jsdom runtime checks. Neither command starts a development server or repeats the separate limited local DevTools fixture observation recorded in the compatibility profile. Neither command proves physical devices, screen readers, focus/keyboard behavior, production AppID, App/H5/other mini-program targets, package publication, or release readiness. The declared evidence is also available through `npm run tool:inspect:compatibility`.
 
-`npm run build:fixture:mp-weixin` 只提供本地 compiler 证据。`npm test` 运行 Node 契约与 Vue/jsdom runtime 检查。两个命令都不会启动开发服务器，也不能证明微信开发者工具、真机、读屏、焦点/键盘行为、App/H5/其他小程序目标、包发布或发布就绪性。已声明 evidence 还可通过 `npm run tool:inspect:compatibility` 查看。
+`npm run build:fixture:mp-weixin` 只提供本地 compiler 证据。`npm test` 运行 Node 契约与 Vue/jsdom runtime 检查。两个命令都不会启动开发服务器，也不会重复 compatibility profile 中另行记录的受限本机 DevTools fixture 观察。它们均不能证明真机、读屏、焦点/键盘行为、真实 AppID、App/H5/其他小程序目标、包发布或发布就绪性。已声明 evidence 还可通过 `npm run tool:inspect:compatibility` 查看。

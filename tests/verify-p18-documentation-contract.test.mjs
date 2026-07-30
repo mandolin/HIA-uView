@@ -62,9 +62,10 @@ test('keeps examples and migration guidance manual, UI-only, and evidence-bounde
     readPublicDocument('docs/migration-from-uview.md')
   ]);
 
-  // <lang><zh-CN>示例必须表明 fixture 不等于 business starter 或发布就绪性，并保留 compiler/jsdom 与设备范围的区别。</zh-CN><en>The example must state that a fixture is not a business starter or release readiness and retain the difference between compiler or jsdom and device scope.</en></lang>
+  // <lang><zh-CN>示例必须表明 fixture 不等于 business starter 或发布就绪性，并区分可复跑的 compiler/jsdom 命令与单独记录的受限 DevTools 观察。</zh-CN><en>The example must state that a fixture is not a business starter or release readiness and distinguish repeatable compiler or jsdom commands from the separately recorded constrained DevTools observation.</en></lang>
   assert.match(examples, /not an application starter, business module/i);
-  assert.match(examples, /Neither command starts a development server or proves WeChat DevTools, physical devices/i);
+  assert.match(examples, /Neither command starts a development server or repeats the separate limited local DevTools fixture observation/i);
+  assert.match(examples, /Neither command proves physical devices, screen readers/i);
   assert.match(examples, /tool:inspect:compatibility/);
   // <lang><zh-CN>迁移必须是逐组件人工动作，并明确不存在 codemod、源码扫描器与 Tool 写入模式。</zh-CN><en>Migration must be a component-by-component manual action and explicitly state that no codemod, source scanner, or Tool write mode exists.</en></lang>
   assert.match(migration, /\*\*not\*\* a fork with a complete upstream API surface/i);

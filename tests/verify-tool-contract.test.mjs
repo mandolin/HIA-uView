@@ -50,7 +50,7 @@ test('inspects declared components and compatibility evidence without upgrading 
   const compatibility = await executeToolCommand(['inspect', 'compatibility', '--config', configurationPath]);
   // <lang><zh-CN>component 细节只含公开组件名与相对 source/contract 路径，证明 inspect 没有读取源正文。</zh-CN><en>Component details contain only public component names and relative source and contract paths, proving inspect did not read source body.</en></lang>
   const componentRecord = components.details.manifests[0].components[0];
-  // <lang><zh-CN>compatibility evidence 的 scope 必须保留 compiler-only/jsdom-only 限制，且未验证列表仍显式保留 device。</zh-CN><en>Compatibility evidence scope must retain compiler-only and jsdom-only limits while the unverified list still explicitly retains device.</en></lang>
+  // <lang><zh-CN>compatibility evidence 的 scope 必须保留 compiler、受限本机 DevTools fixture 与 jsdom 三层限制，且未验证列表仍显式保留 device。</zh-CN><en>Compatibility evidence scopes must retain compiler, constrained local DevTools-fixture, and jsdom limits while the unverified list still explicitly retains device.</en></lang>
   const verifiedScopes = compatibility.details.manifests[0].verified.map((evidence) => evidence.scope);
 
   assert.equal(components.ok, true);
@@ -58,7 +58,7 @@ test('inspects declared components and compatibility evidence without upgrading 
   assert.equal(componentRecord.name, 'u-fixture-button');
   assert.equal(componentRecord.source, 'src/fixture-button.vue');
   assert.equal(compatibility.ok, true);
-  assert.deepEqual(verifiedScopes, ['compiler-only', 'jsdom-only']);
+  assert.deepEqual(verifiedScopes, ['compiler-only', 'local-fixture-only', 'jsdom-only']);
   assert.ok(compatibility.details.manifests[0].unverified.includes('device'));
   assert.doesNotMatch(JSON.stringify(compatibility), /release-certified|device-verified/i);
 });
