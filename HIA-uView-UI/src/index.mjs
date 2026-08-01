@@ -10,6 +10,8 @@ import UActionSheet from './components/u-action-sheet/u-action-sheet.vue';
 import UCell from './components/u-cell/u-cell.vue';
 import UCheckbox from './components/u-checkbox/u-checkbox.vue';
 import UCheckboxGroup from './components/u-checkbox-group/u-checkbox-group.vue';
+import UCollapse from './components/u-collapse/u-collapse.vue';
+import UCollapseItem from './components/u-collapse-item/u-collapse-item.vue';
 import UEmpty from './components/u-empty/u-empty.vue';
 import UField from './components/u-field/u-field.vue';
 import UForm from './components/u-form/u-form.vue';
@@ -29,13 +31,19 @@ import UBadge from './components/u-badge/u-badge.vue';
 import UDivider from './components/u-divider/u-divider.vue';
 import UCountTo from './components/u-count-to/u-count-to.vue';
 import ULineProgress from './components/u-line-progress/u-line-progress.vue';
+import UList from './components/u-list/u-list.vue';
+import ULoadmore from './components/u-loadmore/u-loadmore.vue';
 import ULoadingPage from './components/u-loading-page/u-loading-page.vue';
 import URadio from './components/u-radio/u-radio.vue';
 import URadioGroup from './components/u-radio-group/u-radio-group.vue';
 import URate from './components/u-rate/u-rate.vue';
 import USearch from './components/u-search/u-search.vue';
+import UScrollList from './components/u-scroll-list/u-scroll-list.vue';
+import USkeleton from './components/u-skeleton/u-skeleton.vue';
 import UStack from './components/u-stack/u-stack.vue';
 import USteps from './components/u-steps/u-steps.vue';
+import USticky from './components/u-sticky/u-sticky.vue';
+import USwiper from './components/u-swiper/u-swiper.vue';
 import USwitch from './components/u-switch/u-switch.vue';
 import UTabbar from './components/u-tabbar/u-tabbar.vue';
 import UTabs from './components/u-tabs/u-tabs.vue';
@@ -58,6 +66,10 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-checkbox', component: UCheckbox }),
   // <lang><zh-CN>checkbox group 只计算新的字符串集合并 emit，不拥有表单、提交或业务全选语义。</zh-CN><en>The checkbox group computes and emits a new string set only and owns no form, submission, or business select-all semantics.</en></lang>
   Object.freeze({ name: 'u-checkbox-group', component: UCheckboxGroup }),
+  // <lang><zh-CN>折叠父级只提供调用方受控 open values 的局部 context，不执行动画或业务流程。</zh-CN><en>The collapse parent provides local context for caller-controlled open values only and performs no animation or business flow.</en></lang>
+  Object.freeze({ name: 'u-collapse', component: UCollapse }),
+  // <lang><zh-CN>折叠子项只呈现标题/slot 并报告 toggle intent，不拥有父级集合。</zh-CN><en>The collapse item presents title/slot and reports toggle intent only; it owns no parent collection.</en></lang>
+  Object.freeze({ name: 'u-collapse-item', component: UCollapseItem }),
   // <lang><zh-CN>空态只展示调用方文字并 emit 可选 action 意图，不读取数据或加载状态。</zh-CN><en>The empty state displays caller text only and emits optional action intent without reading data or loading state.</en></lang>
   Object.freeze({ name: 'u-empty', component: UEmpty }),
   // <lang><zh-CN>字段结构只组织调用方标签、插槽、帮助和独立消息，不拥有表单模型或规则生命周期。</zh-CN><en>The field structure organizes caller label, slot, help, and independent message only and owns no form model or rule lifecycle.</en></lang>
@@ -96,6 +108,10 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-count-to', component: UCountTo }),
   // <lang><zh-CN>进度条只投影调用方百分比，不连接上传、下载或任务状态。</zh-CN><en>The progress bar projects caller percentage only and connects to no upload, download, or task state.</en></lang>
   Object.freeze({ name: 'u-line-progress', component: ULineProgress }),
+  // <lang><zh-CN>列表只呈现调用方有限行与 select intent，不请求、缓存或虚拟化。</zh-CN><en>The list presents caller-declared finite rows and select intent only, with no request, cache, or virtualization.</en></lang>
+  Object.freeze({ name: 'u-list', component: UList }),
+  // <lang><zh-CN>加载更多只呈现受控状态并在 more 时报告 intent，不执行分页请求。</zh-CN><en>Loadmore presents controlled status and reports intent in more state only; it executes no paging request.</en></lang>
+  Object.freeze({ name: 'u-loadmore', component: ULoadmore }),
   // <lang><zh-CN>页面 loading 是调用方控制的静态文字呈现，不推断异步状态或自动隐藏。</zh-CN><en>Page loading is caller-controlled static copy and infers no async state or automatic hiding.</en></lang>
   Object.freeze({ name: 'u-loading-page', component: ULoadingPage }),
   // <lang><zh-CN>radio 只呈现调用方受控单选意图；它不取消已选项，也不持有 option 数据。</zh-CN><en>The radio presents caller-controlled single-choice intent only; it neither clears a selected item nor owns option data.</en></lang>
@@ -106,10 +122,18 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-rate', component: URate }),
   // <lang><zh-CN>搜索只组合受控文本与 search/clear intent，不请求、去重或生成结果。</zh-CN><en>The search control composes controlled text and search/clear intent only and performs no request, deduplication, or result generation.</en></lang>
   Object.freeze({ name: 'u-search', component: USearch }),
+  // <lang><zh-CN>横向列表只使用局部 CSS overflow，不引入 WXS、BindingX 或 native plugin。</zh-CN><en>The horizontal list uses local CSS overflow only and introduces no WXS, BindingX, or native plugin.</en></lang>
+  Object.freeze({ name: 'u-scroll-list', component: UScrollList }),
+  // <lang><zh-CN>骨架只呈现静态 placeholder，不播放动画、测量 DOM 或等待异步。</zh-CN><en>The skeleton presents static placeholders only and does not animate, measure DOM, or await async work.</en></lang>
+  Object.freeze({ name: 'u-skeleton', component: USkeleton }),
   // <lang><zh-CN>布局原语只排列默认插槽，不拥有页面或子项语义。</zh-CN><en>The layout primitive arranges the default slot only and owns no page or child semantics.</en></lang>
   Object.freeze({ name: 'u-stack', component: UStack }),
   // <lang><zh-CN>步骤只呈现调用方声明的有限序列，不执行流程或自动推进。</zh-CN><en>Steps presents a caller-declared finite sequence only and executes no flow or automatic advancement.</en></lang>
   Object.freeze({ name: 'u-steps', component: USteps }),
+  // <lang><zh-CN>吸顶只投影标准 CSS sticky；调用方负责目标平台支持判断。</zh-CN><en>Sticky projects standard CSS sticky only; the caller owns target-platform support decisions.</en></lang>
+  Object.freeze({ name: 'u-sticky', component: USticky }),
+  // <lang><zh-CN>轮播只呈现静态 slide 与显式前后选择，不使用 autoplay、timer 或媒体源。</zh-CN><en>The swiper presents static slides and explicit previous/next selection only, using no autoplay, timer, or media source.</en></lang>
+  Object.freeze({ name: 'u-swiper', component: USwiper }),
   // <lang><zh-CN>切换只回传受控布尔选择，不执行权限、持久化或远程更新。</zh-CN><en>The switch returns controlled boolean selection only and performs no authorization, persistence, or remote update.</en></lang>
   Object.freeze({ name: 'u-switch', component: USwitch }),
   // <lang><zh-CN>底部标签栏只回传局部选择，不执行 router、身份或全局导航。</zh-CN><en>The bottom tabbar returns local selection only and performs no router, identity, or global navigation.</en></lang>
@@ -157,5 +181,5 @@ export const UView = Object.freeze({
 });
 
 // <lang><zh-CN>导出命名组件供应用按需注册；默认导出保持显式 plugin 入口，二者均不产生 import-time 副作用。</zh-CN><en>Exports named components for application-side registration; the default export remains the explicit plugin entry, and neither creates import-time side effects.</en></lang>
-export { UActionSheet, UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UForm, UFormItem, UIcon, UImage, UAvatar, UInput, ULineProgress, ULoadingPage, UModal, UNavBar, UNotice, UNumberBox, UPagination, UPopup, UTag, UBadge, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UStack, USteps, USwitch, UTabbar, UTabs, UTextarea, UToast, UValidationMessage };
+export { UActionSheet, UButton, UCell, UCheckbox, UCheckboxGroup, UCollapse, UCollapseItem, UEmpty, UField, UForm, UFormItem, UIcon, UImage, UAvatar, UInput, ULineProgress, UList, ULoadmore, ULoadingPage, UModal, UNavBar, UNotice, UNumberBox, UPagination, UPopup, UTag, UBadge, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UValidationMessage };
 export default UView;

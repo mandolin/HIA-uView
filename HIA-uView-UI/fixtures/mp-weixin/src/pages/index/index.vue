@@ -88,6 +88,28 @@
         </u-popup>
       </u-stack>
 
+      <!-- @lang zh-CN P44 组合只使用页面声明的有限列表、状态、折叠值、静态 slide、CSS overflow 和 sticky；不产生请求、缓存、虚拟化、autoplay、timer、WXS 或 observer。 @lang en The P44 composition uses page-declared finite list, status, collapse values, static slides, CSS overflow, and sticky only; it creates no request, cache, virtualization, autoplay, timer, WXS, or observer. <lang><zh-CN>所有 items 与状态由页面 refs 拥有。</zh-CN><en>All items and state are owned by page refs.</en></lang> -->
+      <u-stack class="fixture-content" gap="sm">
+        <u-list :items="fixtureListItems" aria-label="本地列表 / Local list" @select="handleFixtureListSelect" />
+        <u-loadmore :status="fixtureLoadmoreStatus" @loadmore="handleFixtureLoadmore" />
+        <u-skeleton :loading="fixtureSkeletonLoading" :rows="2" :show-title="true" :show-avatar="true">
+          <text>骨架完成后的本地内容 / Local content after skeleton</text>
+        </u-skeleton>
+        <u-collapse :model-value="fixtureCollapseValues" @update:model-value="updateFixtureCollapseValues">
+          <u-collapse-item name="limits" title="限制 / Limits" description="受控 disclosure / Controlled disclosure">
+            <text>列表、滚动和吸顶均由页面决定是否使用。</text>
+          </u-collapse-item>
+          <u-collapse-item name="evidence" title="证据 / Evidence" description="静态编译证据 / Static compile evidence">
+            <text>fixture 不代表 DevTools、真机或发布认证。</text>
+          </u-collapse-item>
+        </u-collapse>
+        <u-swiper :items="fixtureSwiperItems" :model-value="fixtureSwiperValue" aria-label="本地 slide / Local slides" @update:model-value="updateFixtureSwiperValue" @select="handleFixtureSwiperSelect" />
+        <u-scroll-list :items="fixtureScrollItems" aria-label="横向列表 / Horizontal list" @select="handleFixtureScrollSelect" />
+        <u-sticky :offset-top="0">
+          <u-badge :value="fixtureBadgeValue"><text>局部 sticky / Local sticky</text></u-badge>
+        </u-sticky>
+      </u-stack>
+
       <!-- @lang zh-CN P16 选择组只使用页面自有字符串与字符串数组，验证 group emit/writeback 而不引入 option 数据源或业务筛选。 @lang en The P16 choice groups use page-owned string and string array only, verifying group emit/writeback without introducing option data source or business filtering. <lang><zh-CN>这些控件不改变目录 query。</zh-CN><en>These controls do not change directory query.</en></lang> -->
       <u-radio-group :model-value="fixtureRadioValue" @update:model-value="updateFixtureRadioValue">
         <u-radio value="local-a" label="本地单选 A / Local radio A" />
@@ -180,6 +202,8 @@ import { UForm, UFormItem, UNumberBox, URate, USearch, USwitch, UTextarea } from
 import { UAvatar, UBadge, UCountTo, UDivider, UIcon, UImage, ULineProgress, UTag } from '../../../../../src/index.mjs';
 // <lang><zh-CN>P43 显式导入受控浮层、反馈和导航组件；它们不通过全局 registry 自动注册。</zh-CN><en>Explicitly imports controlled overlay, feedback, and navigation components for P43; they are not auto-registered through a global registry.</en></lang>
 import { UActionSheet, ULoadingPage, UPagination, UPopup, USteps, UTabbar, UTabs, UToast } from '../../../../../src/index.mjs';
+// <lang><zh-CN>P44 显式导入列表、滚动和信息承载组件；它们只消费页面本地状态，不启用平台服务。</zh-CN><en>Explicitly imports P44 list, scroll, and information-content components; they consume page-local state only and enable no platform service.</en></lang>
+import { UCollapse, UCollapseItem, UList, ULoadmore, UScrollList, USkeleton, USticky, USwiper } from '../../../../../src/index.mjs';
 // <lang><zh-CN>导入固定匿名 mock 集合与纯同步 helper；它们位于 fixture 内而非 UI runtime 或 Biz package。</zh-CN><en>Imports the fixed anonymous mock collection and pure synchronous helpers; they reside inside the fixture rather than UI runtime or a Biz package.</en></lang>
 import { LOCAL_CATALOG_RECORDS, filterLocalCatalogRecords, findLocalCatalogRecord } from './local-catalog.mjs';
 
@@ -247,6 +271,25 @@ const fixtureLoadingVisible = ref(false);
 const fixtureSheetVisible = ref(false);
 const fixturePopupVisible = ref(false);
 
+// <lang><zh-CN>P44 items 与状态都是页面内声明的中性 fixture 数据，不进入 UI runtime、路由或业务模型。</zh-CN><en>P44 items and state are page-declared neutral fixture data and enter no UI runtime, router, or business model.</en></lang>
+const fixtureListItems = Object.freeze([
+  Object.freeze({ label: '列表行 A / List row A', description: '局部文字 / Local copy', value: 'a' }),
+  Object.freeze({ label: '列表行 B / List row B', description: '受控选择 / Controlled selection', value: 'b' })
+]);
+const fixtureSwiperItems = Object.freeze([
+  Object.freeze({ label: 'Slide 一 / Slide one', description: '静态呈现 / Static presentation', value: 'one' }),
+  Object.freeze({ label: 'Slide 二 / Slide two', description: '显式切换 / Explicit change', value: 'two' })
+]);
+const fixtureScrollItems = Object.freeze([
+  Object.freeze({ label: '横向一 / Horizontal one', value: 'one' }),
+  Object.freeze({ label: '横向二 / Horizontal two', value: 'two' }),
+  Object.freeze({ label: '横向三 / Horizontal three', value: 'three' })
+]);
+const fixtureLoadmoreStatus = ref('more');
+const fixtureSkeletonLoading = ref(true);
+const fixtureCollapseValues = ref(['limits']);
+const fixtureSwiperValue = ref(0);
+
 /**
  * @lang zh-CN 隐藏 fixture 标签只更新当前页面可见 ref，不代表业务删除或远程状态。
  * @lang en Hides the fixture tag by updating a page-local visible ref only; it represents no business deletion or remote state.
@@ -284,6 +327,68 @@ function updateFixtureTabbarValue(value) {
  */
 function updateFixturePageValue(value) {
   fixturePageValue.value = value;
+}
+
+/**
+ * @lang zh-CN 记录 P44 列表的本地选择，只显示受控 notice，不导航、不请求或修改目录数据。
+ * @lang en Records a P44 list local selection by showing a controlled notice only; it does not navigate, request, or mutate catalog data.
+ * @param {{ value: string, index: number }} selection <lang><zh-CN>列表选择意图。</zh-CN><en>List selection intent.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function handleFixtureListSelect(selection) {
+  catalogNoticeMessage.value = `已选择列表项 ${selection.value} / Selected list item ${selection.value}`;
+  catalogNoticeVisible.value = true;
+}
+
+/**
+ * @lang zh-CN 将 loadmore intent 映射为静态 nomore 状态，避免启动任何数据请求。
+ * @lang en Maps loadmore intent to a static nomore state without starting any data request.
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function handleFixtureLoadmore() {
+  fixtureLoadmoreStatus.value = 'nomore';
+}
+
+/**
+ * @lang zh-CN 写回页面拥有的折叠值；不执行动画或持久化。
+ * @lang en Writes back the page-owned collapse values without animation or persistence.
+ * @param {string[]|string} value <lang><zh-CN>折叠 open value。</zh-CN><en>Collapse open value.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function updateFixtureCollapseValues(value) {
+  fixtureCollapseValues.value = Array.isArray(value) ? value : (value ? [value] : []);
+}
+
+/**
+ * @lang zh-CN 写回页面拥有的静态 slide index；不 autoplay、不创建 timer。
+ * @lang en Writes back the page-owned static slide index without autoplay or timer creation.
+ * @param {number} value <lang><zh-CN>当前 slide index。</zh-CN><en>Current slide index.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function updateFixtureSwiperValue(value) {
+  fixtureSwiperValue.value = value;
+}
+
+/**
+ * @lang zh-CN 处理 slide 选择，只写页面 notice 文字。
+ * @lang en Handles slide selection by writing page notice copy only.
+ * @param {{ value: string, index: number }} selection <lang><zh-CN>slide 选择意图。</zh-CN><en>Slide selection intent.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function handleFixtureSwiperSelect(selection) {
+  catalogNoticeMessage.value = `已选择 slide ${selection.value} / Selected slide ${selection.value}`;
+  catalogNoticeVisible.value = true;
+}
+
+/**
+ * @lang zh-CN 处理横向列表选择，只写页面 notice 文字，不同步滚动指示器。
+ * @lang en Handles horizontal-list selection by writing page notice copy only without synchronizing a scroll indicator.
+ * @param {{ value: string, index: number }} selection <lang><zh-CN>横向列表选择意图。</zh-CN><en>Horizontal-list selection intent.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function handleFixtureScrollSelect(selection) {
+  catalogNoticeMessage.value = `已选择横向项 ${selection.value} / Selected horizontal item ${selection.value}`;
+  catalogNoticeVisible.value = true;
 }
 
 /**

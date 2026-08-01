@@ -1,0 +1,33 @@
+/**
+ * @component UScrollList styles
+ * @lang zh-CN 定义局部横向 overflow 和有限 item，不包含 WXS、BindingX、测量或滚动服务。
+ * @lang en Defines local horizontal overflow and finite items; it includes no WXS, BindingX, measurement, or scroll service.
+ */
+.u-scroll-list {
+  display: block;
+  width: 100%;
+  color: var(--u-comp-scroll-list-foreground);
+}
+
+.u-scroll-list__viewport {
+  overflow-x: auto;
+  width: 100%;
+  padding-bottom: var(--u-comp-scroll-list-scrollbar-gap);
+}
+
+.u-scroll-list__track {
+  display: inline-flex;
+  min-width: 100%;
+  align-items: stretch;
+  gap: var(--u-comp-scroll-list-gap);
+}
+
+.u-scroll-list__item {
+  flex: 0 0 auto;
+  min-height: var(--u-comp-scroll-list-item-min-height);
+  padding: var(--u-comp-scroll-list-item-padding);
+  border: var(--u-comp-scroll-list-border-width) solid var(--u-comp-scroll-list-border);
+  border-radius: var(--u-comp-scroll-list-radius);
+  background: var(--u-comp-scroll-list-surface);
+  color: var(--u-comp-scroll-list-item-foreground);
+}

@@ -536,4 +536,105 @@
   --u-comp-pagination-active-border: var(--u-sys-color-action-primary);
   --u-comp-pagination-active-foreground: var(--u-sys-color-on-action-primary);
   --u-comp-pagination-disabled-foreground: var(--u-sys-color-text-secondary);
+
+  /* <lang><zh-CN>UList token 组只定义局部行、文字和分隔，不编码请求、缓存或虚拟化。</zh-CN><en>The UList token group defines local rows, copy, and dividers only; it encodes no request, cache, or virtualization.</en></lang> */
+  --u-comp-list-gap: 0px;
+  --u-comp-list-surface: var(--u-sys-color-surface);
+  --u-comp-list-foreground: var(--u-sys-color-text);
+  --u-comp-list-secondary-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-list-disabled-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-list-divider: var(--u-ref-color-neutral-50);
+  --u-comp-list-divider-width: 1px;
+  --u-comp-list-item-min-height: 48px;
+  --u-comp-list-item-padding: 12px;
+  --u-comp-list-text-gap: 4px;
+  --u-comp-list-label-size: 15px;
+  --u-comp-list-description-size: 12px;
+  --u-comp-list-value-gap: 12px;
+
+  /* <lang><zh-CN>ULoadmore token 组只定义状态文字和显式操作按钮，不包含 spinner、timer 或分页策略。</zh-CN><en>The ULoadmore token group defines status copy and explicit action button only; it includes no spinner, timer, or paging strategy.</en></lang> */
+  --u-comp-loadmore-padding: 12px;
+  --u-comp-loadmore-foreground: var(--u-sys-color-text);
+  --u-comp-loadmore-secondary-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-loadmore-size: 14px;
+  --u-comp-loadmore-surface: var(--u-sys-color-surface);
+  --u-comp-loadmore-action-foreground: var(--u-sys-color-action-primary);
+  --u-comp-loadmore-border: var(--u-ref-color-neutral-700);
+  --u-comp-loadmore-border-width: 1px;
+  --u-comp-loadmore-radius: 6px;
+  --u-comp-loadmore-action-padding: 6px 12px;
+  --u-comp-loadmore-min-height: 32px;
+
+  /* <lang><zh-CN>USkeleton token 组定义静态 placeholder 的中性表面和几何，不包含 shimmer、animation 或测量。</zh-CN><en>The USkeleton token group defines neutral static-placeholder surfaces and geometry; it includes no shimmer, animation, or measurement.</en></lang> */
+  --u-comp-skeleton-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-skeleton-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-skeleton-padding: 12px;
+  --u-comp-skeleton-gap: 12px;
+  --u-comp-skeleton-row-gap: 8px;
+  --u-comp-skeleton-radius: 6px;
+  --u-comp-skeleton-avatar-size: 40px;
+  --u-comp-skeleton-title-width: 52%;
+  --u-comp-skeleton-title-height: 16px;
+  --u-comp-skeleton-row-height: 12px;
+
+  /* <lang><zh-CN>UCollapse token 组定义局部边界和表面，不声明动画或父树服务。</zh-CN><en>The UCollapse token group defines local boundaries and surfaces; it declares no animation or parent-tree service.</en></lang> */
+  --u-comp-collapse-gap: 0px;
+  --u-comp-collapse-border: var(--u-ref-color-neutral-50);
+  --u-comp-collapse-border-width: 1px;
+  --u-comp-collapse-radius: 8px;
+  --u-comp-collapse-surface: var(--u-sys-color-surface);
+
+  /* <lang><zh-CN>UCollapseItem token 组定义标题、内容和指示符的静态几何，不使用 transition 或 icon registry。</zh-CN><en>The UCollapseItem token group defines static title, content, and indicator geometry without transition or icon registry.</en></lang> */
+  --u-comp-collapse-item-divider: var(--u-ref-color-neutral-50);
+  --u-comp-collapse-item-divider-width: 1px;
+  --u-comp-collapse-item-header-min-height: 48px;
+  --u-comp-collapse-item-header-padding: 12px;
+  --u-comp-collapse-item-title-foreground: var(--u-sys-color-text);
+  --u-comp-collapse-item-title-size: 15px;
+  --u-comp-collapse-item-description-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-collapse-item-description-size: 12px;
+  --u-comp-collapse-item-text-gap: 4px;
+  --u-comp-collapse-item-indicator: var(--u-sys-color-action-primary);
+  --u-comp-collapse-item-indicator-size: 20px;
+  --u-comp-collapse-item-content-padding: 12px;
+  --u-comp-collapse-item-content-border-width: 1px;
+  --u-comp-collapse-item-content-foreground: var(--u-sys-color-text);
+
+  /* <lang><zh-CN>USwiper token 组定义静态 slide deck 和控制按钮，不编码 autoplay、媒体或原生 swiper。</zh-CN><en>The USwiper token group defines a static slide deck and controls; it encodes no autoplay, media, or native swiper.</en></lang> */
+  --u-comp-swiper-gap: 12px;
+  --u-comp-swiper-padding: 12px;
+  --u-comp-swiper-border: var(--u-ref-color-neutral-50);
+  --u-comp-swiper-border-width: 1px;
+  --u-comp-swiper-radius: 8px;
+  --u-comp-swiper-surface: var(--u-sys-color-surface);
+  --u-comp-swiper-slide-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-swiper-slide-foreground: var(--u-sys-color-text);
+  --u-comp-swiper-secondary-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-swiper-slide-min-height: 120px;
+  --u-comp-swiper-slide-padding: 20px;
+  --u-comp-swiper-text-gap: 6px;
+  --u-comp-swiper-label-size: 16px;
+  --u-comp-swiper-description-size: 12px;
+  --u-comp-swiper-control-gap: 8px;
+  --u-comp-swiper-control-min-height: 32px;
+  --u-comp-swiper-control-padding: 6px 10px;
+  --u-comp-swiper-control-radius: 6px;
+  --u-comp-swiper-control-foreground: var(--u-sys-color-action-primary);
+
+  /* <lang><zh-CN>UScrollList token 组定义局部横向 overflow、item 和边界，不包含 WXS、BindingX 或测量。</zh-CN><en>The UScrollList token group defines local horizontal overflow, items, and boundaries; it includes no WXS, BindingX, or measurement.</en></lang> */
+  --u-comp-scroll-list-foreground: var(--u-sys-color-text);
+  --u-comp-scroll-list-scrollbar-gap: 4px;
+  --u-comp-scroll-list-gap: 8px;
+  --u-comp-scroll-list-item-min-height: 40px;
+  --u-comp-scroll-list-item-padding: 8px 12px;
+  --u-comp-scroll-list-border: var(--u-ref-color-neutral-50);
+  --u-comp-scroll-list-border-width: 1px;
+  --u-comp-scroll-list-radius: 999px;
+  --u-comp-scroll-list-surface: var(--u-sys-color-surface);
+  --u-comp-scroll-list-item-foreground: var(--u-sys-color-action-primary);
+
+  /* <lang><zh-CN>USticky token 组只声明 CSS sticky 的局部表面与层级，不包含 observer 或 fixed fallback。</zh-CN><en>The USticky token group declares local CSS-sticky surface and layer only; it includes no observer or fixed fallback.</en></lang> */
+  --u-comp-sticky-default-top: 0px;
+  --u-comp-sticky-z-index: 1;
+  --u-comp-sticky-surface: var(--u-sys-color-surface);
 }

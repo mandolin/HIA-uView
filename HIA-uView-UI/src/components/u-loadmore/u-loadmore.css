@@ -1,0 +1,26 @@
+/**
+ * @component ULoadmore styles
+ * @lang zh-CN 定义局部状态文字和操作按钮，不包含 spinner、动画、timer 或分页样式服务。
+ * @lang en Defines local status copy and action button only; it includes no spinner, animation, timer, or paging style service.
+ */
+.u-loadmore {
+  display: flex;
+  justify-content: center;
+  padding: var(--u-comp-loadmore-padding);
+  color: var(--u-comp-loadmore-foreground);
+  font-size: var(--u-comp-loadmore-size);
+}
+
+.u-loadmore__action {
+  min-height: var(--u-comp-loadmore-min-height);
+  padding: var(--u-comp-loadmore-action-padding);
+  border: var(--u-comp-loadmore-border-width) solid var(--u-comp-loadmore-border);
+  border-radius: var(--u-comp-loadmore-radius);
+  background: var(--u-comp-loadmore-surface);
+  color: var(--u-comp-loadmore-action-foreground);
+  font-size: inherit;
+}
+
+.u-loadmore__text {
+  color: var(--u-comp-loadmore-secondary-foreground);
+}

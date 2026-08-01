@@ -1,0 +1,52 @@
+/**
+ * @component USwiper styles
+ * @lang zh-CN 定义静态 slide、控制按钮和位置文字，不声明原生轮播、动画或媒体资产。
+ * @lang en Defines static slides, control buttons, and position copy; it declares no native carousel, animation, or media asset.
+ */
+.u-swiper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-swiper-gap);
+  padding: var(--u-comp-swiper-padding);
+  border: var(--u-comp-swiper-border-width) solid var(--u-comp-swiper-border);
+  border-radius: var(--u-comp-swiper-radius);
+  background: var(--u-comp-swiper-surface);
+}
+
+.u-swiper__slide,
+.u-swiper__empty {
+  display: flex;
+  min-height: var(--u-comp-swiper-slide-min-height);
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--u-comp-swiper-text-gap);
+  padding: var(--u-comp-swiper-slide-padding);
+  background: var(--u-comp-swiper-slide-surface);
+  color: var(--u-comp-swiper-slide-foreground);
+}
+
+.u-swiper__label {
+  font-size: var(--u-comp-swiper-label-size);
+}
+
+.u-swiper__description,
+.u-swiper__position {
+  color: var(--u-comp-swiper-secondary-foreground);
+  font-size: var(--u-comp-swiper-description-size);
+}
+
+.u-swiper__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--u-comp-swiper-control-gap);
+}
+
+.u-swiper__controls button {
+  min-height: var(--u-comp-swiper-control-min-height);
+  padding: var(--u-comp-swiper-control-padding);
+  border: var(--u-comp-swiper-border-width) solid var(--u-comp-swiper-border);
+  border-radius: var(--u-comp-swiper-control-radius);
+  background: var(--u-comp-swiper-surface);
+  color: var(--u-comp-swiper-control-foreground);
+}

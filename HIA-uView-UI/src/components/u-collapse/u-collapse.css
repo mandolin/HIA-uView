@@ -1,0 +1,13 @@
+/**
+ * @component UCollapse styles
+ * @lang zh-CN 定义局部折叠边界和 slot 排列，不声明动画、timer 或父树注册服务。
+ * @lang en Defines local collapse boundaries and slot arrangement; it declares no animation, timer, or parent-tree registry service.
+ */
+.u-collapse {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-collapse-gap);
+  border: var(--u-comp-collapse-border-width) solid var(--u-comp-collapse-border);
+  border-radius: var(--u-comp-collapse-radius);
+  background: var(--u-comp-collapse-surface);
+}

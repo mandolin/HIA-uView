@@ -1,0 +1,53 @@
+/**
+ * @component UList styles
+ * @lang zh-CN 只定义局部列表行、文字和 slot 间距，不声明滚动容器、虚拟化或数据状态。
+ * @lang en Defines local list rows, copy, and slot spacing only; it declares no scroll container, virtualization, or data state.
+ */
+.u-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-list-gap);
+  color: var(--u-comp-list-foreground);
+}
+
+.u-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: var(--u-comp-list-item-min-height);
+  padding: var(--u-comp-list-item-padding);
+  border: 0;
+  border-bottom: var(--u-comp-list-divider-width) solid var(--u-comp-list-divider);
+  background: var(--u-comp-list-surface);
+  color: inherit;
+  text-align: left;
+}
+
+.u-list__item--disabled {
+  color: var(--u-comp-list-disabled-foreground);
+}
+
+.u-list__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-list-text-gap);
+}
+
+.u-list__label {
+  font-size: var(--u-comp-list-label-size);
+}
+
+.u-list__description,
+.u-list__value {
+  color: var(--u-comp-list-secondary-foreground);
+  font-size: var(--u-comp-list-description-size);
+}
+
+.u-list__value {
+  margin-left: var(--u-comp-list-value-gap);
+}
+
+.u-list__slot {
+  display: block;
+}

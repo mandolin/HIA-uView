@@ -16,9 +16,9 @@ import { UActionSheet, UAvatar, UBadge, UButton, UCell, UCheckbox, UCheckboxGrou
 
 ## Explicit plugin / 显式 plugin
 
-Use `app.use(UView)` only when deliberate registration of every currently exported HIA component is appropriate. The current private collection contains 37 `u-*` components, including controlled display, feedback, overlay, navigation, steps, and pagination contracts. Importing the module alone has no global registration or style side effect.
+Use `app.use(UView)` only when deliberate registration of every currently exported HIA component is appropriate. The current private collection contains 45 `u-*` components, including controlled display, list, scroll, feedback, overlay, navigation, steps, and pagination contracts. Importing the module alone has no global registration or style side effect.
 
-仅当适合有意注册当前所有已导出 HIA 组件时才使用 `app.use(UView)`。当前私有集合包含 37 个 `u-*` 组件，包括受控展示、反馈、浮层、导航、步骤和分页契约。单独 import module 不会产生全局注册或样式副作用。
+仅当适合有意注册当前所有已导出 HIA 组件时才使用 `app.use(UView)`。当前私有集合包含 45 个 `u-*` 组件，包括受控展示、列表、滚动、反馈、浮层、导航、步骤和分页契约。单独 import module 不会产生全局注册或样式副作用。
 
 ```js
 import UView from '@hia-uview/ui';

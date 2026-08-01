@@ -1,0 +1,15 @@
+/**
+ * @component USticky styles
+ * @lang zh-CN 只使用标准 CSS sticky 与 token offset，不包含平台探测、observer、fixed fallback 或 scroll listener。
+ * @lang en Uses standard CSS sticky and tokenized offset only; it includes no platform detection, observer, fixed fallback, or scroll listener.
+ */
+.u-sticky {
+  position: sticky;
+  top: var(--u-comp-sticky-default-top);
+  z-index: var(--u-comp-sticky-z-index);
+  background: var(--u-comp-sticky-surface);
+}
+
+.u-sticky--disabled {
+  position: static;
+}

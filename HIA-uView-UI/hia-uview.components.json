@@ -52,6 +52,18 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-collapse",
+      "source": "src/components/u-collapse/u-collapse.vue",
+      "contract": "docs/collapse.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-collapse-item",
+      "source": "src/components/u-collapse-item/u-collapse-item.vue",
+      "contract": "docs/collapse-item.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-count-to",
       "source": "src/components/u-count-to/u-count-to.vue",
       "contract": "docs/count-to.md",
@@ -121,9 +133,21 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-list",
+      "source": "src/components/u-list/u-list.vue",
+      "contract": "docs/list.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-loading-page",
       "source": "src/components/u-loading-page/u-loading-page.vue",
       "contract": "docs/loading-page.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-loadmore",
+      "source": "src/components/u-loadmore/u-loadmore.vue",
+      "contract": "docs/loadmore.md",
       "locales": ["zh-Hans", "en"]
     },
     {
@@ -190,9 +214,21 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-scroll-list",
+      "source": "src/components/u-scroll-list/u-scroll-list.vue",
+      "contract": "docs/scroll-list.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-search",
       "source": "src/components/u-search/u-search.vue",
       "contract": "docs/search.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-skeleton",
+      "source": "src/components/u-skeleton/u-skeleton.vue",
+      "contract": "docs/skeleton.md",
       "locales": ["zh-Hans", "en"]
     },
     {
@@ -208,6 +244,18 @@
       "name": "u-steps",
       "source": "src/components/u-steps/u-steps.vue",
       "contract": "docs/steps.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-sticky",
+      "source": "src/components/u-sticky/u-sticky.vue",
+      "contract": "docs/sticky.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-swiper",
+      "source": "src/components/u-swiper/u-swiper.vue",
+      "contract": "docs/swiper.md",
       "locales": ["zh-Hans", "en"]
     },
     {

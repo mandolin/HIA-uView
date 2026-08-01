@@ -10,6 +10,8 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-cell` | `UCell` | [UCell](cell.md) | Text row and click intent / 文字行与 click 意图 |
 | `u-checkbox` | `UCheckbox` | [UCheckbox](checkbox.md) | Controlled boolean/membership intent / 受控布尔或成员选择意图 |
 | `u-checkbox-group` | `UCheckboxGroup` | [UCheckboxGroup](checkbox-group.md) | Controlled string-set coordination / 受控字符串集合协调 |
+| `u-collapse` | `UCollapse` | [UCollapse](collapse.md) | Controlled local disclosure context / 受控局部折叠 context |
+| `u-collapse-item` | `UCollapseItem` | [UCollapseItem](collapse-item.md) | Controlled disclosure item / 受控折叠子项 |
 | `u-empty` | `UEmpty` | [UEmpty](empty.md) | Caller-owned empty projection / 调用方拥有的空态投影 |
 | `u-field` | `UField` | [UField](field.md) | Field layout without form ownership / 不拥有表单的字段布局 |
 | `u-form` | `UForm` | [UForm](form.md) | Static form grouping and explicit intents / 静态表单分组与显式意图 |
@@ -27,6 +29,8 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-divider` | `UDivider` | [UDivider](divider.md) | Local line and slot separation / 局部线条与 slot 分隔 |
 | `u-count-to` | `UCountTo` | [UCountTo](count-to.md) | Synchronous formatted number / 同步格式化数字 |
 | `u-line-progress` | `ULineProgress` | [ULineProgress](line-progress.md) | Static bounded progress projection / 静态受边界保护进度投影 |
+| `u-list` | `UList` | [UList](list.md) | Finite local list rows / 有限局部列表行 |
+| `u-loadmore` | `ULoadmore` | [ULoadmore](loadmore.md) | Controlled load-more status / 受控加载更多状态 |
 | `u-action-sheet` | `UActionSheet` | [UActionSheet](action-sheet.md) | Caller-declared local action list / 调用方声明的局部操作列表 |
 | `u-loading-page` | `ULoadingPage` | [ULoadingPage](loading-page.md) | Static page loading presentation / 静态页面 loading 呈现 |
 | `u-pagination` | `UPagination` | [UPagination](pagination.md) | Controlled finite page selection / 受控有限页码选择 |
@@ -34,11 +38,15 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-tabbar` | `UTabbar` | [UTabbar](tabbar.md) | Local bottom tab selection / 局部底部标签选择 |
 | `u-tabs` | `UTabs` | [UTabs](tabs.md) | Controlled tab strip / 受控标签栏 |
 | `u-steps` | `USteps` | [USteps](steps.md) | Declarative finite step sequence / 声明式有限步骤序列 |
+| `u-sticky` | `USticky` | [USticky](sticky.md) | CSS-only sticky projection / 仅 CSS 吸顶投影 |
+| `u-swiper` | `USwiper` | [USwiper](swiper.md) | Static slide deck / 静态 slide deck |
 | `u-toast` | `UToast` | [UToast](toast.md) | Static controlled feedback / 静态受控反馈 |
 | `u-radio` | `URadio` | [URadio](radio.md) | Controlled single-choice intent / 受控单选意图 |
 | `u-radio-group` | `URadioGroup` | [URadioGroup](radio-group.md) | Controlled single-choice coordination / 受控单选协调 |
 | `u-rate` | `URate` | [URate](rate.md) | Text-symbol integer selection / 文字符号整数选择 |
 | `u-search` | `USearch` | [USearch](search.md) | Controlled query intent / 受控查询意图 |
+| `u-scroll-list` | `UScrollList` | [UScrollList](scroll-list.md) | CSS overflow horizontal list / CSS overflow 横向列表 |
+| `u-skeleton` | `USkeleton` | [USkeleton](skeleton.md) | Static placeholder projection / 静态占位投影 |
 | `u-stack` | `UStack` | [UStack](stack.md) | Slot layout primitive / 插槽布局原语 |
 | `u-switch` | `USwitch` | [USwitch](switch.md) | Controlled boolean choice / 受控布尔选择 |
 | `u-textarea` | `UTextarea` | [UTextarea](textarea.md) | Controlled multiline input / 受控多行输入 |

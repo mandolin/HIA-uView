@@ -1,0 +1,52 @@
+/**
+ * @component UCollapseItem styles
+ * @lang zh-CN 定义标题、描述和静态内容显隐，不包含 transition、animation 或 native cell/icon 依赖。
+ * @lang en Defines title, description, and static content visibility; it includes no transition, animation, or native cell/icon dependency.
+ */
+.u-collapse-item {
+  display: block;
+  border-bottom: var(--u-comp-collapse-item-divider-width) solid var(--u-comp-collapse-item-divider);
+}
+
+.u-collapse-item:last-child {
+  border-bottom: 0;
+}
+
+.u-collapse-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: var(--u-comp-collapse-item-header-min-height);
+  padding: var(--u-comp-collapse-item-header-padding);
+  border: 0;
+  background: transparent;
+  color: var(--u-comp-collapse-item-title-foreground);
+  text-align: left;
+}
+
+.u-collapse-item__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-collapse-item-text-gap);
+}
+
+.u-collapse-item__title {
+  font-size: var(--u-comp-collapse-item-title-size);
+}
+
+.u-collapse-item__description {
+  color: var(--u-comp-collapse-item-description-foreground);
+  font-size: var(--u-comp-collapse-item-description-size);
+}
+
+.u-collapse-item__indicator {
+  color: var(--u-comp-collapse-item-indicator);
+  font-size: var(--u-comp-collapse-item-indicator-size);
+}
+
+.u-collapse-item__content {
+  padding: var(--u-comp-collapse-item-content-padding);
+  border-top: var(--u-comp-collapse-item-content-border-width) solid var(--u-comp-collapse-item-divider);
+  color: var(--u-comp-collapse-item-content-foreground);
+}

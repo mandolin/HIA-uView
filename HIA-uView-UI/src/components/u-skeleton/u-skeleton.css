@@ -1,0 +1,47 @@
+/**
+ * @component USkeleton styles
+ * @lang zh-CN 定义静态占位块、文字间距和中性表面，不包含 shimmer、animation 或 DOM 测量。
+ * @lang en Defines static placeholders, copy spacing, and neutral surfaces; it includes no shimmer, animation, or DOM measurement.
+ */
+.u-skeleton {
+  display: block;
+  color: var(--u-comp-skeleton-foreground);
+}
+
+.u-skeleton__placeholder {
+  display: flex;
+  gap: var(--u-comp-skeleton-gap);
+  padding: var(--u-comp-skeleton-padding);
+}
+
+.u-skeleton__avatar,
+.u-skeleton__title,
+.u-skeleton__row {
+  background: var(--u-comp-skeleton-surface);
+}
+
+.u-skeleton__avatar {
+  flex: 0 0 var(--u-comp-skeleton-avatar-size);
+  width: var(--u-comp-skeleton-avatar-size);
+  height: var(--u-comp-skeleton-avatar-size);
+  border-radius: 50%;
+}
+
+.u-skeleton__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--u-comp-skeleton-row-gap);
+}
+
+.u-skeleton__title {
+  width: var(--u-comp-skeleton-title-width);
+  height: var(--u-comp-skeleton-title-height);
+  border-radius: var(--u-comp-skeleton-radius);
+}
+
+.u-skeleton__row {
+  width: 100%;
+  height: var(--u-comp-skeleton-row-height);
+  border-radius: var(--u-comp-skeleton-radius);
+}
