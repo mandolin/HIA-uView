@@ -1,0 +1,12 @@
+/**
+ * @component UActionSheet
+ * @lang zh-CN 受控 action sheet 样式；无全局 service、命令或任意颜色输入。
+ * @lang en Controlled action-sheet styles; no global service, command, or arbitrary color input is included.
+ */
+.u-action-sheet { inset: 0; position: fixed; z-index: var(--u-comp-action-sheet-z-index); }
+.u-action-sheet__mask { background: var(--u-comp-action-sheet-mask); inset: 0; position: absolute; }
+.u-action-sheet__panel { background: var(--u-comp-action-sheet-surface); bottom: 0; box-sizing: border-box; left: 0; padding: var(--u-comp-action-sheet-padding); position: absolute; right: 0; }
+.u-action-sheet__title { color: var(--u-comp-action-sheet-title-foreground); display: block; font-size: var(--u-comp-action-sheet-title-size); padding: var(--u-comp-action-sheet-title-padding); text-align: center; }
+.u-action-sheet__item, .u-action-sheet__cancel { background: var(--u-comp-action-sheet-item-surface); border: 0; border-bottom: 1px solid var(--u-comp-action-sheet-divider); border-radius: 0; color: var(--u-comp-action-sheet-item-foreground); display: block; font-size: var(--u-comp-action-sheet-item-size); margin: 0; min-height: var(--u-comp-action-sheet-item-min-height); padding: var(--u-comp-action-sheet-item-padding); width: 100%; }
+.u-action-sheet__item[disabled] { color: var(--u-comp-action-sheet-disabled-foreground); }
+.u-action-sheet__cancel { background: var(--u-comp-action-sheet-cancel-surface); margin-top: var(--u-comp-action-sheet-cancel-gap); }

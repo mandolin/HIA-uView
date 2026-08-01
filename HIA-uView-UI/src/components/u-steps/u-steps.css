@@ -1,0 +1,19 @@
+/**
+ * @component USteps
+ * @lang zh-CN 有限步骤序列样式；不把步骤连接线变成业务流程或自动状态机。
+ * @lang en Finite-step sequence styles; connectors do not become a business flow or automatic state machine.
+ */
+.u-steps { display: flex; gap: var(--u-comp-steps-gap); }
+.u-steps--horizontal { flex-direction: row; }
+.u-steps--vertical { flex-direction: column; }
+.u-steps__item { align-items: flex-start; display: flex; flex: 1; gap: var(--u-comp-steps-item-gap); position: relative; }
+.u-steps--vertical .u-steps__item { flex: none; }
+.u-steps__indicator { align-items: center; background: var(--u-comp-steps-wait-surface); border-radius: 999px; color: var(--u-comp-steps-wait-foreground); display: flex; flex: 0 0 var(--u-comp-steps-indicator-size); font-size: var(--u-comp-steps-indicator-font-size); height: var(--u-comp-steps-indicator-size); justify-content: center; width: var(--u-comp-steps-indicator-size); }
+.u-steps__indicator--process { background: var(--u-comp-steps-process-surface); color: var(--u-comp-steps-process-foreground); }
+.u-steps__indicator--finish { background: var(--u-comp-steps-finish-surface); color: var(--u-comp-steps-finish-foreground); }
+.u-steps__indicator--error { background: var(--u-comp-steps-error-surface); color: var(--u-comp-steps-error-foreground); }
+.u-steps__body { display: flex; flex-direction: column; gap: var(--u-comp-steps-text-gap); }
+.u-steps__label { color: var(--u-comp-steps-label-foreground); font-size: var(--u-comp-steps-label-size); }
+.u-steps__description { color: var(--u-comp-steps-description-foreground); font-size: var(--u-comp-steps-description-size); }
+.u-steps__line { background: var(--u-comp-steps-line); flex: 1; height: var(--u-comp-steps-line-width); margin-top: calc(var(--u-comp-steps-indicator-size) / 2); }
+.u-steps--vertical .u-steps__line { height: auto; margin-left: calc(var(--u-comp-steps-indicator-size) / 2); min-height: var(--u-comp-steps-vertical-line-height); width: var(--u-comp-steps-line-width); }

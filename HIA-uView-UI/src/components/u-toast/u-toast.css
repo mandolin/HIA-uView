@@ -1,0 +1,12 @@
+/**
+ * @component UToast
+ * @lang zh-CN 局部受控反馈样式；不包含计时、队列或全局 service。
+ * @lang en Local controlled-feedback styles; no timer, queue, or global service is included.
+ */
+.u-toast { align-items: center; border: 1px solid var(--u-comp-toast-border); border-radius: var(--u-comp-toast-radius); box-sizing: border-box; display: flex; gap: var(--u-comp-toast-gap); justify-content: space-between; padding: var(--u-comp-toast-padding); width: 100%; }
+.u-toast--info { background: var(--u-comp-toast-info-surface); color: var(--u-comp-toast-info-foreground); }
+.u-toast--success { background: var(--u-comp-toast-success-surface); color: var(--u-comp-toast-success-foreground); }
+.u-toast--warning { background: var(--u-comp-toast-warning-surface); color: var(--u-comp-toast-warning-foreground); }
+.u-toast--error { background: var(--u-comp-toast-error-surface); color: var(--u-comp-toast-error-foreground); }
+.u-toast__message { flex: 1; font-size: var(--u-comp-toast-message-size); }
+.u-toast__close { background: transparent; border: 0; color: currentColor; font-size: var(--u-comp-toast-close-size); margin: 0; min-height: var(--u-comp-toast-control-min-height); padding: 0 var(--u-comp-toast-close-padding); }

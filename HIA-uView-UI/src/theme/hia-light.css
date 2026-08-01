@@ -406,4 +406,134 @@
   --u-comp-line-progress-label-foreground: var(--u-sys-color-text-secondary);
   --u-comp-line-progress-label-font-size: 12px;
   --u-comp-line-progress-label-width: 40px;
+
+  /* <lang><zh-CN>UPopup token 组定义局部遮罩、面板和有限方向几何；不声明动画、焦点或页面滚动控制。</zh-CN><en>The UPopup token group defines local mask, panel, and finite placement geometry; it declares no animation, focus, or page-scroll control.</en></lang> */
+  --u-comp-popup-z-index: 20;
+  --u-comp-popup-mask: rgba(0, 27, 46, 0.36);
+  --u-comp-popup-surface: var(--u-sys-color-surface);
+  --u-comp-popup-max-height: 80vh;
+  --u-comp-popup-min-width: 240px;
+  --u-comp-popup-side-width: 80%;
+  --u-comp-popup-center-width: 420px;
+  --u-comp-popup-center-gutter: 16px;
+  --u-comp-popup-padding: 20px;
+  --u-comp-popup-header-gap: 12px;
+  --u-comp-popup-title-foreground: var(--u-sys-color-text);
+  --u-comp-popup-title-size: 18px;
+  --u-comp-popup-close-foreground: var(--u-sys-color-action-primary);
+  --u-comp-popup-close-size: 14px;
+  --u-comp-popup-close-padding: 4px;
+  --u-comp-popup-control-min-height: 32px;
+  --u-comp-popup-content-foreground: var(--u-sys-color-text);
+  --u-comp-popup-content-gap: 12px;
+
+  /* <lang><zh-CN>UActionSheet token 组只定义有限 item、mask 和 cancel 几何，不执行 command 或导航。</zh-CN><en>The UActionSheet token group defines finite item, mask, and cancel geometry only and executes no command or navigation.</en></lang> */
+  --u-comp-action-sheet-z-index: 21;
+  --u-comp-action-sheet-mask: rgba(0, 27, 46, 0.36);
+  --u-comp-action-sheet-surface: var(--u-sys-color-surface);
+  --u-comp-action-sheet-padding: 12px;
+  --u-comp-action-sheet-title-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-action-sheet-title-size: 14px;
+  --u-comp-action-sheet-title-padding: 8px;
+  --u-comp-action-sheet-item-surface: var(--u-sys-color-surface);
+  --u-comp-action-sheet-item-foreground: var(--u-sys-color-text);
+  --u-comp-action-sheet-item-size: 16px;
+  --u-comp-action-sheet-item-min-height: 48px;
+  --u-comp-action-sheet-item-padding: 12px;
+  --u-comp-action-sheet-divider: var(--u-ref-color-neutral-50);
+  --u-comp-action-sheet-disabled-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-action-sheet-cancel-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-action-sheet-cancel-gap: 8px;
+
+  /* <lang><zh-CN>UToast token 组定义局部 feedback 的有限 tone；不包含计时、队列或全局 service。</zh-CN><en>The UToast token group defines finite tones for local feedback; it includes no timer, queue, or global service.</en></lang> */
+  --u-comp-toast-border: var(--u-ref-color-neutral-700);
+  --u-comp-toast-radius: 8px;
+  --u-comp-toast-gap: 8px;
+  --u-comp-toast-padding: 12px;
+  --u-comp-toast-info-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-toast-info-foreground: var(--u-sys-color-text);
+  --u-comp-toast-success-surface: var(--u-sys-color-accent);
+  --u-comp-toast-success-foreground: var(--u-sys-color-on-accent);
+  --u-comp-toast-warning-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-toast-warning-foreground: var(--u-sys-color-text);
+  --u-comp-toast-error-surface: var(--u-sys-color-surface);
+  --u-comp-toast-error-foreground: var(--u-sys-color-text);
+  --u-comp-toast-message-size: 14px;
+  --u-comp-toast-close-size: 14px;
+  --u-comp-toast-close-padding: 4px;
+  --u-comp-toast-control-min-height: 28px;
+
+  /* <lang><zh-CN>ULoadingPage token 组定义静态页面 loading 的表面、文字和层级；省略号不代表异步状态机。</zh-CN><en>The ULoadingPage token group defines static loading surface, copy, and layer; the ellipsis represents no async state machine.</en></lang> */
+  --u-comp-loading-page-z-index: 19;
+  --u-comp-loading-page-surface: var(--u-sys-color-surface);
+  --u-comp-loading-page-gap: 12px;
+  --u-comp-loading-page-padding: 24px;
+  --u-comp-loading-page-neutral-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-loading-page-primary-foreground: var(--u-sys-color-action-primary);
+  --u-comp-loading-page-accent-foreground: var(--u-sys-color-text);
+  --u-comp-loading-page-indicator-size: 28px;
+  --u-comp-loading-page-text-size: 14px;
+
+  /* <lang><zh-CN>UTabs token 组定义局部标签的有限间距、边界和状态；不声明滚动动画或隐藏内容策略。</zh-CN><en>The UTabs token group defines finite local-tab spacing, borders, and states; it declares no scroll animation or hidden-content strategy.</en></lang> */
+  --u-comp-tabs-divider: var(--u-ref-color-neutral-50);
+  --u-comp-tabs-gap: 4px;
+  --u-comp-tabs-active-border-width: 2px;
+  --u-comp-tabs-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-tabs-active-border: var(--u-sys-color-action-primary);
+  --u-comp-tabs-active-foreground: var(--u-sys-color-action-primary);
+  --u-comp-tabs-disabled-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-tabs-item-size: 14px;
+  --u-comp-tabs-item-min-height: 44px;
+  --u-comp-tabs-item-padding: 8px 12px;
+
+  /* <lang><zh-CN>UTabbar token 组定义局部底部选择表面；不承诺 router、图标、徽标或安全区能力。</zh-CN><en>The UTabbar token group defines a local bottom-selection surface; it promises no router, icon, badge, or safe-area capability.</en></lang> */
+  --u-comp-tabbar-surface: var(--u-sys-color-surface);
+  --u-comp-tabbar-divider: var(--u-ref-color-neutral-50);
+  --u-comp-tabbar-gap: 4px;
+  --u-comp-tabbar-padding: 6px;
+  --u-comp-tabbar-item-radius: 6px;
+  --u-comp-tabbar-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-tabbar-active-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-tabbar-active-foreground: var(--u-sys-color-action-primary);
+  --u-comp-tabbar-disabled-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-tabbar-item-size: 12px;
+  --u-comp-tabbar-item-min-height: 44px;
+  --u-comp-tabbar-item-padding: 8px 4px;
+
+  /* <lang><zh-CN>USteps token 组定义有限序列、指标与连接线；不编码业务流程状态机。</zh-CN><en>The USteps token group defines finite sequence, indicator, and connector styles; it encodes no business flow state machine.</en></lang> */
+  --u-comp-steps-gap: 12px;
+  --u-comp-steps-item-gap: 8px;
+  --u-comp-steps-indicator-size: 24px;
+  --u-comp-steps-indicator-font-size: 12px;
+  --u-comp-steps-wait-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-steps-wait-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-steps-process-surface: var(--u-sys-color-action-primary);
+  --u-comp-steps-process-foreground: var(--u-sys-color-on-action-primary);
+  --u-comp-steps-finish-surface: var(--u-sys-color-accent);
+  --u-comp-steps-finish-foreground: var(--u-sys-color-on-accent);
+  --u-comp-steps-error-surface: var(--u-sys-color-text);
+  --u-comp-steps-error-foreground: var(--u-sys-color-surface);
+  --u-comp-steps-label-foreground: var(--u-sys-color-text);
+  --u-comp-steps-description-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-steps-label-size: 14px;
+  --u-comp-steps-description-size: 12px;
+  --u-comp-steps-text-gap: 4px;
+  --u-comp-steps-line: var(--u-ref-color-neutral-700);
+  --u-comp-steps-line-width: 1px;
+  --u-comp-steps-vertical-line-height: 24px;
+
+  /* <lang><zh-CN>UPagination token 组定义有限页码控件；不包含查询、缓存或远程 total。</zh-CN><en>The UPagination token group defines finite page controls; it includes no query, cache, or remote total.</en></lang> */
+  --u-comp-pagination-gap: 6px;
+  --u-comp-pagination-surface: var(--u-sys-color-surface);
+  --u-comp-pagination-border: var(--u-ref-color-neutral-700);
+  --u-comp-pagination-foreground: var(--u-sys-color-text);
+  --u-comp-pagination-radius: 6px;
+  --u-comp-pagination-item-size: 12px;
+  --u-comp-pagination-item-min-height: 32px;
+  --u-comp-pagination-item-min-width: 32px;
+  --u-comp-pagination-item-padding: 4px 8px;
+  --u-comp-pagination-active-surface: var(--u-sys-color-action-primary);
+  --u-comp-pagination-active-border: var(--u-sys-color-action-primary);
+  --u-comp-pagination-active-foreground: var(--u-sys-color-on-action-primary);
+  --u-comp-pagination-disabled-foreground: var(--u-sys-color-text-secondary);
 }

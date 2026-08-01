@@ -1,0 +1,11 @@
+/**
+ * @component ULoadingPage
+ * @lang zh-CN 静态 loading 页面样式；省略号只作文字占位，不加载 spinner 或图标资产。
+ * @lang en Static loading-page styles; the ellipsis is text placeholder only and loads no spinner or icon asset.
+ */
+.u-loading-page { align-items: center; background: var(--u-comp-loading-page-surface); box-sizing: border-box; display: flex; flex-direction: column; gap: var(--u-comp-loading-page-gap); inset: 0; justify-content: center; padding: var(--u-comp-loading-page-padding); position: fixed; z-index: var(--u-comp-loading-page-z-index); }
+.u-loading-page--neutral { color: var(--u-comp-loading-page-neutral-foreground); }
+.u-loading-page--primary { color: var(--u-comp-loading-page-primary-foreground); }
+.u-loading-page--accent { color: var(--u-comp-loading-page-accent-foreground); }
+.u-loading-page__indicator { font-size: var(--u-comp-loading-page-indicator-size); line-height: 1; }
+.u-loading-page__text { font-size: var(--u-comp-loading-page-text-size); }

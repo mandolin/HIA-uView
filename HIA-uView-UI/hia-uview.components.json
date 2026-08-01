@@ -4,6 +4,12 @@
   "styleEntry": "src/style.css",
   "components": [
     {
+      "name": "u-action-sheet",
+      "source": "src/components/u-action-sheet/u-action-sheet.vue",
+      "contract": "docs/action-sheet.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-avatar",
       "source": "src/components/u-avatar/u-avatar.vue",
       "contract": "docs/avatar.md",
@@ -115,6 +121,12 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-loading-page",
+      "source": "src/components/u-loading-page/u-loading-page.vue",
+      "contract": "docs/loading-page.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-modal",
       "source": "src/components/u-modal/u-modal.vue",
       "contract": "docs/modal.md",
@@ -145,6 +157,18 @@
       "name": "u-number-box",
       "source": "src/components/u-number-box/u-number-box.vue",
       "contract": "docs/number-box.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-pagination",
+      "source": "src/components/u-pagination/u-pagination.vue",
+      "contract": "docs/pagination.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-popup",
+      "source": "src/components/u-popup/u-popup.vue",
+      "contract": "docs/popup.md",
       "locales": ["zh-Hans", "en"]
     },
     {
@@ -181,9 +205,27 @@
       ]
     },
     {
+      "name": "u-steps",
+      "source": "src/components/u-steps/u-steps.vue",
+      "contract": "docs/steps.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-switch",
       "source": "src/components/u-switch/u-switch.vue",
       "contract": "docs/switch.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-tabbar",
+      "source": "src/components/u-tabbar/u-tabbar.vue",
+      "contract": "docs/tabbar.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-tabs",
+      "source": "src/components/u-tabs/u-tabs.vue",
+      "contract": "docs/tabs.md",
       "locales": ["zh-Hans", "en"]
     },
     {
@@ -196,6 +238,12 @@
       "name": "u-textarea",
       "source": "src/components/u-textarea/u-textarea.vue",
       "contract": "docs/textarea.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-toast",
+      "source": "src/components/u-toast/u-toast.vue",
+      "contract": "docs/toast.md",
       "locales": ["zh-Hans", "en"]
     },
     {

@@ -1,0 +1,17 @@
+/**
+ * @component UPopup
+ * @lang zh-CN 受控局部浮层样式；仅消费 P43 popup token，不声明动画、焦点或页面滚动控制。
+ * @lang en Controlled local-overlay styles; consumes P43 popup tokens only and declares no animation, focus, or page-scroll control.
+ */
+.u-popup { inset: 0; position: fixed; z-index: var(--u-comp-popup-z-index); }
+.u-popup__mask { background: var(--u-comp-popup-mask); inset: 0; position: absolute; }
+.u-popup__panel { background: var(--u-comp-popup-surface); box-sizing: border-box; max-height: var(--u-comp-popup-max-height); min-width: var(--u-comp-popup-min-width); padding: var(--u-comp-popup-padding); position: absolute; }
+.u-popup--bottom .u-popup__panel { bottom: 0; left: 0; right: 0; }
+.u-popup--top .u-popup__panel { left: 0; right: 0; top: 0; }
+.u-popup--left .u-popup__panel { bottom: 0; left: 0; top: 0; width: var(--u-comp-popup-side-width); }
+.u-popup--right .u-popup__panel { bottom: 0; right: 0; top: 0; width: var(--u-comp-popup-side-width); }
+.u-popup--center .u-popup__panel { left: 50%; max-width: var(--u-comp-popup-center-width); top: 50%; transform: translate(-50%, -50%); width: calc(100% - var(--u-comp-popup-center-gutter) * 2); }
+.u-popup__header { align-items: center; display: flex; gap: var(--u-comp-popup-header-gap); justify-content: space-between; }
+.u-popup__title { color: var(--u-comp-popup-title-foreground); font-size: var(--u-comp-popup-title-size); font-weight: 600; }
+.u-popup__close { background: transparent; color: var(--u-comp-popup-close-foreground); font-size: var(--u-comp-popup-close-size); margin: 0; min-height: var(--u-comp-popup-control-min-height); padding: 0 var(--u-comp-popup-close-padding); }
+.u-popup__content { color: var(--u-comp-popup-content-foreground); padding-top: var(--u-comp-popup-content-gap); }

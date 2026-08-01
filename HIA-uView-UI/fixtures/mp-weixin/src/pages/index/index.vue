@@ -73,6 +73,21 @@
         <u-line-progress :percent="fixtureProgressValue" />
       </u-stack>
 
+      <!-- @lang zh-CN P43 组合只使用页面声明的 tabs、tabbar、steps、pagination 与受控 overlay/feedback；不产生 router、timer、service 或请求。 @lang en The P43 composition uses page-declared tabs, tabbar, steps, pagination, and controlled overlay/feedback only; it creates no router, timer, service, or request. <lang><zh-CN>所有可见状态和 items 由页面 refs 拥有。</zh-CN><en>All visible state and items are owned by page refs.</en></lang> -->
+      <u-stack class="fixture-navigation" gap="sm">
+        <u-tabs :model-value="fixtureTabValue" :items="fixtureTabItems" @update:model-value="updateFixtureTabValue" />
+        <u-tabbar :model-value="fixtureTabbarValue" :items="fixtureTabbarItems" @update:model-value="updateFixtureTabbarValue" />
+        <u-steps :steps="fixtureStepItems" :current="fixtureStepCurrent" />
+        <u-pagination :current="fixturePageValue" :page-count="3" @update:current="updateFixturePageValue" />
+        <u-button label="打开局部 sheet / Open local sheet" @click="openFixtureSheet" />
+        <u-toast :visible="fixtureToastVisible" message="局部反馈 / Local feedback" close-text="关闭 / Close" @close="closeFixtureToast" />
+        <u-loading-page :visible="fixtureLoadingVisible" text="页面 loading / Page loading" />
+        <u-action-sheet :visible="fixtureSheetVisible" :items="fixtureActionItems" title="局部操作 / Local actions" cancel-text="取消 / Cancel" @select="handleFixtureAction" @close="closeFixtureSheet" />
+        <u-popup :visible="fixturePopupVisible" title="局部浮层 / Local popup" close-text="关闭 / Close" @close="closeFixturePopup">
+          <text>调用方 slot 内容 / Caller-owned slot content</text>
+        </u-popup>
+      </u-stack>
+
       <!-- @lang zh-CN P16 选择组只使用页面自有字符串与字符串数组，验证 group emit/writeback 而不引入 option 数据源或业务筛选。 @lang en The P16 choice groups use page-owned string and string array only, verifying group emit/writeback without introducing option data source or business filtering. <lang><zh-CN>这些控件不改变目录 query。</zh-CN><en>These controls do not change directory query.</en></lang> -->
       <u-radio-group :model-value="fixtureRadioValue" @update:model-value="updateFixtureRadioValue">
         <u-radio value="local-a" label="本地单选 A / Local radio A" />
@@ -163,6 +178,8 @@ import { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UInput, UMod
 import { UForm, UFormItem, UNumberBox, URate, USearch, USwitch, UTextarea } from '../../../../../src/index.mjs';
 // <lang><zh-CN>展示批次使用第三个显式导入，保持每组 fixture 依赖可读且不启用自动注册。</zh-CN><en>The display batch uses a third explicit import so each fixture dependency group stays readable without enabling auto-registration.</en></lang>
 import { UAvatar, UBadge, UCountTo, UDivider, UIcon, UImage, ULineProgress, UTag } from '../../../../../src/index.mjs';
+// <lang><zh-CN>P43 显式导入受控浮层、反馈和导航组件；它们不通过全局 registry 自动注册。</zh-CN><en>Explicitly imports controlled overlay, feedback, and navigation components for P43; they are not auto-registered through a global registry.</en></lang>
+import { UActionSheet, ULoadingPage, UPagination, UPopup, USteps, UTabbar, UTabs, UToast } from '../../../../../src/index.mjs';
 // <lang><zh-CN>导入固定匿名 mock 集合与纯同步 helper；它们位于 fixture 内而非 UI runtime 或 Biz package。</zh-CN><en>Imports the fixed anonymous mock collection and pure synchronous helpers; they reside inside the fixture rather than UI runtime or a Biz package.</en></lang>
 import { LOCAL_CATALOG_RECORDS, filterLocalCatalogRecords, findLocalCatalogRecord } from './local-catalog.mjs';
 
@@ -202,6 +219,34 @@ const fixtureBadgeValue = ref(3);
 const fixtureCountValue = ref(42);
 const fixtureProgressValue = ref(65);
 
+// <lang><zh-CN>P43 items 与状态都是页面内声明的中性 fixture 数据，不进入 UI runtime、路由或业务模型。</zh-CN><en>P43 items and state are page-declared neutral fixture data and enter no UI runtime, router, or business model.</en></lang>
+const fixtureTabItems = Object.freeze([
+  Object.freeze({ label: '概览 / Overview', value: 'overview' }),
+  Object.freeze({ label: '说明 / Notes', value: 'notes' }),
+  Object.freeze({ label: '限制 / Limits', value: 'limits' })
+]);
+const fixtureTabbarItems = Object.freeze([
+  Object.freeze({ label: '首页 / Home', value: 'home' }),
+  Object.freeze({ label: '设置 / Settings', value: 'settings' })
+]);
+const fixtureStepItems = Object.freeze([
+  Object.freeze({ label: '声明 / Declare', description: '本地 fixture / Local fixture' }),
+  Object.freeze({ label: '呈现 / Present', description: '受控 UI / Controlled UI' }),
+  Object.freeze({ label: '验证 / Verify', description: '静态 evidence / Static evidence' })
+]);
+const fixtureActionItems = Object.freeze([
+  Object.freeze({ label: '显示反馈 / Show feedback', value: 'toast' }),
+  Object.freeze({ label: '显示浮层 / Show popup', value: 'popup' })
+]);
+const fixtureTabValue = ref('overview');
+const fixtureTabbarValue = ref('home');
+const fixtureStepCurrent = ref(1);
+const fixturePageValue = ref(1);
+const fixtureToastVisible = ref(false);
+const fixtureLoadingVisible = ref(false);
+const fixtureSheetVisible = ref(false);
+const fixturePopupVisible = ref(false);
+
 /**
  * @lang zh-CN 隐藏 fixture 标签只更新当前页面可见 ref，不代表业务删除或远程状态。
  * @lang en Hides the fixture tag by updating a page-local visible ref only; it represents no business deletion or remote state.
@@ -209,6 +254,88 @@ const fixtureProgressValue = ref(65);
  */
 function hideFixtureTag() {
   fixtureTagVisible.value = false;
+}
+
+/**
+ * @lang zh-CN 更新 fixture tabs 的本地选择，不导航、不加载内容或执行请求。
+ * @lang en Updates local fixture tab selection without navigation, content loading, or requests.
+ * @param {string|number} value <lang><zh-CN>受控 tab value。</zh-CN><en>Controlled tab value.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function updateFixtureTabValue(value) {
+  fixtureTabValue.value = value;
+}
+
+/**
+ * @lang zh-CN 更新 fixture tabbar 的本地选择，不写路由、权限或身份状态。
+ * @lang en Updates local fixture tabbar selection without writing route, authorization, or identity state.
+ * @param {string|number} value <lang><zh-CN>受控 tabbar value。</zh-CN><en>Controlled tabbar value.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function updateFixtureTabbarValue(value) {
+  fixtureTabbarValue.value = value;
+}
+
+/**
+ * @lang zh-CN 更新 fixture 页码；页面不把它转换为请求或数据分页策略。
+ * @lang en Updates fixture page number without converting it into a request or data-pagination strategy.
+ * @param {number} value <lang><zh-CN>受控页码。</zh-CN><en>Controlled page number.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function updateFixturePageValue(value) {
+  fixturePageValue.value = value;
+}
+
+/**
+ * @lang zh-CN 打开局部 action sheet；只更新页面 ref，不执行 item 命令。
+ * @lang en Opens the local action sheet by updating a page ref only; it executes no item command.
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function openFixtureSheet() {
+  fixtureSheetVisible.value = true;
+}
+
+/**
+ * @lang zh-CN 关闭局部 action sheet；不代表业务取消或路由返回。
+ * @lang en Closes the local action sheet without representing business cancellation or route return.
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function closeFixtureSheet() {
+  fixtureSheetVisible.value = false;
+}
+
+/**
+ * @lang zh-CN 处理 fixture action intent，只切换本地反馈或浮层 ref。
+ * @lang en Handles fixture action intent by toggling local feedback or popup refs only.
+ * @param {{ value: string }} selection <lang><zh-CN>受控 action 选择。</zh-CN><en>Controlled action selection.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function handleFixtureAction(selection) {
+  closeFixtureSheet();
+  if (selection.value === 'toast') {
+    fixtureToastVisible.value = true;
+  }
+  if (selection.value === 'popup') {
+    fixturePopupVisible.value = true;
+  }
+}
+
+/**
+ * @lang zh-CN 关闭 fixture toast；组件不使用 timer 自动消失。
+ * @lang en Closes fixture toast; the component does not auto-disappear with a timer.
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function closeFixtureToast() {
+  fixtureToastVisible.value = false;
+}
+
+/**
+ * @lang zh-CN 关闭 fixture popup；组件不自动写回 visible。
+ * @lang en Closes fixture popup; the component does not write visible automatically.
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function closeFixturePopup() {
+  fixturePopupVisible.value = false;
 }
 
 // <lang><zh-CN>由当前受控 query 同步派生的本地目录投影；helper 不访问网络、缓存或异步数据源。</zh-CN><en>Local catalog projection synchronously derived from the current controlled query; the helper accesses no network, cache, or asynchronous data source.</en></lang>

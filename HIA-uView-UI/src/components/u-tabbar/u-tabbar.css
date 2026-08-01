@@ -1,0 +1,10 @@
+/**
+ * @component UTabbar
+ * @lang zh-CN 局部底部标签栏样式；不声明 router、icon registry 或安全区适配。
+ * @lang en Local bottom-tab-bar styles; declares no router, icon registry, or safe-area adaptation.
+ */
+.u-tabbar { background: var(--u-comp-tabbar-surface); border-top: 1px solid var(--u-comp-tabbar-divider); display: flex; gap: var(--u-comp-tabbar-gap); padding: var(--u-comp-tabbar-padding); width: 100%; }
+.u-tabbar__item { background: transparent; border: 0; border-radius: var(--u-comp-tabbar-item-radius); color: var(--u-comp-tabbar-foreground); flex: 1; font-size: var(--u-comp-tabbar-item-size); margin: 0; min-height: var(--u-comp-tabbar-item-min-height); padding: var(--u-comp-tabbar-item-padding); }
+.u-tabbar__item--active { background: var(--u-comp-tabbar-active-surface); color: var(--u-comp-tabbar-active-foreground); font-weight: 600; }
+.u-tabbar__item--disabled { color: var(--u-comp-tabbar-disabled-foreground); }
+.u-tabbar__label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -16,9 +16,9 @@ The `mp-weixin` fixture contains a deliberately small, local-only “catalog —
 - 由调用方拥有的 selected identifier，在没有 route 或 URL 的情况下切换目录与详情投影。
 - 空态 reset 意图、受控确认 modal 与完全由页面处理的局部 notice 可见状态。
 
-The fixture uses existing `UStack`, `UNavBar`, `UField`, `UInput`, `UCell`, `UValidationMessage`, `UEmpty`, `UModal`, `UNotice`, and `UButton`. It adds no component, plugin behavior, auto-registration, global service, or style injection.
+The fixture uses existing `UStack`, `UNavBar`, `UField`, `UInput`, `UCell`, `UValidationMessage`, `UEmpty`, `UModal`, `UNotice`, `UButton`, the P42 display components, and the P43 controlled overlay/feedback/navigation components. It adds no auto-registration, global service, timer, router, or style injection.
 
-fixture 使用既有的 `UStack`、`UNavBar`、`UField`、`UInput`、`UCell`、`UValidationMessage`、`UEmpty`、`UModal`、`UNotice` 与 `UButton`。它不新增组件、plugin 行为、自动注册、全局 service 或样式注入。
+fixture 使用既有的 `UStack`、`UNavBar`、`UField`、`UInput`、`UCell`、`UValidationMessage`、`UEmpty`、`UModal`、`UNotice`、`UButton`、P42 展示组件和 P43 受控浮层/反馈/导航组件。它不新增自动注册、全局 service、timer、router 或样式注入。
 
 ## Caller ownership / 调用方职责
 
@@ -32,9 +32,9 @@ fixture 使用既有的 `UStack`、`UNavBar`、`UField`、`UInput`、`UCell`、`
 
 ## Intentional limits / 有意保留的限制
 
-This is not a HIA-uView-Biz module, an industry starter, a public data contract, or a backend adapter. The mock records are not customer, user, product, resource, or server-response data. The example has no network request, Directus integration, authentication, permission check, router, `uni.*` navigation, storage, cache, loading state, retry, paging, virtualization, timer, queue, image, icon, SVG, or font.
+This is not a HIA-uView-Biz module, an industry starter, a public data contract, or a backend adapter. The mock records are not customer, user, product, resource, or server-response data. The example has no network request, Directus integration, authentication, permission check, router, `uni.*` navigation, storage, cache, retry, virtualization, timer, queue, global service, image, icon, SVG, or font; P43 loading, pagination, and overlays remain explicitly page-controlled.
 
-这不是 HIA-uView-Biz 模块、行业 starter、公开数据契约或后端 adapter。mock 记录不是客户、用户、产品、资源或服务器响应数据。该示例没有网络请求、Directus 集成、身份、权限检查、router、`uni.*` 导航、storage、cache、loading state、retry、分页、虚拟化、timer、queue、图片、图标、SVG 或字体。
+这不是 HIA-uView-Biz 模块、行业 starter、公开数据契约或后端 adapter。mock 记录不是客户、用户、产品、资源或服务器响应数据。该示例没有网络请求、Directus 集成、身份、权限检查、router、`uni.*` 导航、storage、cache、retry、虚拟化、timer、queue、全局 service、图片、图标、SVG 或字体；P43 的 loading、分页和浮层仅由页面显式控制。
 
 The local query is a demonstration of page-owned synchronous projection only. It does not establish a search syntax, relevance rule, privacy policy, data-retention rule, caching policy, accessibility-tree behavior, or production interaction model.
 

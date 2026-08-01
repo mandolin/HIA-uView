@@ -6,6 +6,7 @@
 
 // <lang><zh-CN>导入当前已批准的独立组件实现；每个组件仍由调用方直接导入或通过显式 plugin 选择注册。</zh-CN><en>Imports the currently approved independent component implementations; callers still choose direct imports or explicit plugin registration for every component.</en></lang>
 import UButton from './components/u-button/u-button.vue';
+import UActionSheet from './components/u-action-sheet/u-action-sheet.vue';
 import UCell from './components/u-cell/u-cell.vue';
 import UCheckbox from './components/u-checkbox/u-checkbox.vue';
 import UCheckboxGroup from './components/u-checkbox-group/u-checkbox-group.vue';
@@ -21,18 +22,25 @@ import UModal from './components/u-modal/u-modal.vue';
 import UNavBar from './components/u-nav-bar/u-nav-bar.vue';
 import UNotice from './components/u-notice/u-notice.vue';
 import UNumberBox from './components/u-number-box/u-number-box.vue';
+import UPagination from './components/u-pagination/u-pagination.vue';
+import UPopup from './components/u-popup/u-popup.vue';
 import UTag from './components/u-tag/u-tag.vue';
 import UBadge from './components/u-badge/u-badge.vue';
 import UDivider from './components/u-divider/u-divider.vue';
 import UCountTo from './components/u-count-to/u-count-to.vue';
 import ULineProgress from './components/u-line-progress/u-line-progress.vue';
+import ULoadingPage from './components/u-loading-page/u-loading-page.vue';
 import URadio from './components/u-radio/u-radio.vue';
 import URadioGroup from './components/u-radio-group/u-radio-group.vue';
 import URate from './components/u-rate/u-rate.vue';
 import USearch from './components/u-search/u-search.vue';
 import UStack from './components/u-stack/u-stack.vue';
+import USteps from './components/u-steps/u-steps.vue';
 import USwitch from './components/u-switch/u-switch.vue';
+import UTabbar from './components/u-tabbar/u-tabbar.vue';
+import UTabs from './components/u-tabs/u-tabs.vue';
 import UTextarea from './components/u-textarea/u-textarea.vue';
+import UToast from './components/u-toast/u-toast.vue';
 import UValidationMessage from './components/u-validation-message/u-validation-message.vue';
 
 /**
@@ -40,6 +48,8 @@ import UValidationMessage from './components/u-validation-message/u-validation-m
  * @lang en Stable template-name and implementation mapping registerable by the explicit plugin. This read-only collection must match the component manifest; the manifest remains for development-time declaration validation and is not a runtime registry.
  */
 export const UVIEW_COMPONENTS = Object.freeze([
+  // <lang><zh-CN>action sheet 只呈现调用方声明的有限 item 和 local intent，不执行命令或导航。</zh-CN><en>The action sheet presents caller-declared finite items and local intent only and executes no command or navigation.</en></lang>
+  Object.freeze({ name: 'u-action-sheet', component: UActionSheet }),
   // <lang><zh-CN>按钮保留 P10/P11 已验证的独立本地操作边界。</zh-CN><en>The button retains the independently verified local-action boundary from P10/P11.</en></lang>
   Object.freeze({ name: 'u-button', component: UButton }),
   // <lang><zh-CN>信息行只展示调用方文字并 emit 受限 click 意图。</zh-CN><en>The information row displays caller text only and emits constrained click intent.</en></lang>
@@ -72,6 +82,10 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-notice', component: UNotice }),
   // <lang><zh-CN>数值盒只进行受边界保护的本地加减和输入 intent，不理解单位、库存或业务精度。</zh-CN><en>The number box performs bounded local increment/decrement and input intent only and understands no unit, inventory, or business precision.</en></lang>
   Object.freeze({ name: 'u-number-box', component: UNumberBox }),
+  // <lang><zh-CN>分页只投影调用方 pageCount/current，不请求或缓存数据。</zh-CN><en>Pagination projects caller pageCount/current only and requests or caches no data.</en></lang>
+  Object.freeze({ name: 'u-pagination', component: UPagination }),
+  // <lang><zh-CN>浮层只提供局部 visible、slot 和 close intent，不拥有焦点、滚动或路由。</zh-CN><en>The popup provides local visible, slot, and close intent only and owns no focus, scrolling, or routing.</en></lang>
+  Object.freeze({ name: 'u-popup', component: UPopup }),
   // <lang><zh-CN>标签只呈现有限 tone/size/shape 和 close intent，不拥有分类 registry。</zh-CN><en>The tag presents finite tone/size/shape and close intent only and owns no category registry.</en></lang>
   Object.freeze({ name: 'u-tag', component: UTag }),
   // <lang><zh-CN>徽标只呈现调用方文字或 dot，不读取通知或创建全局服务。</zh-CN><en>The badge presents caller text or dot only and reads no notifications or creates global services.</en></lang>
@@ -82,6 +96,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-count-to', component: UCountTo }),
   // <lang><zh-CN>进度条只投影调用方百分比，不连接上传、下载或任务状态。</zh-CN><en>The progress bar projects caller percentage only and connects to no upload, download, or task state.</en></lang>
   Object.freeze({ name: 'u-line-progress', component: ULineProgress }),
+  // <lang><zh-CN>页面 loading 是调用方控制的静态文字呈现，不推断异步状态或自动隐藏。</zh-CN><en>Page loading is caller-controlled static copy and infers no async state or automatic hiding.</en></lang>
+  Object.freeze({ name: 'u-loading-page', component: ULoadingPage }),
   // <lang><zh-CN>radio 只呈现调用方受控单选意图；它不取消已选项，也不持有 option 数据。</zh-CN><en>The radio presents caller-controlled single-choice intent only; it neither clears a selected item nor owns option data.</en></lang>
   Object.freeze({ name: 'u-radio', component: URadio }),
   // <lang><zh-CN>radio group 只向直接子 radio 提供受控上下文并 emit 选择意图，不创建 picker、popup 或全局选择服务。</zh-CN><en>The radio group provides controlled context to direct child radios and emits selection intent only; it creates no picker, popup, or global selection service.</en></lang>
@@ -92,10 +108,18 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-search', component: USearch }),
   // <lang><zh-CN>布局原语只排列默认插槽，不拥有页面或子项语义。</zh-CN><en>The layout primitive arranges the default slot only and owns no page or child semantics.</en></lang>
   Object.freeze({ name: 'u-stack', component: UStack }),
+  // <lang><zh-CN>步骤只呈现调用方声明的有限序列，不执行流程或自动推进。</zh-CN><en>Steps presents a caller-declared finite sequence only and executes no flow or automatic advancement.</en></lang>
+  Object.freeze({ name: 'u-steps', component: USteps }),
   // <lang><zh-CN>切换只回传受控布尔选择，不执行权限、持久化或远程更新。</zh-CN><en>The switch returns controlled boolean selection only and performs no authorization, persistence, or remote update.</en></lang>
   Object.freeze({ name: 'u-switch', component: USwitch }),
+  // <lang><zh-CN>底部标签栏只回传局部选择，不执行 router、身份或全局导航。</zh-CN><en>The bottom tabbar returns local selection only and performs no router, identity, or global navigation.</en></lang>
+  Object.freeze({ name: 'u-tabbar', component: UTabbar }),
+  // <lang><zh-CN>标签栏只回传受控切换，不请求、懒加载或管理隐藏面板。</zh-CN><en>The tab strip returns controlled changes only and requests, lazy-loads, or manages no hidden panel.</en></lang>
+  Object.freeze({ name: 'u-tabs', component: UTabs }),
   // <lang><zh-CN>多行输入只回传受控字符串和焦点/确认 intent，不执行校验、提交或持久化。</zh-CN><en>The textarea returns controlled string and focus/confirm intent only and performs no validation, submission, or persistence.</en></lang>
   Object.freeze({ name: 'u-textarea', component: UTextarea }),
+  // <lang><zh-CN>toast 只呈现调用方受控反馈，不使用 timer、队列或全局 service。</zh-CN><en>The toast presents caller-controlled feedback only and uses no timer, queue, or global service.</en></lang>
+  Object.freeze({ name: 'u-toast', component: UToast }),
   // <lang><zh-CN>独立校验消息只呈现应用声明的状态和文字，不推断结果或启动异步工作。</zh-CN><en>The independent validation message presents application-declared state and text only and infers no result or starts no asynchronous work.</en></lang>
   Object.freeze({ name: 'u-validation-message', component: UValidationMessage })
 ]);
@@ -133,5 +157,5 @@ export const UView = Object.freeze({
 });
 
 // <lang><zh-CN>导出命名组件供应用按需注册；默认导出保持显式 plugin 入口，二者均不产生 import-time 副作用。</zh-CN><en>Exports named components for application-side registration; the default export remains the explicit plugin entry, and neither creates import-time side effects.</en></lang>
-export { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UForm, UFormItem, UIcon, UImage, UAvatar, UInput, UModal, UNavBar, UNotice, UNumberBox, UTag, UBadge, UDivider, UCountTo, ULineProgress, URadio, URadioGroup, URate, USearch, UStack, USwitch, UTextarea, UValidationMessage };
+export { UActionSheet, UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UForm, UFormItem, UIcon, UImage, UAvatar, UInput, ULineProgress, ULoadingPage, UModal, UNavBar, UNotice, UNumberBox, UPagination, UPopup, UTag, UBadge, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UStack, USteps, USwitch, UTabbar, UTabs, UTextarea, UToast, UValidationMessage };
 export default UView;
