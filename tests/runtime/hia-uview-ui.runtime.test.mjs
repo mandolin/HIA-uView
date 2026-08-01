@@ -136,13 +136,13 @@ describe('UNavBar runtime behavior', () => {
 });
 
 /**
- * @lang zh-CN 验证 UCell 仅在 clickable 且未 disabled 时 emit click，并让禁用状态保留非颜色类。
- * @lang en Verifies that UCell emits click only when clickable and not disabled and that disabled state retains a non-color class.
+ * @lang zh-CN 验证 UCell 为 clickable 行输出原生 control、仅在未 disabled 时 emit click，并让禁用状态保留非颜色类。
+ * @lang en Verifies that UCell renders a native control for a clickable row, emits click only while not disabled, and retains a non-color class for disabled state.
  */
 describe('UCell runtime behavior', () => {
   /**
-   * @lang zh-CN 验证启用可点击行触发一次 click，而禁用和默认信息行触发零事件。
-   * @lang en Verifies that an enabled clickable row emits one click while disabled and default informational rows emit zero events.
+   * @lang zh-CN 验证启用可点击行是可激活原生 button 并触发一次 click，而禁用和默认信息行触发零事件。
+   * @lang en Verifies that an enabled clickable row is an activatable native button and emits one click while disabled and default informational rows emit zero events.
    * @returns {Promise<void>} <lang><zh-CN>无返回值；异步 click 触发完成后解决。</zh-CN><en>No return value; resolves after asynchronous click triggers complete.</en></lang>
    */
   it('guards click intent and retains visible information text', async () => {
@@ -151,7 +151,13 @@ describe('UCell runtime behavior', () => {
       props: { label: 'Local row', description: 'Local detail', value: 'Ready', clickable: true }
     });
 
-    await enabled.get('.u-cell').trigger('click');
+    // <lang><zh-CN>可点击行必须使用原生 button，而不是只有 `bindtap` 的平台 view；这使其在 mp-weixin 模拟器中具有实际可激活的 control 语义，同时保留公开 `click` 意图。</zh-CN><en>A clickable row must use a native button rather than a platform view with only `bindtap`; this gives it actually activatable control semantics in the mp-weixin simulator while preserving the public `click` intent.</en></lang>
+    const enabledControl = enabled.get('button.u-cell');
+
+    // <lang><zh-CN>固定 button type，避免 Web host 将信息行解释为表单 submit；小程序编译器可独立映射其原生 control。</zh-CN><en>Fix the button type so a web host cannot interpret the information row as form submission; the Mini Program compiler can map its native control independently.</en></lang>
+    expect(enabledControl.attributes('type')).toBe('button');
+
+    await enabledControl.trigger('click');
     expect(enabled.text()).toContain('Local row');
     expect(enabled.text()).toContain('Local detail');
     expect(enabled.text()).toContain('Ready');
@@ -160,14 +166,21 @@ describe('UCell runtime behavior', () => {
     // <lang><zh-CN>禁用实例保留标签并增加禁用类，但 guard 必须阻止 click 转交给应用。</zh-CN><en>The disabled instance retains its label and adds the disabled class, but the guard must block click delegation to the application.</en></lang>
     const disabled = mount(UCell, { props: { label: 'Unavailable row', clickable: true, disabled: true } });
 
-    await disabled.get('.u-cell').trigger('click');
-    expect(disabled.get('.u-cell').classes()).toContain('u-cell--disabled');
+    // <lang><zh-CN>禁用可点击行仍输出原生 button，并同步 native disabled 与 CSS 状态，避免 mp-weixin 出现看似可点却无法激活的普通 view。</zh-CN><en>A disabled clickable row still renders a native button and synchronizes native disabled with CSS state, avoiding an ordinary view that appears tappable but cannot activate in mp-weixin.</en></lang>
+    const disabledControl = disabled.get('button.u-cell');
+
+    await disabledControl.trigger('click');
+    expect(disabledControl.attributes()).toHaveProperty('disabled');
+    expect(disabledControl.classes()).toContain('u-cell--disabled');
     expect(disabled.emitted('click')).toBeUndefined();
 
     // <lang><zh-CN>默认实例是纯信息行；即使平台传来 click，也不得隐式产生操作意图。</zh-CN><en>The default instance is an informational row; even if the platform supplies click, it must not implicitly produce action intent.</en></lang>
     const informational = mount(UCell, { props: { label: 'Display only' } });
 
-    await informational.get('.u-cell').trigger('click');
+    // <lang><zh-CN>默认信息行必须保持 view，而非无业务意图的 button，防止辅助技术或表单宿主把文本行宣告为可操作。</zh-CN><en>The default informational row must remain a view rather than a button with no business intent, preventing assistive technology or a form host from announcing text row as actionable.</en></lang>
+    const informationalRow = informational.get('view.u-cell');
+
+    await informationalRow.trigger('click');
     expect(informational.emitted('click')).toBeUndefined();
   });
 });

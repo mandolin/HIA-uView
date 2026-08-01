@@ -5,26 +5,44 @@
 -->
 <template>
   <!--
-  @lang zh-CN 根行同时承载展示与可选点击意图。
-  @lang en The root row carries presentation and optional click intent together.
-  <lang><zh-CN>根行同时承载展示与可选点击意图；事件 handler 内部守卫确保默认的纯信息行不意外触发操作。</zh-CN><en>The root row carries presentation and optional click intent together; the handler guard ensures the default informational row cannot accidentally trigger an action.</en></lang>
+  @lang zh-CN 根行按交互状态选择原生 control 或纯展示容器。
+  @lang en The root row selects a native control or a presentation-only container according to interaction state.
+  <lang><zh-CN>可点击行使用原生 button，使 mp-weixin 能提供实际可激活的 control；不可点击行保持 view，避免纯信息默认成为操作或表单控件。两个分支都只转发通用 click 意图，handler guard 仍是跨宿主的最终保护。</zh-CN><en>A clickable row uses a native button so mp-weixin can provide an actually activatable control; a non-clickable row remains a view, preventing pure information from becoming an action or form control by default. Both branches forward only generic click intent, and the handler guard remains the final cross-host protection.</en></lang>
   -->
-  <view :class="cellClasses" @click="handleClick">
+  <button
+    v-if="clickable"
+    type="button"
+    :class="cellClasses"
+    :disabled="disabled"
+    @click="handleClick"
+  >
     <!--
-    @lang zh-CN 左侧内容区始终保留调用方主标签。
-    @lang en The left content area always retains the caller primary label.
-    <lang><zh-CN>左侧内容区始终保留调用方主标签，并仅在提供说明时添加次级文字，避免组件生成业务文案。</zh-CN><en>The left content area always retains the caller primary label and adds secondary text only when supplied, avoiding generated business copy.</en></lang>
+    @lang zh-CN 可点击分支保留调用方主标签、可选说明和值。
+    @lang en The clickable branch retains caller primary label, optional description, and value.
+    <lang><zh-CN>button 内部仍只呈现调用方提供的信息；它不会取得链接、导航、表单提交或业务记录职责。</zh-CN><en>Inside the button, the component still presents only caller-provided information; it acquires no link, navigation, form-submission, or business-record responsibility.</en></lang>
     -->
     <view class="u-cell__content">
       <text class="u-cell__label">{{ label }}</text>
       <text v-if="description" class="u-cell__description">{{ description }}</text>
     </view>
+    <text v-if="value" class="u-cell__value">{{ value }}</text>
+  </button>
 
+  <!--
+  @lang zh-CN 纯信息分支维持非 control 根节点。
+  @lang en The informational branch retains a non-control root node.
+  <lang><zh-CN>该分支不绑定 click，也不输出 disabled 原生属性；即使宿主意外派发事件，script guard 仍会维持零事件契约。</zh-CN><en>This branch binds no click and emits no native disabled attribute; even if a host unexpectedly dispatches an event, the script guard still retains the zero-event contract.</en></lang>
+  -->
+  <view v-else :class="cellClasses">
     <!--
-    @lang zh-CN 右侧值是可选的调用方文本。
-    @lang en The right-side value is optional caller text.
-    <lang><zh-CN>右侧值是可选的调用方文本；空值不渲染占位符、箭头或链接提示。</zh-CN><en>The right-side value is optional caller text; an empty value renders no placeholder, arrow, or link cue.</en></lang>
+    @lang zh-CN 信息分支使用与可点击分支相同的调用方文字结构。
+    @lang en The informational branch uses the same caller-text structure as the clickable branch.
+    <lang><zh-CN>重复的静态结构有意避免动态 component 选择，使 UniApp compiler 可为两个固定宿主标签生成可审阅输出。</zh-CN><en>The repeated static structure deliberately avoids dynamic component selection, allowing the UniApp compiler to generate auditable output for two fixed host tags.</en></lang>
     -->
+    <view class="u-cell__content">
+      <text class="u-cell__label">{{ label }}</text>
+      <text v-if="description" class="u-cell__description">{{ description }}</text>
+    </view>
     <text v-if="value" class="u-cell__value">{{ value }}</text>
   </view>
 </template>

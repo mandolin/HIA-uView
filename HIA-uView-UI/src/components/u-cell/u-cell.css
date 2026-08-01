@@ -53,6 +53,14 @@
 /* <lang><zh-CN>可点击行只提供弱视觉提示，不把它表述为链接或导航；实际目的仍由应用收到 click 后决定。</zh-CN><en>A clickable row provides only a light visual cue and does not present itself as a link or navigation; the application still decides actual purpose after receiving click.</en></lang> */
 .u-cell--clickable {
   cursor: pointer;
+  margin: 0;
+  text-align: left;
+  width: 100%;
+}
+
+/* <lang><zh-CN>UniApp button 默认伪元素会额外绘制边界；可点击信息行清除该平台装饰，使现有 cell border 仍是唯一可审阅边界来源。</zh-CN><en>The UniApp button default pseudo-element can draw an extra border; a clickable information row clears that platform decoration so the existing cell border remains the sole auditable border source.</en></lang> */
+.u-cell--clickable::after {
+  border: 0;
 }
 
 /* <lang><zh-CN>禁用可点击行增加虚线边界和降低透明度文字，确保不可用状态不只依赖颜色。</zh-CN><en>A disabled clickable row adds a dashed boundary and reduced-opacity text so unavailable state does not rely on color alone.</en></lang> */

@@ -33,9 +33,9 @@ The root namespace is `u-cell`. The component consumes `--u-comp-cell-*` tokens 
 
 ## Accessibility and platform disclosure / 无障碍与平台披露
 
-The label is required as visible text. Disabled state adds a dashed boundary and reduced-opacity text; color alone does not convey it. A clickable row currently uses the platform view click event and makes no keyboard, ARIA, screen-reader, accessibility-tree, or device-interaction guarantee. Applications must not treat `click` as navigation proof.
+The label is required as visible text. Disabled state adds a dashed boundary and reduced-opacity text; color alone does not convey it. A clickable row uses a native button control and preserves the constrained `click` intent; a non-clickable row remains a presentation view. This improves the current `mp-weixin` activation boundary, but does not make a keyboard, ARIA, screen-reader, accessibility-tree, device-interaction, or navigation guarantee. Applications must not treat `click` as navigation proof.
 
-标签必须是可见文字。禁用状态增加虚线边界和降低透明度文字，不能仅依赖颜色表达。可点击行当前使用平台 view click 事件，不对键盘、ARIA、读屏、无障碍树或真机交互作保证。应用不得将 `click` 视为导航证明。
+标签必须是可见文字。禁用状态增加虚线边界和降低透明度文字，不能仅依赖颜色表达。可点击行使用原生 button control 并保留受限 `click` 意图；不可点击行保持展示 view。这改善当前 `mp-weixin` 的激活边界，但不对键盘、ARIA、读屏、无障碍树、真机交互或导航作保证。应用不得将 `click` 视为导航证明。
 
 ## Required fixtures / 实现必需 fixture
 
