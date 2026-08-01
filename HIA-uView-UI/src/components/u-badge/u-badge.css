@@ -1,0 +1,14 @@
+/**
+ * @component UBadge
+ * @lang zh-CN UBadge 的局部徽标 token 样式；不表达通知来源或业务状态。
+ * @lang en Local badge-token styles for UBadge; they express no notification source or business state.
+ */
+
+.u-badge { display: inline-flex; position: relative; }
+.u-badge__value { align-items: center; border-radius: var(--u-comp-badge-radius); display: inline-flex; font-size: var(--u-comp-badge-medium-font-size); justify-content: center; min-height: var(--u-comp-badge-medium-size); min-width: var(--u-comp-badge-medium-size); padding: 0 var(--u-comp-badge-inline-padding); }
+.u-badge--small .u-badge__value { font-size: var(--u-comp-badge-small-font-size); min-height: var(--u-comp-badge-small-size); min-width: var(--u-comp-badge-small-size); }
+.u-badge--large .u-badge__value { font-size: var(--u-comp-badge-large-font-size); min-height: var(--u-comp-badge-large-size); min-width: var(--u-comp-badge-large-size); }
+.u-badge--neutral .u-badge__value { background: var(--u-comp-badge-neutral-surface); color: var(--u-comp-badge-neutral-foreground); }
+.u-badge--primary .u-badge__value { background: var(--u-comp-badge-primary-surface); color: var(--u-comp-badge-primary-foreground); }
+.u-badge--accent .u-badge__value { background: var(--u-comp-badge-accent-surface); color: var(--u-comp-badge-accent-foreground); }
+.u-badge--dot .u-badge__value { border-radius: 50%; height: var(--u-comp-badge-dot-size); min-height: var(--u-comp-badge-dot-size); min-width: var(--u-comp-badge-dot-size); padding: 0; width: var(--u-comp-badge-dot-size); }

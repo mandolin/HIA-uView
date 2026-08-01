@@ -1,0 +1,16 @@
+/**
+ * @component ULineProgress
+ * @lang zh-CN ULineProgress 的静态 track/bar token 样式；不提供任务或动画服务。
+ * @lang en Static track/bar token styles for ULineProgress; they provide no task or animation service.
+ */
+
+.u-line-progress { align-items: center; display: flex; gap: var(--u-comp-line-progress-gap); width: 100%; }
+.u-line-progress__track { background: var(--u-comp-line-progress-track); border-radius: var(--u-comp-line-progress-radius); flex: 1; overflow: hidden; }
+.u-line-progress__bar { background: var(--u-comp-line-progress-primary-bar); border-radius: inherit; height: 100%; min-width: 0; }
+.u-line-progress--small .u-line-progress__track { height: var(--u-comp-line-progress-small-height); }
+.u-line-progress--medium .u-line-progress__track { height: var(--u-comp-line-progress-medium-height); }
+.u-line-progress--large .u-line-progress__track { height: var(--u-comp-line-progress-large-height); }
+.u-line-progress--neutral .u-line-progress__bar { background: var(--u-comp-line-progress-neutral-bar); }
+.u-line-progress--accent .u-line-progress__bar { background: var(--u-comp-line-progress-accent-bar); }
+.u-line-progress--striped .u-line-progress__bar { background-image: repeating-linear-gradient(135deg, transparent 0, transparent 6px, var(--u-comp-line-progress-stripe) 6px, var(--u-comp-line-progress-stripe) 12px); }
+.u-line-progress__label { color: var(--u-comp-line-progress-label-foreground); font-size: var(--u-comp-line-progress-label-font-size); min-width: var(--u-comp-line-progress-label-width); text-align: right; }

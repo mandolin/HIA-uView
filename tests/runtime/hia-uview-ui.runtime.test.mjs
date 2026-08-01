@@ -10,7 +10,7 @@ import { resolve } from 'node:path';
 import { createApp } from 'vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import UView, { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UForm, UFormItem, UInput, UModal, UNavBar, UNotice, UNumberBox, URadio, URadioGroup, URate, USearch, UStack, USwitch, UTextarea, UValidationMessage, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
+import UView, { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UForm, UFormItem, UIcon, UImage, UAvatar, UInput, UModal, UNavBar, UNotice, UNumberBox, UTag, UBadge, UDivider, UCountTo, ULineProgress, URadio, URadioGroup, URate, USearch, UStack, USwitch, UTextarea, UValidationMessage, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
 
 /**
  * @lang zh-CN 验证 UButton 保持 P10/P11 的 enabled、disabled、loading、slot 与 loadingText 契约，防止 P12 registry 扩展回退既有组件行为。
@@ -202,11 +202,19 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-field')).toBeUndefined();
   expect(application.component('u-form')).toBeUndefined();
   expect(application.component('u-form-item')).toBeUndefined();
+  expect(application.component('u-icon')).toBeUndefined();
+  expect(application.component('u-image')).toBeUndefined();
+  expect(application.component('u-avatar')).toBeUndefined();
   expect(application.component('u-input')).toBeUndefined();
   expect(application.component('u-modal')).toBeUndefined();
   expect(application.component('u-nav-bar')).toBeUndefined();
   expect(application.component('u-notice')).toBeUndefined();
   expect(application.component('u-number-box')).toBeUndefined();
+  expect(application.component('u-tag')).toBeUndefined();
+  expect(application.component('u-badge')).toBeUndefined();
+  expect(application.component('u-divider')).toBeUndefined();
+  expect(application.component('u-count-to')).toBeUndefined();
+  expect(application.component('u-line-progress')).toBeUndefined();
   expect(application.component('u-radio')).toBeUndefined();
   expect(application.component('u-radio-group')).toBeUndefined();
   expect(application.component('u-rate')).toBeUndefined();
@@ -227,11 +235,19 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-field')).toBe(UField);
   expect(application.component('u-form')).toBe(UForm);
   expect(application.component('u-form-item')).toBe(UFormItem);
+  expect(application.component('u-icon')).toBe(UIcon);
+  expect(application.component('u-image')).toBe(UImage);
+  expect(application.component('u-avatar')).toBe(UAvatar);
   expect(application.component('u-input')).toBe(UInput);
   expect(application.component('u-modal')).toBe(UModal);
   expect(application.component('u-nav-bar')).toBe(UNavBar);
   expect(application.component('u-notice')).toBe(UNotice);
   expect(application.component('u-number-box')).toBe(UNumberBox);
+  expect(application.component('u-tag')).toBe(UTag);
+  expect(application.component('u-badge')).toBe(UBadge);
+  expect(application.component('u-divider')).toBe(UDivider);
+  expect(application.component('u-count-to')).toBe(UCountTo);
+  expect(application.component('u-line-progress')).toBe(ULineProgress);
   expect(application.component('u-radio')).toBe(URadio);
   expect(application.component('u-radio-group')).toBe(URadioGroup);
   expect(application.component('u-rate')).toBe(URate);
@@ -240,7 +256,7 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-switch')).toBe(USwitch);
   expect(application.component('u-textarea')).toBe(UTextarea);
   expect(application.component('u-validation-message')).toBe(UValidationMessage);
-  expect(UVIEW_COMPONENTS).toHaveLength(21);
+  expect(UVIEW_COMPONENTS).toHaveLength(29);
 
   // <lang><zh-CN>读取 runtime entry 本文以验证 style 仍由应用显式导入，而非由 import 或 plugin 注入。</zh-CN><en>Reads runtime-entry text to verify styles remain application-explicit rather than being injected by import or plugin.</en></lang>
   const runtimeEntry = await readFile(resolve('HIA-uView-UI/src/index.mjs'), 'utf8');

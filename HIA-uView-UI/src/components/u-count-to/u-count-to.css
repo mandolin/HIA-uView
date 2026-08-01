@@ -1,0 +1,13 @@
+/**
+ * @component UCountTo
+ * @lang zh-CN UCountTo 的静态数字 token 样式；不提供动画生命周期。
+ * @lang en Static numeric token styles for UCountTo; they provide no animation lifecycle.
+ */
+
+.u-count-to { font-variant-numeric: tabular-nums; }
+.u-count-to--small { font-size: var(--u-comp-count-to-small-size); }
+.u-count-to--medium { font-size: var(--u-comp-count-to-medium-size); }
+.u-count-to--large { font-size: var(--u-comp-count-to-large-size); font-weight: 600; }
+.u-count-to--neutral { color: var(--u-comp-count-to-neutral-foreground); }
+.u-count-to--primary { color: var(--u-comp-count-to-primary-foreground); }
+.u-count-to--accent { color: var(--u-comp-count-to-accent-foreground); }

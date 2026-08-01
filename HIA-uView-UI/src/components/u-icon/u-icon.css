@@ -1,0 +1,33 @@
+/**
+ * @component UIcon
+ * @lang zh-CN UIcon 的文本符号样式；不依赖字体、图片或外部图标库。
+ * @lang en Text-symbol styles for UIcon; they depend on no font, image, or external icon library.
+ */
+
+.u-icon {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--u-comp-icon-gap);
+  justify-content: center;
+  min-height: var(--u-comp-icon-min-height);
+  min-width: var(--u-comp-icon-min-width);
+  vertical-align: middle;
+}
+
+.u-icon__symbol {
+  color: var(--u-comp-icon-neutral-foreground);
+  line-height: 1;
+  text-align: center;
+}
+
+.u-icon__label {
+  color: var(--u-comp-icon-label-foreground);
+  font-size: var(--u-comp-icon-label-font-size);
+}
+
+.u-icon--small .u-icon__symbol { font-size: var(--u-comp-icon-small-size); }
+.u-icon--medium .u-icon__symbol { font-size: var(--u-comp-icon-medium-size); }
+.u-icon--large .u-icon__symbol { font-size: var(--u-comp-icon-large-size); }
+.u-icon--primary .u-icon__symbol { color: var(--u-comp-icon-primary-foreground); }
+.u-icon--accent .u-icon__symbol { color: var(--u-comp-icon-accent-foreground); }
+.u-icon--disabled { opacity: var(--u-comp-icon-disabled-opacity); }

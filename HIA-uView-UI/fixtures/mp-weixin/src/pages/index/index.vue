@@ -61,6 +61,18 @@
         </u-form-item>
       </u-form>
 
+      <!-- @lang zh-CN 展示批次只组合本地文字符号、空源图片、initials、有限标签、徽标、分隔、数字和静态进度；不产生资产或任务服务。 @lang en The display batch composes local text symbol, empty-source image, initials, finite tag, badge, divider, number, and static progress only; it creates no asset or task service. <lang><zh-CN>所有值由页面 refs 拥有。</zh-CN><en>All values are owned by page refs.</en></lang> -->
+      <u-stack class="fixture-display" gap="sm">
+        <u-icon name="•" label="中性符号 / Neutral symbol" />
+        <u-image :src="fixtureImageSource" alt="本地图片占位 / Local image placeholder" size="small" />
+        <u-avatar text="HI" alt="initials 占位 / initials placeholder" size="small" />
+        <u-tag :visible="fixtureTagVisible" text="本地标签 / Local tag" tone="primary" closable @close="hideFixtureTag" />
+        <u-badge :value="fixtureBadgeValue"><text>徽标内容 / Badge content</text></u-badge>
+        <u-divider text="局部分隔 / Local divider" />
+        <u-count-to :model-value="fixtureCountValue" prefix="#" />
+        <u-line-progress :percent="fixtureProgressValue" />
+      </u-stack>
+
       <!-- @lang zh-CN P16 选择组只使用页面自有字符串与字符串数组，验证 group emit/writeback 而不引入 option 数据源或业务筛选。 @lang en The P16 choice groups use page-owned string and string array only, verifying group emit/writeback without introducing option data source or business filtering. <lang><zh-CN>这些控件不改变目录 query。</zh-CN><en>These controls do not change directory query.</en></lang> -->
       <u-radio-group :model-value="fixtureRadioValue" @update:model-value="updateFixtureRadioValue">
         <u-radio value="local-a" label="本地单选 A / Local radio A" />
@@ -149,6 +161,8 @@ import { computed, ref } from 'vue';
 import { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UInput, UModal, UNavBar, UNotice, URadio, URadioGroup, UStack, UValidationMessage } from '../../../../../src/index.mjs';
 // <lang><zh-CN>高频控件通过第二个显式导入保持新增实现和旧 fixture 组件边界清晰；两次导入均不触发自动注册。</zh-CN><en>High-frequency controls use a second explicit import to keep new implementations and the existing fixture component boundary clear; neither import triggers auto-registration.</en></lang>
 import { UForm, UFormItem, UNumberBox, URate, USearch, USwitch, UTextarea } from '../../../../../src/index.mjs';
+// <lang><zh-CN>展示批次使用第三个显式导入，保持每组 fixture 依赖可读且不启用自动注册。</zh-CN><en>The display batch uses a third explicit import so each fixture dependency group stays readable without enabling auto-registration.</en></lang>
+import { UAvatar, UBadge, UCountTo, UDivider, UIcon, UImage, ULineProgress, UTag } from '../../../../../src/index.mjs';
 // <lang><zh-CN>导入固定匿名 mock 集合与纯同步 helper；它们位于 fixture 内而非 UI runtime 或 Biz package。</zh-CN><en>Imports the fixed anonymous mock collection and pure synchronous helpers; they reside inside the fixture rather than UI runtime or a Biz package.</en></lang>
 import { LOCAL_CATALOG_RECORDS, filterLocalCatalogRecords, findLocalCatalogRecord } from './local-catalog.mjs';
 
@@ -182,6 +196,20 @@ const fixtureTextareaValue = ref('');
 const fixtureSwitchValue = ref(false);
 const fixtureNumberValue = ref(1);
 const fixtureRateValue = ref(0);
+const fixtureImageSource = ref('');
+const fixtureTagVisible = ref(true);
+const fixtureBadgeValue = ref(3);
+const fixtureCountValue = ref(42);
+const fixtureProgressValue = ref(65);
+
+/**
+ * @lang zh-CN 隐藏 fixture 标签只更新当前页面可见 ref，不代表业务删除或远程状态。
+ * @lang en Hides the fixture tag by updating a page-local visible ref only; it represents no business deletion or remote state.
+ * @returns {void} <lang><zh-CN>无返回值；只写当前页面 ref。</zh-CN><en>No return value; writes the current page ref only.</en></lang>
+ */
+function hideFixtureTag() {
+  fixtureTagVisible.value = false;
+}
 
 // <lang><zh-CN>由当前受控 query 同步派生的本地目录投影；helper 不访问网络、缓存或异步数据源。</zh-CN><en>Local catalog projection synchronously derived from the current controlled query; the helper accesses no network, cache, or asynchronous data source.</en></lang>
 const filteredCatalogRecords = computed(() => filterLocalCatalogRecords(LOCAL_CATALOG_RECORDS, catalogQuery.value));

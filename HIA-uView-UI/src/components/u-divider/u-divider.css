@@ -1,0 +1,16 @@
+/**
+ * @component UDivider
+ * @lang zh-CN UDivider 的局部线条和文字 token 样式；不承担页面结构或动态布局。
+ * @lang en Local line and text token styles for UDivider; they own no page structure or dynamic layout.
+ */
+
+.u-divider { align-items: center; display: flex; gap: var(--u-comp-divider-gap); }
+.u-divider--horizontal { flex-direction: row; width: 100%; }
+.u-divider--vertical { flex-direction: column; height: var(--u-comp-divider-vertical-height); }
+.u-divider__line { background: var(--u-comp-divider-neutral-line); flex: 1; height: var(--u-comp-divider-line-width); }
+.u-divider--vertical .u-divider__line { height: auto; min-height: var(--u-comp-divider-vertical-line-min-height); width: var(--u-comp-divider-line-width); }
+.u-divider__text { color: var(--u-comp-divider-neutral-foreground); font-size: var(--u-comp-divider-font-size); white-space: nowrap; }
+.u-divider--primary .u-divider__line { background: var(--u-comp-divider-primary-line); }
+.u-divider--primary .u-divider__text { color: var(--u-comp-divider-primary-foreground); }
+.u-divider--accent .u-divider__line { background: var(--u-comp-divider-accent-line); }
+.u-divider--accent .u-divider__text { color: var(--u-comp-divider-accent-foreground); }

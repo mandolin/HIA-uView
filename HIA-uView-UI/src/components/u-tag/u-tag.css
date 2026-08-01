@@ -1,0 +1,19 @@
+/**
+ * @component UTag
+ * @lang zh-CN UTag 的有限 tone/size/shape token 样式；不接受任意颜色或深层脚本定制。
+ * @lang en Finite tone/size/shape token styles for UTag; they accept no arbitrary color or deep script customization.
+ */
+
+.u-tag { align-items: center; display: inline-flex; gap: var(--u-comp-tag-gap); }
+.u-tag__text { font-size: var(--u-comp-tag-medium-font-size); }
+.u-tag__close { background: transparent; border: 0; color: inherit; font-size: var(--u-comp-tag-close-size); line-height: 1; min-height: var(--u-comp-tag-close-min-height); padding: 0; }
+.u-tag--small { padding: var(--u-comp-tag-small-padding); }
+.u-tag--medium { padding: var(--u-comp-tag-medium-padding); }
+.u-tag--large { padding: var(--u-comp-tag-large-padding); }
+.u-tag--square { border-radius: 0; }
+.u-tag--rounded { border-radius: var(--u-comp-tag-radius); }
+.u-tag--pill { border-radius: 999px; }
+.u-tag--neutral { background: var(--u-comp-tag-neutral-surface); color: var(--u-comp-tag-neutral-foreground); }
+.u-tag--primary { background: var(--u-comp-tag-primary-surface); color: var(--u-comp-tag-primary-foreground); }
+.u-tag--accent { background: var(--u-comp-tag-accent-surface); color: var(--u-comp-tag-accent-foreground); }
+.u-tag--disabled { opacity: var(--u-comp-tag-disabled-opacity); }

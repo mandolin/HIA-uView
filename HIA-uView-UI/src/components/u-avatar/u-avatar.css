@@ -1,0 +1,22 @@
+/**
+ * @component UAvatar
+ * @lang zh-CN UAvatar 的局部尺寸、形状和 initials 样式；不包含身份或资产语义。
+ * @lang en Local size, shape, and initials styles for UAvatar; they contain no identity or asset semantics.
+ */
+
+.u-avatar {
+  align-items: center;
+  background: var(--u-comp-avatar-surface);
+  color: var(--u-comp-avatar-foreground);
+  display: inline-flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.u-avatar--small { height: var(--u-comp-avatar-small-size); width: var(--u-comp-avatar-small-size); }
+.u-avatar--medium { height: var(--u-comp-avatar-medium-size); width: var(--u-comp-avatar-medium-size); }
+.u-avatar--large { height: var(--u-comp-avatar-large-size); width: var(--u-comp-avatar-large-size); }
+.u-avatar--rounded { border-radius: var(--u-comp-avatar-rounded-radius); }
+.u-avatar--circle { border-radius: 50%; }
+.u-avatar__text { font-size: var(--u-comp-avatar-text-font-size); font-weight: 600; }
+.u-avatar--disabled { opacity: var(--u-comp-avatar-disabled-opacity); }

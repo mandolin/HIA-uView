@@ -301,4 +301,109 @@
   --u-comp-form-item-required-gap: 4px;
   --u-comp-form-item-help-font-size: 14px;
   --u-comp-form-item-disabled-opacity: 0.6;
+
+  /* <lang><zh-CN>UIcon token 组仅定义文本符号、标签和最小触控几何；不绑定图标字体或资源。</zh-CN><en>The UIcon token group defines text-symbol, label, and minimum touch geometry only; it binds no icon font or asset.</en></lang> */
+  --u-comp-icon-gap: 6px;
+  --u-comp-icon-min-height: 24px;
+  --u-comp-icon-min-width: 24px;
+  --u-comp-icon-neutral-foreground: var(--u-sys-color-text);
+  --u-comp-icon-primary-foreground: var(--u-sys-color-action-primary);
+  --u-comp-icon-accent-foreground: var(--u-sys-color-accent);
+  --u-comp-icon-label-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-icon-label-font-size: 14px;
+  --u-comp-icon-small-size: 16px;
+  --u-comp-icon-medium-size: 20px;
+  --u-comp-icon-large-size: 28px;
+  --u-comp-icon-disabled-opacity: 0.6;
+
+  /* <lang><zh-CN>UImage token 组定义无资产的图片容器、尺寸和错误 fallback；src 与错误文字仍由调用方拥有。</zh-CN><en>The UImage token group defines an asset-free image container, sizes, and error fallback; src and error copy remain caller-owned.</en></lang> */
+  --u-comp-image-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-image-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-image-error-border: var(--u-ref-color-neutral-700);
+  --u-comp-image-small-size: 40px;
+  --u-comp-image-medium-size: 80px;
+  --u-comp-image-large-size: 144px;
+  --u-comp-image-rounded-radius: 12px;
+  --u-comp-image-fallback-font-size: 12px;
+  --u-comp-image-fallback-padding: 8px;
+
+  /* <lang><zh-CN>UAvatar token 组只提供占位表面、尺寸、形状和 initials 文字；不编码身份或等级。</zh-CN><en>The UAvatar token group provides placeholder surface, sizes, shapes, and initials text only; it encodes no identity or level.</en></lang> */
+  --u-comp-avatar-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-avatar-foreground: var(--u-sys-color-text);
+  --u-comp-avatar-small-size: 32px;
+  --u-comp-avatar-medium-size: 48px;
+  --u-comp-avatar-large-size: 72px;
+  --u-comp-avatar-rounded-radius: 12px;
+  --u-comp-avatar-text-font-size: 16px;
+  --u-comp-avatar-disabled-opacity: 0.6;
+
+  /* <lang><zh-CN>UTag token 组为有限 tone 提供中性 surface/foreground、尺寸和 close 几何，不接受任意颜色。</zh-CN><en>The UTag token group provides neutral surface/foreground, sizes, and close geometry for finite tones and accepts no arbitrary color.</en></lang> */
+  --u-comp-tag-gap: 4px;
+  --u-comp-tag-radius: 6px;
+  --u-comp-tag-small-padding: 2px 6px;
+  --u-comp-tag-medium-padding: 4px 8px;
+  --u-comp-tag-large-padding: 6px 10px;
+  --u-comp-tag-medium-font-size: 14px;
+  --u-comp-tag-close-size: 16px;
+  --u-comp-tag-close-min-height: 20px;
+  --u-comp-tag-neutral-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-tag-neutral-foreground: var(--u-sys-color-text);
+  --u-comp-tag-primary-surface: var(--u-sys-color-action-primary);
+  --u-comp-tag-primary-foreground: var(--u-sys-color-on-action-primary);
+  --u-comp-tag-accent-surface: var(--u-sys-color-accent);
+  --u-comp-tag-accent-foreground: var(--u-sys-color-on-accent);
+  --u-comp-tag-disabled-opacity: 0.6;
+
+  /* <lang><zh-CN>UBadge token 组定义局部文字/dot 徽标的有限颜色、尺寸和间距；不表示通知来源。</zh-CN><en>The UBadge token group defines finite color, size, and spacing for local text/dot badges; it represents no notification source.</en></lang> */
+  --u-comp-badge-radius: 999px;
+  --u-comp-badge-inline-padding: 6px;
+  --u-comp-badge-small-size: 18px;
+  --u-comp-badge-medium-size: 22px;
+  --u-comp-badge-large-size: 28px;
+  --u-comp-badge-small-font-size: 10px;
+  --u-comp-badge-medium-font-size: 12px;
+  --u-comp-badge-large-font-size: 14px;
+  --u-comp-badge-dot-size: 8px;
+  --u-comp-badge-neutral-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-badge-neutral-foreground: var(--u-sys-color-text);
+  --u-comp-badge-primary-surface: var(--u-sys-color-action-primary);
+  --u-comp-badge-primary-foreground: var(--u-sys-color-on-action-primary);
+  --u-comp-badge-accent-surface: var(--u-sys-color-accent);
+  --u-comp-badge-accent-foreground: var(--u-sys-color-on-accent);
+
+  /* <lang><zh-CN>UDivider token 组只表达局部线条、文字与方向几何，不推断页面层级。</zh-CN><en>The UDivider token group expresses local line, text, and direction geometry only and infers no page hierarchy.</en></lang> */
+  --u-comp-divider-gap: 8px;
+  --u-comp-divider-line-width: 1px;
+  --u-comp-divider-vertical-height: 80px;
+  --u-comp-divider-vertical-line-min-height: 24px;
+  --u-comp-divider-font-size: 14px;
+  --u-comp-divider-neutral-line: var(--u-ref-color-neutral-700);
+  --u-comp-divider-neutral-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-divider-primary-line: var(--u-sys-color-action-primary);
+  --u-comp-divider-primary-foreground: var(--u-sys-color-action-primary);
+  --u-comp-divider-accent-line: var(--u-sys-color-accent);
+  --u-comp-divider-accent-foreground: var(--u-sys-color-text);
+
+  /* <lang><zh-CN>UCountTo token 组定义同步数字文字大小和 tone；不提供动画时间或自动完成状态。</zh-CN><en>The UCountTo token group defines synchronous numeric text sizes and tones; it provides no animation timing or auto-completion state.</en></lang> */
+  --u-comp-count-to-small-size: 14px;
+  --u-comp-count-to-medium-size: 20px;
+  --u-comp-count-to-large-size: 28px;
+  --u-comp-count-to-neutral-foreground: var(--u-sys-color-text);
+  --u-comp-count-to-primary-foreground: var(--u-sys-color-action-primary);
+  --u-comp-count-to-accent-foreground: var(--u-sys-color-text);
+
+  /* <lang><zh-CN>ULineProgress token 组定义静态轨道、有限 tone、条纹和文字标签；不编码上传/下载任务。</zh-CN><en>The ULineProgress token group defines static track, finite tones, stripe, and text label; it encodes no upload/download task.</en></lang> */
+  --u-comp-line-progress-gap: 8px;
+  --u-comp-line-progress-radius: 999px;
+  --u-comp-line-progress-small-height: 4px;
+  --u-comp-line-progress-medium-height: 8px;
+  --u-comp-line-progress-large-height: 12px;
+  --u-comp-line-progress-track: var(--u-sys-color-surface-subtle);
+  --u-comp-line-progress-neutral-bar: var(--u-ref-color-neutral-700);
+  --u-comp-line-progress-primary-bar: var(--u-sys-color-action-primary);
+  --u-comp-line-progress-accent-bar: var(--u-sys-color-accent);
+  --u-comp-line-progress-stripe: rgba(255, 255, 255, 0.35);
+  --u-comp-line-progress-label-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-line-progress-label-font-size: 12px;
+  --u-comp-line-progress-label-width: 40px;
 }

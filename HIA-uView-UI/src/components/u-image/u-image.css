@@ -1,0 +1,34 @@
+/**
+ * @component UImage
+ * @lang zh-CN UImage 的尺寸、形状和错误 fallback 样式；不加载任何图片或图标资产。
+ * @lang en Size, shape, and error-fallback styles for UImage; they load no image or icon asset.
+ */
+
+.u-image {
+  align-items: center;
+  background: var(--u-comp-image-surface);
+  color: var(--u-comp-image-foreground);
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.u-image--small { height: var(--u-comp-image-small-size); width: var(--u-comp-image-small-size); }
+.u-image--medium { height: var(--u-comp-image-medium-size); width: var(--u-comp-image-medium-size); }
+.u-image--large { height: var(--u-comp-image-large-size); width: var(--u-comp-image-large-size); }
+.u-image--rounded { border-radius: var(--u-comp-image-rounded-radius); }
+.u-image--circle { border-radius: 50%; }
+
+.u-image__native {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.u-image__fallback {
+  font-size: var(--u-comp-image-fallback-font-size);
+  padding: var(--u-comp-image-fallback-padding);
+  text-align: center;
+}
+
+.u-image--error { border: 1px dashed var(--u-comp-image-error-border); }

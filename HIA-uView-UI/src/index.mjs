@@ -13,11 +13,19 @@ import UEmpty from './components/u-empty/u-empty.vue';
 import UField from './components/u-field/u-field.vue';
 import UForm from './components/u-form/u-form.vue';
 import UFormItem from './components/u-form-item/u-form-item.vue';
+import UIcon from './components/u-icon/u-icon.vue';
+import UImage from './components/u-image/u-image.vue';
+import UAvatar from './components/u-avatar/u-avatar.vue';
 import UInput from './components/u-input/u-input.vue';
 import UModal from './components/u-modal/u-modal.vue';
 import UNavBar from './components/u-nav-bar/u-nav-bar.vue';
 import UNotice from './components/u-notice/u-notice.vue';
 import UNumberBox from './components/u-number-box/u-number-box.vue';
+import UTag from './components/u-tag/u-tag.vue';
+import UBadge from './components/u-badge/u-badge.vue';
+import UDivider from './components/u-divider/u-divider.vue';
+import UCountTo from './components/u-count-to/u-count-to.vue';
+import ULineProgress from './components/u-line-progress/u-line-progress.vue';
 import URadio from './components/u-radio/u-radio.vue';
 import URadioGroup from './components/u-radio-group/u-radio-group.vue';
 import URate from './components/u-rate/u-rate.vue';
@@ -48,6 +56,12 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-form', component: UForm }),
   // <lang><zh-CN>表单项只组织标签、帮助和应用声明消息，嵌入控件仍由调用方控制。</zh-CN><en>The form item organizes label, help, and caller-declared message only while the embedded control remains caller-controlled.</en></lang>
   Object.freeze({ name: 'u-form-item', component: UFormItem }),
+  // <lang><zh-CN>图标仅呈现调用方文字符号或 slot，不加载字体、图片或 icon registry。</zh-CN><en>The icon presents caller text or slot only and loads no font, image, or icon registry.</en></lang>
+  Object.freeze({ name: 'u-icon', component: UIcon }),
+  // <lang><zh-CN>图片只呈现调用方 src、尺寸、替代文字和错误 intent，不拥有请求或缓存。</zh-CN><en>The image presents caller src, size, alt text, and error intent only and owns no request or cache.</en></lang>
+  Object.freeze({ name: 'u-image', component: UImage }),
+  // <lang><zh-CN>头像只提供图片或 initials 占位，不解释身份、性别或等级。</zh-CN><en>The avatar provides image or initials placeholder only and interprets no identity, sex, or level.</en></lang>
+  Object.freeze({ name: 'u-avatar', component: UAvatar }),
   // <lang><zh-CN>受控输入只显示调用方字符串并 emit 未修改的本地输入意图。</zh-CN><en>The controlled input displays caller string only and emits unmodified local input intent.</en></lang>
   Object.freeze({ name: 'u-input', component: UInput }),
   // <lang><zh-CN>modal 只呈现调用方 visible/内容与 confirm/cancel 意图，不自动关闭或管理焦点。</zh-CN><en>The modal presents caller visible/content and confirm/cancel intent only and neither auto-closes nor manages focus.</en></lang>
@@ -58,6 +72,16 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-notice', component: UNotice }),
   // <lang><zh-CN>数值盒只进行受边界保护的本地加减和输入 intent，不理解单位、库存或业务精度。</zh-CN><en>The number box performs bounded local increment/decrement and input intent only and understands no unit, inventory, or business precision.</en></lang>
   Object.freeze({ name: 'u-number-box', component: UNumberBox }),
+  // <lang><zh-CN>标签只呈现有限 tone/size/shape 和 close intent，不拥有分类 registry。</zh-CN><en>The tag presents finite tone/size/shape and close intent only and owns no category registry.</en></lang>
+  Object.freeze({ name: 'u-tag', component: UTag }),
+  // <lang><zh-CN>徽标只呈现调用方文字或 dot，不读取通知或创建全局服务。</zh-CN><en>The badge presents caller text or dot only and reads no notifications or creates global services.</en></lang>
+  Object.freeze({ name: 'u-badge', component: UBadge }),
+  // <lang><zh-CN>分隔只提供局部方向、线条和 slot 文字，不推断页面层级。</zh-CN><en>The divider provides local direction, lines, and slot text only and infers no page hierarchy.</en></lang>
+  Object.freeze({ name: 'u-divider', component: UDivider }),
+  // <lang><zh-CN>数字呈现是同步格式投影，不使用计时器、动画或自动完成事件。</zh-CN><en>Numeric presentation is a synchronous formatting projection with no timer, animation, or auto-completion event.</en></lang>
+  Object.freeze({ name: 'u-count-to', component: UCountTo }),
+  // <lang><zh-CN>进度条只投影调用方百分比，不连接上传、下载或任务状态。</zh-CN><en>The progress bar projects caller percentage only and connects to no upload, download, or task state.</en></lang>
+  Object.freeze({ name: 'u-line-progress', component: ULineProgress }),
   // <lang><zh-CN>radio 只呈现调用方受控单选意图；它不取消已选项，也不持有 option 数据。</zh-CN><en>The radio presents caller-controlled single-choice intent only; it neither clears a selected item nor owns option data.</en></lang>
   Object.freeze({ name: 'u-radio', component: URadio }),
   // <lang><zh-CN>radio group 只向直接子 radio 提供受控上下文并 emit 选择意图，不创建 picker、popup 或全局选择服务。</zh-CN><en>The radio group provides controlled context to direct child radios and emits selection intent only; it creates no picker, popup, or global selection service.</en></lang>
@@ -109,5 +133,5 @@ export const UView = Object.freeze({
 });
 
 // <lang><zh-CN>导出命名组件供应用按需注册；默认导出保持显式 plugin 入口，二者均不产生 import-time 副作用。</zh-CN><en>Exports named components for application-side registration; the default export remains the explicit plugin entry, and neither creates import-time side effects.</en></lang>
-export { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UForm, UFormItem, UInput, UModal, UNavBar, UNotice, UNumberBox, URadio, URadioGroup, URate, USearch, UStack, USwitch, UTextarea, UValidationMessage };
+export { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UForm, UFormItem, UIcon, UImage, UAvatar, UInput, UModal, UNavBar, UNotice, UNumberBox, UTag, UBadge, UDivider, UCountTo, ULineProgress, URadio, URadioGroup, URate, USearch, UStack, USwitch, UTextarea, UValidationMessage };
 export default UView;

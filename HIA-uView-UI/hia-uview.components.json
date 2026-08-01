@@ -4,6 +4,18 @@
   "styleEntry": "src/style.css",
   "components": [
     {
+      "name": "u-avatar",
+      "source": "src/components/u-avatar/u-avatar.vue",
+      "contract": "docs/avatar.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-badge",
+      "source": "src/components/u-badge/u-badge.vue",
+      "contract": "docs/badge.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-button",
       "source": "src/components/u-button/u-button.vue",
       "contract": "docs/button.md",
@@ -31,6 +43,18 @@
       "name": "u-checkbox-group",
       "source": "src/components/u-checkbox-group/u-checkbox-group.vue",
       "contract": "docs/checkbox-group.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-count-to",
+      "source": "src/components/u-count-to/u-count-to.vue",
+      "contract": "docs/count-to.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-divider",
+      "source": "src/components/u-divider/u-divider.vue",
+      "contract": "docs/divider.md",
       "locales": ["zh-Hans", "en"]
     },
     {
@@ -64,6 +88,18 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-icon",
+      "source": "src/components/u-icon/u-icon.vue",
+      "contract": "docs/icon.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-image",
+      "source": "src/components/u-image/u-image.vue",
+      "contract": "docs/image.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-input",
       "source": "src/components/u-input/u-input.vue",
       "contract": "docs/input.md",
@@ -71,6 +107,12 @@
         "zh-Hans",
         "en"
       ]
+    },
+    {
+      "name": "u-line-progress",
+      "source": "src/components/u-line-progress/u-line-progress.vue",
+      "contract": "docs/line-progress.md",
+      "locales": ["zh-Hans", "en"]
     },
     {
       "name": "u-modal",
@@ -142,6 +184,12 @@
       "name": "u-switch",
       "source": "src/components/u-switch/u-switch.vue",
       "contract": "docs/switch.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-tag",
+      "source": "src/components/u-tag/u-tag.vue",
+      "contract": "docs/tag.md",
       "locales": ["zh-Hans", "en"]
     },
     {
