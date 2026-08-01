@@ -12,13 +12,20 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-checkbox-group` | `UCheckboxGroup` | [UCheckboxGroup](checkbox-group.md) | Controlled string-set coordination / 受控字符串集合协调 |
 | `u-empty` | `UEmpty` | [UEmpty](empty.md) | Caller-owned empty projection / 调用方拥有的空态投影 |
 | `u-field` | `UField` | [UField](field.md) | Field layout without form ownership / 不拥有表单的字段布局 |
+| `u-form` | `UForm` | [UForm](form.md) | Static form grouping and explicit intents / 静态表单分组与显式意图 |
+| `u-form-item` | `UFormItem` | [UFormItem](form-item.md) | Label/help/message presentation / 标签、帮助与消息呈现 |
 | `u-input` | `UInput` | [UInput](input.md) | Controlled string input intent / 受控字符串输入意图 |
 | `u-modal` | `UModal` | [UModal](modal.md) | Controlled confirmation/cancel intent / 受控确认或取消意图 |
 | `u-nav-bar` | `UNavBar` | [UNavBar](nav-bar.md) | Title and navigation/action intent / 标题与导航或操作意图 |
 | `u-notice` | `UNotice` | [UNotice](notice.md) | Local feedback presentation / 本地反馈呈现 |
+| `u-number-box` | `UNumberBox` | [UNumberBox](number-box.md) | Bounded local numeric intent / 受边界保护的本地数值意图 |
 | `u-radio` | `URadio` | [URadio](radio.md) | Controlled single-choice intent / 受控单选意图 |
 | `u-radio-group` | `URadioGroup` | [URadioGroup](radio-group.md) | Controlled single-choice coordination / 受控单选协调 |
+| `u-rate` | `URate` | [URate](rate.md) | Text-symbol integer selection / 文字符号整数选择 |
+| `u-search` | `USearch` | [USearch](search.md) | Controlled query intent / 受控查询意图 |
 | `u-stack` | `UStack` | [UStack](stack.md) | Slot layout primitive / 插槽布局原语 |
+| `u-switch` | `USwitch` | [USwitch](switch.md) | Controlled boolean choice / 受控布尔选择 |
+| `u-textarea` | `UTextarea` | [UTextarea](textarea.md) | Controlled multiline input / 受控多行输入 |
 | `u-validation-message` | `UValidationMessage` | [UValidationMessage](validation-message.md) | Caller-declared validation presentation / 调用方声明的校验呈现 |
 
 Use named imports or the explicit `UView` plugin as documented in [runtime consumption](runtime-consumption.md). Import `style.css` explicitly from application-owned global style setup. The current [compatibility profile](compatibility.md), [examples](examples.md), and [migration guidance](migration-from-uview.md) state the evidence and limits that apply to this index.

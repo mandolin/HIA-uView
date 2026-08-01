@@ -1,0 +1,47 @@
+/**
+ * @component UTextarea
+ * @lang zh-CN UTextarea 的 token 化多行输入样式；样式不拥有值、规则或平台焦点生命周期。
+ * @lang en Tokenized multiline-input styles for UTextarea; styles own no value, rules, or platform focus lifecycle.
+ */
+
+/* <lang><zh-CN>根容器使用中性表面和边界，保留调用方布局与业务语义在组件外部。</zh-CN><en>The root uses neutral surface and boundary while keeping caller layout and business meaning outside the component.</en></lang> */
+.u-textarea {
+  position: relative;
+  background: var(--u-comp-textarea-surface);
+  border: 1px solid var(--u-comp-textarea-border);
+  border-radius: var(--u-comp-textarea-radius);
+  box-sizing: border-box;
+  color: var(--u-comp-textarea-foreground);
+  min-height: var(--u-comp-textarea-min-height);
+  padding: var(--u-comp-textarea-block-padding) var(--u-comp-textarea-inline-padding);
+  width: 100%;
+}
+
+/* <lang><zh-CN>字段保持无额外装饰，避免平台 textarea 的原生值被样式伪造。</zh-CN><en>The field keeps a plain presentation so native textarea value is not faked by styling.</en></lang> */
+.u-textarea__field {
+  background: transparent;
+  border: 0;
+  box-sizing: border-box;
+  color: inherit;
+  display: block;
+  font-size: var(--u-comp-textarea-font-size);
+  min-height: var(--u-comp-textarea-field-min-height);
+  padding: 0;
+  width: 100%;
+}
+
+/* <lang><zh-CN>计数使用次要 token，仅表达字符串长度观察，不表达业务配额或错误。</zh-CN><en>The counter uses secondary tokens to show string length only, not business quota or error.</en></lang> */
+.u-textarea__count {
+  color: var(--u-comp-textarea-count-foreground);
+  display: block;
+  font-size: var(--u-comp-textarea-count-font-size);
+  text-align: right;
+}
+
+/* <lang><zh-CN>禁用和只读通过边界、透明度与背景共同表达，避免只依赖颜色。</zh-CN><en>Disabled and readonly use boundary, opacity, and background together instead of relying on color alone.</en></lang> */
+.u-textarea--disabled,
+.u-textarea--readonly {
+  background: var(--u-comp-textarea-inactive-surface);
+  border-color: var(--u-comp-textarea-inactive-border);
+  opacity: var(--u-comp-textarea-inactive-opacity);
+}

@@ -52,6 +52,18 @@
       ]
     },
     {
+      "name": "u-form",
+      "source": "src/components/u-form/u-form.vue",
+      "contract": "docs/form.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-form-item",
+      "source": "src/components/u-form-item/u-form-item.vue",
+      "contract": "docs/form-item.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-input",
       "source": "src/components/u-input/u-input.vue",
       "contract": "docs/input.md",
@@ -88,6 +100,12 @@
       ]
     },
     {
+      "name": "u-number-box",
+      "source": "src/components/u-number-box/u-number-box.vue",
+      "contract": "docs/number-box.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-radio",
       "source": "src/components/u-radio/u-radio.vue",
       "contract": "docs/radio.md",
@@ -100,6 +118,18 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-rate",
+      "source": "src/components/u-rate/u-rate.vue",
+      "contract": "docs/rate.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-search",
+      "source": "src/components/u-search/u-search.vue",
+      "contract": "docs/search.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-stack",
       "source": "src/components/u-stack/u-stack.vue",
       "contract": "docs/stack.md",
@@ -107,6 +137,18 @@
         "zh-Hans",
         "en"
       ]
+    },
+    {
+      "name": "u-switch",
+      "source": "src/components/u-switch/u-switch.vue",
+      "contract": "docs/switch.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-textarea",
+      "source": "src/components/u-textarea/u-textarea.vue",
+      "contract": "docs/textarea.md",
+      "locales": ["zh-Hans", "en"]
     },
     {
       "name": "u-validation-message",

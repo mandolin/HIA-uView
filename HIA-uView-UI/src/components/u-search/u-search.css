@@ -1,0 +1,47 @@
+/**
+ * @component USearch
+ * @lang zh-CN USearch 的局部组合样式；不加载图标、请求或结果服务。
+ * @lang en Local composition styles for USearch; they load no icon, request, or result service.
+ */
+
+/* <lang><zh-CN>搜索行保持输入、清除和 action 的局部排列。</zh-CN><en>The search row keeps input, clear, and action in local layout.</en></lang> */
+.u-search {
+  align-items: center;
+  background: var(--u-comp-search-surface);
+  border: 1px solid var(--u-comp-search-border);
+  border-radius: var(--u-comp-search-radius);
+  box-sizing: border-box;
+  display: flex;
+  gap: var(--u-comp-search-gap);
+  min-height: var(--u-comp-search-min-height);
+  padding: var(--u-comp-search-padding);
+  width: 100%;
+}
+
+/* <lang><zh-CN>输入消费中性 token，搜索语义通过外部 event 而不是内部请求表达。</zh-CN><en>The input consumes neutral tokens; search meaning is expressed through external events rather than an internal request.</en></lang> */
+.u-search__input {
+  background: transparent;
+  border: 0;
+  box-sizing: border-box;
+  color: var(--u-comp-search-foreground);
+  flex: 1;
+  font-size: var(--u-comp-search-font-size);
+  min-width: 0;
+  padding: 0;
+}
+
+/* <lang><zh-CN>清除和 action 使用调用方可见文字，避免字体/图标资产进入 UI 包。</zh-CN><en>Clear and action use caller-visible text so font/icon assets do not enter the UI package.</en></lang> */
+.u-search__clear,
+.u-search__action {
+  background: transparent;
+  border: 0;
+  color: var(--u-comp-search-action-foreground);
+  min-height: var(--u-comp-search-control-min-height);
+  min-width: var(--u-comp-search-control-min-width);
+  padding: 0 var(--u-comp-search-control-padding);
+}
+
+/* <lang><zh-CN>禁用使用透明度和边界共同表达。</zh-CN><en>Disabled state combines opacity and boundary.</en></lang> */
+.u-search--disabled {
+  opacity: var(--u-comp-search-disabled-opacity);
+}

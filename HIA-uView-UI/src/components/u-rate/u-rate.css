@@ -1,0 +1,32 @@
+/**
+ * @component URate
+ * @lang zh-CN URate 的文本符号和 token 样式；不加载图标、字体或图片资产。
+ * @lang en Text-symbol and token styles for URate; they load no icon, font, or image asset.
+ */
+
+/* <lang><zh-CN>按钮集合使用局部横向布局，不创建表单提交或全局评分服务。</zh-CN><en>The button set uses local horizontal layout and creates no form submission or global rating service.</en></lang> */
+.u-rate {
+  display: inline-flex;
+  gap: var(--u-comp-rate-gap);
+}
+
+/* <lang><zh-CN>每个按钮保留最小触控几何和透明背景，符号语义完全由调用方可覆盖文字决定。</zh-CN><en>Each button retains minimum touch geometry and transparent background; symbol meaning is entirely caller-overridable copy.</en></lang> */
+.u-rate__item {
+  background: transparent;
+  border: 0;
+  color: var(--u-comp-rate-inactive-foreground);
+  font-size: var(--u-comp-rate-font-size);
+  min-height: var(--u-comp-rate-min-height);
+  min-width: var(--u-comp-rate-min-width);
+  padding: 0;
+}
+
+/* <lang><zh-CN>选中项使用 HIA 主色；它只表达当前组件值，不表达业务成功或用户信誉。</zh-CN><en>Selected items use HIA primary color; they express current component value only, not business success or user trust.</en></lang> */
+.u-rate__item--active {
+  color: var(--u-comp-rate-active-foreground);
+}
+
+/* <lang><zh-CN>禁用通过透明度补充原生按钮状态。</zh-CN><en>Disabled state supplements native button state with opacity.</en></lang> */
+.u-rate--disabled {
+  opacity: var(--u-comp-rate-disabled-opacity);
+}

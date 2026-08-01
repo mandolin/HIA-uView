@@ -1,0 +1,42 @@
+/**
+ * @component UNumberBox
+ * @lang zh-CN UNumberBox 的局部排列与 token 样式；不表达单位、货币或库存语义。
+ * @lang en Local layout and token styles for UNumberBox; they express no unit, currency, or inventory meaning.
+ */
+
+/* <lang><zh-CN>横向布局将两个本地操作和受控输入保持在同一局部边界内。</zh-CN><en>Horizontal layout keeps two local actions and the controlled input inside one local boundary.</en></lang> */
+.u-number-box {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--u-comp-number-box-gap);
+}
+
+/* <lang><zh-CN>按钮使用中性表面和最小触控几何；具体流程由调用方 click handler 决定。</zh-CN><en>Buttons use neutral surface and minimum touch geometry; the caller decides the follow-up flow.</en></lang> */
+.u-number-box__button {
+  background: var(--u-comp-number-box-button-surface);
+  border: 1px solid var(--u-comp-number-box-border);
+  border-radius: var(--u-comp-number-box-radius);
+  color: var(--u-comp-number-box-foreground);
+  min-height: var(--u-comp-number-box-min-height);
+  min-width: var(--u-comp-number-box-min-width);
+}
+
+/* <lang><zh-CN>数字输入消费与 UInput 同源的文字和边界 token，但保持独立组件契约。</zh-CN><en>The numeric field consumes text and boundary tokens shared in meaning with UInput while keeping an independent component contract.</en></lang> */
+.u-number-box__input {
+  background: var(--u-comp-number-box-input-surface);
+  border: 1px solid var(--u-comp-number-box-border);
+  border-radius: var(--u-comp-number-box-radius);
+  box-sizing: border-box;
+  color: var(--u-comp-number-box-foreground);
+  font-size: var(--u-comp-number-box-font-size);
+  min-height: var(--u-comp-number-box-min-height);
+  min-width: var(--u-comp-number-box-input-min-width);
+  padding: var(--u-comp-number-box-input-padding);
+  text-align: center;
+}
+
+/* <lang><zh-CN>disabled/readonly 通过透明度表达不可编辑状态，并保留按钮原生 disabled 语义。</zh-CN><en>Disabled/readonly use opacity for unavailable editing while retaining native button disabled semantics.</en></lang> */
+.u-number-box--disabled,
+.u-number-box--readonly {
+  opacity: var(--u-comp-number-box-inactive-opacity);
+}

@@ -11,13 +11,20 @@ import UCheckbox from './components/u-checkbox/u-checkbox.vue';
 import UCheckboxGroup from './components/u-checkbox-group/u-checkbox-group.vue';
 import UEmpty from './components/u-empty/u-empty.vue';
 import UField from './components/u-field/u-field.vue';
+import UForm from './components/u-form/u-form.vue';
+import UFormItem from './components/u-form-item/u-form-item.vue';
 import UInput from './components/u-input/u-input.vue';
 import UModal from './components/u-modal/u-modal.vue';
 import UNavBar from './components/u-nav-bar/u-nav-bar.vue';
 import UNotice from './components/u-notice/u-notice.vue';
+import UNumberBox from './components/u-number-box/u-number-box.vue';
 import URadio from './components/u-radio/u-radio.vue';
 import URadioGroup from './components/u-radio-group/u-radio-group.vue';
+import URate from './components/u-rate/u-rate.vue';
+import USearch from './components/u-search/u-search.vue';
 import UStack from './components/u-stack/u-stack.vue';
+import USwitch from './components/u-switch/u-switch.vue';
+import UTextarea from './components/u-textarea/u-textarea.vue';
 import UValidationMessage from './components/u-validation-message/u-validation-message.vue';
 
 /**
@@ -37,6 +44,10 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-empty', component: UEmpty }),
   // <lang><zh-CN>字段结构只组织调用方标签、插槽、帮助和独立消息，不拥有表单模型或规则生命周期。</zh-CN><en>The field structure organizes caller label, slot, help, and independent message only and owns no form model or rule lifecycle.</en></lang>
   Object.freeze({ name: 'u-field', component: UField }),
+  // <lang><zh-CN>表单区域只提供布局和显式 submit/reset intent，不拥有字段 registry 或规则执行。</zh-CN><en>The form region provides layout and explicit submit/reset intent only and owns no field registry or rule execution.</en></lang>
+  Object.freeze({ name: 'u-form', component: UForm }),
+  // <lang><zh-CN>表单项只组织标签、帮助和应用声明消息，嵌入控件仍由调用方控制。</zh-CN><en>The form item organizes label, help, and caller-declared message only while the embedded control remains caller-controlled.</en></lang>
+  Object.freeze({ name: 'u-form-item', component: UFormItem }),
   // <lang><zh-CN>受控输入只显示调用方字符串并 emit 未修改的本地输入意图。</zh-CN><en>The controlled input displays caller string only and emits unmodified local input intent.</en></lang>
   Object.freeze({ name: 'u-input', component: UInput }),
   // <lang><zh-CN>modal 只呈现调用方 visible/内容与 confirm/cancel 意图，不自动关闭或管理焦点。</zh-CN><en>The modal presents caller visible/content and confirm/cancel intent only and neither auto-closes nor manages focus.</en></lang>
@@ -45,12 +56,22 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-nav-bar', component: UNavBar }),
   // <lang><zh-CN>notice 只呈现调用方 message/tone 与可选 dismiss 意图，不创建全局 service 或定时器。</zh-CN><en>The notice presents caller message/tone and optional dismiss intent only and creates no global service or timer.</en></lang>
   Object.freeze({ name: 'u-notice', component: UNotice }),
+  // <lang><zh-CN>数值盒只进行受边界保护的本地加减和输入 intent，不理解单位、库存或业务精度。</zh-CN><en>The number box performs bounded local increment/decrement and input intent only and understands no unit, inventory, or business precision.</en></lang>
+  Object.freeze({ name: 'u-number-box', component: UNumberBox }),
   // <lang><zh-CN>radio 只呈现调用方受控单选意图；它不取消已选项，也不持有 option 数据。</zh-CN><en>The radio presents caller-controlled single-choice intent only; it neither clears a selected item nor owns option data.</en></lang>
   Object.freeze({ name: 'u-radio', component: URadio }),
   // <lang><zh-CN>radio group 只向直接子 radio 提供受控上下文并 emit 选择意图，不创建 picker、popup 或全局选择服务。</zh-CN><en>The radio group provides controlled context to direct child radios and emits selection intent only; it creates no picker, popup, or global selection service.</en></lang>
   Object.freeze({ name: 'u-radio-group', component: URadioGroup }),
+  // <lang><zh-CN>评分只呈现文本符号和整数选择 intent，不提交评价或生成业务分数。</zh-CN><en>The rate presents text symbols and integer-selection intent only and submits no review or business score.</en></lang>
+  Object.freeze({ name: 'u-rate', component: URate }),
+  // <lang><zh-CN>搜索只组合受控文本与 search/clear intent，不请求、去重或生成结果。</zh-CN><en>The search control composes controlled text and search/clear intent only and performs no request, deduplication, or result generation.</en></lang>
+  Object.freeze({ name: 'u-search', component: USearch }),
   // <lang><zh-CN>布局原语只排列默认插槽，不拥有页面或子项语义。</zh-CN><en>The layout primitive arranges the default slot only and owns no page or child semantics.</en></lang>
   Object.freeze({ name: 'u-stack', component: UStack }),
+  // <lang><zh-CN>切换只回传受控布尔选择，不执行权限、持久化或远程更新。</zh-CN><en>The switch returns controlled boolean selection only and performs no authorization, persistence, or remote update.</en></lang>
+  Object.freeze({ name: 'u-switch', component: USwitch }),
+  // <lang><zh-CN>多行输入只回传受控字符串和焦点/确认 intent，不执行校验、提交或持久化。</zh-CN><en>The textarea returns controlled string and focus/confirm intent only and performs no validation, submission, or persistence.</en></lang>
+  Object.freeze({ name: 'u-textarea', component: UTextarea }),
   // <lang><zh-CN>独立校验消息只呈现应用声明的状态和文字，不推断结果或启动异步工作。</zh-CN><en>The independent validation message presents application-declared state and text only and infers no result or starts no asynchronous work.</en></lang>
   Object.freeze({ name: 'u-validation-message', component: UValidationMessage })
 ]);
@@ -88,5 +109,5 @@ export const UView = Object.freeze({
 });
 
 // <lang><zh-CN>导出命名组件供应用按需注册；默认导出保持显式 plugin 入口，二者均不产生 import-time 副作用。</zh-CN><en>Exports named components for application-side registration; the default export remains the explicit plugin entry, and neither creates import-time side effects.</en></lang>
-export { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UInput, UModal, UNavBar, UNotice, URadio, URadioGroup, UStack, UValidationMessage };
+export { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UForm, UFormItem, UInput, UModal, UNavBar, UNotice, UNumberBox, URadio, URadioGroup, URate, USearch, UStack, USwitch, UTextarea, UValidationMessage };
 export default UView;

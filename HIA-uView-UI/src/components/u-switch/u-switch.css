@@ -1,0 +1,25 @@
+/**
+ * @component USwitch
+ * @lang zh-CN USwitch 的局部布局与 token 样式；不改变原生 switch 行为或业务状态。
+ * @lang en Local layout and token styles for USwitch; they do not change native switch behavior or business state.
+ */
+
+/* <lang><zh-CN>标签使用横向局部布局，不创建表单字段注册或全局点击区域。</zh-CN><en>The label uses local horizontal layout and creates no form registration or global click area.</en></lang> */
+.u-switch {
+  align-items: center;
+  color: var(--u-comp-switch-foreground);
+  display: inline-flex;
+  gap: var(--u-comp-switch-gap);
+  min-height: var(--u-comp-switch-min-height);
+}
+
+/* <lang><zh-CN>文字只消费调用方传入的 label，避免组件推断语言或领域语义。</zh-CN><en>Copy consumes caller-provided label only so the component infers no language or domain meaning.</en></lang> */
+.u-switch__label {
+  font-size: var(--u-comp-switch-font-size);
+}
+
+/* <lang><zh-CN>禁用通过透明度和不可用光标共同呈现，并不依赖单一颜色判断。</zh-CN><en>Disabled presentation combines opacity and unavailable cursor rather than relying on a single color.</en></lang> */
+.u-switch--disabled {
+  cursor: not-allowed;
+  opacity: var(--u-comp-switch-disabled-opacity);
+}

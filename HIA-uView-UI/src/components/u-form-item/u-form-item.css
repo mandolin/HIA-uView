@@ -1,0 +1,52 @@
+/**
+ * @component UFormItem
+ * @lang zh-CN UFormItem 的标签、控制区和消息布局 token；不拥有字段值或规则生命周期。
+ * @lang en Label, control, and message layout tokens for UFormItem; it owns no field value or rule lifecycle.
+ */
+
+/* <lang><zh-CN>表单项使用局部垂直结构，保持外部表单和控件可组合。</zh-CN><en>The form item uses local vertical structure while keeping outer form and controls composable.</en></lang> */
+.u-form-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-form-item-gap);
+}
+
+/* <lang><zh-CN>left 类只调整标签行布局，不改变 label/control 的数据所有权。</zh-CN><en>The left class changes label-row layout only and does not change label/control data ownership.</en></lang> */
+.u-form-item--label-left .u-form-item__label-row {
+  align-items: baseline;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* <lang><zh-CN>标签和帮助文字均使用调用方提供的 copy，不生成默认语言或业务术语。</zh-CN><en>Label and help use caller-provided copy and generate no default language or business terminology.</en></lang> */
+.u-form-item__label-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-form-item-label-gap);
+}
+
+.u-form-item__label {
+  color: var(--u-comp-form-item-label-foreground);
+  font-size: var(--u-comp-form-item-label-font-size);
+  font-weight: var(--u-comp-form-item-label-font-weight);
+}
+
+.u-form-item__required {
+  color: var(--u-comp-form-item-required-foreground);
+  margin-right: var(--u-comp-form-item-required-gap);
+}
+
+.u-form-item__help {
+  color: var(--u-comp-form-item-help-foreground);
+  font-size: var(--u-comp-form-item-help-font-size);
+}
+
+/* <lang><zh-CN>控制区只承载插槽内容，组件不在此读取或序列化字段值。</zh-CN><en>The control region holds slot content only; the component reads or serializes no field value here.</en></lang> */
+.u-form-item__control {
+  display: block;
+}
+
+/* <lang><zh-CN>禁用状态以透明度呈现，实际输入禁用必须由嵌入控件的 props 单独声明。</zh-CN><en>Disabled presentation uses opacity; actual input disablement must be declared by the embedded control's props.</en></lang> */
+.u-form-item--disabled {
+  opacity: var(--u-comp-form-item-disabled-opacity);
+}

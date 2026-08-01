@@ -37,6 +37,30 @@
         />
       </u-field>
 
+      <!-- <lang><zh-CN>首发高频控件只验证受控值和本地 intent 的组合，不创建业务字段、规则、请求或持久化。</zh-CN><en>The first high-frequency controls verify controlled values and local intent composition only; they create no business fields, rules, requests, or persistence.</en></lang> -->
+      <u-form label-position="top">
+        <u-form-item label="备注 / Note" help-text="仅展示受控多行文字。">
+          <u-textarea
+            :model-value="fixtureTextareaValue"
+            placeholder="输入备注 / Enter a note"
+            :show-count="true"
+            @update:model-value="updateFixtureTextareaValue"
+          />
+        </u-form-item>
+        <u-form-item label="本地开关 / Local switch">
+          <u-switch :model-value="fixtureSwitchValue" label="启用样例 / Enable sample" @update:model-value="updateFixtureSwitchValue" />
+        </u-form-item>
+        <u-form-item label="数量 / Quantity">
+          <u-number-box :model-value="fixtureNumberValue" :min="0" :max="9" @update:model-value="updateFixtureNumberValue" />
+        </u-form-item>
+        <u-form-item label="分级 / Rate">
+          <u-rate :model-value="fixtureRateValue" @update:model-value="updateFixtureRateValue" />
+        </u-form-item>
+        <u-form-item label="受控查询 / Controlled search">
+          <u-search :model-value="catalogQuery" show-action action-text="查询 / Search" @update:model-value="updateCatalogQuery" @search="handleFixtureSearch" />
+        </u-form-item>
+      </u-form>
+
       <!-- @lang zh-CN P16 选择组只使用页面自有字符串与字符串数组，验证 group emit/writeback 而不引入 option 数据源或业务筛选。 @lang en The P16 choice groups use page-owned string and string array only, verifying group emit/writeback without introducing option data source or business filtering. <lang><zh-CN>这些控件不改变目录 query。</zh-CN><en>These controls do not change directory query.</en></lang> -->
       <u-radio-group :model-value="fixtureRadioValue" @update:model-value="updateFixtureRadioValue">
         <u-radio value="local-a" label="本地单选 A / Local radio A" />
@@ -123,6 +147,8 @@
 import { computed, ref } from 'vue';
 // <lang><zh-CN>显式导入本仓 runtime 组件；template 编译通过 script setup 绑定这些局部实现，不使用自动注册。</zh-CN><en>Explicitly imports repository runtime components; template compilation binds these local implementations through script setup and uses no auto-registration.</en></lang>
 import { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UInput, UModal, UNavBar, UNotice, URadio, URadioGroup, UStack, UValidationMessage } from '../../../../../src/index.mjs';
+// <lang><zh-CN>高频控件通过第二个显式导入保持新增实现和旧 fixture 组件边界清晰；两次导入均不触发自动注册。</zh-CN><en>High-frequency controls use a second explicit import to keep new implementations and the existing fixture component boundary clear; neither import triggers auto-registration.</en></lang>
+import { UForm, UFormItem, UNumberBox, URate, USearch, USwitch, UTextarea } from '../../../../../src/index.mjs';
 // <lang><zh-CN>导入固定匿名 mock 集合与纯同步 helper；它们位于 fixture 内而非 UI runtime 或 Biz package。</zh-CN><en>Imports the fixed anonymous mock collection and pure synchronous helpers; they reside inside the fixture rather than UI runtime or a Biz package.</en></lang>
 import { LOCAL_CATALOG_RECORDS, filterLocalCatalogRecords, findLocalCatalogRecord } from './local-catalog.mjs';
 
@@ -151,6 +177,12 @@ const fixtureRadioValue = ref('local-a');
 // <lang><zh-CN>P16 checkbox group 的页面自有受控数组；页面替换整个数组而不 mutate group 输入。</zh-CN><en>Page-owned controlled array for the P16 checkbox group; the page replaces the whole array rather than mutating group input.</en></lang>
 const fixtureCheckboxValues = ref(['local-one']);
 
+// <lang><zh-CN>新增高频控件均使用页面内局部 refs；它们不进入目录 mock、共享 store 或外部数据源。</zh-CN><en>New high-frequency controls use page-local refs only; they enter no catalog mock, shared store, or external data source.</en></lang>
+const fixtureTextareaValue = ref('');
+const fixtureSwitchValue = ref(false);
+const fixtureNumberValue = ref(1);
+const fixtureRateValue = ref(0);
+
 // <lang><zh-CN>由当前受控 query 同步派生的本地目录投影；helper 不访问网络、缓存或异步数据源。</zh-CN><en>Local catalog projection synchronously derived from the current controlled query; the helper accesses no network, cache, or asynchronous data source.</en></lang>
 const filteredCatalogRecords = computed(() => filterLocalCatalogRecords(LOCAL_CATALOG_RECORDS, catalogQuery.value));
 
@@ -175,6 +207,57 @@ const catalogQueryValidationMessage = computed(() => {
 
 // <lang><zh-CN>独立消息 state 只在页面确有文字时为 error；该样式选择不把无结果扩大为组件或后端错误判断。</zh-CN><en>The independent-message state is error only while the page has copy; this style choice does not expand no result into a component or backend error judgment.</en></lang>
 const catalogQueryValidationState = computed(() => (catalogQueryValidationMessage.value.length > 0 ? 'error' : 'idle'));
+
+/**
+ * @lang zh-CN 更新 fixture 多行文字 ref；它不执行裁剪、校验或持久化。
+ * @lang en Updates the fixture multiline-text ref without trimming, validation, or persistence.
+ * @param {string} value <lang><zh-CN>来自 UTextarea 的受控候选字符串。</zh-CN><en>Controlled candidate string from UTextarea.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写当前页面 ref。</zh-CN><en>No return value; writes the current page ref only.</en></lang>
+ */
+function updateFixtureTextareaValue(value) {
+  fixtureTextareaValue.value = value;
+}
+
+/**
+ * @lang zh-CN 更新 fixture 布尔 ref；它不解释为权限或业务开关。
+ * @lang en Updates the fixture boolean ref without interpreting it as authorization or a business switch.
+ * @param {boolean} value <lang><zh-CN>来自 USwitch 的受控候选值。</zh-CN><en>Controlled candidate value from USwitch.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写当前页面 ref。</zh-CN><en>No return value; writes the current page ref only.</en></lang>
+ */
+function updateFixtureSwitchValue(value) {
+  fixtureSwitchValue.value = value;
+}
+
+/**
+ * @lang zh-CN 更新 fixture 数值 ref；它不增加单位或库存含义。
+ * @lang en Updates the fixture numeric ref without adding unit or inventory meaning.
+ * @param {number} value <lang><zh-CN>来自 UNumberBox 的受边界保护候选值。</zh-CN><en>Bounded candidate value from UNumberBox.</en></param>
+ * @returns {void} <lang><zh-CN>无返回值；只写当前页面 ref。</zh-CN><en>No return value; writes the current page ref only.</en></lang>
+ */
+function updateFixtureNumberValue(value) {
+  fixtureNumberValue.value = value;
+}
+
+/**
+ * @lang zh-CN 更新 fixture 分级 ref；它不提交评价或计算业务分数。
+ * @lang en Updates the fixture rating ref without submitting a review or calculating a business score.
+ * @param {number} value <lang><zh-CN>来自 URate 的整数候选值。</zh-CN><en>Integer candidate value from URate.</en></param>
+ * @returns {void} <lang><zh-CN>无返回值；只写当前页面 ref。</zh-CN><en>No return value; writes the current page ref only.</en></lang>
+ */
+function updateFixtureRateValue(value) {
+  fixtureRateValue.value = value;
+}
+
+/**
+ * @lang zh-CN 接收 USearch 的本地 search intent；fixture 只显示既有受控 notice，不发起查询。
+ * @lang en Receives USearch local search intent; the fixture only shows an existing controlled notice and starts no query.
+ * @param {string} value <lang><zh-CN>当前受控查询文字。</zh-CN><en>Current controlled query text.</en></param>
+ * @returns {void} <lang><zh-CN>无返回值；只更新页面内 notice refs。</zh-CN><en>No return value; updates page-local notice refs only.</en></lang>
+ */
+function handleFixtureSearch(value) {
+  catalogNoticeMessage.value = `本地查询意图：${value} / Local search intent: ${value}`;
+  catalogNoticeVisible.value = true;
+}
 
 /**
  * @lang zh-CN 接收受控 UInput 的下一字符串，并由页面显式写入 query。每次查询变化都会清除本地选择和当前反馈，避免详情或确认文字与新投影混合；不执行请求、规则或持久化。

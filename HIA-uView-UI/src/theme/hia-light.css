@@ -220,4 +220,85 @@
   --u-comp-choice-font-size: 16px;
   --u-comp-choice-marker-width: 20px;
   --u-comp-choice-disabled-opacity: 0.6;
+
+  /* <lang><zh-CN>UTextarea token 组定义多行输入的中性表面、边界、计数和非活动呈现；不编码配额或业务校验。</zh-CN><en>The UTextarea token group defines neutral surface, boundary, counter, and inactive presentation for multiline input; it encodes no quota or business validation.</en></lang> */
+  --u-comp-textarea-surface: var(--u-sys-color-surface);
+  --u-comp-textarea-foreground: var(--u-sys-color-text);
+  --u-comp-textarea-border: var(--u-ref-color-neutral-700);
+  --u-comp-textarea-inactive-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-textarea-inactive-border: var(--u-ref-color-neutral-700);
+  --u-comp-textarea-inactive-opacity: 0.65;
+  --u-comp-textarea-radius: 8px;
+  --u-comp-textarea-min-height: 88px;
+  --u-comp-textarea-field-min-height: 64px;
+  --u-comp-textarea-inline-padding: 12px;
+  --u-comp-textarea-block-padding: 10px;
+  --u-comp-textarea-font-size: 16px;
+  --u-comp-textarea-count-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-textarea-count-font-size: 12px;
+
+  /* <lang><zh-CN>USwitch token 组只定义局部文字、间距、最小触控几何和 disabled 透明度；布尔值仍由调用方拥有。</zh-CN><en>The USwitch token group defines local copy, spacing, minimum touch geometry, and disabled opacity only; the boolean value remains caller-owned.</en></lang> */
+  --u-comp-switch-foreground: var(--u-sys-color-text);
+  --u-comp-switch-gap: 8px;
+  --u-comp-switch-min-height: 44px;
+  --u-comp-switch-font-size: 16px;
+  --u-comp-switch-disabled-opacity: 0.6;
+
+  /* <lang><zh-CN>UNumberBox token 组建立局部按钮/输入几何；不把数值解释为单位、货币或库存。</zh-CN><en>The UNumberBox token group establishes local button/input geometry; it does not interpret numbers as units, currency, or inventory.</en></lang> */
+  --u-comp-number-box-button-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-number-box-input-surface: var(--u-sys-color-surface);
+  --u-comp-number-box-foreground: var(--u-sys-color-text);
+  --u-comp-number-box-border: var(--u-ref-color-neutral-700);
+  --u-comp-number-box-gap: 8px;
+  --u-comp-number-box-radius: 8px;
+  --u-comp-number-box-min-height: 44px;
+  --u-comp-number-box-min-width: 44px;
+  --u-comp-number-box-input-min-width: 72px;
+  --u-comp-number-box-input-padding: 8px;
+  --u-comp-number-box-font-size: 16px;
+  --u-comp-number-box-inactive-opacity: 0.6;
+
+  /* <lang><zh-CN>URate token 组使用文字符号和最小触控几何呈现当前整数值；不编码评价、信誉或成功。</zh-CN><en>The URate token group presents the current integer value through text symbols and minimum touch geometry; it encodes no review, trust, or success.</en></lang> */
+  --u-comp-rate-inactive-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-rate-active-foreground: var(--u-sys-color-action-primary);
+  --u-comp-rate-gap: 4px;
+  --u-comp-rate-min-height: 44px;
+  --u-comp-rate-min-width: 44px;
+  --u-comp-rate-font-size: 24px;
+  --u-comp-rate-disabled-opacity: 0.6;
+
+  /* <lang><zh-CN>USearch token 组提供受控输入行、action 和清除文字的局部表面；请求和结果协议仍由外部拥有。</zh-CN><en>The USearch token group provides local surface for the controlled input row, action, and clear copy; request and result protocols remain external.</en></lang> */
+  --u-comp-search-surface: var(--u-sys-color-surface);
+  --u-comp-search-foreground: var(--u-sys-color-text);
+  --u-comp-search-action-foreground: var(--u-sys-color-action-primary);
+  --u-comp-search-border: var(--u-ref-color-neutral-700);
+  --u-comp-search-radius: 8px;
+  --u-comp-search-gap: 8px;
+  --u-comp-search-min-height: 44px;
+  --u-comp-search-padding: 8px 12px;
+  --u-comp-search-font-size: 16px;
+  --u-comp-search-control-min-height: 36px;
+  --u-comp-search-control-min-width: 36px;
+  --u-comp-search-control-padding: 4px;
+  --u-comp-search-disabled-opacity: 0.6;
+
+  /* <lang><zh-CN>UForm token 组只表达局部区域表面、边界、间距和 disabled 提示；不表达校验、提交或模型状态。</zh-CN><en>The UForm token group expresses local region surface, boundary, spacing, and disabled hint only; it expresses no validation, submission, or model state.</en></lang> */
+  --u-comp-form-surface: var(--u-sys-color-surface);
+  --u-comp-form-border: var(--u-ref-color-neutral-700);
+  --u-comp-form-radius: 12px;
+  --u-comp-form-gap: 16px;
+  --u-comp-form-padding: 16px;
+  --u-comp-form-disabled-opacity: 0.6;
+
+  /* <lang><zh-CN>UFormItem token 组定义标签、帮助、必填与局部间距；消息文字和状态由调用方声明。</zh-CN><en>The UFormItem token group defines label, help, required cue, and local spacing; message copy and state are caller-declared.</en></lang> */
+  --u-comp-form-item-label-foreground: var(--u-sys-color-text);
+  --u-comp-form-item-required-foreground: var(--u-sys-color-action-primary);
+  --u-comp-form-item-help-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-form-item-gap: 8px;
+  --u-comp-form-item-label-gap: 4px;
+  --u-comp-form-item-label-font-size: 16px;
+  --u-comp-form-item-label-font-weight: 600;
+  --u-comp-form-item-required-gap: 4px;
+  --u-comp-form-item-help-font-size: 14px;
+  --u-comp-form-item-disabled-opacity: 0.6;
 }

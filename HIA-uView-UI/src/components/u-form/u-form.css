@@ -1,0 +1,31 @@
+/**
+ * @component UForm
+ * @lang zh-CN UForm 的区域布局 token；不表达校验、提交、模型或后端状态。
+ * @lang en Region-layout tokens for UForm; they express no validation, submission, model, or backend state.
+ */
+
+/* <lang><zh-CN>区域只提供垂直间距和中性表面，子字段通过插槽保持调用方拥有。</zh-CN><en>The region provides vertical spacing and neutral surface only while slot fields remain caller-owned.</en></lang> */
+.u-form {
+  background: var(--u-comp-form-surface);
+  border: 1px solid var(--u-comp-form-border);
+  border-radius: var(--u-comp-form-radius);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-comp-form-gap);
+  padding: var(--u-comp-form-padding);
+}
+
+/* <lang><zh-CN>left/top 只代表局部布局方向，不创建字段注册或表单规则。</zh-CN><en>Left/top represents local layout direction only and creates no field registration or form rules.</en></lang> */
+.u-form--label-left {
+  --u-form-item-label-position: row;
+}
+
+.u-form--label-top {
+  --u-form-item-label-position: column;
+}
+
+/* <lang><zh-CN>禁用状态通过透明度表达区域不可交互提示；具体控件仍由各自 props 决定。</zh-CN><en>Disabled state uses opacity for region-level unavailability; individual controls still decide through their own props.</en></lang> */
+.u-form--disabled {
+  opacity: var(--u-comp-form-disabled-opacity);
+}
