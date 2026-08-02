@@ -1,0 +1,7 @@
+/**
+ * @component URow
+ * @lang zh-CN 受控 flex 行样式；只消费行布局 token，不测量 DOM 或解释业务子项。
+ * @lang en Controlled flex-row styles; consumes row-layout tokens only and measures no DOM or business item.
+ */
+.u-row { align-items: var(--u-row-align); display: flex; flex-wrap: wrap; gap: var(--u-row-gutter); justify-content: var(--u-row-justify); min-width: 0; }
+.u-row--nowrap { flex-wrap: nowrap; }

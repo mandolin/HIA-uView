@@ -1,0 +1,15 @@
+/**
+ * @component UCalendar
+ * @lang zh-CN 日历样式只消费主题 token 和日期网格状态，不表达时区或平台日历能力。
+ * @lang en Calendar styles consume theme tokens and date-grid state only; they express no time-zone or platform-calendar capability.
+ */
+.u-calendar { background: var(--u-comp-calendar-surface); color: var(--u-comp-calendar-foreground); padding: var(--u-comp-calendar-padding); }
+.u-calendar__header, .u-calendar__week, .u-calendar__grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.u-calendar__header { align-items: center; grid-template-columns: 40px 1fr 40px; justify-items: center; margin-block-end: var(--u-comp-calendar-gap); }
+.u-calendar__nav { background: transparent; border: 0; color: var(--u-comp-calendar-nav-foreground); font-size: var(--u-comp-calendar-nav-size); min-height: var(--u-comp-calendar-nav-size); padding: 0; }
+.u-calendar__month { font-weight: 600; }
+.u-calendar__week { color: var(--u-comp-calendar-week-foreground); font-size: var(--u-comp-calendar-week-size); text-align: center; }
+.u-calendar__cell { align-items: center; display: flex; justify-content: center; min-height: var(--u-comp-calendar-cell-size); }
+.u-calendar__day { background: transparent; border: 0; border-radius: var(--u-comp-calendar-day-radius); color: inherit; font-size: var(--u-comp-calendar-day-size); min-height: var(--u-comp-calendar-day-size); min-width: var(--u-comp-calendar-day-size); padding: 0; }
+.u-calendar__day--selected { background: var(--u-comp-calendar-selected-background); color: var(--u-comp-calendar-selected-foreground); }
+.u-calendar__day--today { box-shadow: inset 0 0 0 1px var(--u-comp-calendar-today-border); }

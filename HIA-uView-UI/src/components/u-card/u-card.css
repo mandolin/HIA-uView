@@ -1,0 +1,14 @@
+/**
+ * @component UCard
+ * @lang zh-CN 卡片样式提供中性表面、边界和有限阴影，不表达行业或业务状态。
+ * @lang en Card styles provide neutral surface, boundary, and finite shadow only; they express no industry or business state.
+ */
+.u-card { background: var(--u-comp-card-surface); color: var(--u-comp-card-foreground); padding: var(--u-card-padding); }
+.u-card--bordered { border: 1px solid var(--u-comp-card-border); border-radius: var(--u-comp-card-radius); }
+.u-card--shadow { box-shadow: var(--u-comp-card-shadow); }
+.u-card__header, .u-card__footer { display: flex; gap: var(--u-comp-card-gap); }
+.u-card__header { margin-block-end: var(--u-comp-card-gap); }
+.u-card__footer { margin-block-start: var(--u-comp-card-gap); }
+.u-card__heading { display: flex; flex-direction: column; gap: var(--u-comp-card-heading-gap); min-width: 0; }
+.u-card__title { font-size: var(--u-comp-card-title-size); font-weight: 600; }
+.u-card__subtitle { color: var(--u-comp-card-subtitle); font-size: var(--u-comp-card-subtitle-size); }

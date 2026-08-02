@@ -1,0 +1,13 @@
+/**
+ * @component UPicker
+ * @lang zh-CN 选择器样式提供单列选项和操作区，不决定浮层或平台交互方式。
+ * @lang en Picker styles provide a single option column and action area without deciding popup or platform interaction.
+ */
+.u-picker { background: var(--u-comp-picker-surface); color: var(--u-comp-picker-foreground); padding: var(--u-comp-picker-padding); }
+.u-picker__title { font-size: var(--u-comp-picker-title-size); font-weight: 600; margin-block-end: var(--u-comp-picker-gap); text-align: center; }
+.u-picker__options { display: flex; flex-direction: column; gap: var(--u-comp-picker-option-gap); }
+.u-picker__option { background: transparent; border: 0; border-radius: var(--u-comp-picker-radius); color: inherit; min-height: var(--u-comp-picker-option-height); padding: 0 var(--u-comp-picker-option-padding); text-align: center; }
+.u-picker__option--selected { background: var(--u-comp-picker-selected-background); color: var(--u-comp-picker-selected-foreground); }
+.u-picker__actions { display: flex; gap: var(--u-comp-picker-gap); justify-content: flex-end; margin-block-start: var(--u-comp-picker-gap); }
+.u-picker__action { background: transparent; border: 1px solid var(--u-comp-picker-action-border); border-radius: var(--u-comp-picker-radius); color: var(--u-comp-picker-action-foreground); min-height: var(--u-comp-picker-action-height); padding: 0 var(--u-comp-picker-action-padding); }
+.u-picker__action--confirm { background: var(--u-comp-picker-confirm-background); border-color: var(--u-comp-picker-confirm-background); color: var(--u-comp-picker-confirm-foreground); }

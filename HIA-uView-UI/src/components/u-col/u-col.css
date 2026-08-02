@@ -1,0 +1,6 @@
+/**
+ * @component UCol
+ * @lang zh-CN 24 栅格列样式；只消费 span/offset 和对齐 token，不测量容器。
+ * @lang en 24-grid column styles; consumes span/offset and alignment tokens only and measures no container.
+ */
+.u-col { align-items: var(--u-col-align); display: flex; flex: 0 0 calc(var(--u-col-span) / 24 * 100%); justify-content: var(--u-col-justify); margin-inline-start: calc(var(--u-col-offset) / 24 * 100%); min-width: 0; }

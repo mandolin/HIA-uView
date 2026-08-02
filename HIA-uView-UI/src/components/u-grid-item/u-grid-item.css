@@ -1,0 +1,10 @@
+/**
+ * @component UGridItem
+ * @lang zh-CN 网格项目样式只消费主题 token 与父级投影的 aspect 值。
+ * @lang en Grid-item styles consume theme tokens and the aspect value projected by the parent only.
+ */
+.u-grid-item { align-items: center; aspect-ratio: var(--u-grid-item-aspect); background: var(--u-comp-grid-item-surface); border: 1px solid var(--u-comp-grid-item-border); color: var(--u-comp-grid-item-foreground); display: flex; gap: var(--u-comp-grid-item-gap); justify-content: center; min-height: var(--u-comp-grid-item-min-height); padding: var(--u-comp-grid-item-padding); text-align: center; }
+.u-grid-item--disabled { cursor: not-allowed; opacity: var(--u-comp-grid-item-disabled-opacity); }
+.u-grid-item__content { display: flex; flex-direction: column; gap: var(--u-comp-grid-item-content-gap); min-width: 0; }
+.u-grid-item__label { font-size: var(--u-comp-grid-item-label-size); font-weight: 600; }
+.u-grid-item__description { color: var(--u-comp-grid-item-description); font-size: var(--u-comp-grid-item-description-size); }

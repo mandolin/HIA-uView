@@ -1,0 +1,13 @@
+/**
+ * @component UAlertTips
+ * @lang zh-CN 提示条按有限 tone 选择主题 token，不拥有全局反馈服务。
+ * @lang en Alert strips select theme tokens from finite tones and own no global feedback service.
+ */
+.u-alert-tips { align-items: flex-start; background: var(--u-comp-alert-tips-background); border: 1px solid var(--u-comp-alert-tips-border); border-radius: var(--u-comp-alert-tips-radius); color: var(--u-comp-alert-tips-foreground); display: flex; gap: var(--u-comp-alert-tips-gap); justify-content: space-between; padding: var(--u-comp-alert-tips-padding); }
+.u-alert-tips--success { --u-comp-alert-tips-background: var(--u-comp-alert-tips-success-background); --u-comp-alert-tips-border: var(--u-comp-alert-tips-success-border); }
+.u-alert-tips--warning { --u-comp-alert-tips-background: var(--u-comp-alert-tips-warning-background); --u-comp-alert-tips-border: var(--u-comp-alert-tips-warning-border); }
+.u-alert-tips--error { --u-comp-alert-tips-background: var(--u-comp-alert-tips-error-background); --u-comp-alert-tips-border: var(--u-comp-alert-tips-error-border); }
+.u-alert-tips__body { display: flex; flex: 1; flex-direction: column; gap: var(--u-comp-alert-tips-content-gap); min-width: 0; }
+.u-alert-tips__title { font-weight: 600; }
+.u-alert-tips__description { font-size: var(--u-comp-alert-tips-description-size); }
+.u-alert-tips__close { background: transparent; border: 0; color: inherit; font-size: var(--u-comp-alert-tips-close-size); min-height: var(--u-comp-alert-tips-close-size); padding: 0; }

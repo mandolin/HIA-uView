@@ -10,6 +10,12 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-alert-tips",
+      "source": "src/components/u-alert-tips/u-alert-tips.vue",
+      "contract": "docs/alert-tips.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-avatar",
       "source": "src/components/u-avatar/u-avatar.vue",
       "contract": "docs/avatar.md",
@@ -31,6 +37,18 @@
       ]
     },
     {
+      "name": "u-calendar",
+      "source": "src/components/u-calendar/u-calendar.vue",
+      "contract": "docs/calendar.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-card",
+      "source": "src/components/u-card/u-card.vue",
+      "contract": "docs/card.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-cell",
       "source": "src/components/u-cell/u-cell.vue",
       "contract": "docs/cell.md",
@@ -49,6 +67,12 @@
       "name": "u-checkbox-group",
       "source": "src/components/u-checkbox-group/u-checkbox-group.vue",
       "contract": "docs/checkbox-group.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-col",
+      "source": "src/components/u-col/u-col.vue",
+      "contract": "docs/col.md",
       "locales": ["zh-Hans", "en"]
     },
     {
@@ -106,6 +130,24 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-gap",
+      "source": "src/components/u-gap/u-gap.vue",
+      "contract": "docs/gap.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-grid",
+      "source": "src/components/u-grid/u-grid.vue",
+      "contract": "docs/grid.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-grid-item",
+      "source": "src/components/u-grid-item/u-grid-item.vue",
+      "contract": "docs/grid-item.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-icon",
       "source": "src/components/u-icon/u-icon.vue",
       "contract": "docs/icon.md",
@@ -125,6 +167,12 @@
         "zh-Hans",
         "en"
       ]
+    },
+    {
+      "name": "u-link",
+      "source": "src/components/u-link/u-link.vue",
+      "contract": "docs/link.md",
+      "locales": ["zh-Hans", "en"]
     },
     {
       "name": "u-line-progress",
@@ -190,6 +238,12 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-picker",
+      "source": "src/components/u-picker/u-picker.vue",
+      "contract": "docs/picker.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-popup",
       "source": "src/components/u-popup/u-popup.vue",
       "contract": "docs/popup.md",
@@ -205,6 +259,12 @@
       "name": "u-radio-group",
       "source": "src/components/u-radio-group/u-radio-group.vue",
       "contract": "docs/radio-group.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-row",
+      "source": "src/components/u-row/u-row.vue",
+      "contract": "docs/row.md",
       "locales": ["zh-Hans", "en"]
     },
     {

@@ -1,0 +1,6 @@
+/**
+ * @component UGap
+ * @lang zh-CN 空隙样式只消费调用方投影的尺寸和颜色。
+ * @lang en Gap styles consume only the size and color projected by the caller.
+ */
+.u-gap { background: var(--u-gap-background); height: var(--u-gap-height); width: 100%; }

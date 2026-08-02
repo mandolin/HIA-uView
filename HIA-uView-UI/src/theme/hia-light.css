@@ -637,4 +637,89 @@
   --u-comp-sticky-default-top: 0px;
   --u-comp-sticky-z-index: 1;
   --u-comp-sticky-surface: var(--u-sys-color-surface);
+
+  /* <lang><zh-CN>本批新增布局/容器组件只消费中性主题 token；它们不表达行业、身份或远程状态。</zh-CN><en>The newly added layout/container components consume neutral theme tokens only; they express no industry, identity, or remote state.</en></lang> */
+  --u-comp-alert-tips-background: var(--u-sys-color-surface-subtle);
+  --u-comp-alert-tips-foreground: var(--u-sys-color-text);
+  --u-comp-alert-tips-border: var(--u-ref-color-neutral-700);
+  --u-comp-alert-tips-success-background: #e6f7ed;
+  --u-comp-alert-tips-success-border: #2f855a;
+  --u-comp-alert-tips-warning-background: #fff8e1;
+  --u-comp-alert-tips-warning-border: #b7791f;
+  --u-comp-alert-tips-error-background: #fff0f0;
+  --u-comp-alert-tips-error-border: #c53030;
+  --u-comp-alert-tips-radius: 8px;
+  --u-comp-alert-tips-gap: 8px;
+  --u-comp-alert-tips-padding: 12px;
+  --u-comp-alert-tips-content-gap: 4px;
+  --u-comp-alert-tips-description-size: 14px;
+  --u-comp-alert-tips-close-size: 24px;
+
+  --u-comp-calendar-surface: var(--u-sys-color-surface);
+  --u-comp-calendar-foreground: var(--u-sys-color-text);
+  --u-comp-calendar-padding: 12px;
+  --u-comp-calendar-gap: 8px;
+  --u-comp-calendar-nav-foreground: var(--u-sys-color-action-primary);
+  --u-comp-calendar-nav-size: 32px;
+  --u-comp-calendar-week-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-calendar-week-size: 12px;
+  --u-comp-calendar-cell-size: 40px;
+  --u-comp-calendar-day-radius: 999px;
+  --u-comp-calendar-day-size: 32px;
+  --u-comp-calendar-selected-background: var(--u-sys-color-action-primary);
+  --u-comp-calendar-selected-foreground: var(--u-sys-color-on-action-primary);
+  --u-comp-calendar-today-border: var(--u-sys-color-accent);
+
+  --u-comp-col-placeholder: transparent;
+  --u-comp-gap-background: transparent;
+  --u-comp-row-placeholder: transparent;
+
+  --u-comp-card-surface: var(--u-sys-color-surface);
+  --u-comp-card-foreground: var(--u-sys-color-text);
+  --u-comp-card-border: var(--u-ref-color-neutral-50);
+  --u-comp-card-radius: 8px;
+  --u-comp-card-shadow: 0 2px 8px rgb(0 27 46 / 12%);
+  --u-comp-card-gap: 12px;
+  --u-comp-card-heading-gap: 4px;
+  --u-comp-card-title-size: 16px;
+  --u-comp-card-subtitle: var(--u-sys-color-text-secondary);
+  --u-comp-card-subtitle-size: 13px;
+
+  --u-comp-grid-border: var(--u-ref-color-neutral-50);
+  --u-comp-grid-radius: 8px;
+  --u-comp-grid-item-surface: var(--u-sys-color-surface);
+  --u-comp-grid-item-foreground: var(--u-sys-color-text);
+  --u-comp-grid-item-border: var(--u-ref-color-neutral-50);
+  --u-comp-grid-item-gap: 8px;
+  --u-comp-grid-item-min-height: 72px;
+  --u-comp-grid-item-padding: 12px;
+  --u-comp-grid-item-content-gap: 4px;
+  --u-comp-grid-item-label-size: 15px;
+  --u-comp-grid-item-description: var(--u-sys-color-text-secondary);
+  --u-comp-grid-item-description-size: 12px;
+  --u-comp-grid-item-disabled-opacity: 0.55;
+
+  --u-comp-link-foreground: var(--u-sys-color-action-primary);
+  --u-comp-link-disabled-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-link-disabled-opacity: 0.65;
+  --u-comp-link-font-size: 15px;
+  --u-comp-link-min-height: 32px;
+
+  --u-comp-picker-surface: var(--u-sys-color-surface);
+  --u-comp-picker-foreground: var(--u-sys-color-text);
+  --u-comp-picker-padding: 16px;
+  --u-comp-picker-title-size: 16px;
+  --u-comp-picker-gap: 12px;
+  --u-comp-picker-option-gap: 4px;
+  --u-comp-picker-option-height: 44px;
+  --u-comp-picker-option-padding: 12px;
+  --u-comp-picker-radius: 8px;
+  --u-comp-picker-selected-background: var(--u-sys-color-surface-subtle);
+  --u-comp-picker-selected-foreground: var(--u-sys-color-action-primary);
+  --u-comp-picker-action-border: var(--u-ref-color-neutral-700);
+  --u-comp-picker-action-foreground: var(--u-sys-color-text);
+  --u-comp-picker-action-height: 40px;
+  --u-comp-picker-action-padding: 12px;
+  --u-comp-picker-confirm-background: var(--u-sys-color-action-primary);
+  --u-comp-picker-confirm-foreground: var(--u-sys-color-on-action-primary);
 }

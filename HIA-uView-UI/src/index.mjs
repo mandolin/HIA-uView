@@ -19,13 +19,23 @@ import UFormItem from './components/u-form-item/u-form-item.vue';
 import UIcon from './components/u-icon/u-icon.vue';
 import UImage from './components/u-image/u-image.vue';
 import UAvatar from './components/u-avatar/u-avatar.vue';
+import UAlertTips from './components/u-alert-tips/u-alert-tips.vue';
+import UCalendar from './components/u-calendar/u-calendar.vue';
+import UCard from './components/u-card/u-card.vue';
+import UCol from './components/u-col/u-col.vue';
+import UGap from './components/u-gap/u-gap.vue';
+import UGrid from './components/u-grid/u-grid.vue';
+import UGridItem from './components/u-grid-item/u-grid-item.vue';
 import UInput from './components/u-input/u-input.vue';
+import ULink from './components/u-link/u-link.vue';
 import UModal from './components/u-modal/u-modal.vue';
 import UNavBar from './components/u-nav-bar/u-nav-bar.vue';
 import UNotice from './components/u-notice/u-notice.vue';
 import UNumberBox from './components/u-number-box/u-number-box.vue';
 import UPagination from './components/u-pagination/u-pagination.vue';
 import UPopup from './components/u-popup/u-popup.vue';
+import UPicker from './components/u-picker/u-picker.vue';
+import URow from './components/u-row/u-row.vue';
 import UTag from './components/u-tag/u-tag.vue';
 import UBadge from './components/u-badge/u-badge.vue';
 import UDivider from './components/u-divider/u-divider.vue';
@@ -58,14 +68,22 @@ import UValidationMessage from './components/u-validation-message/u-validation-m
 export const UVIEW_COMPONENTS = Object.freeze([
   // <lang><zh-CN>action sheet 只呈现调用方声明的有限 item 和 local intent，不执行命令或导航。</zh-CN><en>The action sheet presents caller-declared finite items and local intent only and executes no command or navigation.</en></lang>
   Object.freeze({ name: 'u-action-sheet', component: UActionSheet }),
+  // <lang><zh-CN>提示条只呈现调用方受控 tone 与 close intent，不创建全局服务。</zh-CN><en>The alert strip presents caller-controlled tone and close intent only and creates no global service.</en></lang>
+  Object.freeze({ name: 'u-alert-tips', component: UAlertTips }),
   // <lang><zh-CN>按钮保留 P10/P11 已验证的独立本地操作边界。</zh-CN><en>The button retains the independently verified local-action boundary from P10/P11.</en></lang>
   Object.freeze({ name: 'u-button', component: UButton }),
+  // <lang><zh-CN>日历只计算本地单月日期格并报告选择，不读取平台日历或远程数据。</zh-CN><en>The calendar computes local single-month cells and reports selection only; it reads no platform calendar or remote data.</en></lang>
+  Object.freeze({ name: 'u-calendar', component: UCalendar }),
+  // <lang><zh-CN>卡片只提供中性表面和插槽，不拥有业务卡片集合。</zh-CN><en>The card provides a neutral surface and slots only and owns no business card collection.</en></lang>
+  Object.freeze({ name: 'u-card', component: UCard }),
   // <lang><zh-CN>信息行只展示调用方文字并 emit 受限 click 意图。</zh-CN><en>The information row displays caller text only and emits constrained click intent.</en></lang>
   Object.freeze({ name: 'u-cell', component: UCell }),
   // <lang><zh-CN>checkbox 只呈现调用方受控 checked/value 意图；group 协调由相邻 `u-checkbox-group` 显式提供。</zh-CN><en>The checkbox presents caller-controlled checked and value intent only; group coordination is explicitly provided by adjacent `u-checkbox-group`.</en></lang>
   Object.freeze({ name: 'u-checkbox', component: UCheckbox }),
   // <lang><zh-CN>checkbox group 只计算新的字符串集合并 emit，不拥有表单、提交或业务全选语义。</zh-CN><en>The checkbox group computes and emits a new string set only and owns no form, submission, or business select-all semantics.</en></lang>
   Object.freeze({ name: 'u-checkbox-group', component: UCheckboxGroup }),
+  // <lang><zh-CN>列只投影 24 栅格几何并报告局部点击，不拥有导航。</zh-CN><en>The column projects 24-grid geometry and reports local clicks only; it owns no navigation.</en></lang>
+  Object.freeze({ name: 'u-col', component: UCol }),
   // <lang><zh-CN>折叠父级只提供调用方受控 open values 的局部 context，不执行动画或业务流程。</zh-CN><en>The collapse parent provides local context for caller-controlled open values only and performs no animation or business flow.</en></lang>
   Object.freeze({ name: 'u-collapse', component: UCollapse }),
   // <lang><zh-CN>折叠子项只呈现标题/slot 并报告 toggle intent，不拥有父级集合。</zh-CN><en>The collapse item presents title/slot and reports toggle intent only; it owns no parent collection.</en></lang>
@@ -78,6 +96,12 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-form', component: UForm }),
   // <lang><zh-CN>表单项只组织标签、帮助和应用声明消息，嵌入控件仍由调用方控制。</zh-CN><en>The form item organizes label, help, and caller-declared message only while the embedded control remains caller-controlled.</en></lang>
   Object.freeze({ name: 'u-form-item', component: UFormItem }),
+  // <lang><zh-CN>空隙只提供有限本地尺寸，不表达业务节奏。</zh-CN><en>The gap provides a finite local size only and expresses no business cadence.</en></lang>
+  Object.freeze({ name: 'u-gap', component: UGap }),
+  // <lang><zh-CN>网格容器只提供有限列数、间距和 context，不管理业务项目。</zh-CN><en>The grid provides finite columns, gap, and context only and manages no business items.</en></lang>
+  Object.freeze({ name: 'u-grid', component: UGrid }),
+  // <lang><zh-CN>网格项只呈现文字和 click intent，不获得路由或请求能力。</zh-CN><en>The grid item presents text and click intent only and gains no routing or request capability.</en></lang>
+  Object.freeze({ name: 'u-grid-item', component: UGridItem }),
   // <lang><zh-CN>图标仅呈现调用方文字符号或 slot，不加载字体、图片或 icon registry。</zh-CN><en>The icon presents caller text or slot only and loads no font, image, or icon registry.</en></lang>
   Object.freeze({ name: 'u-icon', component: UIcon }),
   // <lang><zh-CN>图片只呈现调用方 src、尺寸、替代文字和错误 intent，不拥有请求或缓存。</zh-CN><en>The image presents caller src, size, alt text, and error intent only and owns no request or cache.</en></lang>
@@ -86,6 +110,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-avatar', component: UAvatar }),
   // <lang><zh-CN>受控输入只显示调用方字符串并 emit 未修改的本地输入意图。</zh-CN><en>The controlled input displays caller string only and emits unmodified local input intent.</en></lang>
   Object.freeze({ name: 'u-input', component: UInput }),
+  // <lang><zh-CN>链接只呈现文字并报告 click，不接受 href 或导航协议。</zh-CN><en>The link presents text and reports click only; it accepts no href or navigation protocol.</en></lang>
+  Object.freeze({ name: 'u-link', component: ULink }),
   // <lang><zh-CN>modal 只呈现调用方 visible/内容与 confirm/cancel 意图，不自动关闭或管理焦点。</zh-CN><en>The modal presents caller visible/content and confirm/cancel intent only and neither auto-closes nor manages focus.</en></lang>
   Object.freeze({ name: 'u-modal', component: UModal }),
   // <lang><zh-CN>导航栏只展示标题/文字 control 并 emit back/action 意图。</zh-CN><en>The navigation bar displays title/text controls only and emits back/action intent.</en></lang>
@@ -96,6 +122,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-number-box', component: UNumberBox }),
   // <lang><zh-CN>分页只投影调用方 pageCount/current，不请求或缓存数据。</zh-CN><en>Pagination projects caller pageCount/current only and requests or caches no data.</en></lang>
   Object.freeze({ name: 'u-pagination', component: UPagination }),
+  // <lang><zh-CN>选择器只在有限选项中报告 draft/confirm/cancel intent，不绑定弹层或请求。</zh-CN><en>The picker reports draft/confirm/cancel intent over finite options only and binds to no popup or request.</en></lang>
+  Object.freeze({ name: 'u-picker', component: UPicker }),
   // <lang><zh-CN>浮层只提供局部 visible、slot 和 close intent，不拥有焦点、滚动或路由。</zh-CN><en>The popup provides local visible, slot, and close intent only and owns no focus, scrolling, or routing.</en></lang>
   Object.freeze({ name: 'u-popup', component: UPopup }),
   // <lang><zh-CN>标签只呈现有限 tone/size/shape 和 close intent，不拥有分类 registry。</zh-CN><en>The tag presents finite tone/size/shape and close intent only and owns no category registry.</en></lang>
@@ -120,6 +148,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-radio-group', component: URadioGroup }),
   // <lang><zh-CN>评分只呈现文本符号和整数选择 intent，不提交评价或生成业务分数。</zh-CN><en>The rate presents text symbols and integer-selection intent only and submits no review or business score.</en></lang>
   Object.freeze({ name: 'u-rate', component: URate }),
+  // <lang><zh-CN>行只排列默认插槽并投影受控 flex 值，不拥有子项或页面语义。</zh-CN><en>The row arranges the default slot and projects controlled flex values only; it owns no child or page semantics.</en></lang>
+  Object.freeze({ name: 'u-row', component: URow }),
   // <lang><zh-CN>搜索只组合受控文本与 search/clear intent，不请求、去重或生成结果。</zh-CN><en>The search control composes controlled text and search/clear intent only and performs no request, deduplication, or result generation.</en></lang>
   Object.freeze({ name: 'u-search', component: USearch }),
   // <lang><zh-CN>横向列表只使用局部 CSS overflow，不引入 WXS、BindingX 或 native plugin。</zh-CN><en>The horizontal list uses local CSS overflow only and introduces no WXS, BindingX, or native plugin.</en></lang>
@@ -181,5 +211,5 @@ export const UView = Object.freeze({
 });
 
 // <lang><zh-CN>导出命名组件供应用按需注册；默认导出保持显式 plugin 入口，二者均不产生 import-time 副作用。</zh-CN><en>Exports named components for application-side registration; the default export remains the explicit plugin entry, and neither creates import-time side effects.</en></lang>
-export { UActionSheet, UButton, UCell, UCheckbox, UCheckboxGroup, UCollapse, UCollapseItem, UEmpty, UField, UForm, UFormItem, UIcon, UImage, UAvatar, UInput, ULineProgress, UList, ULoadmore, ULoadingPage, UModal, UNavBar, UNotice, UNumberBox, UPagination, UPopup, UTag, UBadge, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UValidationMessage };
+export { UActionSheet, UAlertTips, UButton, UCalendar, UCard, UCell, UCheckbox, UCheckboxGroup, UCollapse, UCollapseItem, UCol, UEmpty, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, ULineProgress, ULink, UList, ULoadmore, ULoadingPage, UModal, UNavBar, UNotice, UNumberBox, UPagination, UPicker, UPopup, URow, UTag, UBadge, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UValidationMessage };
 export default UView;

@@ -1,0 +1,7 @@
+/**
+ * @component UGrid
+ * @lang zh-CN 网格容器只消费受控布局 token，不测量 DOM 或解释业务分组。
+ * @lang en The grid container consumes controlled layout tokens only and measures no DOM or business grouping.
+ */
+.u-grid { display: grid; gap: var(--u-grid-gap); grid-template-columns: repeat(var(--u-grid-columns), minmax(0, 1fr)); min-width: 0; }
+.u-grid--bordered { border: 1px solid var(--u-comp-grid-border); border-radius: var(--u-comp-grid-radius); }

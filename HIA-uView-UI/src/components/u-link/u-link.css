@@ -1,0 +1,8 @@
+/**
+ * @component ULink
+ * @lang zh-CN 链接样式使用主题文字和 focus token，不绑定平台导航。
+ * @lang en Link styles use theme text and focus tokens and bind to no platform navigation.
+ */
+.u-link { color: var(--u-comp-link-foreground); font-size: var(--u-comp-link-font-size); min-height: var(--u-comp-link-min-height); }
+.u-link--underlined { text-decoration: underline; }
+.u-link--disabled { color: var(--u-comp-link-disabled-foreground); opacity: var(--u-comp-link-disabled-opacity); }
