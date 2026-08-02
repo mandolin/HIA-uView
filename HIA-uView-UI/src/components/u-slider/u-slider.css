@@ -1,0 +1,9 @@
+/**
+ * @component USlider
+ * @lang zh-CN 滑块样式消费主题轨道和受控 disabled token，不绑定业务进度。
+ * @lang en Slider styles consume theme track and controlled disabled tokens without binding to business progress.
+ */
+.u-slider { color: var(--u-comp-slider-foreground); padding: var(--u-comp-slider-padding); }
+.u-slider--disabled { opacity: var(--u-comp-slider-disabled-opacity); }
+.u-slider__value { color: var(--u-comp-slider-value); display: block; font-size: var(--u-comp-slider-value-size); text-align: end; }
+.u-slider__control { width: 100%; }

@@ -1,0 +1,14 @@
+/**
+ * @component UText
+ * @lang zh-CN 文本样式只消费有限 tone/size 与 CSS 截断 token。
+ * @lang en Text styles consume finite tone/size and CSS truncation tokens only.
+ */
+.u-text { color: var(--u-comp-text-foreground); display: block; max-width: 100%; overflow: hidden; }
+.u-text--secondary { color: var(--u-comp-text-secondary); }
+.u-text--success { color: var(--u-comp-text-success); }
+.u-text--warning { color: var(--u-comp-text-warning); }
+.u-text--danger { color: var(--u-comp-text-danger); }
+.u-text--sm { font-size: var(--u-comp-text-size-sm); }
+.u-text--md { font-size: var(--u-comp-text-size-md); }
+.u-text--lg { font-size: var(--u-comp-text-size-lg); }
+.u-text[style*="--u-text-lines"] { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--u-text-lines); }

@@ -1,0 +1,9 @@
+{
+  "name": "@hia-uview/h5-fixture",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vite build --config vite.config.mjs",
+    "verify": "node verify-output.mjs"
+  }
+}

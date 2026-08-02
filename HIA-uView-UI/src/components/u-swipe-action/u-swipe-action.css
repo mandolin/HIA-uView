@@ -1,0 +1,13 @@
+/**
+ * @component USwipeAction
+ * @lang zh-CN 操作槽样式使用显式布局，不引入手势、transform、timer 或平台服务。
+ * @lang en Action-slot styles use explicit layout and introduce no gesture, transform, timer, or platform service.
+ */
+.u-swipe-action { background: var(--u-comp-swipe-action-surface); display: flex; min-width: 0; overflow: hidden; }
+.u-swipe-action__content { flex: 1; min-width: 0; }
+.u-swipe-action__actions { display: flex; gap: var(--u-comp-swipe-action-gap); }
+.u-swipe-action__action, .u-swipe-action__close { background: var(--u-comp-swipe-action-action-background); border: 0; color: var(--u-comp-swipe-action-foreground); min-height: var(--u-comp-swipe-action-height); padding: 0 var(--u-comp-swipe-action-padding); white-space: nowrap; }
+.u-swipe-action__action--warning { background: var(--u-comp-swipe-action-warning-background); }
+.u-swipe-action__action--danger { background: var(--u-comp-swipe-action-danger-background); color: var(--u-comp-swipe-action-danger-foreground); }
+.u-swipe-action__close { background: var(--u-comp-swipe-action-close-background); }
+.u-swipe-action--disabled { opacity: var(--u-comp-swipe-action-disabled-opacity); }

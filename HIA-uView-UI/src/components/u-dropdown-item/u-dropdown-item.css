@@ -1,0 +1,8 @@
+/**
+ * @component UDropdownItem
+ * @lang zh-CN 下拉项只消费有限选择状态和主题 token。
+ * @lang en Dropdown-item styles consume finite selection state and theme tokens only.
+ */
+.u-dropdown-item { background: var(--u-comp-dropdown-item-surface); border: 1px solid var(--u-comp-dropdown-item-border); border-radius: var(--u-comp-dropdown-item-radius); color: var(--u-comp-dropdown-item-foreground); min-height: var(--u-comp-dropdown-item-height); padding: 0 var(--u-comp-dropdown-item-padding); }
+.u-dropdown-item--selected { background: var(--u-comp-dropdown-item-selected-background); color: var(--u-comp-dropdown-item-selected-foreground); }
+.u-dropdown-item--disabled { opacity: var(--u-comp-dropdown-item-disabled-opacity); }

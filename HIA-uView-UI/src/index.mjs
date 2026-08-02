@@ -39,11 +39,16 @@ import URow from './components/u-row/u-row.vue';
 import UTag from './components/u-tag/u-tag.vue';
 import UBadge from './components/u-badge/u-badge.vue';
 import UDivider from './components/u-divider/u-divider.vue';
+import UCellGroup from './components/u-cell-group/u-cell-group.vue';
 import UCountTo from './components/u-count-to/u-count-to.vue';
+import UDropdown from './components/u-dropdown/u-dropdown.vue';
+import UDropdownItem from './components/u-dropdown-item/u-dropdown-item.vue';
 import ULineProgress from './components/u-line-progress/u-line-progress.vue';
+import ULine from './components/u-line/u-line.vue';
 import UList from './components/u-list/u-list.vue';
 import ULoadmore from './components/u-loadmore/u-loadmore.vue';
 import ULoadingPage from './components/u-loading-page/u-loading-page.vue';
+import UReadMore from './components/u-read-more/u-read-more.vue';
 import URadio from './components/u-radio/u-radio.vue';
 import URadioGroup from './components/u-radio-group/u-radio-group.vue';
 import URate from './components/u-rate/u-rate.vue';
@@ -55,9 +60,14 @@ import USteps from './components/u-steps/u-steps.vue';
 import USticky from './components/u-sticky/u-sticky.vue';
 import USwiper from './components/u-swiper/u-swiper.vue';
 import USwitch from './components/u-switch/u-switch.vue';
+import USwipeAction from './components/u-swipe-action/u-swipe-action.vue';
 import UTabbar from './components/u-tabbar/u-tabbar.vue';
 import UTabs from './components/u-tabs/u-tabs.vue';
 import UTextarea from './components/u-textarea/u-textarea.vue';
+import USection from './components/u-section/u-section.vue';
+import USelect from './components/u-select/u-select.vue';
+import USlider from './components/u-slider/u-slider.vue';
+import UText from './components/u-text/u-text.vue';
 import UToast from './components/u-toast/u-toast.vue';
 import UValidationMessage from './components/u-validation-message/u-validation-message.vue';
 
@@ -78,6 +88,7 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-card', component: UCard }),
   // <lang><zh-CN>信息行只展示调用方文字并 emit 受限 click 意图。</zh-CN><en>The information row displays caller text only and emits constrained click intent.</en></lang>
   Object.freeze({ name: 'u-cell', component: UCell }),
+  Object.freeze({ name: 'u-cell-group', component: UCellGroup }),
   // <lang><zh-CN>checkbox 只呈现调用方受控 checked/value 意图；group 协调由相邻 `u-checkbox-group` 显式提供。</zh-CN><en>The checkbox presents caller-controlled checked and value intent only; group coordination is explicitly provided by adjacent `u-checkbox-group`.</en></lang>
   Object.freeze({ name: 'u-checkbox', component: UCheckbox }),
   // <lang><zh-CN>checkbox group 只计算新的字符串集合并 emit，不拥有表单、提交或业务全选语义。</zh-CN><en>The checkbox group computes and emits a new string set only and owns no form, submission, or business select-all semantics.</en></lang>
@@ -126,6 +137,7 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-picker', component: UPicker }),
   // <lang><zh-CN>浮层只提供局部 visible、slot 和 close intent，不拥有焦点、滚动或路由。</zh-CN><en>The popup provides local visible, slot, and close intent only and owns no focus, scrolling, or routing.</en></lang>
   Object.freeze({ name: 'u-popup', component: UPopup }),
+  Object.freeze({ name: 'u-read-more', component: UReadMore }),
   // <lang><zh-CN>标签只呈现有限 tone/size/shape 和 close intent，不拥有分类 registry。</zh-CN><en>The tag presents finite tone/size/shape and close intent only and owns no category registry.</en></lang>
   Object.freeze({ name: 'u-tag', component: UTag }),
   // <lang><zh-CN>徽标只呈现调用方文字或 dot，不读取通知或创建全局服务。</zh-CN><en>The badge presents caller text or dot only and reads no notifications or creates global services.</en></lang>
@@ -134,8 +146,11 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-divider', component: UDivider }),
   // <lang><zh-CN>数字呈现是同步格式投影，不使用计时器、动画或自动完成事件。</zh-CN><en>Numeric presentation is a synchronous formatting projection with no timer, animation, or auto-completion event.</en></lang>
   Object.freeze({ name: 'u-count-to', component: UCountTo }),
+  Object.freeze({ name: 'u-dropdown', component: UDropdown }),
+  Object.freeze({ name: 'u-dropdown-item', component: UDropdownItem }),
   // <lang><zh-CN>进度条只投影调用方百分比，不连接上传、下载或任务状态。</zh-CN><en>The progress bar projects caller percentage only and connects to no upload, download, or task state.</en></lang>
   Object.freeze({ name: 'u-line-progress', component: ULineProgress }),
+  Object.freeze({ name: 'u-line', component: ULine }),
   // <lang><zh-CN>列表只呈现调用方有限行与 select intent，不请求、缓存或虚拟化。</zh-CN><en>The list presents caller-declared finite rows and select intent only, with no request, cache, or virtualization.</en></lang>
   Object.freeze({ name: 'u-list', component: UList }),
   // <lang><zh-CN>加载更多只呈现受控状态并在 more 时报告 intent，不执行分页请求。</zh-CN><en>Loadmore presents controlled status and reports intent in more state only; it executes no paging request.</en></lang>
@@ -150,6 +165,9 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-rate', component: URate }),
   // <lang><zh-CN>行只排列默认插槽并投影受控 flex 值，不拥有子项或页面语义。</zh-CN><en>The row arranges the default slot and projects controlled flex values only; it owns no child or page semantics.</en></lang>
   Object.freeze({ name: 'u-row', component: URow }),
+  Object.freeze({ name: 'u-section', component: USection }),
+  Object.freeze({ name: 'u-select', component: USelect }),
+  Object.freeze({ name: 'u-slider', component: USlider }),
   // <lang><zh-CN>搜索只组合受控文本与 search/clear intent，不请求、去重或生成结果。</zh-CN><en>The search control composes controlled text and search/clear intent only and performs no request, deduplication, or result generation.</en></lang>
   Object.freeze({ name: 'u-search', component: USearch }),
   // <lang><zh-CN>横向列表只使用局部 CSS overflow，不引入 WXS、BindingX 或 native plugin。</zh-CN><en>The horizontal list uses local CSS overflow only and introduces no WXS, BindingX, or native plugin.</en></lang>
@@ -166,12 +184,14 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-swiper', component: USwiper }),
   // <lang><zh-CN>切换只回传受控布尔选择，不执行权限、持久化或远程更新。</zh-CN><en>The switch returns controlled boolean selection only and performs no authorization, persistence, or remote update.</en></lang>
   Object.freeze({ name: 'u-switch', component: USwitch }),
+  Object.freeze({ name: 'u-swipe-action', component: USwipeAction }),
   // <lang><zh-CN>底部标签栏只回传局部选择，不执行 router、身份或全局导航。</zh-CN><en>The bottom tabbar returns local selection only and performs no router, identity, or global navigation.</en></lang>
   Object.freeze({ name: 'u-tabbar', component: UTabbar }),
   // <lang><zh-CN>标签栏只回传受控切换，不请求、懒加载或管理隐藏面板。</zh-CN><en>The tab strip returns controlled changes only and requests, lazy-loads, or manages no hidden panel.</en></lang>
   Object.freeze({ name: 'u-tabs', component: UTabs }),
   // <lang><zh-CN>多行输入只回传受控字符串和焦点/确认 intent，不执行校验、提交或持久化。</zh-CN><en>The textarea returns controlled string and focus/confirm intent only and performs no validation, submission, or persistence.</en></lang>
   Object.freeze({ name: 'u-textarea', component: UTextarea }),
+  Object.freeze({ name: 'u-text', component: UText }),
   // <lang><zh-CN>toast 只呈现调用方受控反馈，不使用 timer、队列或全局 service。</zh-CN><en>The toast presents caller-controlled feedback only and uses no timer, queue, or global service.</en></lang>
   Object.freeze({ name: 'u-toast', component: UToast }),
   // <lang><zh-CN>独立校验消息只呈现应用声明的状态和文字，不推断结果或启动异步工作。</zh-CN><en>The independent validation message presents application-declared state and text only and infers no result or starts no asynchronous work.</en></lang>
@@ -211,5 +231,5 @@ export const UView = Object.freeze({
 });
 
 // <lang><zh-CN>导出命名组件供应用按需注册；默认导出保持显式 plugin 入口，二者均不产生 import-time 副作用。</zh-CN><en>Exports named components for application-side registration; the default export remains the explicit plugin entry, and neither creates import-time side effects.</en></lang>
-export { UActionSheet, UAlertTips, UButton, UCalendar, UCard, UCell, UCheckbox, UCheckboxGroup, UCollapse, UCollapseItem, UCol, UEmpty, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, ULineProgress, ULink, UList, ULoadmore, ULoadingPage, UModal, UNavBar, UNotice, UNumberBox, UPagination, UPicker, UPopup, URow, UTag, UBadge, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UValidationMessage };
+export { UActionSheet, UAlertTips, UButton, UCalendar, UCard, UCell, UCellGroup, UCheckbox, UCheckboxGroup, UCollapse, UCollapseItem, UCol, UDropdown, UDropdownItem, UEmpty, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, ULine, ULineProgress, ULink, UList, ULoadmore, ULoadingPage, UModal, UNavBar, UNotice, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URow, USection, USelect, USlider, USwipeAction, UTag, UBadge, UText, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UValidationMessage };
 export default UView;

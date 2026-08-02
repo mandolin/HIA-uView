@@ -1,0 +1,12 @@
+/**
+ * @component USelect
+ * @lang zh-CN 选择器样式只消费有限选项和主题 token，不决定外层弹层。
+ * @lang en Select styles consume finite options and theme tokens only and do not decide outer popup behavior.
+ */
+.u-select { background: var(--u-comp-select-surface); border: 1px solid var(--u-comp-select-border); border-radius: var(--u-comp-select-radius); color: var(--u-comp-select-foreground); padding: var(--u-comp-select-padding); }
+.u-select--disabled { opacity: var(--u-comp-select-disabled-opacity); }
+.u-select__placeholder { color: var(--u-comp-select-placeholder); }
+.u-select__value { color: var(--u-comp-select-value); }
+.u-select__options { display: flex; flex-direction: column; gap: var(--u-comp-select-option-gap); margin-block-start: var(--u-comp-select-gap); }
+.u-select__option { background: transparent; border: 0; border-radius: var(--u-comp-select-radius); color: inherit; min-height: var(--u-comp-select-option-height); padding: 0 var(--u-comp-select-option-padding); text-align: start; }
+.u-select__option--selected { background: var(--u-comp-select-selected-background); color: var(--u-comp-select-selected-foreground); }

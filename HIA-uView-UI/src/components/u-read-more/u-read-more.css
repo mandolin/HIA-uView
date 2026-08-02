@@ -1,0 +1,9 @@
+/**
+ * @component UReadMore
+ * @lang zh-CN 展开样式使用固定高度和主题 token，不使用 observer 或动画服务。
+ * @lang en Read-more styles use fixed height and theme tokens without observers or animation services.
+ */
+.u-read-more { max-height: var(--u-read-more-height); overflow: hidden; }
+.u-read-more--expanded { max-height: none; }
+.u-read-more--disabled { opacity: var(--u-comp-read-more-disabled-opacity); }
+.u-read-more__trigger { background: transparent; border: 0; color: var(--u-comp-read-more-action); min-height: var(--u-comp-read-more-action-height); padding: 0; }

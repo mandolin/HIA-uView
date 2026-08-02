@@ -1,0 +1,10 @@
+/**
+ * @component USection
+ * @lang zh-CN 区块标题样式提供有限层级和局部 action。
+ * @lang en Section styles provide finite hierarchy and local action only.
+ */
+.u-section { align-items: center; color: var(--u-comp-section-foreground); display: flex; gap: var(--u-comp-section-gap); justify-content: space-between; min-height: var(--u-comp-section-min-height); }
+.u-section__heading { display: flex; flex: 1; flex-direction: column; gap: var(--u-comp-section-heading-gap); min-width: 0; }
+.u-section__title { font-size: var(--u-comp-section-title-size); font-weight: 600; }
+.u-section__subtitle { color: var(--u-comp-section-subtitle); font-size: var(--u-comp-section-subtitle-size); }
+.u-section__action { background: transparent; border: 0; color: var(--u-comp-section-action); min-height: var(--u-comp-section-action-height); padding: 0; }

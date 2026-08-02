@@ -1,0 +1,8 @@
+/**
+ * @component UCellGroup
+ * @lang zh-CN 信息行分组样式只提供边界和标题间距。
+ * @lang en Cell-group styles provide boundary and title spacing only.
+ */
+.u-cell-group { background: var(--u-comp-cell-group-surface); color: var(--u-comp-cell-group-foreground); }
+.u-cell-group--bordered { border: 1px solid var(--u-comp-cell-group-border); border-radius: var(--u-comp-cell-group-radius); overflow: hidden; }
+.u-cell-group__title { color: var(--u-comp-cell-group-title); display: block; font-size: var(--u-comp-cell-group-title-size); padding: var(--u-comp-cell-group-title-padding); }

@@ -1,0 +1,7 @@
+/**
+ * @component UDropdown
+ * @lang zh-CN 下拉容器样式只提供局部排列和边界。
+ * @lang en Dropdown container styles provide local arrangement and boundary only.
+ */
+.u-dropdown { display: flex; gap: var(--u-comp-dropdown-gap); min-width: 0; }
+.u-dropdown--disabled { opacity: var(--u-comp-dropdown-disabled-opacity); }

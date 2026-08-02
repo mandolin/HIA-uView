@@ -64,6 +64,12 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-cell-group",
+      "source": "src/components/u-cell-group/u-cell-group.vue",
+      "contract": "docs/cell-group.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-checkbox-group",
       "source": "src/components/u-checkbox-group/u-checkbox-group.vue",
       "contract": "docs/checkbox-group.md",
@@ -91,6 +97,18 @@
       "name": "u-count-to",
       "source": "src/components/u-count-to/u-count-to.vue",
       "contract": "docs/count-to.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-dropdown",
+      "source": "src/components/u-dropdown/u-dropdown.vue",
+      "contract": "docs/dropdown.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-dropdown-item",
+      "source": "src/components/u-dropdown-item/u-dropdown-item.vue",
+      "contract": "docs/dropdown-item.md",
       "locales": ["zh-Hans", "en"]
     },
     {
@@ -181,6 +199,12 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-line",
+      "source": "src/components/u-line/u-line.vue",
+      "contract": "docs/line.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-list",
       "source": "src/components/u-list/u-list.vue",
       "contract": "docs/list.md",
@@ -250,6 +274,12 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-read-more",
+      "source": "src/components/u-read-more/u-read-more.vue",
+      "contract": "docs/read-more.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-radio",
       "source": "src/components/u-radio/u-radio.vue",
       "contract": "docs/radio.md",
@@ -265,6 +295,24 @@
       "name": "u-row",
       "source": "src/components/u-row/u-row.vue",
       "contract": "docs/row.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-section",
+      "source": "src/components/u-section/u-section.vue",
+      "contract": "docs/section.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-select",
+      "source": "src/components/u-select/u-select.vue",
+      "contract": "docs/select.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-slider",
+      "source": "src/components/u-slider/u-slider.vue",
+      "contract": "docs/slider.md",
       "locales": ["zh-Hans", "en"]
     },
     {
@@ -325,6 +373,12 @@
       "locales": ["zh-Hans", "en"]
     },
     {
+      "name": "u-swipe-action",
+      "source": "src/components/u-swipe-action/u-swipe-action.vue",
+      "contract": "docs/swipe-action.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
       "name": "u-tabbar",
       "source": "src/components/u-tabbar/u-tabbar.vue",
       "contract": "docs/tabbar.md",
@@ -346,6 +400,12 @@
       "name": "u-textarea",
       "source": "src/components/u-textarea/u-textarea.vue",
       "contract": "docs/textarea.md",
+      "locales": ["zh-Hans", "en"]
+    },
+    {
+      "name": "u-text",
+      "source": "src/components/u-text/u-text.vue",
+      "contract": "docs/text.md",
       "locales": ["zh-Hans", "en"]
     },
     {

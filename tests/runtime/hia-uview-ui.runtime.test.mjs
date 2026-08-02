@@ -10,7 +10,7 @@ import { resolve } from 'node:path';
 import { createApp } from 'vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import UView, { UActionSheet, UAlertTips, UButton, UCalendar, UCard, UCell, UCheckbox, UCheckboxGroup, UCollapse, UCollapseItem, UCol, UEmpty, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, ULineProgress, ULink, UList, ULoadmore, ULoadingPage, UModal, UNavBar, UNotice, UNumberBox, UPagination, UPicker, UPopup, URow, UTag, UBadge, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UValidationMessage, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
+import UView, { UActionSheet, UAlertTips, UButton, UCalendar, UCard, UCell, UCellGroup, UCheckbox, UCheckboxGroup, UCollapse, UCollapseItem, UCol, UDropdown, UDropdownItem, UEmpty, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, ULine, ULineProgress, ULink, UList, ULoadmore, ULoadingPage, UModal, UNavBar, UNotice, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URow, USection, USelect, USlider, USwipeAction, UTag, UBadge, UText, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UValidationMessage, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
 
 /**
  * @lang zh-CN 验证 UButton 保持 P10/P11 的 enabled、disabled、loading、slot 与 loadingText 契约，防止 P12 registry 扩展回退既有组件行为。
@@ -240,7 +240,7 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-toast')).toBeUndefined();
   expect(application.component('u-validation-message')).toBeUndefined();
 
-  // <lang><zh-CN>显式安装是唯一注册入口；集合长度与当前五十五项私有组件声明一致。</zh-CN><en>Explicit installation is the only registration entry; collection length matches the current fifty-five private component declarations.</en></lang>
+  // <lang><zh-CN>显式安装是唯一注册入口；集合长度与当前六十五项私有组件声明一致。</zh-CN><en>Explicit installation is the only registration entry; collection length matches the current sixty-five private component declarations.</en></lang>
   application.use(UView);
 
   expect(application.component('u-button')).toBe(UButton);
@@ -249,9 +249,12 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-calendar')).toBe(UCalendar);
   expect(application.component('u-card')).toBe(UCard);
   expect(application.component('u-cell')).toBe(UCell);
+  expect(application.component('u-cell-group')).toBe(UCellGroup);
   expect(application.component('u-checkbox')).toBe(UCheckbox);
   expect(application.component('u-checkbox-group')).toBe(UCheckboxGroup);
   expect(application.component('u-col')).toBe(UCol);
+  expect(application.component('u-dropdown')).toBe(UDropdown);
+  expect(application.component('u-dropdown-item')).toBe(UDropdownItem);
   expect(application.component('u-collapse')).toBe(UCollapse);
   expect(application.component('u-collapse-item')).toBe(UCollapseItem);
   expect(application.component('u-empty')).toBe(UEmpty);
@@ -265,6 +268,7 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-image')).toBe(UImage);
   expect(application.component('u-avatar')).toBe(UAvatar);
   expect(application.component('u-input')).toBe(UInput);
+  expect(application.component('u-line')).toBe(ULine);
   expect(application.component('u-link')).toBe(ULink);
   expect(application.component('u-modal')).toBe(UModal);
   expect(application.component('u-nav-bar')).toBe(UNavBar);
@@ -273,6 +277,7 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-pagination')).toBe(UPagination);
   expect(application.component('u-picker')).toBe(UPicker);
   expect(application.component('u-popup')).toBe(UPopup);
+  expect(application.component('u-read-more')).toBe(UReadMore);
   expect(application.component('u-tag')).toBe(UTag);
   expect(application.component('u-badge')).toBe(UBadge);
   expect(application.component('u-divider')).toBe(UDivider);
@@ -285,6 +290,9 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-radio-group')).toBe(URadioGroup);
   expect(application.component('u-rate')).toBe(URate);
   expect(application.component('u-row')).toBe(URow);
+  expect(application.component('u-section')).toBe(USection);
+  expect(application.component('u-select')).toBe(USelect);
+  expect(application.component('u-slider')).toBe(USlider);
   expect(application.component('u-search')).toBe(USearch);
   expect(application.component('u-scroll-list')).toBe(UScrollList);
   expect(application.component('u-skeleton')).toBe(USkeleton);
@@ -293,12 +301,14 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-sticky')).toBe(USticky);
   expect(application.component('u-swiper')).toBe(USwiper);
   expect(application.component('u-switch')).toBe(USwitch);
+  expect(application.component('u-swipe-action')).toBe(USwipeAction);
   expect(application.component('u-tabbar')).toBe(UTabbar);
   expect(application.component('u-tabs')).toBe(UTabs);
   expect(application.component('u-textarea')).toBe(UTextarea);
+  expect(application.component('u-text')).toBe(UText);
   expect(application.component('u-toast')).toBe(UToast);
   expect(application.component('u-validation-message')).toBe(UValidationMessage);
-  expect(UVIEW_COMPONENTS).toHaveLength(55);
+  expect(UVIEW_COMPONENTS).toHaveLength(65);
 
   // <lang><zh-CN>读取 runtime entry 本文以验证 style 仍由应用显式导入，而非由 import 或 plugin 注入。</zh-CN><en>Reads runtime-entry text to verify styles remain application-explicit rather than being injected by import or plugin.</en></lang>
   const runtimeEntry = await readFile(resolve('HIA-uView-UI/src/index.mjs'), 'utf8');

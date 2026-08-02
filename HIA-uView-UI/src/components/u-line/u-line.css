@@ -1,0 +1,8 @@
+/**
+ * @component ULine
+ * @lang zh-CN 分隔线样式只消费方向、长度和主题颜色。
+ * @lang en Divider styles consume direction, length, and theme color only.
+ */
+.u-line { background: var(--u-line-color); flex: none; }
+.u-line--horizontal { height: var(--u-comp-line-width); width: var(--u-line-length); }
+.u-line--vertical { height: var(--u-line-length); width: var(--u-comp-line-width); }
