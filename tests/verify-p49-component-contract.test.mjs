@@ -41,7 +41,7 @@ test('keeps P49 component declarations aligned', async () => {
     await access(resolve(componentRecord.style));
     await access(resolve(componentRecord.contract));
   }
-  assert.equal(manifest.components.length, 86);
+  assert.equal(manifest.components.length, 89);
 });
 
 /**

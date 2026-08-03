@@ -443,7 +443,10 @@
     { "name": "u-message-input", "source": "src/components/u-message-input/u-message-input.vue", "contract": "docs/message-input.md", "locales": ["zh-Hans", "en"] },
     { "name": "u-car-keyboard", "source": "src/components/u-car-keyboard/u-car-keyboard.vue", "contract": "docs/car-keyboard.md", "locales": ["zh-Hans", "en"] },
     { "name": "u-keyboard", "source": "src/components/u-keyboard/u-keyboard.vue", "contract": "docs/keyboard.md", "locales": ["zh-Hans", "en"] },
-    { "name": "u-number-keyboard", "source": "src/components/u-number-keyboard/u-number-keyboard.vue", "contract": "docs/number-keyboard.md", "locales": ["zh-Hans", "en"] }
+    { "name": "u-number-keyboard", "source": "src/components/u-number-keyboard/u-number-keyboard.vue", "contract": "docs/number-keyboard.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-avatar-cropper", "source": "src/components/u-avatar-cropper/u-avatar-cropper.vue", "contract": "docs/avatar-cropper.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-upload", "source": "src/components/u-upload/u-upload.vue", "contract": "docs/upload.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-verification-code", "source": "src/components/u-verification-code/u-verification-code.vue", "contract": "docs/verification-code.md", "locales": ["zh-Hans", "en"] }
   ],
   "fixtures": [
     {

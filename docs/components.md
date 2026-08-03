@@ -35,6 +35,7 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-icon` | `UIcon` | [UIcon](icon.md) | Text-symbol or slot icon placeholder / 文字符号或 slot 图标占位 |
 | `u-image` | `UImage` | [UImage](image.md) | Caller-owned native image projection / 调用方拥有的原生图片投影 |
 | `u-avatar` | `UAvatar` | [UAvatar](avatar.md) | Image or initials placeholder / 图片或 initials 占位 |
+| `u-avatar-cropper` | `UAvatarCropper` | [UAvatarCropper](avatar-cropper.md) | Caller-owned crop geometry intent / 调用方拥有的裁剪几何意图 |
 | `u-badge` | `UBadge` | [UBadge](badge.md) | Controlled text or dot badge / 受控文字或 dot 徽标 |
 | `u-input` | `UInput` | [UInput](input.md) | Controlled string input intent / 受控字符串输入意图 |
 | `u-keyboard` | `UKeyboard` | [UKeyboard](keyboard.md) | Controlled local keyboard overlay / 受控局部键盘 overlay |
@@ -90,9 +91,11 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-notice-bar` | `UNoticeBar` | [UNoticeBar](notice-bar.md) | Local notice-strip presentation / 局部通知条呈现 |
 | `u-top-tips` | `UTopTips` | [UTopTips](top-tips.md) | Caller-controlled top feedback / 调用方受控的顶部反馈 |
 | `u-transition` | `UTransition` | [UTransition](transition.md) | Finite CSS transition wrapper / 有限 CSS transition 包装器 |
+| `u-upload` | `UUpload` | [UUpload](upload.md) | Caller-owned file-state intent list / 调用方拥有的文件状态意图列表 |
+| `u-verification-code` | `UVerificationCode` | [UVerificationCode](verification-code.md) | Caller-owned request-state projection / 调用方拥有的请求状态投影 |
 | `u-config-provider` | `UConfigProvider` | [UConfigProvider](config-provider.md) | Finite theme-density subtree scope / 有限主题密度子树范围 |
 | `u-root-portal` | `URootPortal` | [URootPortal](root-portal.md) | Same-tree overlay-root wrapper / 同树 overlay-root 包装器 |
 
-The index currently contains 86 declared component contracts. `u-navbar` and `u-notice-bar` are separate, bounded APIs; they do not alias the earlier `u-nav-bar` or `u-notice` contracts. Use named imports or the explicit `UView` plugin as documented in [runtime consumption](runtime-consumption.md). Import `style.css` explicitly from application-owned global style setup. The current [compatibility profile](compatibility.md), [examples](examples.md), and [migration guidance](migration-from-uview.md) state the evidence and limits that apply to this index.
+The index currently contains 89 declared component contracts. `u-navbar` and `u-notice-bar` are separate, bounded APIs; they do not alias the earlier `u-nav-bar` or `u-notice` contracts. Use named imports or the explicit `UView` plugin as documented in [runtime consumption](runtime-consumption.md). Import `style.css` explicitly from application-owned global style setup. The current [compatibility profile](compatibility.md), [examples](examples.md), and [migration guidance](migration-from-uview.md) state the evidence and limits that apply to this index.
 
-该索引当前包含 86 个已声明的组件契约。`u-navbar` 与 `u-notice-bar` 是独立、受限的 API，不是既有 `u-nav-bar` 或 `u-notice` 契约的别名。按 [runtime consumption](runtime-consumption.md) 所述使用命名导入或显式 `UView` plugin，并从应用拥有的全局样式设置显式导入 `style.css`。当前 [compatibility profile](compatibility.md)、[examples](examples.md) 与 [migration guidance](migration-from-uview.md) 说明此索引适用的证据和限制。
+该索引当前包含 89 个已声明的组件契约。`u-navbar` 与 `u-notice-bar` 是独立、受限的 API，不是既有 `u-nav-bar` 或 `u-notice` 契约的别名。按 [runtime consumption](runtime-consumption.md) 所述使用命名导入或显式 `UView` plugin，并从应用拥有的全局样式设置显式导入 `style.css`。当前 [compatibility profile](compatibility.md)、[examples](examples.md) 与 [migration guidance](migration-from-uview.md) 说明此索引适用的证据和限制。

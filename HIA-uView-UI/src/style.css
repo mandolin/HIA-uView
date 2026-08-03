@@ -13,6 +13,7 @@
 @import "./components/u-back-top/u-back-top.css";
 @import "./components/u-alert-tips/u-alert-tips.css";
 @import "./components/u-avatar/u-avatar.css";
+@import "./components/u-avatar-cropper/u-avatar-cropper.css";
 @import "./components/u-badge/u-badge.css";
 @import "./components/u-button/u-button.css";
 @import "./components/u-calendar/u-calendar.css";
@@ -91,6 +92,8 @@
 @import "./components/u-toast/u-toast.css";
 @import "./components/u-top-tips/u-top-tips.css";
 @import "./components/u-transition/u-transition.css";
+@import "./components/u-upload/u-upload.css";
 @import "./components/u-safe-bottom/u-safe-bottom.css";
 @import "./components/u-fab/u-fab.css";
 @import "./components/u-validation-message/u-validation-message.css";
+@import "./components/u-verification-code/u-verification-code.css";

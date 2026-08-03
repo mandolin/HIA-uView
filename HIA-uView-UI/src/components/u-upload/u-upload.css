@@ -1,0 +1,98 @@
+/**
+ * @component UUploadStyle
+ * @lang zh-CN 定义 caller file-state 列表和本地 intent control 的 token 化表面；样式不展示缩略图、进度动画、文件图标、网络或 chooser 状态。
+ * @lang en Defines tokenized surface for caller file-state list and local intent controls; styles show no thumbnail, progress animation, file icon, network, or chooser state.
+ */
+.u-upload { display: grid; gap: var(--u-comp-upload-gap); padding: var(--u-comp-upload-padding); border: 1px solid var(--u-comp-upload-border); border-radius: var(--u-comp-upload-radius); background: var(--u-comp-upload-surface); color: var(--u-comp-upload-foreground); }
+.u-upload__file { display: flex; gap: var(--u-comp-upload-file-gap); align-items: center; justify-content: space-between; min-height: var(--u-comp-upload-file-min-height); padding: var(--u-comp-upload-file-padding); border: 1px solid var(--u-comp-upload-file-border); border-radius: var(--u-comp-upload-file-radius); }
+.u-upload__file-copy { display: grid; min-width: 0; gap: var(--u-comp-upload-copy-gap); }
+.u-upload__file-label { overflow: hidden; font-size: var(--u-comp-upload-file-label-font-size); text-overflow: ellipsis; white-space: nowrap; }
+.u-upload__file-description { color: var(--u-comp-upload-description-foreground); font-size: var(--u-comp-upload-description-font-size); }
+.u-upload__status { font-size: var(--u-comp-upload-status-font-size); }
+.u-upload__status--ready { color: var(--u-comp-upload-ready-foreground); }
+.u-upload__status--pending { color: var(--u-comp-upload-pending-foreground); }
+.u-upload__status--error { color: var(--u-comp-upload-error-foreground); }
+.u-upload__file-actions { display: flex; flex-wrap: wrap; gap: var(--u-comp-upload-action-gap); justify-content: end; }
+.u-upload__action, .u-upload__retry, .u-upload__select { min-height: var(--u-comp-upload-control-min-height); padding: var(--u-comp-upload-control-padding); border: 1px solid var(--u-comp-upload-control-border); border-radius: var(--u-comp-upload-control-radius); background: var(--u-comp-upload-action-surface); color: var(--u-comp-upload-action-foreground); font: inherit; font-size: var(--u-comp-upload-control-font-size); }
+.u-upload__retry { background: var(--u-comp-upload-retry-surface); color: var(--u-comp-upload-retry-foreground); }
+.u-upload__select { background: var(--u-comp-upload-select-surface); color: var(--u-comp-upload-select-foreground); }
+.u-upload__action:focus-visible, .u-upload__retry:focus-visible, .u-upload__select:focus-visible { outline: 2px solid var(--u-comp-upload-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-upload {
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #f7f9fc;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-upload__file {
+  gap: 12px;
+  min-height: 52px;
+  padding: 10px;
+  border: 1px solid #f7f9fc;
+  border-radius: 8px;
+}
+
+.u-upload__file-copy {
+  gap: 4px;
+}
+
+.u-upload__file-label {
+  font-size: 15px;
+}
+
+.u-upload__file-description {
+  color: #27364a;
+  font-size: 13px;
+}
+
+.u-upload__status {
+  font-size: 13px;
+}
+
+.u-upload__status--ready {
+  color: #27364a;
+}
+
+.u-upload__status--pending {
+  color: #0047ab;
+}
+
+.u-upload__status--error {
+  color: #001b2e;
+}
+
+.u-upload__file-actions {
+  gap: 6px;
+}
+
+.u-upload__action, .u-upload__retry, .u-upload__select {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #001b2e;
+  font-size: 14px;
+}
+
+.u-upload__retry {
+  background: #f7f9fc;
+  color: #0047ab;
+}
+
+.u-upload__select {
+  background: #0047ab;
+  color: #ffffff;
+}
+
+.u-upload__action:focus-visible, .u-upload__retry:focus-visible, .u-upload__select:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

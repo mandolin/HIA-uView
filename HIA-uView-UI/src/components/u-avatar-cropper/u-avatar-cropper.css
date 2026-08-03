@@ -1,0 +1,54 @@
+/**
+ * @component UAvatarCropperStyle
+ * @lang zh-CN 定义图片投影上的 token 化比例几何框和 caller-labeled control；样式不含 Canvas、像素处理、拖动、手势、资源或上传表达。
+ * @lang en Defines tokenized proportional geometry frame over image projection and caller-labeled controls; styles contain no Canvas, pixel processing, dragging, gesture, asset, or upload expression.
+ */
+.u-avatar-cropper { display: grid; gap: var(--u-comp-avatar-cropper-gap); padding: var(--u-comp-avatar-cropper-padding); border: 1px solid var(--u-comp-avatar-cropper-border); border-radius: var(--u-comp-avatar-cropper-radius); background: var(--u-comp-avatar-cropper-surface); color: var(--u-comp-avatar-cropper-foreground); }
+.u-avatar-cropper__preview { position: relative; justify-self: start; }
+.u-avatar-cropper__geometry { position: absolute; top: var(--u-avatar-cropper-y); left: var(--u-avatar-cropper-x); width: var(--u-avatar-cropper-width); height: var(--u-avatar-cropper-height); box-sizing: border-box; border: var(--u-comp-avatar-cropper-geometry-border-width) solid var(--u-comp-avatar-cropper-geometry-border); outline: var(--u-comp-avatar-cropper-geometry-outline-width) solid var(--u-comp-avatar-cropper-geometry-outline); pointer-events: none; }
+.u-avatar-cropper__adjustments, .u-avatar-cropper__actions { display: flex; flex-wrap: wrap; gap: var(--u-comp-avatar-cropper-action-gap); justify-content: end; }
+.u-avatar-cropper__adjustment, .u-avatar-cropper__action, .u-avatar-cropper__confirm { min-height: var(--u-comp-avatar-cropper-control-min-height); padding: var(--u-comp-avatar-cropper-control-padding); border: 1px solid var(--u-comp-avatar-cropper-control-border); border-radius: var(--u-comp-avatar-cropper-control-radius); background: var(--u-comp-avatar-cropper-action-surface); color: var(--u-comp-avatar-cropper-action-foreground); font: inherit; font-size: var(--u-comp-avatar-cropper-control-font-size); }
+.u-avatar-cropper__confirm { background: var(--u-comp-avatar-cropper-confirm-surface); color: var(--u-comp-avatar-cropper-confirm-foreground); }
+.u-avatar-cropper__adjustment:focus-visible, .u-avatar-cropper__action:focus-visible, .u-avatar-cropper__confirm:focus-visible { outline: 2px solid var(--u-comp-avatar-cropper-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-avatar-cropper {
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #f7f9fc;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-avatar-cropper__geometry {
+  border: 2px solid #0047ab;
+  outline: 1px solid #ffffff;
+}
+
+.u-avatar-cropper__adjustments, .u-avatar-cropper__actions {
+  gap: 8px;
+}
+
+.u-avatar-cropper__adjustment, .u-avatar-cropper__action, .u-avatar-cropper__confirm {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  background: #f7f9fc;
+  color: #001b2e;
+  font-size: 14px;
+}
+
+.u-avatar-cropper__confirm {
+  background: #0047ab;
+  color: #ffffff;
+}
+
+.u-avatar-cropper__adjustment:focus-visible, .u-avatar-cropper__action:focus-visible, .u-avatar-cropper__confirm:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

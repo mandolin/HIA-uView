@@ -324,7 +324,7 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-status-bar')).toBe(UStatusBar);
   expect(application.component('u-top-tips')).toBe(UTopTips);
   expect(application.component('u-transition')).toBe(UTransition);
-  expect(UVIEW_COMPONENTS).toHaveLength(86);
+  expect(UVIEW_COMPONENTS).toHaveLength(89);
 
   // <lang><zh-CN>读取 runtime entry 本文以验证 style 仍由应用显式导入，而非由 import 或 plugin 注入。</zh-CN><en>Reads runtime-entry text to verify styles remain application-explicit rather than being injected by import or plugin.</en></lang>
   const runtimeEntry = await readFile(resolve('HIA-uView-UI/src/index.mjs'), 'utf8');

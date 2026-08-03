@@ -66,7 +66,7 @@ test('keeps P54 component declarations aligned', async () => {
   }
 
   // <lang><zh-CN>P54 保持自身十五项声明；完整 manifest 还可包含保持同一治理边界的后续组件。</zh-CN><en>P54 retains its own fifteen declarations; the complete manifest may also contain subsequent components under the same governance boundary.</en></lang>
-  assert.equal(manifest.components.length, 86);
+  assert.equal(manifest.components.length, 89);
 });
 
 /**

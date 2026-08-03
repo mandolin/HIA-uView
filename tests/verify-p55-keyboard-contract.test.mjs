@@ -53,8 +53,8 @@ test('keeps controlled keyboard declarations aligned', async () => {
     await access(resolve(record.contract));
   }
 
-  // <lang><zh-CN>三项键盘在原有八十三项基础上形成八十六项声明集合。</zh-CN><en>The three keyboards form a declared set of eighty-six over the previous eighty-three items.</en></lang>
-  assert.equal(manifest.components.length, 86);
+  // <lang><zh-CN>本测试保持三项键盘契约；完整 manifest 可以包含后续受审阅组件。</zh-CN><en>This test retains three keyboard contracts; the complete manifest may contain subsequently reviewed components.</en></lang>
+  assert.equal(manifest.components.length, 89);
 });
 
 /**

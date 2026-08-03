@@ -25,6 +25,7 @@ import UIcon from './components/u-icon/u-icon.vue';
 import UKeyboard from './components/u-keyboard/u-keyboard.vue';
 import UImage from './components/u-image/u-image.vue';
 import UAvatar from './components/u-avatar/u-avatar.vue';
+import UAvatarCropper from './components/u-avatar-cropper/u-avatar-cropper.vue';
 import UAlertTips from './components/u-alert-tips/u-alert-tips.vue';
 import UCalendar from './components/u-calendar/u-calendar.vue';
 import UCard from './components/u-card/u-card.vue';
@@ -88,9 +89,11 @@ import UText from './components/u-text/u-text.vue';
 import UToast from './components/u-toast/u-toast.vue';
 import UTopTips from './components/u-top-tips/u-top-tips.vue';
 import UTransition from './components/u-transition/u-transition.vue';
+import UUpload from './components/u-upload/u-upload.vue';
 import USafeBottom from './components/u-safe-bottom/u-safe-bottom.vue';
 import UFab from './components/u-fab/u-fab.vue';
 import UValidationMessage from './components/u-validation-message/u-validation-message.vue';
+import UVerificationCode from './components/u-verification-code/u-verification-code.vue';
 
 /**
  * @lang zh-CN 显式 plugin 可注册的稳定模板名称与组件实现映射。该只读集合必须与 component manifest 一致；manifest 继续只服务开发期声明验证，不承担 runtime registry 职责。
@@ -103,6 +106,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-action-sheet-item', component: UActionSheetItem }),
   // <lang><zh-CN>提示条只呈现调用方受控 tone 与 close intent，不创建全局服务。</zh-CN><en>The alert strip presents caller-controlled tone and close intent only and creates no global service.</en></lang>
   Object.freeze({ name: 'u-alert-tips', component: UAlertTips }),
+  // <lang><zh-CN>avatar-cropper 只报告受限 caller crop geometry，不选择图片、处理像素或输出文件。</zh-CN><en>Avatar-cropper reports constrained caller crop geometry only and selects no image, processes no pixel, and outputs no file.</en></lang>
+  Object.freeze({ name: 'u-avatar-cropper', component: UAvatarCropper }),
   // <lang><zh-CN>按钮保留 P10/P11 已验证的独立本地操作边界。</zh-CN><en>The button retains the independently verified local-action boundary from P10/P11.</en></lang>
   Object.freeze({ name: 'u-button', component: UButton }),
   // <lang><zh-CN>日历只计算本地单月日期格并报告选择，不读取平台日历或远程数据。</zh-CN><en>The calendar computes local single-month cells and reports selection only; it reads no platform calendar or remote data.</en></lang>
@@ -258,7 +263,11 @@ export const UVIEW_COMPONENTS = Object.freeze([
   // <lang><zh-CN>顶部提示只呈现 caller feedback，不创建全局队列或 timer。</zh-CN><en>Top tips present caller feedback only and create no global queue or timer.</en></lang>
   Object.freeze({ name: 'u-top-tips', component: UTopTips }),
   // <lang><zh-CN>transition 只投影有限 CSS mode/duration，不实现 JS 动画生命周期。</zh-CN><en>Transition projects finite CSS mode/duration only and implements no JavaScript animation lifecycle.</en></lang>
-  Object.freeze({ name: 'u-transition', component: UTransition })
+  Object.freeze({ name: 'u-transition', component: UTransition }),
+  // <lang><zh-CN>upload 只呈现 caller file state 并报告 select/preview/remove/retry intent，不操作文件或网络。</zh-CN><en>Upload presents caller file state and reports select/preview/remove/retry intent only and operates no file or network.</en></lang>
+  Object.freeze({ name: 'u-upload', component: UUpload }),
+  // <lang><zh-CN>verification-code 只投影 caller remaining/status 并报告受授权 request，不发送验证码或计时。</zh-CN><en>Verification-code projects caller remaining/status and reports authorized request only and sends no code or timing.</en></lang>
+  Object.freeze({ name: 'u-verification-code', component: UVerificationCode })
 ]);
 
 /**
@@ -294,5 +303,5 @@ export const UView = Object.freeze({
 });
 
 // <lang><zh-CN>导出命名组件供应用按需注册；默认导出保持显式 plugin 入口，二者均不产生 import-time 副作用。</zh-CN><en>Exports named components for application-side registration; the default export remains the explicit plugin entry, and neither creates import-time side effects.</en></lang>
-export { UActionSheet, UActionSheetItem, UAlertTips, UBackTop, UButton, UCalendar, UCard, UCell, UCellGroup, UCellItem, UCarKeyboard, UCheckbox, UCheckboxGroup, UCitySelect, UCollapse, UCollapseItem, UCol, UConfigProvider, UDropdown, UDropdownItem, UEmpty, UFab, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, UKeyboard, ULine, ULineProgress, ULink, UList, ULoading, ULoadingPage, ULoadingPopup, ULoadmore, UMask, UMessageInput, UModal, UNavbar, UNavBar, UNoNetwork, UNotice, UNoticeBar, UNumberKeyboard, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URootPortal, URow, USafeBottom, USection, USelect, USlider, USwipeAction, UStatusBar, UTag, UBadge, UText, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UTopTips, UTransition, UValidationMessage };
+export { UActionSheet, UActionSheetItem, UAlertTips, UAvatarCropper, UBackTop, UButton, UCalendar, UCard, UCell, UCellGroup, UCellItem, UCarKeyboard, UCheckbox, UCheckboxGroup, UCitySelect, UCollapse, UCollapseItem, UCol, UConfigProvider, UDropdown, UDropdownItem, UEmpty, UFab, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, UKeyboard, ULine, ULineProgress, ULink, UList, ULoading, ULoadingPage, ULoadingPopup, ULoadmore, UMask, UMessageInput, UModal, UNavbar, UNavBar, UNoNetwork, UNotice, UNoticeBar, UNumberKeyboard, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URootPortal, URow, USafeBottom, USection, USelect, USlider, USwipeAction, UStatusBar, UTag, UBadge, UText, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UTopTips, UTransition, UUpload, UValidationMessage, UVerificationCode };
 export default UView;

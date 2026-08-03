@@ -52,7 +52,7 @@ test('keeps controlled component declarations aligned', async () => {
   }
 
   // <lang><zh-CN>本测试保持前三项受控组件的契约；完整 manifest 可以包含后续受审阅组件。</zh-CN><en>This test retains the first three controlled-component contracts; the complete manifest may contain subsequently reviewed components.</en></lang>
-  assert.equal(manifest.components.length, 86);
+  assert.equal(manifest.components.length, 89);
 });
 
 /**

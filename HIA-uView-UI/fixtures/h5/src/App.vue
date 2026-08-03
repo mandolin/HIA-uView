@@ -33,6 +33,10 @@
     <UNumberKeyboard :visible="true" :keys="fixtureNumberKeys" label="Local numeric keys / 本地数值键" backspace-label="Remove / 删除" confirm-text="Confirm / 确认" />
     <UCarKeyboard :visible="true" :rows="fixtureCarRows" label="Local row keys / 本地行键" phase="primary" next-phase="secondary" switch-text="Next / 下一组" backspace-label="Remove / 删除" confirm-text="Confirm / 确认" />
     <UKeyboard :visible="false" mode="number" :number-keys="fixtureNumberKeys" label="Local composed keys / 本地组合键" backspace-label="Remove / 删除" confirm-text="Confirm / 确认" />
+    <!-- <lang><zh-CN>文件状态、裁剪选择和验证码状态均来自 fixture 本地声明，验证受控意图面可在 H5 构建中解析；不选择文件、不加载图片、不裁剪像素、不发送验证码或计时。</zh-CN><en>File state, crop selection, and verification state all come from fixture local declarations to verify controlled intent surfaces resolve in the H5 build; they choose no file, load no image, crop no pixel, send no code, and run no timer.</en></lang> -->
+    <UUpload :visible="true" :files="fixtureFiles" label="Local files / 本地文件" select-text="Select / 选择" preview-text="Preview / 预览" remove-text="Remove / 删除" retry-text="Retry / 重试" :max="3" />
+    <UAvatarCropper :visible="true" select-text="Select source / 选择来源" />
+    <UVerificationCode :visible="true" label="Local request state / 本地请求状态" status-text="Caller state / 调用方状态" remaining-text="No local timer / 无本地计时器" :remaining-seconds="30" request-text="Request / 请求" :request-enabled="true" />
     <UBackTop :visible="true" label="Top / 顶部" @back-top="recordP54Intent('top')" />
     <UFab :visible="true" label="Create / 新建" @click="recordP54Intent('fab')" />
     <URootPortal :visible="true" :layer="1200"><UTransition :visible="true" mode="fade"><UTopTips :visible="true" message="Local overlay / 本地浮层" close-text="Close / 关闭" @close="recordP54Intent('tips')" /></UTransition></URootPortal>
@@ -46,7 +50,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { UActionSheetItem, UBackTop, UButton, UCarKeyboard, UCellItem, UCitySelect, UConfigProvider, UDropdown, UDropdownItem, UFab, UKeyboard, ULoading, ULoadingPopup, UMask, UMessageInput, UNavbar, UNoNetwork, UNoticeBar, UNumberKeyboard, URootPortal, USafeBottom, USection, USelect, USlider, UStatusBar, UText, UTopTips, UTransition } from '../../../src/index.mjs';
+import { UActionSheetItem, UAvatarCropper, UBackTop, UButton, UCarKeyboard, UCellItem, UCitySelect, UConfigProvider, UDropdown, UDropdownItem, UFab, UKeyboard, ULoading, ULoadingPopup, UMask, UMessageInput, UNavbar, UNoNetwork, UNoticeBar, UNumberKeyboard, URootPortal, USafeBottom, USection, USelect, USlider, UStatusBar, UText, UTopTips, UTransition, UUpload, UVerificationCode } from '../../../src/index.mjs';
 
 // <lang><zh-CN>fixture 状态只来自本地 ref，便于 H5 smoke 对稳定文本进行检查。</zh-CN><en>Fixture state comes from local refs only, allowing H5 smoke to inspect stable text.</en></lang>
 const selected = ref('public');
@@ -68,6 +72,11 @@ const fixtureNumberKeys = Object.freeze(['1', '2', '3', '4']);
 const fixtureCarRows = Object.freeze([
   Object.freeze(['A', 'B', 'C']),
   Object.freeze(['1', '2', '3'])
+]);
+// <lang><zh-CN>文件记录只是可读本地状态投影，不是文件路径、二进制、上传任务或缓存。</zh-CN><en>File records are readable local-state projections only, not file paths, binary data, upload tasks, or cache.</en></lang>
+const fixtureFiles = Object.freeze([
+  Object.freeze({ label: 'Local ready record / 本地就绪记录', status: 'ready', statusText: 'Ready / 就绪' }),
+  Object.freeze({ label: 'Local retry record / 本地重试记录', status: 'error', statusText: 'Review locally / 本地审阅' })
 ]);
 
 /**

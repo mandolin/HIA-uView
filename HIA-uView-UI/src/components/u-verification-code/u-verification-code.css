@@ -1,0 +1,48 @@
+/**
+ * @component UVerificationCodeStyle
+ * @lang zh-CN 定义 caller verification-state 文字与显式 request control 的 token 化表面；样式不包含倒计时、动画、身份、网络或 storage 状态。
+ * @lang en Defines tokenized surface for caller verification-state copy and explicit request control; styles contain no countdown, animation, identity, network, or storage state.
+ */
+.u-verification-code { display: flex; flex-wrap: wrap; gap: var(--u-comp-verification-code-gap); align-items: center; padding: var(--u-comp-verification-code-padding); border: 1px solid var(--u-comp-verification-code-border); border-radius: var(--u-comp-verification-code-radius); background: var(--u-comp-verification-code-surface); color: var(--u-comp-verification-code-foreground); }
+.u-verification-code__status { color: var(--u-comp-verification-code-status-foreground); font-size: var(--u-comp-verification-code-status-font-size); }
+.u-verification-code__remaining { color: var(--u-comp-verification-code-remaining-foreground); font-size: var(--u-comp-verification-code-remaining-font-size); }
+.u-verification-code__request { min-height: var(--u-comp-verification-code-control-min-height); padding: var(--u-comp-verification-code-control-padding); border: 1px solid var(--u-comp-verification-code-control-border); border-radius: var(--u-comp-verification-code-control-radius); background: var(--u-comp-verification-code-request-surface); color: var(--u-comp-verification-code-request-foreground); font: inherit; font-size: var(--u-comp-verification-code-control-font-size); }
+.u-verification-code__request:focus-visible { outline: 2px solid var(--u-comp-verification-code-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-verification-code {
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #f7f9fc;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-verification-code__status {
+  color: #27364a;
+  font-size: 14px;
+}
+
+.u-verification-code__remaining {
+  color: #0047ab;
+  font-size: 14px;
+}
+
+.u-verification-code__request {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  background: #0047ab;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.u-verification-code__request:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

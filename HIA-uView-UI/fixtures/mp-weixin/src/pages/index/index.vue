@@ -38,6 +38,11 @@
     <u-car-keyboard :visible="true" :rows="fixtureCarRows" label="本地行键 / Local row keys" phase="primary" next-phase="secondary" switch-text="下一组 / Next" backspace-label="删除 / Remove" confirm-text="确认 / Confirm" />
     <u-keyboard :visible="false" mode="number" :number-keys="fixtureNumberKeys" label="本地组合键 / Local composed keys" backspace-label="删除 / Remove" confirm-text="确认 / Confirm" />
 
+    <!-- <lang><zh-CN>文件状态、裁剪选择和验证码状态均为页面本地声明，以验证小程序编译器可解析受控意图面；它们不选择文件、不读图片字节、不裁剪像素、不发送验证码或计时。</zh-CN><en>File state, crop selection, and verification state are all page-local declarations to verify that the Mini Program compiler resolves controlled intent surfaces; they choose no file, read no image bytes, crop no pixel, send no code, and run no timer.</en></lang> -->
+    <u-upload :visible="true" :files="fixtureFiles" label="本地文件 / Local files" select-text="选择 / Select" preview-text="预览 / Preview" remove-text="删除 / Remove" retry-text="重试 / Retry" :max="3" />
+    <u-avatar-cropper :visible="true" select-text="选择来源 / Select source" />
+    <u-verification-code :visible="true" label="本地请求状态 / Local request state" status-text="调用方状态 / Caller state" remaining-text="无本地计时器 / No local timer" :remaining-seconds="30" request-text="请求 / Request" :request-enabled="true" />
+
     <!-- <lang><zh-CN>notice 只呈现页面在确认本地意图后显式写入的消息和可见状态；它不表示保存、请求或业务完成。</zh-CN><en>The notice presents only the message and visibility explicitly written by the page after local intent confirmation; it represents no save, request, or business completion.</en></lang> -->
     <u-notice
       :visible="catalogNoticeVisible"
@@ -261,6 +266,12 @@ const fixtureNumberKeys = Object.freeze(['1', '2', '3', '4']);
 const fixtureCarRows = Object.freeze([
   Object.freeze(['A', 'B', 'C']),
   Object.freeze(['1', '2', '3'])
+]);
+
+// <lang><zh-CN>文件记录是页面内可读状态投影，不代表文件路径、bytes、上传任务或缓存。</zh-CN><en>File records are in-page readable state projections and represent no file path, bytes, upload task, or cache.</en></lang>
+const fixtureFiles = Object.freeze([
+  Object.freeze({ label: '本地就绪记录 / Local ready record', status: 'ready', statusText: '就绪 / Ready' }),
+  Object.freeze({ label: '本地重试记录 / Local retry record', status: 'error', statusText: '本地审阅 / Review locally' })
 ]);
 
 // <lang><zh-CN>新增高频控件均使用页面内局部 refs；它们不进入目录 mock、共享 store 或外部数据源。</zh-CN><en>New high-frequency controls use page-local refs only; they enter no catalog mock, shared store, or external data source.</en></lang>
