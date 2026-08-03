@@ -1,5 +1,5 @@
 import { createSSRApp } from 'vue';
-import FixtureApp from './fixtures/mp-weixin/src/App.vue';
+import FixtureApp from './App.vue';
 
 /**
  * @module hia-uview-mp-weixin-fixture-entry

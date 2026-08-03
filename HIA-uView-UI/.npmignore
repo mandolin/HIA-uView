@@ -8,5 +8,6 @@ fixtures/
 manifest.json
 pages.json
 main.js
+App.vue
 *.log
 *.tgz

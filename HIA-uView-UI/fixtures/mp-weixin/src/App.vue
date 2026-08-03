@@ -1,6 +1,6 @@
 <!--
-@lang zh-CN mp-weixin 编译 fixture 的最小应用外壳；仅导入 HIA 默认主题，不声明跨端或真机能力。
-@lang en Minimal application shell for the mp-weixin compile fixture; imports only the HIA default theme and declares no cross-platform or device capability.
+@lang zh-CN mp-weixin 编译 fixture 的最小应用外壳；由输入根 App 显式导入 HIA 默认主题和组件规则，不声明跨端或真机能力。
+@lang en Minimal application shell for the mp-weixin compile fixture; the input-root App explicitly imports HIA default theme and component rules, and this shell declares no cross-platform or device capability.
 -->
 <script>
 export default {
@@ -8,8 +8,3 @@ export default {
   onLaunch() {}
 };
 </script>
-
-<style>
-/* <lang><zh-CN>fixture 只导入本仓默认浅色主题，使组件 token 有可编译来源；不引入外部字体、图标或品牌资源。</zh-CN><en>The fixture imports only the repository default light theme so component tokens have a compilable source; it imports no external font, icon, or brand asset.</en></lang> */
-@import "../../../src/theme/hia-light.css";
-</style>

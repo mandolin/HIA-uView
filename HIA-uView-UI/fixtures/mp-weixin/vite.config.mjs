@@ -3,8 +3,8 @@ import uniPlugin from '@dcloudio/vite-plugin-uni';
 
 /**
  * @module mp-weixin-fixture-vite-config
- * @lang zh-CN compile-only `mp-weixin` fixture 的最小 Vite 配置模块；它只声明官方 UniApp transform plugin，不声明 dev server、proxy、环境变量、外部输入或发布行为。
- * @lang en Minimal Vite configuration module for the compile-only `mp-weixin` fixture; declares only the official UniApp transform plugin and declares no development server, proxy, environment variable, external input, or release behavior.
+ * @lang zh-CN compile-only mp-weixin fixture 的最小 Vite 配置模块；它只声明官方 UniApp transform plugin，不声明 dev server、proxy、环境变量、外部输入或发布行为。
+ * @lang en Minimal Vite configuration module for the compile-only mp-weixin fixture; declares only the official UniApp transform plugin and declares no development server, proxy, environment variable, external input, or release behavior.
  */
 
 /**

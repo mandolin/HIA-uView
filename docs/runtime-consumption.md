@@ -28,9 +28,9 @@ app.use(UView);
 
 ## Explicit style entry / 显式样式入口
 
-Import the HIA light-theme entry from application-owned global style setup. The runtime module and plugin never inject it automatically.
+Import the HIA complete style entry from application-owned global style setup. It contains the default light-theme tokens and current component rules, including the global rules required by the WeChat Mini Program compilation path. The runtime module and plugin never inject it automatically.
 
-在应用自有的全局样式设置中导入 HIA 浅色主题入口。runtime module 与 plugin 绝不自动注入它。
+在应用自有的全局样式设置中导入 HIA 完整样式入口。它包含默认浅色主题 token 和当前组件规则，其中也包含微信小程序编译路径所需的全局规则。runtime module 与 plugin 绝不自动注入它。
 
 ```css
 @import "@hia-uview/ui/style.css";

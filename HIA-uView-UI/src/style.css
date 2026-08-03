@@ -3,3 +3,73 @@
  * @lang en Explicit global-style entry for HIA-uView; an application must import it deliberately, while the runtime module and plugin never inject theme or global CSS implicitly.
  */
 @import "./theme/hia-light.css";
+
+/**
+ * @lang zh-CN 组件规则通过同一个显式入口提供：这让微信小程序编译链能把样式写入应用 WXSS，也让 H5 保持同一主题输入。运行时和 plugin 仍不隐式注入全局 CSS。
+ * @lang en Component rules are provided through this same explicit entry: it lets the WeChat Mini Program compiler emit them to application WXSS while H5 retains the same theme input. Runtime and plugin still never inject global CSS implicitly.
+ */
+@import "./components/u-action-sheet/u-action-sheet.css";
+@import "./components/u-alert-tips/u-alert-tips.css";
+@import "./components/u-avatar/u-avatar.css";
+@import "./components/u-badge/u-badge.css";
+@import "./components/u-button/u-button.css";
+@import "./components/u-calendar/u-calendar.css";
+@import "./components/u-card/u-card.css";
+@import "./components/u-cell/u-cell.css";
+@import "./components/u-cell-group/u-cell-group.css";
+@import "./components/u-checkbox/u-checkbox.css";
+@import "./components/u-checkbox-group/u-checkbox-group.css";
+@import "./components/u-col/u-col.css";
+@import "./components/u-collapse/u-collapse.css";
+@import "./components/u-collapse-item/u-collapse-item.css";
+@import "./components/u-count-to/u-count-to.css";
+@import "./components/u-divider/u-divider.css";
+@import "./components/u-dropdown/u-dropdown.css";
+@import "./components/u-dropdown-item/u-dropdown-item.css";
+@import "./components/u-empty/u-empty.css";
+@import "./components/u-field/u-field.css";
+@import "./components/u-form/u-form.css";
+@import "./components/u-form-item/u-form-item.css";
+@import "./components/u-gap/u-gap.css";
+@import "./components/u-grid/u-grid.css";
+@import "./components/u-grid-item/u-grid-item.css";
+@import "./components/u-icon/u-icon.css";
+@import "./components/u-image/u-image.css";
+@import "./components/u-input/u-input.css";
+@import "./components/u-line/u-line.css";
+@import "./components/u-line-progress/u-line-progress.css";
+@import "./components/u-link/u-link.css";
+@import "./components/u-list/u-list.css";
+@import "./components/u-loading-page/u-loading-page.css";
+@import "./components/u-loadmore/u-loadmore.css";
+@import "./components/u-modal/u-modal.css";
+@import "./components/u-nav-bar/u-nav-bar.css";
+@import "./components/u-notice/u-notice.css";
+@import "./components/u-number-box/u-number-box.css";
+@import "./components/u-pagination/u-pagination.css";
+@import "./components/u-picker/u-picker.css";
+@import "./components/u-popup/u-popup.css";
+@import "./components/u-radio/u-radio.css";
+@import "./components/u-radio-group/u-radio-group.css";
+@import "./components/u-rate/u-rate.css";
+@import "./components/u-read-more/u-read-more.css";
+@import "./components/u-row/u-row.css";
+@import "./components/u-scroll-list/u-scroll-list.css";
+@import "./components/u-search/u-search.css";
+@import "./components/u-section/u-section.css";
+@import "./components/u-select/u-select.css";
+@import "./components/u-skeleton/u-skeleton.css";
+@import "./components/u-slider/u-slider.css";
+@import "./components/u-stack/u-stack.css";
+@import "./components/u-steps/u-steps.css";
+@import "./components/u-sticky/u-sticky.css";
+@import "./components/u-swipe-action/u-swipe-action.css";
+@import "./components/u-swiper/u-swiper.css";
+@import "./components/u-switch/u-switch.css";
+@import "./components/u-tabbar/u-tabbar.css";
+@import "./components/u-tabs/u-tabs.css";
+@import "./components/u-tag/u-tag.css";
+@import "./components/u-text/u-text.css";
+@import "./components/u-textarea/u-textarea.css";
+@import "./components/u-toast/u-toast.css";
+@import "./components/u-validation-message/u-validation-message.css";

@@ -75,6 +75,12 @@ async function verifyMpWeixinFixture() {
 
     assert.equal(projectConfiguration.compileType, 'miniprogram', 'The generated project config must identify a Mini Program compile type.');
     assert.equal(projectConfiguration.appid, 'touristappid', 'The generated project config must retain the fixture-only tourist AppID.');
+
+    // <lang><zh-CN>样式证据必须来自应用 WXSS：第三方/外置 SFC 样式在小程序编译中不能仅依赖组件局部输出。</zh-CN><en>Style evidence must come from application WXSS: external SFC styles in Mini Program compilation cannot rely only on component-local output.</en></lang>
+    const applicationStyles = await readFile(resolve(outputDirectory, 'app.wxss'), 'utf8');
+    assert.match(applicationStyles, /\.u-button\{/, 'The generated app WXSS must include UButton rules from the explicit style entry.');
+    assert.match(applicationStyles, /\.u-card\{/, 'The generated app WXSS must include UCard rules from the explicit style entry.');
+    assert.match(applicationStyles, /\.u-image\{/, 'The generated app WXSS must include UImage rules from the explicit style entry.');
   } finally {
     // <lang><zh-CN>无论编译或断言成功与否，都删除本函数刚创建的唯一临时目录；不遍历或删除仓库、用户目录或外部路径。</zh-CN><en>Deletes the unique temporary directory created by this function whether compilation or assertions succeed; never traverses or deletes repository, user, or external paths.</en></lang>
     await rm(outputDirectory, { recursive: true, force: true, maxRetries: 2 });
