@@ -18,88 +18,63 @@
 .u-steps__line { background: var(--u-comp-steps-line); flex: 1; height: var(--u-comp-steps-line-width); margin-top: calc(var(--u-comp-steps-indicator-size) / 2); }
 .u-steps--vertical .u-steps__line { height: auto; margin-left: calc(var(--u-comp-steps-indicator-size) / 2); min-height: var(--u-comp-steps-vertical-line-height); width: var(--u-comp-steps-line-width); }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-steps {
-  gap: 12px;
-  gap: var(--u-comp-steps-gap);
+  gap: var(--u-comp-steps-gap, 12px);
 }
 
 .u-steps__item {
-  gap: 8px;
-  gap: var(--u-comp-steps-item-gap);
+  gap: var(--u-comp-steps-item-gap, 8px);
 }
 
 .u-steps__indicator {
-  background: #f7f9fc;
-  background: var(--u-comp-steps-wait-surface);
-  color: #27364a;
-  color: var(--u-comp-steps-wait-foreground);
-  flex: 0 0 24px;
-  flex: 0 0 var(--u-comp-steps-indicator-size);
-  font-size: 12px;
-  font-size: var(--u-comp-steps-indicator-font-size);
-  height: 24px;
-  height: var(--u-comp-steps-indicator-size);
-  width: 24px;
-  width: var(--u-comp-steps-indicator-size);
+  background: var(--u-comp-steps-wait-surface, #f7f9fc);
+  color: var(--u-comp-steps-wait-foreground, #27364a);
+  flex: 0 0 var(--u-comp-steps-indicator-size, 24px);
+  font-size: var(--u-comp-steps-indicator-font-size, 12px);
+  height: var(--u-comp-steps-indicator-size, 24px);
+  width: var(--u-comp-steps-indicator-size, 24px);
 }
 
 .u-steps__indicator--process {
-  background: #0047ab;
-  background: var(--u-comp-steps-process-surface);
-  color: #ffffff;
-  color: var(--u-comp-steps-process-foreground);
+  background: var(--u-comp-steps-process-surface, #0047ab);
+  color: var(--u-comp-steps-process-foreground, #ffffff);
 }
 
 .u-steps__indicator--finish {
-  background: #00a8d3;
-  background: var(--u-comp-steps-finish-surface);
-  color: #001b2e;
-  color: var(--u-comp-steps-finish-foreground);
+  background: var(--u-comp-steps-finish-surface, #00a8d3);
+  color: var(--u-comp-steps-finish-foreground, #001b2e);
 }
 
 .u-steps__indicator--error {
-  background: #001b2e;
-  background: var(--u-comp-steps-error-surface);
-  color: #ffffff;
-  color: var(--u-comp-steps-error-foreground);
+  background: var(--u-comp-steps-error-surface, #001b2e);
+  color: var(--u-comp-steps-error-foreground, #ffffff);
 }
 
 .u-steps__body {
-  gap: 4px;
-  gap: var(--u-comp-steps-text-gap);
+  gap: var(--u-comp-steps-text-gap, 4px);
 }
 
 .u-steps__label {
-  color: #001b2e;
-  color: var(--u-comp-steps-label-foreground);
-  font-size: 14px;
-  font-size: var(--u-comp-steps-label-size);
+  color: var(--u-comp-steps-label-foreground, #001b2e);
+  font-size: var(--u-comp-steps-label-size, 14px);
 }
 
 .u-steps__description {
-  color: #27364a;
-  color: var(--u-comp-steps-description-foreground);
-  font-size: 12px;
-  font-size: var(--u-comp-steps-description-size);
+  color: var(--u-comp-steps-description-foreground, #27364a);
+  font-size: var(--u-comp-steps-description-size, 12px);
 }
 
 .u-steps__line {
-  background: #27364a;
-  background: var(--u-comp-steps-line);
-  height: 1px;
-  height: var(--u-comp-steps-line-width);
-  margin-top: calc(24px / 2);
-  margin-top: calc(var(--u-comp-steps-indicator-size) / 2);
+  background: var(--u-comp-steps-line, #27364a);
+  height: var(--u-comp-steps-line-width, 1px);
+  margin-top: calc(var(--u-comp-steps-indicator-size, 24px) / 2);
 }
 
 .u-steps--vertical .u-steps__line {
-  margin-left: calc(24px / 2);
-  margin-left: calc(var(--u-comp-steps-indicator-size) / 2);
-  min-height: 24px;
-  min-height: var(--u-comp-steps-vertical-line-height);
-  width: 1px;
-  width: var(--u-comp-steps-line-width);
+  margin-left: calc(var(--u-comp-steps-indicator-size, 24px) / 2);
+  min-height: var(--u-comp-steps-vertical-line-height, 24px);
+  width: var(--u-comp-steps-line-width, 1px);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

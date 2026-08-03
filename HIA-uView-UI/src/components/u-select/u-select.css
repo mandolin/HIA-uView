@@ -11,56 +11,41 @@
 .u-select__option { background: transparent; border: 0; border-radius: var(--u-comp-select-radius); color: inherit; min-height: var(--u-comp-select-option-height); padding: 0 var(--u-comp-select-option-padding); text-align: start; }
 .u-select__option--selected { background: var(--u-comp-select-selected-background); color: var(--u-comp-select-selected-foreground); }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-select {
-  background: #ffffff;
-  background: var(--u-comp-select-surface);
-  border: 1px solid #27364a;
-  border: 1px solid var(--u-comp-select-border);
-  border-radius: 8px;
-  border-radius: var(--u-comp-select-radius);
-  color: #001b2e;
-  color: var(--u-comp-select-foreground);
-  padding: 8px 12px;
-  padding: var(--u-comp-select-padding);
+  background: var(--u-comp-select-surface, #ffffff);
+  border: 1px solid var(--u-comp-select-border, #27364a);
+  border-radius: var(--u-comp-select-radius, 8px);
+  color: var(--u-comp-select-foreground, #001b2e);
+  padding: var(--u-comp-select-padding, 8px 12px);
 }
 
 .u-select--disabled {
-  opacity: 0.6;
-  opacity: var(--u-comp-select-disabled-opacity);
+  opacity: var(--u-comp-select-disabled-opacity, 0.6);
 }
 
 .u-select__placeholder {
-  color: #27364a;
-  color: var(--u-comp-select-placeholder);
+  color: var(--u-comp-select-placeholder, #27364a);
 }
 
 .u-select__value {
-  color: #001b2e;
-  color: var(--u-comp-select-value);
+  color: var(--u-comp-select-value, #001b2e);
 }
 
 .u-select__options {
-  gap: 4px;
-  gap: var(--u-comp-select-option-gap);
-  margin-block-start: 8px;
-  margin-block-start: var(--u-comp-select-gap);
+  gap: var(--u-comp-select-option-gap, 4px);
+  margin-block-start: var(--u-comp-select-gap, 8px);
 }
 
 .u-select__option {
-  border-radius: 8px;
-  border-radius: var(--u-comp-select-radius);
-  min-height: 40px;
-  min-height: var(--u-comp-select-option-height);
-  padding: 0 8px;
-  padding: 0 var(--u-comp-select-option-padding);
+  border-radius: var(--u-comp-select-radius, 8px);
+  min-height: var(--u-comp-select-option-height, 40px);
+  padding: 0 var(--u-comp-select-option-padding, 8px);
 }
 
 .u-select__option--selected {
-  background: #f7f9fc;
-  background: var(--u-comp-select-selected-background);
-  color: #0047ab;
-  color: var(--u-comp-select-selected-foreground);
+  background: var(--u-comp-select-selected-background, #f7f9fc);
+  color: var(--u-comp-select-selected-foreground, #0047ab);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

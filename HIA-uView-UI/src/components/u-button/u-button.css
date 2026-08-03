@@ -100,83 +100,60 @@
   letter-spacing: 0.01em;
 }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-button {
-  border-radius: 8px;
-  border-radius: var(--u-comp-button-radius);
-  font-size: 16px;
-  font-size: var(--u-comp-button-font-size-md);
-  gap: 8px;
-  gap: var(--u-comp-button-gap);
-  min-height: 44px;
-  min-height: var(--u-comp-button-min-height);
-  padding: 10px 16px;
-  padding: var(--u-comp-button-block-padding) var(--u-comp-button-inline-padding);
+  border-radius: var(--u-comp-button-radius, 8px);
+  font-size: var(--u-comp-button-font-size-md, 16px);
+  gap: var(--u-comp-button-gap, 8px);
+  min-height: var(--u-comp-button-min-height, 44px);
+  padding: var(--u-comp-button-block-padding, 10px) var(--u-comp-button-inline-padding, 16px);
 }
 
 .u-button--primary {
-  background: #0047ab;
-  background: var(--u-comp-button-primary-background);
-  color: #ffffff;
-  color: var(--u-comp-button-primary-foreground);
+  background: var(--u-comp-button-primary-background, #0047ab);
+  color: var(--u-comp-button-primary-foreground, #ffffff);
 }
 
 .u-button--secondary {
-  background: #ffffff;
-  background: var(--u-comp-button-secondary-background);
-  border-color: #0047ab;
-  border-color: var(--u-comp-button-secondary-border);
-  color: #001b2e;
-  color: var(--u-comp-button-secondary-foreground);
+  background: var(--u-comp-button-secondary-background, #ffffff);
+  border-color: var(--u-comp-button-secondary-border, #0047ab);
+  color: var(--u-comp-button-secondary-foreground, #001b2e);
 }
 
 .u-button--text {
-  background: transparent;
-  background: var(--u-comp-button-text-background);
-  color: #0047ab;
-  color: var(--u-comp-button-text-foreground);
+  background: var(--u-comp-button-text-background, transparent);
+  color: var(--u-comp-button-text-foreground, #0047ab);
 }
 
 .u-button--sm {
-  font-size: 14px;
-  font-size: var(--u-comp-button-font-size-sm);
-  min-height: 40px;
-  min-height: var(--u-comp-button-min-height-sm);
+  font-size: var(--u-comp-button-font-size-sm, 14px);
+  min-height: var(--u-comp-button-min-height-sm, 40px);
 }
 
 .u-button--lg {
-  font-size: 18px;
-  font-size: var(--u-comp-button-font-size-lg);
-  min-height: 48px;
-  min-height: var(--u-comp-button-min-height-lg);
+  font-size: var(--u-comp-button-font-size-lg, 18px);
+  min-height: var(--u-comp-button-min-height-lg, 48px);
 }
 
 .u-button--primary:active:not(.u-button--disabled):not(.u-button--loading),
 .u-button--secondary:active:not(.u-button--disabled):not(.u-button--loading),
 .u-button--text:active:not(.u-button--disabled):not(.u-button--loading) {
-  transform: translateY(1px) scale(0.99);
-  transform: var(--u-comp-button-pressed-transform);
+  transform: var(--u-comp-button-pressed-transform, translateY(1px) scale(0.99));
 }
 
 .u-button--primary.u-button--disabled {
-  background: #f7f9fc;
-  background: var(--u-comp-button-primary-disabled-background);
-  color: #27364a;
-  color: var(--u-comp-button-primary-disabled-foreground);
+  background: var(--u-comp-button-primary-disabled-background, #f7f9fc);
+  color: var(--u-comp-button-primary-disabled-foreground, #27364a);
 }
 
 .u-button--secondary.u-button--disabled {
-  background: #f7f9fc;
-  background: var(--u-comp-button-secondary-disabled-background);
-  border-color: #27364a;
-  border-color: var(--u-comp-button-secondary-disabled-border);
-  color: #27364a;
-  color: var(--u-comp-button-secondary-disabled-foreground);
+  background: var(--u-comp-button-secondary-disabled-background, #f7f9fc);
+  border-color: var(--u-comp-button-secondary-disabled-border, #27364a);
+  color: var(--u-comp-button-secondary-disabled-foreground, #27364a);
 }
 
 .u-button--text.u-button--disabled {
-  color: #27364a;
-  color: var(--u-comp-button-text-disabled-foreground);
+  color: var(--u-comp-button-text-disabled-foreground, #27364a);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

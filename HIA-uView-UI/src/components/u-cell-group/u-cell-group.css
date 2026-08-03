@@ -7,28 +7,21 @@
 .u-cell-group--bordered { border: 1px solid var(--u-comp-cell-group-border); border-radius: var(--u-comp-cell-group-radius); overflow: hidden; }
 .u-cell-group__title { color: var(--u-comp-cell-group-title); display: block; font-size: var(--u-comp-cell-group-title-size); padding: var(--u-comp-cell-group-title-padding); }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-cell-group {
-  background: #ffffff;
-  background: var(--u-comp-cell-group-surface);
-  color: #001b2e;
-  color: var(--u-comp-cell-group-foreground);
+  background: var(--u-comp-cell-group-surface, #ffffff);
+  color: var(--u-comp-cell-group-foreground, #001b2e);
 }
 
 .u-cell-group--bordered {
-  border: 1px solid #f7f9fc;
-  border: 1px solid var(--u-comp-cell-group-border);
-  border-radius: 8px;
-  border-radius: var(--u-comp-cell-group-radius);
+  border: 1px solid var(--u-comp-cell-group-border, #f7f9fc);
+  border-radius: var(--u-comp-cell-group-radius, 8px);
 }
 
 .u-cell-group__title {
-  color: #27364a;
-  color: var(--u-comp-cell-group-title);
-  font-size: 13px;
-  font-size: var(--u-comp-cell-group-title-size);
-  padding: 8px 12px;
-  padding: var(--u-comp-cell-group-title-padding);
+  color: var(--u-comp-cell-group-title, #27364a);
+  font-size: var(--u-comp-cell-group-title-size, 13px);
+  padding: var(--u-comp-cell-group-title-padding, 8px 12px);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

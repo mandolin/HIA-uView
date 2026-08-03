@@ -32,56 +32,44 @@
 .u-icon--accent .u-icon__symbol { color: var(--u-comp-icon-accent-foreground); }
 .u-icon--disabled { opacity: var(--u-comp-icon-disabled-opacity); }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-icon {
-  gap: 6px;
-  gap: var(--u-comp-icon-gap);
-  min-height: 24px;
-  min-height: var(--u-comp-icon-min-height);
-  min-width: 24px;
-  min-width: var(--u-comp-icon-min-width);
+  gap: var(--u-comp-icon-gap, 6px);
+  min-height: var(--u-comp-icon-min-height, 24px);
+  min-width: var(--u-comp-icon-min-width, 24px);
 }
 
 .u-icon__symbol {
-  color: #001b2e;
-  color: var(--u-comp-icon-neutral-foreground);
+  color: var(--u-comp-icon-neutral-foreground, #001b2e);
 }
 
 .u-icon__label {
-  color: #27364a;
-  color: var(--u-comp-icon-label-foreground);
-  font-size: 14px;
-  font-size: var(--u-comp-icon-label-font-size);
+  color: var(--u-comp-icon-label-foreground, #27364a);
+  font-size: var(--u-comp-icon-label-font-size, 14px);
 }
 
 .u-icon--small .u-icon__symbol {
-  font-size: 16px;
-  font-size: var(--u-comp-icon-small-size);
+  font-size: var(--u-comp-icon-small-size, 16px);
 }
 
 .u-icon--medium .u-icon__symbol {
-  font-size: 20px;
-  font-size: var(--u-comp-icon-medium-size);
+  font-size: var(--u-comp-icon-medium-size, 20px);
 }
 
 .u-icon--large .u-icon__symbol {
-  font-size: 28px;
-  font-size: var(--u-comp-icon-large-size);
+  font-size: var(--u-comp-icon-large-size, 28px);
 }
 
 .u-icon--primary .u-icon__symbol {
-  color: #0047ab;
-  color: var(--u-comp-icon-primary-foreground);
+  color: var(--u-comp-icon-primary-foreground, #0047ab);
 }
 
 .u-icon--accent .u-icon__symbol {
-  color: #00a8d3;
-  color: var(--u-comp-icon-accent-foreground);
+  color: var(--u-comp-icon-accent-foreground, #00a8d3);
 }
 
 .u-icon--disabled {
-  opacity: 0.6;
-  opacity: var(--u-comp-icon-disabled-opacity);
+  opacity: var(--u-comp-icon-disabled-opacity, 0.6);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

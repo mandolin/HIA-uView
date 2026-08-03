@@ -9,42 +9,31 @@
 .u-grid-item__label { font-size: var(--u-comp-grid-item-label-size); font-weight: 600; }
 .u-grid-item__description { color: var(--u-comp-grid-item-description); font-size: var(--u-comp-grid-item-description-size); }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-grid-item {
-  background: #ffffff;
-  background: var(--u-comp-grid-item-surface);
-  border: 1px solid #f7f9fc;
-  border: 1px solid var(--u-comp-grid-item-border);
-  color: #001b2e;
-  color: var(--u-comp-grid-item-foreground);
-  gap: 8px;
-  gap: var(--u-comp-grid-item-gap);
-  min-height: 72px;
-  min-height: var(--u-comp-grid-item-min-height);
-  padding: 12px;
-  padding: var(--u-comp-grid-item-padding);
+  background: var(--u-comp-grid-item-surface, #ffffff);
+  border: 1px solid var(--u-comp-grid-item-border, #f7f9fc);
+  color: var(--u-comp-grid-item-foreground, #001b2e);
+  gap: var(--u-comp-grid-item-gap, 8px);
+  min-height: var(--u-comp-grid-item-min-height, 72px);
+  padding: var(--u-comp-grid-item-padding, 12px);
 }
 
 .u-grid-item--disabled {
-  opacity: 0.55;
-  opacity: var(--u-comp-grid-item-disabled-opacity);
+  opacity: var(--u-comp-grid-item-disabled-opacity, 0.55);
 }
 
 .u-grid-item__content {
-  gap: 4px;
-  gap: var(--u-comp-grid-item-content-gap);
+  gap: var(--u-comp-grid-item-content-gap, 4px);
 }
 
 .u-grid-item__label {
-  font-size: 15px;
-  font-size: var(--u-comp-grid-item-label-size);
+  font-size: var(--u-comp-grid-item-label-size, 15px);
 }
 
 .u-grid-item__description {
-  color: #27364a;
-  color: var(--u-comp-grid-item-description);
-  font-size: 12px;
-  font-size: var(--u-comp-grid-item-description-size);
+  color: var(--u-comp-grid-item-description, #27364a);
+  font-size: var(--u-comp-grid-item-description-size, 12px);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

@@ -14,14 +14,11 @@
   position: static;
 }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-sticky {
-  top: 0px;
-  top: var(--u-comp-sticky-default-top);
-  z-index: 1;
-  z-index: var(--u-comp-sticky-z-index);
-  background: #ffffff;
-  background: var(--u-comp-sticky-surface);
+  top: var(--u-comp-sticky-default-top, 0px);
+  z-index: var(--u-comp-sticky-z-index, 1);
+  background: var(--u-comp-sticky-surface, #ffffff);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

@@ -6,12 +6,10 @@
 .u-grid { display: grid; gap: var(--u-grid-gap); grid-template-columns: repeat(var(--u-grid-columns), minmax(0, 1fr)); min-width: 0; }
 .u-grid--bordered { border: 1px solid var(--u-comp-grid-border); border-radius: var(--u-comp-grid-radius); }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-grid--bordered {
-  border: 1px solid #f7f9fc;
-  border: 1px solid var(--u-comp-grid-border);
-  border-radius: 8px;
-  border-radius: var(--u-comp-grid-radius);
+  border: 1px solid var(--u-comp-grid-border, #f7f9fc);
+  border-radius: var(--u-comp-grid-radius, 8px);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

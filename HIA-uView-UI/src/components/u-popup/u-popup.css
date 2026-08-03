@@ -16,73 +16,54 @@
 .u-popup__close { background: transparent; color: var(--u-comp-popup-close-foreground); font-size: var(--u-comp-popup-close-size); margin: 0; min-height: var(--u-comp-popup-control-min-height); padding: 0 var(--u-comp-popup-close-padding); }
 .u-popup__content { color: var(--u-comp-popup-content-foreground); padding-top: var(--u-comp-popup-content-gap); }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-popup {
-  z-index: 20;
-  z-index: var(--u-comp-popup-z-index);
+  z-index: var(--u-comp-popup-z-index, 20);
 }
 
 .u-popup__mask {
-  background: rgba(0, 27, 46, 0.36);
-  background: var(--u-comp-popup-mask);
+  background: var(--u-comp-popup-mask, rgba(0, 27, 46, 0.36));
 }
 
 .u-popup__panel {
-  background: #ffffff;
-  background: var(--u-comp-popup-surface);
-  max-height: 80vh;
-  max-height: var(--u-comp-popup-max-height);
-  min-width: 240px;
-  min-width: var(--u-comp-popup-min-width);
-  padding: 20px;
-  padding: var(--u-comp-popup-padding);
+  background: var(--u-comp-popup-surface, #ffffff);
+  max-height: var(--u-comp-popup-max-height, 80vh);
+  min-width: var(--u-comp-popup-min-width, 240px);
+  padding: var(--u-comp-popup-padding, 20px);
 }
 
 .u-popup--left .u-popup__panel {
-  width: 80%;
-  width: var(--u-comp-popup-side-width);
+  width: var(--u-comp-popup-side-width, 80%);
 }
 
 .u-popup--right .u-popup__panel {
-  width: 80%;
-  width: var(--u-comp-popup-side-width);
+  width: var(--u-comp-popup-side-width, 80%);
 }
 
 .u-popup--center .u-popup__panel {
-  max-width: 420px;
-  max-width: var(--u-comp-popup-center-width);
-  width: calc(100% - 16px * 2);
-  width: calc(100% - var(--u-comp-popup-center-gutter) * 2);
+  max-width: var(--u-comp-popup-center-width, 420px);
+  width: calc(100% - var(--u-comp-popup-center-gutter, 16px) * 2);
 }
 
 .u-popup__header {
-  gap: 12px;
-  gap: var(--u-comp-popup-header-gap);
+  gap: var(--u-comp-popup-header-gap, 12px);
 }
 
 .u-popup__title {
-  color: #001b2e;
-  color: var(--u-comp-popup-title-foreground);
-  font-size: 18px;
-  font-size: var(--u-comp-popup-title-size);
+  color: var(--u-comp-popup-title-foreground, #001b2e);
+  font-size: var(--u-comp-popup-title-size, 18px);
 }
 
 .u-popup__close {
-  color: #0047ab;
-  color: var(--u-comp-popup-close-foreground);
-  font-size: 14px;
-  font-size: var(--u-comp-popup-close-size);
-  min-height: 32px;
-  min-height: var(--u-comp-popup-control-min-height);
-  padding: 0 4px;
-  padding: 0 var(--u-comp-popup-close-padding);
+  color: var(--u-comp-popup-close-foreground, #0047ab);
+  font-size: var(--u-comp-popup-close-size, 14px);
+  min-height: var(--u-comp-popup-control-min-height, 32px);
+  padding: 0 var(--u-comp-popup-close-padding, 4px);
 }
 
 .u-popup__content {
-  color: #001b2e;
-  color: var(--u-comp-popup-content-foreground);
-  padding-top: 12px;
-  padding-top: var(--u-comp-popup-content-gap);
+  color: var(--u-comp-popup-content-foreground, #001b2e);
+  padding-top: var(--u-comp-popup-content-gap, 12px);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

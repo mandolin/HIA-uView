@@ -51,9 +51,9 @@ Import the HIA complete style entry from application-owned global style setup. I
 
 ## Default-light literal fallbacks / 默认浅色字面值回退
 
-Every current component stylesheet also carries generated literal values from the default light theme immediately before the corresponding `var(--u-*)` declaration. This preserves component-local WXSS rendering on the current `mp-weixin` path when custom properties are not resolved, while capable runtimes still let the original token declaration win. It is a bounded default-light compatibility layer, not a multi-theme or runtime theme-switching promise.
+Every current component stylesheet also carries generated default-light literals as fallbacks in the corresponding `var(--u-*, literal)` declaration. This preserves component-local WXSS rendering on the current `mp-weixin` path when a component scope does not resolve a custom property, while capable runtimes still use the token value. It is a bounded default-light compatibility layer, not a multi-theme or runtime theme-switching promise.
 
-每个当前组件样式表还会在对应 `var(--u-*)` 声明前携带由默认浅色主题生成的字面值。这样当当前 `mp-weixin` 路径不解析 custom property 时，组件局部 WXSS 仍可渲染；具备该能力的 runtime 则仍以后面的原 token 声明为准。这是受限的默认浅色兼容层，不构成多主题或运行时切换主题承诺。
+每个当前组件样式表还会在对应的 `var(--u-*, literal)` 声明中携带由默认浅色主题生成的字面值 fallback。这样当当前 `mp-weixin` 路径在组件作用域中无法解析 custom property 时，组件局部 WXSS 仍可渲染；具备 token 的 runtime 则仍使用 token 值。这是受限的默认浅色兼容层，不构成多主题或运行时切换主题承诺。
 
 After changing a default-light token or a component declaration that consumes one, run `npm run theme:sync`; `npm run theme:check` rejects stale generated fallback blocks. The generator reads only the repository-controlled default theme and component stylesheets, and it does not choose business colors or process application-owned CSS.
 

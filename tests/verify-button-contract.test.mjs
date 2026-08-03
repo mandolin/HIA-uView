@@ -30,8 +30,8 @@ test('resolves only the documented UButton loading locales', () => {
 });
 
 /**
- * @lang zh-CN 验证组件只声明批准的 props、加载/禁用激活抑制和组件 token 消费；维护者源码不新增私有硬编码色值，已审计默认主题生成的字面值回退除外。
- * @lang en Verifies that the component declares only approved props, suppresses loading/disabled activation, and consumes component tokens; maintainer-authored source adds no private hard-coded color except audited default-theme-generated literal fallbacks.
+ * @lang zh-CN 验证组件只声明批准的 props、加载/禁用激活抑制和组件 token 消费；维护者源码不新增私有硬编码色值，已审计默认主题生成的 var() fallback 除外。
+ * @lang en Verifies that the component declares only approved props, suppresses loading/disabled activation, and consumes component tokens; maintainer-authored source adds no private hard-coded color except audited default-theme-generated var() fallbacks.
  */
 test('keeps UButton inside its initial component contract', async () => {
   // <lang><zh-CN>只读读取固定的组件和样式路径；测试不编译、挂载或写回这两个文件。</zh-CN><en>Reads fixed component and style paths only; the test neither compiles, mounts, nor writes either file.</en></lang>
@@ -54,8 +54,8 @@ test('keeps UButton inside its initial component contract', async () => {
   assert.match(styles, /--u-comp-button-primary-background/);
   assert.match(styles, /--u-comp-button-min-height/);
 
-  // <lang><zh-CN>拒绝维护者 CSS 中直接 hex 色，确保可见颜色来自已审计 theme token；生成区块的字面值仅是该默认主题的受门禁回退投影，不是组件私有设计决定。</zh-CN><en>Rejects direct hexadecimal colors in maintainer-authored CSS so visible color comes from audited theme tokens; literals in the generated block are a gated fallback projection of that default theme, not a component-private design decision.</en></lang>
+  // <lang><zh-CN>拒绝维护者 CSS 中直接 hex 色，确保可见颜色来自已审计 theme token；生成区块中 var() 的 fallback 仅是该默认主题的受门禁投影，不是组件私有设计决定。</zh-CN><en>Rejects direct hexadecimal colors in maintainer-authored CSS so visible color comes from audited theme tokens; var() fallbacks in the generated block are a gated projection of that default theme, not a component-private design decision.</en></lang>
   assert.notEqual(authoredStyles.length, styles.length, 'UButton must retain the generated Mini Program literal fallback marker.');
   assert.doesNotMatch(authoredStyles, /#[0-9a-f]{3,8}\b/i);
-  assert.match(styles, /background: #0047ab;\s+background: var\(--u-comp-button-primary-background\);/);
+  assert.match(styles, /background: var\(--u-comp-button-primary-background, #0047ab\);/);
 });

@@ -18,68 +18,53 @@
 .u-tag--accent { background: var(--u-comp-tag-accent-surface); color: var(--u-comp-tag-accent-foreground); }
 .u-tag--disabled { opacity: var(--u-comp-tag-disabled-opacity); }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-tag {
-  gap: 4px;
-  gap: var(--u-comp-tag-gap);
+  gap: var(--u-comp-tag-gap, 4px);
 }
 
 .u-tag__text {
-  font-size: 14px;
-  font-size: var(--u-comp-tag-medium-font-size);
+  font-size: var(--u-comp-tag-medium-font-size, 14px);
 }
 
 .u-tag__close {
-  font-size: 16px;
-  font-size: var(--u-comp-tag-close-size);
-  min-height: 20px;
-  min-height: var(--u-comp-tag-close-min-height);
+  font-size: var(--u-comp-tag-close-size, 16px);
+  min-height: var(--u-comp-tag-close-min-height, 20px);
 }
 
 .u-tag--small {
-  padding: 2px 6px;
-  padding: var(--u-comp-tag-small-padding);
+  padding: var(--u-comp-tag-small-padding, 2px 6px);
 }
 
 .u-tag--medium {
-  padding: 4px 8px;
-  padding: var(--u-comp-tag-medium-padding);
+  padding: var(--u-comp-tag-medium-padding, 4px 8px);
 }
 
 .u-tag--large {
-  padding: 6px 10px;
-  padding: var(--u-comp-tag-large-padding);
+  padding: var(--u-comp-tag-large-padding, 6px 10px);
 }
 
 .u-tag--rounded {
-  border-radius: 6px;
-  border-radius: var(--u-comp-tag-radius);
+  border-radius: var(--u-comp-tag-radius, 6px);
 }
 
 .u-tag--neutral {
-  background: #f7f9fc;
-  background: var(--u-comp-tag-neutral-surface);
-  color: #001b2e;
-  color: var(--u-comp-tag-neutral-foreground);
+  background: var(--u-comp-tag-neutral-surface, #f7f9fc);
+  color: var(--u-comp-tag-neutral-foreground, #001b2e);
 }
 
 .u-tag--primary {
-  background: #0047ab;
-  background: var(--u-comp-tag-primary-surface);
-  color: #ffffff;
-  color: var(--u-comp-tag-primary-foreground);
+  background: var(--u-comp-tag-primary-surface, #0047ab);
+  color: var(--u-comp-tag-primary-foreground, #ffffff);
 }
 
 .u-tag--accent {
-  background: #00a8d3;
-  background: var(--u-comp-tag-accent-surface);
-  color: #001b2e;
-  color: var(--u-comp-tag-accent-foreground);
+  background: var(--u-comp-tag-accent-surface, #00a8d3);
+  color: var(--u-comp-tag-accent-foreground, #001b2e);
 }
 
 .u-tag--disabled {
-  opacity: 0.6;
-  opacity: var(--u-comp-tag-disabled-opacity);
+  opacity: var(--u-comp-tag-disabled-opacity, 0.6);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

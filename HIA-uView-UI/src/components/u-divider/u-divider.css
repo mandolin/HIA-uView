@@ -15,56 +15,44 @@
 .u-divider--accent .u-divider__line { background: var(--u-comp-divider-accent-line); }
 .u-divider--accent .u-divider__text { color: var(--u-comp-divider-accent-foreground); }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-divider {
-  gap: 8px;
-  gap: var(--u-comp-divider-gap);
+  gap: var(--u-comp-divider-gap, 8px);
 }
 
 .u-divider--vertical {
-  height: 80px;
-  height: var(--u-comp-divider-vertical-height);
+  height: var(--u-comp-divider-vertical-height, 80px);
 }
 
 .u-divider__line {
-  background: #27364a;
-  background: var(--u-comp-divider-neutral-line);
-  height: 1px;
-  height: var(--u-comp-divider-line-width);
+  background: var(--u-comp-divider-neutral-line, #27364a);
+  height: var(--u-comp-divider-line-width, 1px);
 }
 
 .u-divider--vertical .u-divider__line {
-  min-height: 24px;
-  min-height: var(--u-comp-divider-vertical-line-min-height);
-  width: 1px;
-  width: var(--u-comp-divider-line-width);
+  min-height: var(--u-comp-divider-vertical-line-min-height, 24px);
+  width: var(--u-comp-divider-line-width, 1px);
 }
 
 .u-divider__text {
-  color: #27364a;
-  color: var(--u-comp-divider-neutral-foreground);
-  font-size: 14px;
-  font-size: var(--u-comp-divider-font-size);
+  color: var(--u-comp-divider-neutral-foreground, #27364a);
+  font-size: var(--u-comp-divider-font-size, 14px);
 }
 
 .u-divider--primary .u-divider__line {
-  background: #0047ab;
-  background: var(--u-comp-divider-primary-line);
+  background: var(--u-comp-divider-primary-line, #0047ab);
 }
 
 .u-divider--primary .u-divider__text {
-  color: #0047ab;
-  color: var(--u-comp-divider-primary-foreground);
+  color: var(--u-comp-divider-primary-foreground, #0047ab);
 }
 
 .u-divider--accent .u-divider__line {
-  background: #00a8d3;
-  background: var(--u-comp-divider-accent-line);
+  background: var(--u-comp-divider-accent-line, #00a8d3);
 }
 
 .u-divider--accent .u-divider__text {
-  color: #001b2e;
-  color: var(--u-comp-divider-accent-foreground);
+  color: var(--u-comp-divider-accent-foreground, #001b2e);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

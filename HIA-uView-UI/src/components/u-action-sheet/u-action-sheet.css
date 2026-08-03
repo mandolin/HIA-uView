@@ -11,58 +11,42 @@
 .u-action-sheet__item[disabled] { color: var(--u-comp-action-sheet-disabled-foreground); }
 .u-action-sheet__cancel { background: var(--u-comp-action-sheet-cancel-surface); margin-top: var(--u-comp-action-sheet-cancel-gap); }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-action-sheet {
-  z-index: 21;
-  z-index: var(--u-comp-action-sheet-z-index);
+  z-index: var(--u-comp-action-sheet-z-index, 21);
 }
 
 .u-action-sheet__mask {
-  background: rgba(0, 27, 46, 0.36);
-  background: var(--u-comp-action-sheet-mask);
+  background: var(--u-comp-action-sheet-mask, rgba(0, 27, 46, 0.36));
 }
 
 .u-action-sheet__panel {
-  background: #ffffff;
-  background: var(--u-comp-action-sheet-surface);
-  padding: 12px;
-  padding: var(--u-comp-action-sheet-padding);
+  background: var(--u-comp-action-sheet-surface, #ffffff);
+  padding: var(--u-comp-action-sheet-padding, 12px);
 }
 
 .u-action-sheet__title {
-  color: #27364a;
-  color: var(--u-comp-action-sheet-title-foreground);
-  font-size: 14px;
-  font-size: var(--u-comp-action-sheet-title-size);
-  padding: 8px;
-  padding: var(--u-comp-action-sheet-title-padding);
+  color: var(--u-comp-action-sheet-title-foreground, #27364a);
+  font-size: var(--u-comp-action-sheet-title-size, 14px);
+  padding: var(--u-comp-action-sheet-title-padding, 8px);
 }
 
 .u-action-sheet__item, .u-action-sheet__cancel {
-  background: #ffffff;
-  background: var(--u-comp-action-sheet-item-surface);
-  border-bottom: 1px solid #f7f9fc;
-  border-bottom: 1px solid var(--u-comp-action-sheet-divider);
-  color: #001b2e;
-  color: var(--u-comp-action-sheet-item-foreground);
-  font-size: 16px;
-  font-size: var(--u-comp-action-sheet-item-size);
-  min-height: 48px;
-  min-height: var(--u-comp-action-sheet-item-min-height);
-  padding: 12px;
-  padding: var(--u-comp-action-sheet-item-padding);
+  background: var(--u-comp-action-sheet-item-surface, #ffffff);
+  border-bottom: 1px solid var(--u-comp-action-sheet-divider, #f7f9fc);
+  color: var(--u-comp-action-sheet-item-foreground, #001b2e);
+  font-size: var(--u-comp-action-sheet-item-size, 16px);
+  min-height: var(--u-comp-action-sheet-item-min-height, 48px);
+  padding: var(--u-comp-action-sheet-item-padding, 12px);
 }
 
 .u-action-sheet__item[disabled] {
-  color: #27364a;
-  color: var(--u-comp-action-sheet-disabled-foreground);
+  color: var(--u-comp-action-sheet-disabled-foreground, #27364a);
 }
 
 .u-action-sheet__cancel {
-  background: #f7f9fc;
-  background: var(--u-comp-action-sheet-cancel-surface);
-  margin-top: 8px;
-  margin-top: var(--u-comp-action-sheet-cancel-gap);
+  background: var(--u-comp-action-sheet-cancel-surface, #f7f9fc);
+  margin-top: var(--u-comp-action-sheet-cancel-gap, 8px);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

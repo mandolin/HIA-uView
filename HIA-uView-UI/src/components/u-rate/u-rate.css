@@ -31,31 +31,24 @@
   opacity: var(--u-comp-rate-disabled-opacity);
 }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-rate {
-  gap: 4px;
-  gap: var(--u-comp-rate-gap);
+  gap: var(--u-comp-rate-gap, 4px);
 }
 
 .u-rate__item {
-  color: #27364a;
-  color: var(--u-comp-rate-inactive-foreground);
-  font-size: 24px;
-  font-size: var(--u-comp-rate-font-size);
-  min-height: 44px;
-  min-height: var(--u-comp-rate-min-height);
-  min-width: 44px;
-  min-width: var(--u-comp-rate-min-width);
+  color: var(--u-comp-rate-inactive-foreground, #27364a);
+  font-size: var(--u-comp-rate-font-size, 24px);
+  min-height: var(--u-comp-rate-min-height, 44px);
+  min-width: var(--u-comp-rate-min-width, 44px);
 }
 
 .u-rate__item--active {
-  color: #0047ab;
-  color: var(--u-comp-rate-active-foreground);
+  color: var(--u-comp-rate-active-foreground, #0047ab);
 }
 
 .u-rate--disabled {
-  opacity: 0.6;
-  opacity: var(--u-comp-rate-disabled-opacity);
+  opacity: var(--u-comp-rate-disabled-opacity, 0.6);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

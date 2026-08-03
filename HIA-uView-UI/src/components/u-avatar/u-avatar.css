@@ -21,48 +21,37 @@
 .u-avatar__text { font-size: var(--u-comp-avatar-text-font-size); font-weight: 600; }
 .u-avatar--disabled { opacity: var(--u-comp-avatar-disabled-opacity); }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-avatar {
-  background: #f7f9fc;
-  background: var(--u-comp-avatar-surface);
-  color: #001b2e;
-  color: var(--u-comp-avatar-foreground);
+  background: var(--u-comp-avatar-surface, #f7f9fc);
+  color: var(--u-comp-avatar-foreground, #001b2e);
 }
 
 .u-avatar--small {
-  height: 32px;
-  height: var(--u-comp-avatar-small-size);
-  width: 32px;
-  width: var(--u-comp-avatar-small-size);
+  height: var(--u-comp-avatar-small-size, 32px);
+  width: var(--u-comp-avatar-small-size, 32px);
 }
 
 .u-avatar--medium {
-  height: 48px;
-  height: var(--u-comp-avatar-medium-size);
-  width: 48px;
-  width: var(--u-comp-avatar-medium-size);
+  height: var(--u-comp-avatar-medium-size, 48px);
+  width: var(--u-comp-avatar-medium-size, 48px);
 }
 
 .u-avatar--large {
-  height: 72px;
-  height: var(--u-comp-avatar-large-size);
-  width: 72px;
-  width: var(--u-comp-avatar-large-size);
+  height: var(--u-comp-avatar-large-size, 72px);
+  width: var(--u-comp-avatar-large-size, 72px);
 }
 
 .u-avatar--rounded {
-  border-radius: 12px;
-  border-radius: var(--u-comp-avatar-rounded-radius);
+  border-radius: var(--u-comp-avatar-rounded-radius, 12px);
 }
 
 .u-avatar__text {
-  font-size: 16px;
-  font-size: var(--u-comp-avatar-text-font-size);
+  font-size: var(--u-comp-avatar-text-font-size, 16px);
 }
 
 .u-avatar--disabled {
-  opacity: 0.6;
-  opacity: var(--u-comp-avatar-disabled-opacity);
+  opacity: var(--u-comp-avatar-disabled-opacity, 0.6);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

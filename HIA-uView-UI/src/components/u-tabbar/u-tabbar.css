@@ -9,41 +9,29 @@
 .u-tabbar__item--disabled { color: var(--u-comp-tabbar-disabled-foreground); }
 .u-tabbar__label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-tabbar {
-  background: #ffffff;
-  background: var(--u-comp-tabbar-surface);
-  border-top: 1px solid #f7f9fc;
-  border-top: 1px solid var(--u-comp-tabbar-divider);
-  gap: 4px;
-  gap: var(--u-comp-tabbar-gap);
-  padding: 6px;
-  padding: var(--u-comp-tabbar-padding);
+  background: var(--u-comp-tabbar-surface, #ffffff);
+  border-top: 1px solid var(--u-comp-tabbar-divider, #f7f9fc);
+  gap: var(--u-comp-tabbar-gap, 4px);
+  padding: var(--u-comp-tabbar-padding, 6px);
 }
 
 .u-tabbar__item {
-  border-radius: 6px;
-  border-radius: var(--u-comp-tabbar-item-radius);
-  color: #27364a;
-  color: var(--u-comp-tabbar-foreground);
-  font-size: 12px;
-  font-size: var(--u-comp-tabbar-item-size);
-  min-height: 44px;
-  min-height: var(--u-comp-tabbar-item-min-height);
-  padding: 8px 4px;
-  padding: var(--u-comp-tabbar-item-padding);
+  border-radius: var(--u-comp-tabbar-item-radius, 6px);
+  color: var(--u-comp-tabbar-foreground, #27364a);
+  font-size: var(--u-comp-tabbar-item-size, 12px);
+  min-height: var(--u-comp-tabbar-item-min-height, 44px);
+  padding: var(--u-comp-tabbar-item-padding, 8px 4px);
 }
 
 .u-tabbar__item--active {
-  background: #f7f9fc;
-  background: var(--u-comp-tabbar-active-surface);
-  color: #0047ab;
-  color: var(--u-comp-tabbar-active-foreground);
+  background: var(--u-comp-tabbar-active-surface, #f7f9fc);
+  color: var(--u-comp-tabbar-active-foreground, #0047ab);
 }
 
 .u-tabbar__item--disabled {
-  color: #27364a;
-  color: var(--u-comp-tabbar-disabled-foreground);
+  color: var(--u-comp-tabbar-disabled-foreground, #27364a);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

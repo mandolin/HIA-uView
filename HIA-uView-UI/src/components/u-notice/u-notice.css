@@ -71,63 +71,43 @@
   color: var(--u-comp-notice-error-foreground);
 }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-notice {
-  background: #f7f9fc;
-  background: var(--u-comp-notice-info-surface);
-  border-left: 3px solid #0047ab;
-  border-left: var(--u-comp-notice-border-width) solid var(--u-comp-notice-info-border);
-  color: #0047ab;
-  color: var(--u-comp-notice-info-foreground);
-  font-size: 14px;
-  font-size: var(--u-comp-notice-font-size);
-  gap: 8px;
-  gap: var(--u-comp-notice-gap);
-  padding: 10px 12px;
-  padding: var(--u-comp-notice-block-padding) var(--u-comp-notice-inline-padding);
+  background: var(--u-comp-notice-info-surface, #f7f9fc);
+  border-left: var(--u-comp-notice-border-width, 3px) solid var(--u-comp-notice-info-border, #0047ab);
+  color: var(--u-comp-notice-info-foreground, #0047ab);
+  font-size: var(--u-comp-notice-font-size, 14px);
+  gap: var(--u-comp-notice-gap, 8px);
+  padding: var(--u-comp-notice-block-padding, 10px) var(--u-comp-notice-inline-padding, 12px);
 }
 
 .u-notice__marker {
-  font-weight: 700;
-  font-weight: var(--u-comp-notice-marker-font-weight);
-  min-width: 16px;
-  min-width: var(--u-comp-notice-marker-min-width);
+  font-weight: var(--u-comp-notice-marker-font-weight, 700);
+  min-width: var(--u-comp-notice-marker-min-width, 16px);
 }
 
 .u-notice--info {
-  background: #f7f9fc;
-  background: var(--u-comp-notice-info-surface);
-  border-left-color: #0047ab;
-  border-left-color: var(--u-comp-notice-info-border);
-  color: #0047ab;
-  color: var(--u-comp-notice-info-foreground);
+  background: var(--u-comp-notice-info-surface, #f7f9fc);
+  border-left-color: var(--u-comp-notice-info-border, #0047ab);
+  color: var(--u-comp-notice-info-foreground, #0047ab);
 }
 
 .u-notice--success {
-  background: #00a8d3;
-  background: var(--u-comp-notice-success-surface);
-  border-left-color: #00a8d3;
-  border-left-color: var(--u-comp-notice-success-border);
-  color: #001b2e;
-  color: var(--u-comp-notice-success-foreground);
+  background: var(--u-comp-notice-success-surface, #00a8d3);
+  border-left-color: var(--u-comp-notice-success-border, #00a8d3);
+  color: var(--u-comp-notice-success-foreground, #001b2e);
 }
 
 .u-notice--warning {
-  background: #f7f9fc;
-  background: var(--u-comp-notice-warning-surface);
-  border-left-color: #27364a;
-  border-left-color: var(--u-comp-notice-warning-border);
-  color: #001b2e;
-  color: var(--u-comp-notice-warning-foreground);
+  background: var(--u-comp-notice-warning-surface, #f7f9fc);
+  border-left-color: var(--u-comp-notice-warning-border, #27364a);
+  color: var(--u-comp-notice-warning-foreground, #001b2e);
 }
 
 .u-notice--error {
-  background: #ffffff;
-  background: var(--u-comp-notice-error-surface);
-  border-left-color: #27364a;
-  border-left-color: var(--u-comp-notice-error-border);
-  color: #001b2e;
-  color: var(--u-comp-notice-error-foreground);
+  background: var(--u-comp-notice-error-surface, #ffffff);
+  border-left-color: var(--u-comp-notice-error-border, #27364a);
+  color: var(--u-comp-notice-error-foreground, #001b2e);
 }
 /* HIA-uView MP-Weixin literal fallback end. */

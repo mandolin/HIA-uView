@@ -8,24 +8,19 @@
 .u-slider__value { color: var(--u-comp-slider-value); display: block; font-size: var(--u-comp-slider-value-size); text-align: end; }
 .u-slider__control { width: 100%; }
 
-/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-slider {
-  color: #001b2e;
-  color: var(--u-comp-slider-foreground);
-  padding: 8px 0;
-  padding: var(--u-comp-slider-padding);
+  color: var(--u-comp-slider-foreground, #001b2e);
+  padding: var(--u-comp-slider-padding, 8px 0);
 }
 
 .u-slider--disabled {
-  opacity: 0.6;
-  opacity: var(--u-comp-slider-disabled-opacity);
+  opacity: var(--u-comp-slider-disabled-opacity, 0.6);
 }
 
 .u-slider__value {
-  color: #0047ab;
-  color: var(--u-comp-slider-value);
-  font-size: 13px;
-  font-size: var(--u-comp-slider-value-size);
+  color: var(--u-comp-slider-value, #0047ab);
+  font-size: var(--u-comp-slider-value-size, 13px);
 }
 /* HIA-uView MP-Weixin literal fallback end. */
