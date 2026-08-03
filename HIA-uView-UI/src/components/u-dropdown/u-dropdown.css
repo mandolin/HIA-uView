@@ -6,13 +6,15 @@
 .u-dropdown { display: flex; gap: var(--u-comp-dropdown-gap); min-width: 0; }
 .u-dropdown--disabled { opacity: var(--u-comp-dropdown-disabled-opacity); }
 
-/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-dropdown {
-  gap: var(--u-comp-dropdown-gap, 8px);
+  gap: 8px;
 }
 
 .u-dropdown--disabled {
-  opacity: var(--u-comp-dropdown-disabled-opacity, 0.6);
+  opacity: 0.6;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

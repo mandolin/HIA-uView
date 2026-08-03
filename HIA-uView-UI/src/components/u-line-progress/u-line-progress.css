@@ -15,48 +15,50 @@
 .u-line-progress--striped .u-line-progress__bar { background-image: repeating-linear-gradient(135deg, transparent 0, transparent 6px, var(--u-comp-line-progress-stripe) 6px, var(--u-comp-line-progress-stripe) 12px); }
 .u-line-progress__label { color: var(--u-comp-line-progress-label-foreground); font-size: var(--u-comp-line-progress-label-font-size); min-width: var(--u-comp-line-progress-label-width); text-align: right; }
 
-/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-line-progress {
-  gap: var(--u-comp-line-progress-gap, 8px);
+  gap: 8px;
 }
 
 .u-line-progress__track {
-  background: var(--u-comp-line-progress-track, #f7f9fc);
-  border-radius: var(--u-comp-line-progress-radius, 999px);
+  background: #f7f9fc;
+  border-radius: 999px;
 }
 
 .u-line-progress__bar {
-  background: var(--u-comp-line-progress-primary-bar, #0047ab);
+  background: #0047ab;
 }
 
 .u-line-progress--small .u-line-progress__track {
-  height: var(--u-comp-line-progress-small-height, 4px);
+  height: 4px;
 }
 
 .u-line-progress--medium .u-line-progress__track {
-  height: var(--u-comp-line-progress-medium-height, 8px);
+  height: 8px;
 }
 
 .u-line-progress--large .u-line-progress__track {
-  height: var(--u-comp-line-progress-large-height, 12px);
+  height: 12px;
 }
 
 .u-line-progress--neutral .u-line-progress__bar {
-  background: var(--u-comp-line-progress-neutral-bar, #27364a);
+  background: #27364a;
 }
 
 .u-line-progress--accent .u-line-progress__bar {
-  background: var(--u-comp-line-progress-accent-bar, #00a8d3);
+  background: #00a8d3;
 }
 
 .u-line-progress--striped .u-line-progress__bar {
-  background-image: repeating-linear-gradient(135deg, transparent 0, transparent 6px, var(--u-comp-line-progress-stripe, rgba(255, 255, 255, 0.35)) 6px, var(--u-comp-line-progress-stripe, rgba(255, 255, 255, 0.35)) 12px);
+  background-image: repeating-linear-gradient(135deg, transparent 0, transparent 6px, rgba(255, 255, 255, 0.35) 6px, rgba(255, 255, 255, 0.35) 12px);
 }
 
 .u-line-progress__label {
-  color: var(--u-comp-line-progress-label-foreground, #27364a);
-  font-size: var(--u-comp-line-progress-label-font-size, 12px);
-  min-width: var(--u-comp-line-progress-label-width, 40px);
+  color: #27364a;
+  font-size: 12px;
+  min-width: 40px;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

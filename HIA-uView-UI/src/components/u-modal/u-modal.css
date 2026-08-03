@@ -70,38 +70,40 @@
   justify-content: flex-end;
 }
 
-/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-modal {
-  padding: var(--u-comp-modal-viewport-padding, 24px);
-  z-index: var(--u-comp-modal-layer, 1000);
+  padding: 24px;
+  z-index: 1000;
 }
 
 .u-modal__mask {
-  background: var(--u-comp-modal-mask-surface, rgba(0, 27, 46, 0.56));
+  background: rgba(0, 27, 46, 0.56);
 }
 
 .u-modal__panel {
-  background: var(--u-comp-modal-panel-surface, #ffffff);
-  border: 1px solid var(--u-comp-modal-panel-border, #27364a);
-  border-radius: var(--u-comp-modal-radius, 12px);
-  color: var(--u-comp-modal-foreground, #001b2e);
-  gap: var(--u-comp-modal-gap, 16px);
-  max-width: var(--u-comp-modal-max-width, 480px);
-  padding: var(--u-comp-modal-panel-padding, 20px);
+  background: #ffffff;
+  border: 1px solid #27364a;
+  border-radius: 12px;
+  color: #001b2e;
+  gap: 16px;
+  max-width: 480px;
+  padding: 20px;
 }
 
 .u-modal__title {
-  color: var(--u-comp-modal-title-foreground, #001b2e);
-  font-size: var(--u-comp-modal-title-font-size, 18px);
-  font-weight: var(--u-comp-modal-title-font-weight, 600);
+  color: #001b2e;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .u-modal__content {
-  color: var(--u-comp-modal-foreground, #001b2e);
+  color: #001b2e;
 }
 
 .u-modal__actions {
-  gap: var(--u-comp-modal-action-gap, 8px);
+  gap: 8px;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

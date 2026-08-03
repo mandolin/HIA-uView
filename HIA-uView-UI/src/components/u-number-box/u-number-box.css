@@ -41,34 +41,36 @@
   opacity: var(--u-comp-number-box-inactive-opacity);
 }
 
-/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-number-box {
-  gap: var(--u-comp-number-box-gap, 8px);
+  gap: 8px;
 }
 
 .u-number-box__button {
-  background: var(--u-comp-number-box-button-surface, #f7f9fc);
-  border: 1px solid var(--u-comp-number-box-border, #27364a);
-  border-radius: var(--u-comp-number-box-radius, 8px);
-  color: var(--u-comp-number-box-foreground, #001b2e);
-  min-height: var(--u-comp-number-box-min-height, 44px);
-  min-width: var(--u-comp-number-box-min-width, 44px);
+  background: #f7f9fc;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  color: #001b2e;
+  min-height: 44px;
+  min-width: 44px;
 }
 
 .u-number-box__input {
-  background: var(--u-comp-number-box-input-surface, #ffffff);
-  border: 1px solid var(--u-comp-number-box-border, #27364a);
-  border-radius: var(--u-comp-number-box-radius, 8px);
-  color: var(--u-comp-number-box-foreground, #001b2e);
-  font-size: var(--u-comp-number-box-font-size, 16px);
-  min-height: var(--u-comp-number-box-min-height, 44px);
-  min-width: var(--u-comp-number-box-input-min-width, 72px);
-  padding: var(--u-comp-number-box-input-padding, 8px);
+  background: #ffffff;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  color: #001b2e;
+  font-size: 16px;
+  min-height: 44px;
+  min-width: 72px;
+  padding: 8px;
 }
 
 .u-number-box--disabled,
 .u-number-box--readonly {
-  opacity: var(--u-comp-number-box-inactive-opacity, 0.6);
+  opacity: 0.6;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

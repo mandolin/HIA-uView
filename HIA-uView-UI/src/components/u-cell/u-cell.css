@@ -70,37 +70,39 @@
   opacity: var(--u-comp-cell-disabled-opacity);
 }
 
-/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-cell {
-  background: var(--u-comp-cell-surface, #ffffff);
-  border-bottom: 1px solid var(--u-comp-cell-border, #f7f9fc);
-  color: var(--u-comp-cell-foreground, #001b2e);
-  gap: var(--u-comp-cell-gap, 12px);
-  min-height: var(--u-comp-cell-min-height, 48px);
-  padding: var(--u-comp-cell-block-padding, 12px) var(--u-comp-cell-inline-padding, 16px);
+  background: #ffffff;
+  border-bottom: 1px solid #f7f9fc;
+  color: #001b2e;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 16px;
 }
 
 .u-cell__content {
-  gap: var(--u-comp-cell-content-gap, 4px);
+  gap: 4px;
 }
 
 .u-cell__label {
-  color: var(--u-comp-cell-foreground, #001b2e);
-  font-size: var(--u-comp-cell-label-font-size, 16px);
+  color: #001b2e;
+  font-size: 16px;
 }
 
 .u-cell__description {
-  color: var(--u-comp-cell-description-foreground, #27364a);
-  font-size: var(--u-comp-cell-description-font-size, 14px);
+  color: #27364a;
+  font-size: 14px;
 }
 
 .u-cell__value {
-  color: var(--u-comp-cell-value-foreground, #27364a);
-  font-size: var(--u-comp-cell-value-font-size, 14px);
+  color: #27364a;
+  font-size: 14px;
 }
 
 .u-cell--disabled {
-  opacity: var(--u-comp-cell-disabled-opacity, 0.6);
+  opacity: 0.6;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

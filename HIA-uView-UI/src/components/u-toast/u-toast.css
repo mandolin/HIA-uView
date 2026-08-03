@@ -11,42 +11,44 @@
 .u-toast__message { flex: 1; font-size: var(--u-comp-toast-message-size); }
 .u-toast__close { background: transparent; border: 0; color: currentColor; font-size: var(--u-comp-toast-close-size); margin: 0; min-height: var(--u-comp-toast-control-min-height); padding: 0 var(--u-comp-toast-close-padding); }
 
-/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-toast {
-  border: 1px solid var(--u-comp-toast-border, #27364a);
-  border-radius: var(--u-comp-toast-radius, 8px);
-  gap: var(--u-comp-toast-gap, 8px);
-  padding: var(--u-comp-toast-padding, 12px);
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  gap: 8px;
+  padding: 12px;
 }
 
 .u-toast--info {
-  background: var(--u-comp-toast-info-surface, #f7f9fc);
-  color: var(--u-comp-toast-info-foreground, #001b2e);
+  background: #f7f9fc;
+  color: #001b2e;
 }
 
 .u-toast--success {
-  background: var(--u-comp-toast-success-surface, #00a8d3);
-  color: var(--u-comp-toast-success-foreground, #001b2e);
+  background: #00a8d3;
+  color: #001b2e;
 }
 
 .u-toast--warning {
-  background: var(--u-comp-toast-warning-surface, #f7f9fc);
-  color: var(--u-comp-toast-warning-foreground, #001b2e);
+  background: #f7f9fc;
+  color: #001b2e;
 }
 
 .u-toast--error {
-  background: var(--u-comp-toast-error-surface, #ffffff);
-  color: var(--u-comp-toast-error-foreground, #001b2e);
+  background: #ffffff;
+  color: #001b2e;
 }
 
 .u-toast__message {
-  font-size: var(--u-comp-toast-message-size, 14px);
+  font-size: 14px;
 }
 
 .u-toast__close {
-  font-size: var(--u-comp-toast-close-size, 14px);
-  min-height: var(--u-comp-toast-control-min-height, 28px);
-  padding: 0 var(--u-comp-toast-close-padding, 4px);
+  font-size: 14px;
+  min-height: 28px;
+  padding: 0 4px;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

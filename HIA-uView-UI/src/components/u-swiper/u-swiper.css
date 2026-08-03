@@ -51,45 +51,47 @@
   color: var(--u-comp-swiper-control-foreground);
 }
 
-/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-swiper {
-  gap: var(--u-comp-swiper-gap, 12px);
-  padding: var(--u-comp-swiper-padding, 12px);
-  border: var(--u-comp-swiper-border-width, 1px) solid var(--u-comp-swiper-border, #f7f9fc);
-  border-radius: var(--u-comp-swiper-radius, 8px);
-  background: var(--u-comp-swiper-surface, #ffffff);
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #f7f9fc;
+  border-radius: 8px;
+  background: #ffffff;
 }
 
 .u-swiper__slide,
 .u-swiper__empty {
-  min-height: var(--u-comp-swiper-slide-min-height, 120px);
-  gap: var(--u-comp-swiper-text-gap, 6px);
-  padding: var(--u-comp-swiper-slide-padding, 20px);
-  background: var(--u-comp-swiper-slide-surface, #f7f9fc);
-  color: var(--u-comp-swiper-slide-foreground, #001b2e);
+  min-height: 120px;
+  gap: 6px;
+  padding: 20px;
+  background: #f7f9fc;
+  color: #001b2e;
 }
 
 .u-swiper__label {
-  font-size: var(--u-comp-swiper-label-size, 16px);
+  font-size: 16px;
 }
 
 .u-swiper__description,
 .u-swiper__position {
-  color: var(--u-comp-swiper-secondary-foreground, #27364a);
-  font-size: var(--u-comp-swiper-description-size, 12px);
+  color: #27364a;
+  font-size: 12px;
 }
 
 .u-swiper__controls {
-  gap: var(--u-comp-swiper-control-gap, 8px);
+  gap: 8px;
 }
 
 .u-swiper__controls button {
-  min-height: var(--u-comp-swiper-control-min-height, 32px);
-  padding: var(--u-comp-swiper-control-padding, 6px 10px);
-  border: var(--u-comp-swiper-border-width, 1px) solid var(--u-comp-swiper-border, #f7f9fc);
-  border-radius: var(--u-comp-swiper-control-radius, 6px);
-  background: var(--u-comp-swiper-surface, #ffffff);
-  color: var(--u-comp-swiper-control-foreground, #0047ab);
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid #f7f9fc;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #0047ab;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

@@ -46,31 +46,33 @@
   opacity: var(--u-comp-textarea-inactive-opacity);
 }
 
-/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-textarea {
-  background: var(--u-comp-textarea-surface, #ffffff);
-  border: 1px solid var(--u-comp-textarea-border, #27364a);
-  border-radius: var(--u-comp-textarea-radius, 8px);
-  color: var(--u-comp-textarea-foreground, #001b2e);
-  min-height: var(--u-comp-textarea-min-height, 88px);
-  padding: var(--u-comp-textarea-block-padding, 10px) var(--u-comp-textarea-inline-padding, 12px);
+  background: #ffffff;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  color: #001b2e;
+  min-height: 88px;
+  padding: 10px 12px;
 }
 
 .u-textarea__field {
-  font-size: var(--u-comp-textarea-font-size, 16px);
-  min-height: var(--u-comp-textarea-field-min-height, 64px);
+  font-size: 16px;
+  min-height: 64px;
 }
 
 .u-textarea__count {
-  color: var(--u-comp-textarea-count-foreground, #27364a);
-  font-size: var(--u-comp-textarea-count-font-size, 12px);
+  color: #27364a;
+  font-size: 12px;
 }
 
 .u-textarea--disabled,
 .u-textarea--readonly {
-  background: var(--u-comp-textarea-inactive-surface, #f7f9fc);
-  border-color: var(--u-comp-textarea-inactive-border, #27364a);
-  opacity: var(--u-comp-textarea-inactive-opacity, 0.65);
+  background: #f7f9fc;
+  border-color: #27364a;
+  opacity: 0.65;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

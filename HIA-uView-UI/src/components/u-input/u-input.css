@@ -34,25 +34,27 @@
   opacity: var(--u-comp-input-disabled-opacity);
 }
 
-/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-input {
-  background: var(--u-comp-input-surface, #ffffff);
-  border: 1px solid var(--u-comp-input-border, #27364a);
-  border-radius: var(--u-comp-input-radius, 8px);
-  color: var(--u-comp-input-foreground, #001b2e);
-  font-size: var(--u-comp-input-font-size, 16px);
-  min-height: var(--u-comp-input-min-height, 44px);
-  padding: var(--u-comp-input-block-padding, 10px) var(--u-comp-input-inline-padding, 12px);
+  background: #ffffff;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  color: #001b2e;
+  font-size: 16px;
+  min-height: 44px;
+  padding: 10px 12px;
 }
 
 .u-input::placeholder {
-  color: var(--u-comp-input-placeholder-foreground, #27364a);
+  color: #27364a;
 }
 
 .u-input--disabled {
-  border-color: var(--u-comp-input-disabled-border, #27364a);
-  color: var(--u-comp-input-disabled-foreground, #27364a);
-  opacity: var(--u-comp-input-disabled-opacity, 0.65);
+  border-color: #27364a;
+  color: #27364a;
+  opacity: 0.65;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

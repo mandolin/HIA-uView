@@ -12,37 +12,39 @@
 .u-swipe-action__close { background: var(--u-comp-swipe-action-close-background); }
 .u-swipe-action--disabled { opacity: var(--u-comp-swipe-action-disabled-opacity); }
 
-/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-swipe-action {
-  background: var(--u-comp-swipe-action-surface, #ffffff);
+  background: #ffffff;
 }
 
 .u-swipe-action__actions {
-  gap: var(--u-comp-swipe-action-gap, 4px);
+  gap: 4px;
 }
 
 .u-swipe-action__action, .u-swipe-action__close {
-  background: var(--u-comp-swipe-action-action-background, #f7f9fc);
-  color: var(--u-comp-swipe-action-foreground, #001b2e);
-  min-height: var(--u-comp-swipe-action-height, 44px);
-  padding: 0 var(--u-comp-swipe-action-padding, 12px);
+  background: #f7f9fc;
+  color: #001b2e;
+  min-height: 44px;
+  padding: 0 12px;
 }
 
 .u-swipe-action__action--warning {
-  background: var(--u-comp-swipe-action-warning-background, #fff8e1);
+  background: #fff8e1;
 }
 
 .u-swipe-action__action--danger {
-  background: var(--u-comp-swipe-action-danger-background, #c53030);
-  color: var(--u-comp-swipe-action-danger-foreground, #ffffff);
+  background: #c53030;
+  color: #ffffff;
 }
 
 .u-swipe-action__close {
-  background: var(--u-comp-swipe-action-close-background, #f7f9fc);
+  background: #f7f9fc;
 }
 
 .u-swipe-action--disabled {
-  opacity: var(--u-comp-swipe-action-disabled-opacity, 0.6);
+  opacity: 0.6;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

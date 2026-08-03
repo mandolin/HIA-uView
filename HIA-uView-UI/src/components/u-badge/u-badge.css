@@ -13,47 +13,49 @@
 .u-badge--accent .u-badge__value { background: var(--u-comp-badge-accent-surface); color: var(--u-comp-badge-accent-foreground); }
 .u-badge--dot .u-badge__value { border-radius: 50%; height: var(--u-comp-badge-dot-size); min-height: var(--u-comp-badge-dot-size); min-width: var(--u-comp-badge-dot-size); padding: 0; width: var(--u-comp-badge-dot-size); }
 
-/* <lang><zh-CN>以下 custom property 回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；每个 var() 的 fallback 仅在组件作用域缺少 token 时生效，已有 token 的平台仍保持动态主题语义。</zh-CN><en>The custom-property fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; each var() fallback applies only when the component scope lacks the token, while platforms with the token retain dynamic-theme semantics.</en></lang> */
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-badge__value {
-  border-radius: var(--u-comp-badge-radius, 999px);
-  font-size: var(--u-comp-badge-medium-font-size, 12px);
-  min-height: var(--u-comp-badge-medium-size, 22px);
-  min-width: var(--u-comp-badge-medium-size, 22px);
-  padding: 0 var(--u-comp-badge-inline-padding, 6px);
+  border-radius: 999px;
+  font-size: 12px;
+  min-height: 22px;
+  min-width: 22px;
+  padding: 0 6px;
 }
 
 .u-badge--small .u-badge__value {
-  font-size: var(--u-comp-badge-small-font-size, 10px);
-  min-height: var(--u-comp-badge-small-size, 18px);
-  min-width: var(--u-comp-badge-small-size, 18px);
+  font-size: 10px;
+  min-height: 18px;
+  min-width: 18px;
 }
 
 .u-badge--large .u-badge__value {
-  font-size: var(--u-comp-badge-large-font-size, 14px);
-  min-height: var(--u-comp-badge-large-size, 28px);
-  min-width: var(--u-comp-badge-large-size, 28px);
+  font-size: 14px;
+  min-height: 28px;
+  min-width: 28px;
 }
 
 .u-badge--neutral .u-badge__value {
-  background: var(--u-comp-badge-neutral-surface, #f7f9fc);
-  color: var(--u-comp-badge-neutral-foreground, #001b2e);
+  background: #f7f9fc;
+  color: #001b2e;
 }
 
 .u-badge--primary .u-badge__value {
-  background: var(--u-comp-badge-primary-surface, #0047ab);
-  color: var(--u-comp-badge-primary-foreground, #ffffff);
+  background: #0047ab;
+  color: #ffffff;
 }
 
 .u-badge--accent .u-badge__value {
-  background: var(--u-comp-badge-accent-surface, #00a8d3);
-  color: var(--u-comp-badge-accent-foreground, #001b2e);
+  background: #00a8d3;
+  color: #001b2e;
 }
 
 .u-badge--dot .u-badge__value {
-  height: var(--u-comp-badge-dot-size, 8px);
-  min-height: var(--u-comp-badge-dot-size, 8px);
-  min-width: var(--u-comp-badge-dot-size, 8px);
-  width: var(--u-comp-badge-dot-size, 8px);
+  height: 8px;
+  min-height: 8px;
+  min-width: 8px;
+  width: 8px;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */
