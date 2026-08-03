@@ -69,3 +69,54 @@
   gap: var(--u-comp-modal-action-gap);
   justify-content: flex-end;
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-modal {
+  padding: 24px;
+  padding: var(--u-comp-modal-viewport-padding);
+  z-index: 1000;
+  z-index: var(--u-comp-modal-layer);
+}
+
+.u-modal__mask {
+  background: rgba(0, 27, 46, 0.56);
+  background: var(--u-comp-modal-mask-surface);
+}
+
+.u-modal__panel {
+  background: #ffffff;
+  background: var(--u-comp-modal-panel-surface);
+  border: 1px solid #27364a;
+  border: 1px solid var(--u-comp-modal-panel-border);
+  border-radius: 12px;
+  border-radius: var(--u-comp-modal-radius);
+  color: #001b2e;
+  color: var(--u-comp-modal-foreground);
+  gap: 16px;
+  gap: var(--u-comp-modal-gap);
+  max-width: 480px;
+  max-width: var(--u-comp-modal-max-width);
+  padding: 20px;
+  padding: var(--u-comp-modal-panel-padding);
+}
+
+.u-modal__title {
+  color: #001b2e;
+  color: var(--u-comp-modal-title-foreground);
+  font-size: 18px;
+  font-size: var(--u-comp-modal-title-font-size);
+  font-weight: 600;
+  font-weight: var(--u-comp-modal-title-font-weight);
+}
+
+.u-modal__content {
+  color: #001b2e;
+  color: var(--u-comp-modal-foreground);
+}
+
+.u-modal__actions {
+  gap: 8px;
+  gap: var(--u-comp-modal-action-gap);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

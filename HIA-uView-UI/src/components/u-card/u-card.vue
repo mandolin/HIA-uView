@@ -35,7 +35,8 @@ const props = defineProps({
 
 // <lang><zh-CN>把 padding 收敛到安全范围，避免调用方把任意 CSS 字符串注入组件样式。</zh-CN><en>Converges padding to a safe range so callers cannot inject arbitrary CSS strings into component styles.</en></lang>
 const safePadding = computed(() => Number.isFinite(props.padding) ? Math.min(64, Math.max(0, props.padding)) : 16);
-const cardStyle = computed(() => ({ '--u-card-padding': `${safePadding.value}px` }));
+// <lang><zh-CN>将已收敛的数值作为唯一内联 padding 投影，而不依赖小程序路径未解析的自定义属性；对象没有其他调用方可控的样式键。</zh-CN><en>Projects the bounded number as the sole inline padding rather than relying on an unresolved custom property in the Mini Program path; the object has no other caller-controlled style key.</en></lang>
+const cardStyle = computed(() => ({ padding: `${safePadding.value}px` }));
 </script>
 
 <style src="./u-card.css"></style>

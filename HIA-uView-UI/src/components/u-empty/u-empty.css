@@ -42,3 +42,44 @@
 .u-empty__action {
   margin-top: var(--u-comp-empty-action-gap);
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-empty {
+  background: #f7f9fc;
+  background: var(--u-comp-empty-surface);
+  border: 1px dashed #27364a;
+  border: 1px dashed var(--u-comp-empty-border);
+  border-radius: 12px;
+  border-radius: var(--u-comp-empty-radius);
+  color: #001b2e;
+  color: var(--u-comp-empty-foreground);
+  gap: 8px;
+  gap: var(--u-comp-empty-gap);
+  max-width: 420px;
+  max-width: var(--u-comp-empty-max-width);
+  padding: 24px;
+  padding: var(--u-comp-empty-panel-padding);
+}
+
+.u-empty__title {
+  color: #001b2e;
+  color: var(--u-comp-empty-title-foreground);
+  font-size: 18px;
+  font-size: var(--u-comp-empty-title-font-size);
+  font-weight: 600;
+  font-weight: var(--u-comp-empty-title-font-weight);
+}
+
+.u-empty__description {
+  color: #27364a;
+  color: var(--u-comp-empty-description-foreground);
+  font-size: 14px;
+  font-size: var(--u-comp-empty-description-font-size);
+}
+
+.u-empty__action {
+  margin-top: 8px;
+  margin-top: var(--u-comp-empty-action-gap);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

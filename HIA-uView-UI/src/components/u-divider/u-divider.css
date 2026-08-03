@@ -14,3 +14,57 @@
 .u-divider--primary .u-divider__text { color: var(--u-comp-divider-primary-foreground); }
 .u-divider--accent .u-divider__line { background: var(--u-comp-divider-accent-line); }
 .u-divider--accent .u-divider__text { color: var(--u-comp-divider-accent-foreground); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-divider {
+  gap: 8px;
+  gap: var(--u-comp-divider-gap);
+}
+
+.u-divider--vertical {
+  height: 80px;
+  height: var(--u-comp-divider-vertical-height);
+}
+
+.u-divider__line {
+  background: #27364a;
+  background: var(--u-comp-divider-neutral-line);
+  height: 1px;
+  height: var(--u-comp-divider-line-width);
+}
+
+.u-divider--vertical .u-divider__line {
+  min-height: 24px;
+  min-height: var(--u-comp-divider-vertical-line-min-height);
+  width: 1px;
+  width: var(--u-comp-divider-line-width);
+}
+
+.u-divider__text {
+  color: #27364a;
+  color: var(--u-comp-divider-neutral-foreground);
+  font-size: 14px;
+  font-size: var(--u-comp-divider-font-size);
+}
+
+.u-divider--primary .u-divider__line {
+  background: #0047ab;
+  background: var(--u-comp-divider-primary-line);
+}
+
+.u-divider--primary .u-divider__text {
+  color: #0047ab;
+  color: var(--u-comp-divider-primary-foreground);
+}
+
+.u-divider--accent .u-divider__line {
+  background: #00a8d3;
+  background: var(--u-comp-divider-accent-line);
+}
+
+.u-divider--accent .u-divider__text {
+  color: #001b2e;
+  color: var(--u-comp-divider-accent-foreground);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

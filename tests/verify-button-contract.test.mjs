@@ -30,13 +30,15 @@ test('resolves only the documented UButton loading locales', () => {
 });
 
 /**
- * @lang zh-CN 验证组件只声明批准的 props、加载/禁用激活抑制和组件 token 消费，且样式不新增硬编码色值。
- * @lang en Verifies that the component declares only approved props, suppresses loading/disabled activation, and consumes component tokens without adding hard-coded color values in styles.
+ * @lang zh-CN 验证组件只声明批准的 props、加载/禁用激活抑制和组件 token 消费；维护者源码不新增私有硬编码色值，已审计默认主题生成的字面值回退除外。
+ * @lang en Verifies that the component declares only approved props, suppresses loading/disabled activation, and consumes component tokens; maintainer-authored source adds no private hard-coded color except audited default-theme-generated literal fallbacks.
  */
 test('keeps UButton inside its initial component contract', async () => {
   // <lang><zh-CN>只读读取固定的组件和样式路径；测试不编译、挂载或写回这两个文件。</zh-CN><en>Reads fixed component and style paths only; the test neither compiles, mounts, nor writes either file.</en></lang>
   const component = await readFile(resolve('HIA-uView-UI/src/components/u-button/u-button.vue'), 'utf8');
   const styles = await readFile(resolve('HIA-uView-UI/src/components/u-button/u-button.css'), 'utf8');
+  const generatedFallbackMarker = '/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */';
+  const authoredStyles = styles.slice(0, styles.indexOf(generatedFallbackMarker));
 
   // <lang><zh-CN>批准 prop 清单是有限公开契约；逐项断言防止任意业务、路由或样式 escape prop 静默出现。</zh-CN><en>The approved prop list is a finite public contract; assertion item by item prevents arbitrary business, route, or style-escape props from appearing silently.</en></lang>
   for (const property of ['variant', 'size', 'block', 'disabled', 'loading', 'loadingText', 'label']) {
@@ -52,6 +54,8 @@ test('keeps UButton inside its initial component contract', async () => {
   assert.match(styles, /--u-comp-button-primary-background/);
   assert.match(styles, /--u-comp-button-min-height/);
 
-  // <lang><zh-CN>拒绝 CSS 中直接 hex 色，确保可见颜色只能来自已审计 theme token 而非组件私有硬编码。</zh-CN><en>Rejects direct hexadecimal colors in CSS so visible color can come only from audited theme tokens rather than component-private hard coding.</en></lang>
-  assert.doesNotMatch(styles, /#[0-9a-f]{3,8}\b/i);
+  // <lang><zh-CN>拒绝维护者 CSS 中直接 hex 色，确保可见颜色来自已审计 theme token；生成区块的字面值仅是该默认主题的受门禁回退投影，不是组件私有设计决定。</zh-CN><en>Rejects direct hexadecimal colors in maintainer-authored CSS so visible color comes from audited theme tokens; literals in the generated block are a gated fallback projection of that default theme, not a component-private design decision.</en></lang>
+  assert.notEqual(authoredStyles.length, styles.length, 'UButton must retain the generated Mini Program literal fallback marker.');
+  assert.doesNotMatch(authoredStyles, /#[0-9a-f]{3,8}\b/i);
+  assert.match(styles, /background: #0047ab;\s+background: var\(--u-comp-button-primary-background\);/);
 });

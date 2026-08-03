@@ -11,3 +11,36 @@
 .u-count-to--neutral { color: var(--u-comp-count-to-neutral-foreground); }
 .u-count-to--primary { color: var(--u-comp-count-to-primary-foreground); }
 .u-count-to--accent { color: var(--u-comp-count-to-accent-foreground); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-count-to--small {
+  font-size: 14px;
+  font-size: var(--u-comp-count-to-small-size);
+}
+
+.u-count-to--medium {
+  font-size: 20px;
+  font-size: var(--u-comp-count-to-medium-size);
+}
+
+.u-count-to--large {
+  font-size: 28px;
+  font-size: var(--u-comp-count-to-large-size);
+}
+
+.u-count-to--neutral {
+  color: #001b2e;
+  color: var(--u-comp-count-to-neutral-foreground);
+}
+
+.u-count-to--primary {
+  color: #0047ab;
+  color: var(--u-comp-count-to-primary-foreground);
+}
+
+.u-count-to--accent {
+  color: #001b2e;
+  color: var(--u-comp-count-to-accent-foreground);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

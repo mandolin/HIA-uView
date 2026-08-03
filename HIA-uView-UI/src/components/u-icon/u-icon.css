@@ -31,3 +31,57 @@
 .u-icon--primary .u-icon__symbol { color: var(--u-comp-icon-primary-foreground); }
 .u-icon--accent .u-icon__symbol { color: var(--u-comp-icon-accent-foreground); }
 .u-icon--disabled { opacity: var(--u-comp-icon-disabled-opacity); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-icon {
+  gap: 6px;
+  gap: var(--u-comp-icon-gap);
+  min-height: 24px;
+  min-height: var(--u-comp-icon-min-height);
+  min-width: 24px;
+  min-width: var(--u-comp-icon-min-width);
+}
+
+.u-icon__symbol {
+  color: #001b2e;
+  color: var(--u-comp-icon-neutral-foreground);
+}
+
+.u-icon__label {
+  color: #27364a;
+  color: var(--u-comp-icon-label-foreground);
+  font-size: 14px;
+  font-size: var(--u-comp-icon-label-font-size);
+}
+
+.u-icon--small .u-icon__symbol {
+  font-size: 16px;
+  font-size: var(--u-comp-icon-small-size);
+}
+
+.u-icon--medium .u-icon__symbol {
+  font-size: 20px;
+  font-size: var(--u-comp-icon-medium-size);
+}
+
+.u-icon--large .u-icon__symbol {
+  font-size: 28px;
+  font-size: var(--u-comp-icon-large-size);
+}
+
+.u-icon--primary .u-icon__symbol {
+  color: #0047ab;
+  color: var(--u-comp-icon-primary-foreground);
+}
+
+.u-icon--accent .u-icon__symbol {
+  color: #00a8d3;
+  color: var(--u-comp-icon-accent-foreground);
+}
+
+.u-icon--disabled {
+  opacity: 0.6;
+  opacity: var(--u-comp-icon-disabled-opacity);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

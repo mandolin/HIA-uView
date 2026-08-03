@@ -3,7 +3,7 @@
  * @lang zh-CN 卡片样式提供中性表面、边界和有限阴影，不表达行业或业务状态。
  * @lang en Card styles provide neutral surface, boundary, and finite shadow only; they express no industry or business state.
  */
-.u-card { background: var(--u-comp-card-surface); color: var(--u-comp-card-foreground); padding: var(--u-card-padding); }
+.u-card { background: var(--u-comp-card-surface); color: var(--u-comp-card-foreground); }
 .u-card--bordered { border: 1px solid var(--u-comp-card-border); border-radius: var(--u-comp-card-radius); }
 .u-card--shadow { box-shadow: var(--u-comp-card-shadow); }
 .u-card__header, .u-card__footer { display: flex; gap: var(--u-comp-card-gap); }
@@ -12,3 +12,57 @@
 .u-card__heading { display: flex; flex-direction: column; gap: var(--u-comp-card-heading-gap); min-width: 0; }
 .u-card__title { font-size: var(--u-comp-card-title-size); font-weight: 600; }
 .u-card__subtitle { color: var(--u-comp-card-subtitle); font-size: var(--u-comp-card-subtitle-size); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-card {
+  background: #ffffff;
+  background: var(--u-comp-card-surface);
+  color: #001b2e;
+  color: var(--u-comp-card-foreground);
+}
+
+.u-card--bordered {
+  border: 1px solid #f7f9fc;
+  border: 1px solid var(--u-comp-card-border);
+  border-radius: 8px;
+  border-radius: var(--u-comp-card-radius);
+}
+
+.u-card--shadow {
+  box-shadow: 0 2px 8px rgb(0 27 46 / 12%);
+  box-shadow: var(--u-comp-card-shadow);
+}
+
+.u-card__header, .u-card__footer {
+  gap: 12px;
+  gap: var(--u-comp-card-gap);
+}
+
+.u-card__header {
+  margin-block-end: 12px;
+  margin-block-end: var(--u-comp-card-gap);
+}
+
+.u-card__footer {
+  margin-block-start: 12px;
+  margin-block-start: var(--u-comp-card-gap);
+}
+
+.u-card__heading {
+  gap: 4px;
+  gap: var(--u-comp-card-heading-gap);
+}
+
+.u-card__title {
+  font-size: 16px;
+  font-size: var(--u-comp-card-title-size);
+}
+
+.u-card__subtitle {
+  color: #27364a;
+  color: var(--u-comp-card-subtitle);
+  font-size: 13px;
+  font-size: var(--u-comp-card-subtitle-size);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

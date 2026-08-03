@@ -6,3 +6,33 @@
 .u-dropdown-item { background: var(--u-comp-dropdown-item-surface); border: 1px solid var(--u-comp-dropdown-item-border); border-radius: var(--u-comp-dropdown-item-radius); color: var(--u-comp-dropdown-item-foreground); min-height: var(--u-comp-dropdown-item-height); padding: 0 var(--u-comp-dropdown-item-padding); }
 .u-dropdown-item--selected { background: var(--u-comp-dropdown-item-selected-background); color: var(--u-comp-dropdown-item-selected-foreground); }
 .u-dropdown-item--disabled { opacity: var(--u-comp-dropdown-item-disabled-opacity); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-dropdown-item {
+  background: #ffffff;
+  background: var(--u-comp-dropdown-item-surface);
+  border: 1px solid #f7f9fc;
+  border: 1px solid var(--u-comp-dropdown-item-border);
+  border-radius: 8px;
+  border-radius: var(--u-comp-dropdown-item-radius);
+  color: #001b2e;
+  color: var(--u-comp-dropdown-item-foreground);
+  min-height: 40px;
+  min-height: var(--u-comp-dropdown-item-height);
+  padding: 0 12px;
+  padding: 0 var(--u-comp-dropdown-item-padding);
+}
+
+.u-dropdown-item--selected {
+  background: #f7f9fc;
+  background: var(--u-comp-dropdown-item-selected-background);
+  color: #0047ab;
+  color: var(--u-comp-dropdown-item-selected-foreground);
+}
+
+.u-dropdown-item--disabled {
+  opacity: 0.6;
+  opacity: var(--u-comp-dropdown-item-disabled-opacity);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

@@ -11,3 +11,72 @@
 .u-picker__actions { display: flex; gap: var(--u-comp-picker-gap); justify-content: flex-end; margin-block-start: var(--u-comp-picker-gap); }
 .u-picker__action { background: transparent; border: 1px solid var(--u-comp-picker-action-border); border-radius: var(--u-comp-picker-radius); color: var(--u-comp-picker-action-foreground); min-height: var(--u-comp-picker-action-height); padding: 0 var(--u-comp-picker-action-padding); }
 .u-picker__action--confirm { background: var(--u-comp-picker-confirm-background); border-color: var(--u-comp-picker-confirm-background); color: var(--u-comp-picker-confirm-foreground); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-picker {
+  background: #ffffff;
+  background: var(--u-comp-picker-surface);
+  color: #001b2e;
+  color: var(--u-comp-picker-foreground);
+  padding: 16px;
+  padding: var(--u-comp-picker-padding);
+}
+
+.u-picker__title {
+  font-size: 16px;
+  font-size: var(--u-comp-picker-title-size);
+  margin-block-end: 12px;
+  margin-block-end: var(--u-comp-picker-gap);
+}
+
+.u-picker__options {
+  gap: 4px;
+  gap: var(--u-comp-picker-option-gap);
+}
+
+.u-picker__option {
+  border-radius: 8px;
+  border-radius: var(--u-comp-picker-radius);
+  min-height: 44px;
+  min-height: var(--u-comp-picker-option-height);
+  padding: 0 12px;
+  padding: 0 var(--u-comp-picker-option-padding);
+}
+
+.u-picker__option--selected {
+  background: #f7f9fc;
+  background: var(--u-comp-picker-selected-background);
+  color: #0047ab;
+  color: var(--u-comp-picker-selected-foreground);
+}
+
+.u-picker__actions {
+  gap: 12px;
+  gap: var(--u-comp-picker-gap);
+  margin-block-start: 12px;
+  margin-block-start: var(--u-comp-picker-gap);
+}
+
+.u-picker__action {
+  border: 1px solid #27364a;
+  border: 1px solid var(--u-comp-picker-action-border);
+  border-radius: 8px;
+  border-radius: var(--u-comp-picker-radius);
+  color: #001b2e;
+  color: var(--u-comp-picker-action-foreground);
+  min-height: 40px;
+  min-height: var(--u-comp-picker-action-height);
+  padding: 0 12px;
+  padding: 0 var(--u-comp-picker-action-padding);
+}
+
+.u-picker__action--confirm {
+  background: #0047ab;
+  background: var(--u-comp-picker-confirm-background);
+  border-color: #0047ab;
+  border-color: var(--u-comp-picker-confirm-background);
+  color: #ffffff;
+  color: var(--u-comp-picker-confirm-foreground);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

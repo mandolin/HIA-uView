@@ -45,3 +45,55 @@
   height: var(--u-comp-skeleton-row-height);
   border-radius: var(--u-comp-skeleton-radius);
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-skeleton {
+  color: #27364a;
+  color: var(--u-comp-skeleton-foreground);
+}
+
+.u-skeleton__placeholder {
+  gap: 12px;
+  gap: var(--u-comp-skeleton-gap);
+  padding: 12px;
+  padding: var(--u-comp-skeleton-padding);
+}
+
+.u-skeleton__avatar,
+.u-skeleton__title,
+.u-skeleton__row {
+  background: #f7f9fc;
+  background: var(--u-comp-skeleton-surface);
+}
+
+.u-skeleton__avatar {
+  flex: 0 0 40px;
+  flex: 0 0 var(--u-comp-skeleton-avatar-size);
+  width: 40px;
+  width: var(--u-comp-skeleton-avatar-size);
+  height: 40px;
+  height: var(--u-comp-skeleton-avatar-size);
+}
+
+.u-skeleton__body {
+  gap: 8px;
+  gap: var(--u-comp-skeleton-row-gap);
+}
+
+.u-skeleton__title {
+  width: 52%;
+  width: var(--u-comp-skeleton-title-width);
+  height: 16px;
+  height: var(--u-comp-skeleton-title-height);
+  border-radius: 6px;
+  border-radius: var(--u-comp-skeleton-radius);
+}
+
+.u-skeleton__row {
+  height: 12px;
+  height: var(--u-comp-skeleton-row-height);
+  border-radius: 6px;
+  border-radius: var(--u-comp-skeleton-radius);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

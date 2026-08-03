@@ -7,3 +7,25 @@
 .u-slider--disabled { opacity: var(--u-comp-slider-disabled-opacity); }
 .u-slider__value { color: var(--u-comp-slider-value); display: block; font-size: var(--u-comp-slider-value-size); text-align: end; }
 .u-slider__control { width: 100%; }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-slider {
+  color: #001b2e;
+  color: var(--u-comp-slider-foreground);
+  padding: 8px 0;
+  padding: var(--u-comp-slider-padding);
+}
+
+.u-slider--disabled {
+  opacity: 0.6;
+  opacity: var(--u-comp-slider-disabled-opacity);
+}
+
+.u-slider__value {
+  color: #0047ab;
+  color: var(--u-comp-slider-value);
+  font-size: 13px;
+  font-size: var(--u-comp-slider-value-size);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

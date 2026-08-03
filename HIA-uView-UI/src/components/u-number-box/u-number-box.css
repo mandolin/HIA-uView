@@ -40,3 +40,51 @@
 .u-number-box--readonly {
   opacity: var(--u-comp-number-box-inactive-opacity);
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-number-box {
+  gap: 8px;
+  gap: var(--u-comp-number-box-gap);
+}
+
+.u-number-box__button {
+  background: #f7f9fc;
+  background: var(--u-comp-number-box-button-surface);
+  border: 1px solid #27364a;
+  border: 1px solid var(--u-comp-number-box-border);
+  border-radius: 8px;
+  border-radius: var(--u-comp-number-box-radius);
+  color: #001b2e;
+  color: var(--u-comp-number-box-foreground);
+  min-height: 44px;
+  min-height: var(--u-comp-number-box-min-height);
+  min-width: 44px;
+  min-width: var(--u-comp-number-box-min-width);
+}
+
+.u-number-box__input {
+  background: #ffffff;
+  background: var(--u-comp-number-box-input-surface);
+  border: 1px solid #27364a;
+  border: 1px solid var(--u-comp-number-box-border);
+  border-radius: 8px;
+  border-radius: var(--u-comp-number-box-radius);
+  color: #001b2e;
+  color: var(--u-comp-number-box-foreground);
+  font-size: 16px;
+  font-size: var(--u-comp-number-box-font-size);
+  min-height: 44px;
+  min-height: var(--u-comp-number-box-min-height);
+  min-width: 72px;
+  min-width: var(--u-comp-number-box-input-min-width);
+  padding: 8px;
+  padding: var(--u-comp-number-box-input-padding);
+}
+
+.u-number-box--disabled,
+.u-number-box--readonly {
+  opacity: 0.6;
+  opacity: var(--u-comp-number-box-inactive-opacity);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

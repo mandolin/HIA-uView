@@ -11,3 +11,49 @@
 .u-swipe-action__action--danger { background: var(--u-comp-swipe-action-danger-background); color: var(--u-comp-swipe-action-danger-foreground); }
 .u-swipe-action__close { background: var(--u-comp-swipe-action-close-background); }
 .u-swipe-action--disabled { opacity: var(--u-comp-swipe-action-disabled-opacity); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-swipe-action {
+  background: #ffffff;
+  background: var(--u-comp-swipe-action-surface);
+}
+
+.u-swipe-action__actions {
+  gap: 4px;
+  gap: var(--u-comp-swipe-action-gap);
+}
+
+.u-swipe-action__action, .u-swipe-action__close {
+  background: #f7f9fc;
+  background: var(--u-comp-swipe-action-action-background);
+  color: #001b2e;
+  color: var(--u-comp-swipe-action-foreground);
+  min-height: 44px;
+  min-height: var(--u-comp-swipe-action-height);
+  padding: 0 12px;
+  padding: 0 var(--u-comp-swipe-action-padding);
+}
+
+.u-swipe-action__action--warning {
+  background: #fff8e1;
+  background: var(--u-comp-swipe-action-warning-background);
+}
+
+.u-swipe-action__action--danger {
+  background: #c53030;
+  background: var(--u-comp-swipe-action-danger-background);
+  color: #ffffff;
+  color: var(--u-comp-swipe-action-danger-foreground);
+}
+
+.u-swipe-action__close {
+  background: #f7f9fc;
+  background: var(--u-comp-swipe-action-close-background);
+}
+
+.u-swipe-action--disabled {
+  opacity: 0.6;
+  opacity: var(--u-comp-swipe-action-disabled-opacity);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

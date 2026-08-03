@@ -90,6 +90,14 @@ async function verifyMpWeixinFixture() {
       access(resolve(outputDirectory, 'src/components/u-button/u-button.wxss'))
     ]);
 
+    // <lang><zh-CN>组件局部 WXSS 必须同时保留默认浅色主题的字面值与原 token 声明；前者覆盖当前不解析 custom property 的小程序路径，后者保留支持该能力的运行时主题语义。</zh-CN><en>Component-local WXSS must retain both default-light literal values and original token declarations; the former covers the current Mini Program path that does not resolve custom properties, while the latter retains runtime theme semantics where the capability exists.</en></lang>
+    const [buttonStyles, tagStyles] = await Promise.all([
+      readFile(resolve(outputDirectory, 'src/components/u-button/u-button.wxss'), 'utf8'),
+      readFile(resolve(outputDirectory, 'src/components/u-tag/u-tag.wxss'), 'utf8')
+    ]);
+    assert.match(buttonStyles, /\.u-button--primary\{background:#0047ab;background:var\(--u-comp-button-primary-background\);color:#fff;color:var\(--u-comp-button-primary-foreground\)\}/, 'The generated UButton WXSS must include the default-light literal fallback before its primary token declarations.');
+    assert.match(tagStyles, /\.u-tag--neutral\{background:#f7f9fc;background:var\(--u-comp-tag-neutral-surface\);color:#001b2e;color:var\(--u-comp-tag-neutral-foreground\)\}/, 'The generated UTag WXSS must include the default-light literal fallback before its neutral token declarations.');
+
     // <lang><zh-CN>应用 WXSS 仍需包含完整主题与全局组件规则；组件的独立 WXSS 与此共同构成小程序端可用的样式证据。</zh-CN><en>The app WXSS must still contain the complete theme and global component rules; its combination with component-local WXSS forms the usable Mini Program style evidence.</en></lang>
     const applicationStyles = await readFile(resolve(outputDirectory, 'app.wxss'), 'utf8');
     assert.match(applicationStyles, /\.u-button\{/, 'The generated app WXSS must include UButton rules from the explicit style entry.');

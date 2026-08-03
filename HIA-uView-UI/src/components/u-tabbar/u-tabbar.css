@@ -8,3 +8,42 @@
 .u-tabbar__item--active { background: var(--u-comp-tabbar-active-surface); color: var(--u-comp-tabbar-active-foreground); font-weight: 600; }
 .u-tabbar__item--disabled { color: var(--u-comp-tabbar-disabled-foreground); }
 .u-tabbar__label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-tabbar {
+  background: #ffffff;
+  background: var(--u-comp-tabbar-surface);
+  border-top: 1px solid #f7f9fc;
+  border-top: 1px solid var(--u-comp-tabbar-divider);
+  gap: 4px;
+  gap: var(--u-comp-tabbar-gap);
+  padding: 6px;
+  padding: var(--u-comp-tabbar-padding);
+}
+
+.u-tabbar__item {
+  border-radius: 6px;
+  border-radius: var(--u-comp-tabbar-item-radius);
+  color: #27364a;
+  color: var(--u-comp-tabbar-foreground);
+  font-size: 12px;
+  font-size: var(--u-comp-tabbar-item-size);
+  min-height: 44px;
+  min-height: var(--u-comp-tabbar-item-min-height);
+  padding: 8px 4px;
+  padding: var(--u-comp-tabbar-item-padding);
+}
+
+.u-tabbar__item--active {
+  background: #f7f9fc;
+  background: var(--u-comp-tabbar-active-surface);
+  color: #0047ab;
+  color: var(--u-comp-tabbar-active-foreground);
+}
+
+.u-tabbar__item--disabled {
+  color: #27364a;
+  color: var(--u-comp-tabbar-disabled-foreground);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

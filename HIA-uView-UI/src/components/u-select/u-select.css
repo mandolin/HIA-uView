@@ -10,3 +10,57 @@
 .u-select__options { display: flex; flex-direction: column; gap: var(--u-comp-select-option-gap); margin-block-start: var(--u-comp-select-gap); }
 .u-select__option { background: transparent; border: 0; border-radius: var(--u-comp-select-radius); color: inherit; min-height: var(--u-comp-select-option-height); padding: 0 var(--u-comp-select-option-padding); text-align: start; }
 .u-select__option--selected { background: var(--u-comp-select-selected-background); color: var(--u-comp-select-selected-foreground); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-select {
+  background: #ffffff;
+  background: var(--u-comp-select-surface);
+  border: 1px solid #27364a;
+  border: 1px solid var(--u-comp-select-border);
+  border-radius: 8px;
+  border-radius: var(--u-comp-select-radius);
+  color: #001b2e;
+  color: var(--u-comp-select-foreground);
+  padding: 8px 12px;
+  padding: var(--u-comp-select-padding);
+}
+
+.u-select--disabled {
+  opacity: 0.6;
+  opacity: var(--u-comp-select-disabled-opacity);
+}
+
+.u-select__placeholder {
+  color: #27364a;
+  color: var(--u-comp-select-placeholder);
+}
+
+.u-select__value {
+  color: #001b2e;
+  color: var(--u-comp-select-value);
+}
+
+.u-select__options {
+  gap: 4px;
+  gap: var(--u-comp-select-option-gap);
+  margin-block-start: 8px;
+  margin-block-start: var(--u-comp-select-gap);
+}
+
+.u-select__option {
+  border-radius: 8px;
+  border-radius: var(--u-comp-select-radius);
+  min-height: 40px;
+  min-height: var(--u-comp-select-option-height);
+  padding: 0 8px;
+  padding: 0 var(--u-comp-select-option-padding);
+}
+
+.u-select__option--selected {
+  background: #f7f9fc;
+  background: var(--u-comp-select-selected-background);
+  color: #0047ab;
+  color: var(--u-comp-select-selected-foreground);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

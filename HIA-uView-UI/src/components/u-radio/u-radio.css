@@ -39,3 +39,42 @@
   font-weight: 700;
   min-width: var(--u-comp-choice-marker-width);
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-radio {
+  background: #ffffff;
+  background: var(--u-comp-choice-surface);
+  border: 1px solid #27364a;
+  border: 1px solid var(--u-comp-choice-border);
+  border-radius: 8px;
+  border-radius: var(--u-comp-choice-radius);
+  color: #001b2e;
+  color: var(--u-comp-choice-foreground);
+  font-size: 16px;
+  font-size: var(--u-comp-choice-font-size);
+  gap: 8px;
+  gap: var(--u-comp-choice-gap);
+  min-height: 44px;
+  min-height: var(--u-comp-choice-min-height);
+  padding: 8px 12px;
+  padding: var(--u-comp-choice-block-padding) var(--u-comp-choice-inline-padding);
+}
+
+.u-radio--selected {
+  border-color: #0047ab;
+  border-color: var(--u-comp-choice-selected-border);
+  color: #0047ab;
+  color: var(--u-comp-choice-selected-foreground);
+}
+
+.u-radio--disabled {
+  opacity: 0.6;
+  opacity: var(--u-comp-choice-disabled-opacity);
+}
+
+.u-radio__mark {
+  min-width: 20px;
+  min-width: var(--u-comp-choice-marker-width);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

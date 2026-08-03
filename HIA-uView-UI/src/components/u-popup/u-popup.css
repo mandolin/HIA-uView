@@ -15,3 +15,74 @@
 .u-popup__title { color: var(--u-comp-popup-title-foreground); font-size: var(--u-comp-popup-title-size); font-weight: 600; }
 .u-popup__close { background: transparent; color: var(--u-comp-popup-close-foreground); font-size: var(--u-comp-popup-close-size); margin: 0; min-height: var(--u-comp-popup-control-min-height); padding: 0 var(--u-comp-popup-close-padding); }
 .u-popup__content { color: var(--u-comp-popup-content-foreground); padding-top: var(--u-comp-popup-content-gap); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-popup {
+  z-index: 20;
+  z-index: var(--u-comp-popup-z-index);
+}
+
+.u-popup__mask {
+  background: rgba(0, 27, 46, 0.36);
+  background: var(--u-comp-popup-mask);
+}
+
+.u-popup__panel {
+  background: #ffffff;
+  background: var(--u-comp-popup-surface);
+  max-height: 80vh;
+  max-height: var(--u-comp-popup-max-height);
+  min-width: 240px;
+  min-width: var(--u-comp-popup-min-width);
+  padding: 20px;
+  padding: var(--u-comp-popup-padding);
+}
+
+.u-popup--left .u-popup__panel {
+  width: 80%;
+  width: var(--u-comp-popup-side-width);
+}
+
+.u-popup--right .u-popup__panel {
+  width: 80%;
+  width: var(--u-comp-popup-side-width);
+}
+
+.u-popup--center .u-popup__panel {
+  max-width: 420px;
+  max-width: var(--u-comp-popup-center-width);
+  width: calc(100% - 16px * 2);
+  width: calc(100% - var(--u-comp-popup-center-gutter) * 2);
+}
+
+.u-popup__header {
+  gap: 12px;
+  gap: var(--u-comp-popup-header-gap);
+}
+
+.u-popup__title {
+  color: #001b2e;
+  color: var(--u-comp-popup-title-foreground);
+  font-size: 18px;
+  font-size: var(--u-comp-popup-title-size);
+}
+
+.u-popup__close {
+  color: #0047ab;
+  color: var(--u-comp-popup-close-foreground);
+  font-size: 14px;
+  font-size: var(--u-comp-popup-close-size);
+  min-height: 32px;
+  min-height: var(--u-comp-popup-control-min-height);
+  padding: 0 4px;
+  padding: 0 var(--u-comp-popup-close-padding);
+}
+
+.u-popup__content {
+  color: #001b2e;
+  color: var(--u-comp-popup-content-foreground);
+  padding-top: 12px;
+  padding-top: var(--u-comp-popup-content-gap);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

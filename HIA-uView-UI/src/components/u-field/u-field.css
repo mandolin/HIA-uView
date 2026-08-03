@@ -49,3 +49,41 @@
   font-size: var(--u-comp-field-help-font-size);
   line-height: 1.4;
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-field {
+  gap: 8px;
+  gap: var(--u-comp-field-gap);
+}
+
+.u-field__label-row {
+  gap: 4px;
+  gap: var(--u-comp-field-label-gap);
+}
+
+.u-field__label {
+  color: #001b2e;
+  color: var(--u-comp-field-label-foreground);
+  font-size: 16px;
+  font-size: var(--u-comp-field-label-font-size);
+  font-weight: 600;
+  font-weight: var(--u-comp-field-label-font-weight);
+}
+
+.u-field__required-mark {
+  color: #0047ab;
+  color: var(--u-comp-field-required-foreground);
+  font-size: 16px;
+  font-size: var(--u-comp-field-required-font-size);
+  font-weight: 600;
+  font-weight: var(--u-comp-field-label-font-weight);
+}
+
+.u-field__help {
+  color: #27364a;
+  color: var(--u-comp-field-help-foreground);
+  font-size: 14px;
+  font-size: var(--u-comp-field-help-font-size);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

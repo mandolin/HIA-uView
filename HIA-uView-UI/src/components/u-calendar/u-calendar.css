@@ -13,3 +13,64 @@
 .u-calendar__day { background: transparent; border: 0; border-radius: var(--u-comp-calendar-day-radius); color: inherit; font-size: var(--u-comp-calendar-day-size); min-height: var(--u-comp-calendar-day-size); min-width: var(--u-comp-calendar-day-size); padding: 0; }
 .u-calendar__day--selected { background: var(--u-comp-calendar-selected-background); color: var(--u-comp-calendar-selected-foreground); }
 .u-calendar__day--today { box-shadow: inset 0 0 0 1px var(--u-comp-calendar-today-border); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-calendar {
+  background: #ffffff;
+  background: var(--u-comp-calendar-surface);
+  color: #001b2e;
+  color: var(--u-comp-calendar-foreground);
+  padding: 12px;
+  padding: var(--u-comp-calendar-padding);
+}
+
+.u-calendar__header {
+  margin-block-end: 8px;
+  margin-block-end: var(--u-comp-calendar-gap);
+}
+
+.u-calendar__nav {
+  color: #0047ab;
+  color: var(--u-comp-calendar-nav-foreground);
+  font-size: 32px;
+  font-size: var(--u-comp-calendar-nav-size);
+  min-height: 32px;
+  min-height: var(--u-comp-calendar-nav-size);
+}
+
+.u-calendar__week {
+  color: #27364a;
+  color: var(--u-comp-calendar-week-foreground);
+  font-size: 12px;
+  font-size: var(--u-comp-calendar-week-size);
+}
+
+.u-calendar__cell {
+  min-height: 40px;
+  min-height: var(--u-comp-calendar-cell-size);
+}
+
+.u-calendar__day {
+  border-radius: 999px;
+  border-radius: var(--u-comp-calendar-day-radius);
+  font-size: 32px;
+  font-size: var(--u-comp-calendar-day-size);
+  min-height: 32px;
+  min-height: var(--u-comp-calendar-day-size);
+  min-width: 32px;
+  min-width: var(--u-comp-calendar-day-size);
+}
+
+.u-calendar__day--selected {
+  background: #0047ab;
+  background: var(--u-comp-calendar-selected-background);
+  color: #ffffff;
+  color: var(--u-comp-calendar-selected-foreground);
+}
+
+.u-calendar__day--today {
+  box-shadow: inset 0 0 0 1px #00a8d3;
+  box-shadow: inset 0 0 0 1px var(--u-comp-calendar-today-border);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

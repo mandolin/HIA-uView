@@ -7,3 +7,18 @@
 .u-read-more--expanded { max-height: none; }
 .u-read-more--disabled { opacity: var(--u-comp-read-more-disabled-opacity); }
 .u-read-more__trigger { background: transparent; border: 0; color: var(--u-comp-read-more-action); min-height: var(--u-comp-read-more-action-height); padding: 0; }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-read-more--disabled {
+  opacity: 0.6;
+  opacity: var(--u-comp-read-more-disabled-opacity);
+}
+
+.u-read-more__trigger {
+  color: #0047ab;
+  color: var(--u-comp-read-more-action);
+  min-height: 36px;
+  min-height: var(--u-comp-read-more-action-height);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

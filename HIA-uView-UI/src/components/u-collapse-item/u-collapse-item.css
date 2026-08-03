@@ -50,3 +50,53 @@
   border-top: var(--u-comp-collapse-item-content-border-width) solid var(--u-comp-collapse-item-divider);
   color: var(--u-comp-collapse-item-content-foreground);
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-collapse-item {
+  border-bottom: 1px solid #f7f9fc;
+  border-bottom: var(--u-comp-collapse-item-divider-width) solid var(--u-comp-collapse-item-divider);
+}
+
+.u-collapse-item__header {
+  min-height: 48px;
+  min-height: var(--u-comp-collapse-item-header-min-height);
+  padding: 12px;
+  padding: var(--u-comp-collapse-item-header-padding);
+  color: #001b2e;
+  color: var(--u-comp-collapse-item-title-foreground);
+}
+
+.u-collapse-item__heading {
+  gap: 4px;
+  gap: var(--u-comp-collapse-item-text-gap);
+}
+
+.u-collapse-item__title {
+  font-size: 15px;
+  font-size: var(--u-comp-collapse-item-title-size);
+}
+
+.u-collapse-item__description {
+  color: #27364a;
+  color: var(--u-comp-collapse-item-description-foreground);
+  font-size: 12px;
+  font-size: var(--u-comp-collapse-item-description-size);
+}
+
+.u-collapse-item__indicator {
+  color: #0047ab;
+  color: var(--u-comp-collapse-item-indicator);
+  font-size: 20px;
+  font-size: var(--u-comp-collapse-item-indicator-size);
+}
+
+.u-collapse-item__content {
+  padding: 12px;
+  padding: var(--u-comp-collapse-item-content-padding);
+  border-top: 1px solid #f7f9fc;
+  border-top: var(--u-comp-collapse-item-content-border-width) solid var(--u-comp-collapse-item-divider);
+  color: #001b2e;
+  color: var(--u-comp-collapse-item-content-foreground);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

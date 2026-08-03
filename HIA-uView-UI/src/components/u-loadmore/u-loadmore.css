@@ -24,3 +24,35 @@
 .u-loadmore__text {
   color: var(--u-comp-loadmore-secondary-foreground);
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-loadmore {
+  padding: 12px;
+  padding: var(--u-comp-loadmore-padding);
+  color: #001b2e;
+  color: var(--u-comp-loadmore-foreground);
+  font-size: 14px;
+  font-size: var(--u-comp-loadmore-size);
+}
+
+.u-loadmore__action {
+  min-height: 32px;
+  min-height: var(--u-comp-loadmore-min-height);
+  padding: 6px 12px;
+  padding: var(--u-comp-loadmore-action-padding);
+  border: 1px solid #27364a;
+  border: var(--u-comp-loadmore-border-width) solid var(--u-comp-loadmore-border);
+  border-radius: 6px;
+  border-radius: var(--u-comp-loadmore-radius);
+  background: #ffffff;
+  background: var(--u-comp-loadmore-surface);
+  color: #0047ab;
+  color: var(--u-comp-loadmore-action-foreground);
+}
+
+.u-loadmore__text {
+  color: #27364a;
+  color: var(--u-comp-loadmore-secondary-foreground);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

@@ -13,3 +13,15 @@
 .u-sticky--disabled {
   position: static;
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-sticky {
+  top: 0px;
+  top: var(--u-comp-sticky-default-top);
+  z-index: 1;
+  z-index: var(--u-comp-sticky-z-index);
+  background: #ffffff;
+  background: var(--u-comp-sticky-surface);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

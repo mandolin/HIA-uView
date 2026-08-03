@@ -69,3 +69,52 @@
   cursor: not-allowed;
   opacity: var(--u-comp-cell-disabled-opacity);
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-cell {
+  background: #ffffff;
+  background: var(--u-comp-cell-surface);
+  border-bottom: 1px solid #f7f9fc;
+  border-bottom: 1px solid var(--u-comp-cell-border);
+  color: #001b2e;
+  color: var(--u-comp-cell-foreground);
+  gap: 12px;
+  gap: var(--u-comp-cell-gap);
+  min-height: 48px;
+  min-height: var(--u-comp-cell-min-height);
+  padding: 12px 16px;
+  padding: var(--u-comp-cell-block-padding) var(--u-comp-cell-inline-padding);
+}
+
+.u-cell__content {
+  gap: 4px;
+  gap: var(--u-comp-cell-content-gap);
+}
+
+.u-cell__label {
+  color: #001b2e;
+  color: var(--u-comp-cell-foreground);
+  font-size: 16px;
+  font-size: var(--u-comp-cell-label-font-size);
+}
+
+.u-cell__description {
+  color: #27364a;
+  color: var(--u-comp-cell-description-foreground);
+  font-size: 14px;
+  font-size: var(--u-comp-cell-description-font-size);
+}
+
+.u-cell__value {
+  color: #27364a;
+  color: var(--u-comp-cell-value-foreground);
+  font-size: 14px;
+  font-size: var(--u-comp-cell-value-font-size);
+}
+
+.u-cell--disabled {
+  opacity: 0.6;
+  opacity: var(--u-comp-cell-disabled-opacity);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

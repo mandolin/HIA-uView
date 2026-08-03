@@ -31,3 +31,36 @@
   background: var(--u-comp-scroll-list-surface);
   color: var(--u-comp-scroll-list-item-foreground);
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-scroll-list {
+  color: #001b2e;
+  color: var(--u-comp-scroll-list-foreground);
+}
+
+.u-scroll-list__viewport {
+  padding-bottom: 4px;
+  padding-bottom: var(--u-comp-scroll-list-scrollbar-gap);
+}
+
+.u-scroll-list__track {
+  gap: 8px;
+  gap: var(--u-comp-scroll-list-gap);
+}
+
+.u-scroll-list__item {
+  min-height: 40px;
+  min-height: var(--u-comp-scroll-list-item-min-height);
+  padding: 8px 12px;
+  padding: var(--u-comp-scroll-list-item-padding);
+  border: 1px solid #f7f9fc;
+  border: var(--u-comp-scroll-list-border-width) solid var(--u-comp-scroll-list-border);
+  border-radius: 999px;
+  border-radius: var(--u-comp-scroll-list-radius);
+  background: #ffffff;
+  background: var(--u-comp-scroll-list-surface);
+  color: #0047ab;
+  color: var(--u-comp-scroll-list-item-foreground);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

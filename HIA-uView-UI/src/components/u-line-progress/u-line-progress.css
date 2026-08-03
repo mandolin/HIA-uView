@@ -14,3 +14,62 @@
 .u-line-progress--accent .u-line-progress__bar { background: var(--u-comp-line-progress-accent-bar); }
 .u-line-progress--striped .u-line-progress__bar { background-image: repeating-linear-gradient(135deg, transparent 0, transparent 6px, var(--u-comp-line-progress-stripe) 6px, var(--u-comp-line-progress-stripe) 12px); }
 .u-line-progress__label { color: var(--u-comp-line-progress-label-foreground); font-size: var(--u-comp-line-progress-label-font-size); min-width: var(--u-comp-line-progress-label-width); text-align: right; }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-line-progress {
+  gap: 8px;
+  gap: var(--u-comp-line-progress-gap);
+}
+
+.u-line-progress__track {
+  background: #f7f9fc;
+  background: var(--u-comp-line-progress-track);
+  border-radius: 999px;
+  border-radius: var(--u-comp-line-progress-radius);
+}
+
+.u-line-progress__bar {
+  background: #0047ab;
+  background: var(--u-comp-line-progress-primary-bar);
+}
+
+.u-line-progress--small .u-line-progress__track {
+  height: 4px;
+  height: var(--u-comp-line-progress-small-height);
+}
+
+.u-line-progress--medium .u-line-progress__track {
+  height: 8px;
+  height: var(--u-comp-line-progress-medium-height);
+}
+
+.u-line-progress--large .u-line-progress__track {
+  height: 12px;
+  height: var(--u-comp-line-progress-large-height);
+}
+
+.u-line-progress--neutral .u-line-progress__bar {
+  background: #27364a;
+  background: var(--u-comp-line-progress-neutral-bar);
+}
+
+.u-line-progress--accent .u-line-progress__bar {
+  background: #00a8d3;
+  background: var(--u-comp-line-progress-accent-bar);
+}
+
+.u-line-progress--striped .u-line-progress__bar {
+  background-image: repeating-linear-gradient(135deg, transparent 0, transparent 6px, rgba(255, 255, 255, 0.35) 6px, rgba(255, 255, 255, 0.35) 12px);
+  background-image: repeating-linear-gradient(135deg, transparent 0, transparent 6px, var(--u-comp-line-progress-stripe) 6px, var(--u-comp-line-progress-stripe) 12px);
+}
+
+.u-line-progress__label {
+  color: #27364a;
+  color: var(--u-comp-line-progress-label-foreground);
+  font-size: 12px;
+  font-size: var(--u-comp-line-progress-label-font-size);
+  min-width: 40px;
+  min-width: var(--u-comp-line-progress-label-width);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

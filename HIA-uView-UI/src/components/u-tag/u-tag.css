@@ -17,3 +17,69 @@
 .u-tag--primary { background: var(--u-comp-tag-primary-surface); color: var(--u-comp-tag-primary-foreground); }
 .u-tag--accent { background: var(--u-comp-tag-accent-surface); color: var(--u-comp-tag-accent-foreground); }
 .u-tag--disabled { opacity: var(--u-comp-tag-disabled-opacity); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-tag {
+  gap: 4px;
+  gap: var(--u-comp-tag-gap);
+}
+
+.u-tag__text {
+  font-size: 14px;
+  font-size: var(--u-comp-tag-medium-font-size);
+}
+
+.u-tag__close {
+  font-size: 16px;
+  font-size: var(--u-comp-tag-close-size);
+  min-height: 20px;
+  min-height: var(--u-comp-tag-close-min-height);
+}
+
+.u-tag--small {
+  padding: 2px 6px;
+  padding: var(--u-comp-tag-small-padding);
+}
+
+.u-tag--medium {
+  padding: 4px 8px;
+  padding: var(--u-comp-tag-medium-padding);
+}
+
+.u-tag--large {
+  padding: 6px 10px;
+  padding: var(--u-comp-tag-large-padding);
+}
+
+.u-tag--rounded {
+  border-radius: 6px;
+  border-radius: var(--u-comp-tag-radius);
+}
+
+.u-tag--neutral {
+  background: #f7f9fc;
+  background: var(--u-comp-tag-neutral-surface);
+  color: #001b2e;
+  color: var(--u-comp-tag-neutral-foreground);
+}
+
+.u-tag--primary {
+  background: #0047ab;
+  background: var(--u-comp-tag-primary-surface);
+  color: #ffffff;
+  color: var(--u-comp-tag-primary-foreground);
+}
+
+.u-tag--accent {
+  background: #00a8d3;
+  background: var(--u-comp-tag-accent-surface);
+  color: #001b2e;
+  color: var(--u-comp-tag-accent-foreground);
+}
+
+.u-tag--disabled {
+  opacity: 0.6;
+  opacity: var(--u-comp-tag-disabled-opacity);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

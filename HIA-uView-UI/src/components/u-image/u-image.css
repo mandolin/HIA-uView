@@ -32,3 +32,51 @@
 }
 
 .u-image--error { border: 1px dashed var(--u-comp-image-error-border); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-image {
+  background: #f7f9fc;
+  background: var(--u-comp-image-surface);
+  color: #27364a;
+  color: var(--u-comp-image-foreground);
+}
+
+.u-image--small {
+  height: 40px;
+  height: var(--u-comp-image-small-size);
+  width: 40px;
+  width: var(--u-comp-image-small-size);
+}
+
+.u-image--medium {
+  height: 80px;
+  height: var(--u-comp-image-medium-size);
+  width: 80px;
+  width: var(--u-comp-image-medium-size);
+}
+
+.u-image--large {
+  height: 144px;
+  height: var(--u-comp-image-large-size);
+  width: 144px;
+  width: var(--u-comp-image-large-size);
+}
+
+.u-image--rounded {
+  border-radius: 12px;
+  border-radius: var(--u-comp-image-rounded-radius);
+}
+
+.u-image__fallback {
+  font-size: 12px;
+  font-size: var(--u-comp-image-fallback-font-size);
+  padding: 8px;
+  padding: var(--u-comp-image-fallback-padding);
+}
+
+.u-image--error {
+  border: 1px dashed #27364a;
+  border: 1px dashed var(--u-comp-image-error-border);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

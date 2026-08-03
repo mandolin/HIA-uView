@@ -70,3 +70,64 @@
   border-left-style: dashed;
   color: var(--u-comp-notice-error-foreground);
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-notice {
+  background: #f7f9fc;
+  background: var(--u-comp-notice-info-surface);
+  border-left: 3px solid #0047ab;
+  border-left: var(--u-comp-notice-border-width) solid var(--u-comp-notice-info-border);
+  color: #0047ab;
+  color: var(--u-comp-notice-info-foreground);
+  font-size: 14px;
+  font-size: var(--u-comp-notice-font-size);
+  gap: 8px;
+  gap: var(--u-comp-notice-gap);
+  padding: 10px 12px;
+  padding: var(--u-comp-notice-block-padding) var(--u-comp-notice-inline-padding);
+}
+
+.u-notice__marker {
+  font-weight: 700;
+  font-weight: var(--u-comp-notice-marker-font-weight);
+  min-width: 16px;
+  min-width: var(--u-comp-notice-marker-min-width);
+}
+
+.u-notice--info {
+  background: #f7f9fc;
+  background: var(--u-comp-notice-info-surface);
+  border-left-color: #0047ab;
+  border-left-color: var(--u-comp-notice-info-border);
+  color: #0047ab;
+  color: var(--u-comp-notice-info-foreground);
+}
+
+.u-notice--success {
+  background: #00a8d3;
+  background: var(--u-comp-notice-success-surface);
+  border-left-color: #00a8d3;
+  border-left-color: var(--u-comp-notice-success-border);
+  color: #001b2e;
+  color: var(--u-comp-notice-success-foreground);
+}
+
+.u-notice--warning {
+  background: #f7f9fc;
+  background: var(--u-comp-notice-warning-surface);
+  border-left-color: #27364a;
+  border-left-color: var(--u-comp-notice-warning-border);
+  color: #001b2e;
+  color: var(--u-comp-notice-warning-foreground);
+}
+
+.u-notice--error {
+  background: #ffffff;
+  background: var(--u-comp-notice-error-surface);
+  border-left-color: #27364a;
+  border-left-color: var(--u-comp-notice-error-border);
+  color: #001b2e;
+  color: var(--u-comp-notice-error-foreground);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

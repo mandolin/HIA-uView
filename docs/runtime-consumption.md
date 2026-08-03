@@ -49,6 +49,16 @@ Import the HIA complete style entry from application-owned global style setup. I
 @import "@hia-uview/ui/style.css";
 ```
 
+## Default-light literal fallbacks / 默认浅色字面值回退
+
+Every current component stylesheet also carries generated literal values from the default light theme immediately before the corresponding `var(--u-*)` declaration. This preserves component-local WXSS rendering on the current `mp-weixin` path when custom properties are not resolved, while capable runtimes still let the original token declaration win. It is a bounded default-light compatibility layer, not a multi-theme or runtime theme-switching promise.
+
+每个当前组件样式表还会在对应 `var(--u-*)` 声明前携带由默认浅色主题生成的字面值。这样当当前 `mp-weixin` 路径不解析 custom property 时，组件局部 WXSS 仍可渲染；具备该能力的 runtime 则仍以后面的原 token 声明为准。这是受限的默认浅色兼容层，不构成多主题或运行时切换主题承诺。
+
+After changing a default-light token or a component declaration that consumes one, run `npm run theme:sync`; `npm run theme:check` rejects stale generated fallback blocks. The generator reads only the repository-controlled default theme and component stylesheets, and it does not choose business colors or process application-owned CSS.
+
+变更默认浅色 token 或消费 token 的组件声明后，运行 `npm run theme:sync`；`npm run theme:check` 会拒绝过期的生成回退区块。生成器仅读取仓库受控的默认主题和组件样式表，不选择业务颜色，也不处理应用自有 CSS。
+
 ## Current limits / 当前限制
 
 The entry supports only the private UniApp Vue 3 `mp-weixin` profile. Its bounded `easycom` table is not a general auto-import feature or a package-release promise. It is not yet an App/H5, device, accessibility-tree, or cross-platform support commitment. Runtime tests use jsdom and compiler tests produce `mp-weixin` output; neither replaces WeChat DevTools or physical-device evidence.

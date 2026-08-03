@@ -8,3 +8,39 @@
 .u-section__title { font-size: var(--u-comp-section-title-size); font-weight: 600; }
 .u-section__subtitle { color: var(--u-comp-section-subtitle); font-size: var(--u-comp-section-subtitle-size); }
 .u-section__action { background: transparent; border: 0; color: var(--u-comp-section-action); min-height: var(--u-comp-section-action-height); padding: 0; }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-section {
+  color: #001b2e;
+  color: var(--u-comp-section-foreground);
+  gap: 12px;
+  gap: var(--u-comp-section-gap);
+  min-height: 44px;
+  min-height: var(--u-comp-section-min-height);
+}
+
+.u-section__heading {
+  gap: 4px;
+  gap: var(--u-comp-section-heading-gap);
+}
+
+.u-section__title {
+  font-size: 16px;
+  font-size: var(--u-comp-section-title-size);
+}
+
+.u-section__subtitle {
+  color: #27364a;
+  color: var(--u-comp-section-subtitle);
+  font-size: 13px;
+  font-size: var(--u-comp-section-subtitle-size);
+}
+
+.u-section__action {
+  color: #0047ab;
+  color: var(--u-comp-section-action);
+  min-height: 32px;
+  min-height: var(--u-comp-section-action-height);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

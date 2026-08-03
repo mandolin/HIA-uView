@@ -8,3 +8,43 @@
 .u-grid-item__content { display: flex; flex-direction: column; gap: var(--u-comp-grid-item-content-gap); min-width: 0; }
 .u-grid-item__label { font-size: var(--u-comp-grid-item-label-size); font-weight: 600; }
 .u-grid-item__description { color: var(--u-comp-grid-item-description); font-size: var(--u-comp-grid-item-description-size); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-grid-item {
+  background: #ffffff;
+  background: var(--u-comp-grid-item-surface);
+  border: 1px solid #f7f9fc;
+  border: 1px solid var(--u-comp-grid-item-border);
+  color: #001b2e;
+  color: var(--u-comp-grid-item-foreground);
+  gap: 8px;
+  gap: var(--u-comp-grid-item-gap);
+  min-height: 72px;
+  min-height: var(--u-comp-grid-item-min-height);
+  padding: 12px;
+  padding: var(--u-comp-grid-item-padding);
+}
+
+.u-grid-item--disabled {
+  opacity: 0.55;
+  opacity: var(--u-comp-grid-item-disabled-opacity);
+}
+
+.u-grid-item__content {
+  gap: 4px;
+  gap: var(--u-comp-grid-item-content-gap);
+}
+
+.u-grid-item__label {
+  font-size: 15px;
+  font-size: var(--u-comp-grid-item-label-size);
+}
+
+.u-grid-item__description {
+  color: #27364a;
+  color: var(--u-comp-grid-item-description);
+  font-size: 12px;
+  font-size: var(--u-comp-grid-item-description-size);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

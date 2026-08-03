@@ -6,3 +6,16 @@
 .u-line { background: var(--u-line-color); flex: none; }
 .u-line--horizontal { height: var(--u-comp-line-width); width: var(--u-line-length); }
 .u-line--vertical { height: var(--u-line-length); width: var(--u-comp-line-width); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-line--horizontal {
+  height: 1px;
+  height: var(--u-comp-line-width);
+}
+
+.u-line--vertical {
+  width: 1px;
+  width: var(--u-comp-line-width);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

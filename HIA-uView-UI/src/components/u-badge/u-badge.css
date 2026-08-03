@@ -12,3 +12,69 @@
 .u-badge--primary .u-badge__value { background: var(--u-comp-badge-primary-surface); color: var(--u-comp-badge-primary-foreground); }
 .u-badge--accent .u-badge__value { background: var(--u-comp-badge-accent-surface); color: var(--u-comp-badge-accent-foreground); }
 .u-badge--dot .u-badge__value { border-radius: 50%; height: var(--u-comp-badge-dot-size); min-height: var(--u-comp-badge-dot-size); min-width: var(--u-comp-badge-dot-size); padding: 0; width: var(--u-comp-badge-dot-size); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-badge__value {
+  border-radius: 999px;
+  border-radius: var(--u-comp-badge-radius);
+  font-size: 12px;
+  font-size: var(--u-comp-badge-medium-font-size);
+  min-height: 22px;
+  min-height: var(--u-comp-badge-medium-size);
+  min-width: 22px;
+  min-width: var(--u-comp-badge-medium-size);
+  padding: 0 6px;
+  padding: 0 var(--u-comp-badge-inline-padding);
+}
+
+.u-badge--small .u-badge__value {
+  font-size: 10px;
+  font-size: var(--u-comp-badge-small-font-size);
+  min-height: 18px;
+  min-height: var(--u-comp-badge-small-size);
+  min-width: 18px;
+  min-width: var(--u-comp-badge-small-size);
+}
+
+.u-badge--large .u-badge__value {
+  font-size: 14px;
+  font-size: var(--u-comp-badge-large-font-size);
+  min-height: 28px;
+  min-height: var(--u-comp-badge-large-size);
+  min-width: 28px;
+  min-width: var(--u-comp-badge-large-size);
+}
+
+.u-badge--neutral .u-badge__value {
+  background: #f7f9fc;
+  background: var(--u-comp-badge-neutral-surface);
+  color: #001b2e;
+  color: var(--u-comp-badge-neutral-foreground);
+}
+
+.u-badge--primary .u-badge__value {
+  background: #0047ab;
+  background: var(--u-comp-badge-primary-surface);
+  color: #ffffff;
+  color: var(--u-comp-badge-primary-foreground);
+}
+
+.u-badge--accent .u-badge__value {
+  background: #00a8d3;
+  background: var(--u-comp-badge-accent-surface);
+  color: #001b2e;
+  color: var(--u-comp-badge-accent-foreground);
+}
+
+.u-badge--dot .u-badge__value {
+  height: 8px;
+  height: var(--u-comp-badge-dot-size);
+  min-height: 8px;
+  min-height: var(--u-comp-badge-dot-size);
+  min-width: 8px;
+  min-width: var(--u-comp-badge-dot-size);
+  width: 8px;
+  width: var(--u-comp-badge-dot-size);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

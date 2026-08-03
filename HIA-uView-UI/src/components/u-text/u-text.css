@@ -12,3 +12,46 @@
 .u-text--md { font-size: var(--u-comp-text-size-md); }
 .u-text--lg { font-size: var(--u-comp-text-size-lg); }
 .u-text[style*="--u-text-lines"] { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: var(--u-text-lines); }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-text {
+  color: #001b2e;
+  color: var(--u-comp-text-foreground);
+}
+
+.u-text--secondary {
+  color: #27364a;
+  color: var(--u-comp-text-secondary);
+}
+
+.u-text--success {
+  color: #2f855a;
+  color: var(--u-comp-text-success);
+}
+
+.u-text--warning {
+  color: #b7791f;
+  color: var(--u-comp-text-warning);
+}
+
+.u-text--danger {
+  color: #c53030;
+  color: var(--u-comp-text-danger);
+}
+
+.u-text--sm {
+  font-size: 12px;
+  font-size: var(--u-comp-text-size-sm);
+}
+
+.u-text--md {
+  font-size: 15px;
+  font-size: var(--u-comp-text-size-md);
+}
+
+.u-text--lg {
+  font-size: 18px;
+  font-size: var(--u-comp-text-size-lg);
+}
+/* HIA-uView MP-Weixin literal fallback end. */

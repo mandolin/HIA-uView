@@ -45,3 +45,45 @@
   border-color: var(--u-comp-textarea-inactive-border);
   opacity: var(--u-comp-textarea-inactive-opacity);
 }
+
+/* <lang><zh-CN>以下字面值回退由 sync-mp-weixin-css-fallbacks 依据默认主题生成；必须先于同属性的原 token 声明，以保持支持 CSS custom properties 的平台仍由 token 驱动。</zh-CN><en>The literal fallbacks below are generated from the default theme by sync-mp-weixin-css-fallbacks; they precede the original token declaration for the same property so platforms supporting CSS custom properties remain token-driven.</en></lang> */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-textarea {
+  background: #ffffff;
+  background: var(--u-comp-textarea-surface);
+  border: 1px solid #27364a;
+  border: 1px solid var(--u-comp-textarea-border);
+  border-radius: 8px;
+  border-radius: var(--u-comp-textarea-radius);
+  color: #001b2e;
+  color: var(--u-comp-textarea-foreground);
+  min-height: 88px;
+  min-height: var(--u-comp-textarea-min-height);
+  padding: 10px 12px;
+  padding: var(--u-comp-textarea-block-padding) var(--u-comp-textarea-inline-padding);
+}
+
+.u-textarea__field {
+  font-size: 16px;
+  font-size: var(--u-comp-textarea-font-size);
+  min-height: 64px;
+  min-height: var(--u-comp-textarea-field-min-height);
+}
+
+.u-textarea__count {
+  color: #27364a;
+  color: var(--u-comp-textarea-count-foreground);
+  font-size: 12px;
+  font-size: var(--u-comp-textarea-count-font-size);
+}
+
+.u-textarea--disabled,
+.u-textarea--readonly {
+  background: #f7f9fc;
+  background: var(--u-comp-textarea-inactive-surface);
+  border-color: #27364a;
+  border-color: var(--u-comp-textarea-inactive-border);
+  opacity: 0.65;
+  opacity: var(--u-comp-textarea-inactive-opacity);
+}
+/* HIA-uView MP-Weixin literal fallback end. */
