@@ -19,6 +19,7 @@
 @import "./components/u-card/u-card.css";
 @import "./components/u-cell/u-cell.css";
 @import "./components/u-cell-item/u-cell-item.css";
+@import "./components/u-car-keyboard/u-car-keyboard.css";
 @import "./components/u-city-select/u-city-select.css";
 @import "./components/u-cell-group/u-cell-group.css";
 @import "./components/u-checkbox/u-checkbox.css";
@@ -39,6 +40,7 @@
 @import "./components/u-grid/u-grid.css";
 @import "./components/u-grid-item/u-grid-item.css";
 @import "./components/u-icon/u-icon.css";
+@import "./components/u-keyboard/u-keyboard.css";
 @import "./components/u-image/u-image.css";
 @import "./components/u-input/u-input.css";
 @import "./components/u-line/u-line.css";
@@ -55,6 +57,7 @@
 @import "./components/u-nav-bar/u-nav-bar.css";
 @import "./components/u-navbar/u-navbar.css";
 @import "./components/u-no-network/u-no-network.css";
+@import "./components/u-number-keyboard/u-number-keyboard.css";
 @import "./components/u-notice/u-notice.css";
 @import "./components/u-notice-bar/u-notice-bar.css";
 @import "./components/u-number-box/u-number-box.css";

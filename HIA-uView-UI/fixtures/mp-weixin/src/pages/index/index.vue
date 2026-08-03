@@ -33,6 +33,11 @@
     <u-city-select :visible="true" title="本地列 / Local columns" :columns="fixtureSelectorColumns" :model-value="fixtureSelectorValues" close-text="关闭 / Close" confirm-text="确认 / Confirm" />
     <u-message-input input-label="本地固定长度输入 / Local fixed-length input" model-value="42" :length="4" />
 
+    <!-- <lang><zh-CN>三类键盘只消费页面自有的中性有限键/键行与文本，验证小程序编译器解析受控 keyboard surface；它们不建立金额、地区、车辆、身份、系统键盘或焦点所有权。</zh-CN><en>All three keyboards consume only page-owned neutral finite keys/key rows and copy to verify that the Mini Program compiler resolves controlled keyboard surfaces; they establish no money, region, vehicle, identity, system-keyboard, or focus ownership.</en></lang> -->
+    <u-number-keyboard :visible="true" :keys="fixtureNumberKeys" label="本地数值键 / Local numeric keys" backspace-label="删除 / Remove" confirm-text="确认 / Confirm" />
+    <u-car-keyboard :visible="true" :rows="fixtureCarRows" label="本地行键 / Local row keys" phase="primary" next-phase="secondary" switch-text="下一组 / Next" backspace-label="删除 / Remove" confirm-text="确认 / Confirm" />
+    <u-keyboard :visible="false" mode="number" :number-keys="fixtureNumberKeys" label="本地组合键 / Local composed keys" backspace-label="删除 / Remove" confirm-text="确认 / Confirm" />
+
     <!-- <lang><zh-CN>notice 只呈现页面在确认本地意图后显式写入的消息和可见状态；它不表示保存、请求或业务完成。</zh-CN><en>The notice presents only the message and visibility explicitly written by the page after local intent confirmation; it represents no save, request, or business completion.</en></lang> -->
     <u-notice
       :visible="catalogNoticeVisible"
@@ -250,6 +255,13 @@ const fixtureSelectorColumns = Object.freeze([
   Object.freeze([Object.freeze({ label: '一 / One', value: 'one' }), Object.freeze({ label: '二 / Two', value: 'two' })])
 ]);
 const fixtureSelectorValues = Object.freeze(['first', 'one']);
+
+// <lang><zh-CN>有限键和键行是中性页面内编译数据；它们不代表金额、地区、车辆或身份领域模型。</zh-CN><en>Finite keys and key rows are neutral in-page compilation data; they represent no money, region, vehicle, or identity domain model.</en></lang>
+const fixtureNumberKeys = Object.freeze(['1', '2', '3', '4']);
+const fixtureCarRows = Object.freeze([
+  Object.freeze(['A', 'B', 'C']),
+  Object.freeze(['1', '2', '3'])
+]);
 
 // <lang><zh-CN>新增高频控件均使用页面内局部 refs；它们不进入目录 mock、共享 store 或外部数据源。</zh-CN><en>New high-frequency controls use page-local refs only; they enter no catalog mock, shared store, or external data source.</en></lang>
 const fixtureTextareaValue = ref('');

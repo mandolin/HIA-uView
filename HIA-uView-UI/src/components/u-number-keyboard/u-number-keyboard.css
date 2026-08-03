@@ -1,0 +1,58 @@
+/**
+ * @component UNumberKeyboardStyle
+ * @lang zh-CN 定义调用方键集合的 token 化数字键盘布局；样式不引入图标、长按动画、随机键、平台键盘或领域格式。
+ * @lang en Defines tokenized numeric-keyboard layout for caller key collections; styles introduce no icon, long-press animation, random key, platform keyboard, or domain format.
+ */
+.u-number-keyboard { display: grid; gap: var(--u-comp-number-keyboard-gap); padding: var(--u-comp-number-keyboard-padding); border: 1px solid var(--u-comp-number-keyboard-border); border-radius: var(--u-comp-number-keyboard-radius); background: var(--u-comp-number-keyboard-surface); color: var(--u-comp-number-keyboard-foreground); }
+.u-number-keyboard__keys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--u-comp-number-keyboard-key-gap); }
+.u-number-keyboard__key, .u-number-keyboard__action, .u-number-keyboard__confirm { min-height: var(--u-comp-number-keyboard-control-min-height); padding: var(--u-comp-number-keyboard-control-padding); border: 1px solid var(--u-comp-number-keyboard-control-border); border-radius: var(--u-comp-number-keyboard-control-radius); background: var(--u-comp-number-keyboard-key-surface); color: var(--u-comp-number-keyboard-key-foreground); font: inherit; font-size: var(--u-comp-number-keyboard-key-font-size); }
+.u-number-keyboard__actions { display: flex; gap: var(--u-comp-number-keyboard-action-gap); justify-content: end; }
+.u-number-keyboard__action { background: var(--u-comp-number-keyboard-action-surface); color: var(--u-comp-number-keyboard-action-foreground); }
+.u-number-keyboard__confirm { background: var(--u-comp-number-keyboard-confirm-surface); color: var(--u-comp-number-keyboard-confirm-foreground); }
+.u-number-keyboard__key:focus-visible, .u-number-keyboard__action:focus-visible, .u-number-keyboard__confirm:focus-visible { outline: 2px solid var(--u-comp-number-keyboard-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-number-keyboard {
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #f7f9fc;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-number-keyboard__keys {
+  gap: 8px;
+}
+
+.u-number-keyboard__key, .u-number-keyboard__action, .u-number-keyboard__confirm {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #001b2e;
+  font-size: 16px;
+}
+
+.u-number-keyboard__actions {
+  gap: 8px;
+}
+
+.u-number-keyboard__action {
+  background: #f7f9fc;
+  color: #001b2e;
+}
+
+.u-number-keyboard__confirm {
+  background: #0047ab;
+  color: #ffffff;
+}
+
+.u-number-keyboard__key:focus-visible, .u-number-keyboard__action:focus-visible, .u-number-keyboard__confirm:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

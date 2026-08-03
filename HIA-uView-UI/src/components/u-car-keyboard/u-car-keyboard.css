@@ -1,0 +1,59 @@
+/**
+ * @component UCarKeyboardStyle
+ * @lang zh-CN 定义 caller 键行的 token 化车牌式键盘布局；样式不携带地区字、图标、随机化、长按或 timer 表达。
+ * @lang en Defines tokenized vehicle-keyboard layout for caller key rows; styles carry no region glyph, icon, randomization, long press, or timer expression.
+ */
+.u-car-keyboard { display: grid; gap: var(--u-comp-car-keyboard-gap); padding: var(--u-comp-car-keyboard-padding); border: 1px solid var(--u-comp-car-keyboard-border); border-radius: var(--u-comp-car-keyboard-radius); background: var(--u-comp-car-keyboard-surface); color: var(--u-comp-car-keyboard-foreground); }
+.u-car-keyboard__row { display: flex; flex-wrap: wrap; gap: var(--u-comp-car-keyboard-key-gap); justify-content: center; }
+.u-car-keyboard__key, .u-car-keyboard__action, .u-car-keyboard__confirm { min-width: var(--u-comp-car-keyboard-key-min-width); min-height: var(--u-comp-car-keyboard-control-min-height); padding: var(--u-comp-car-keyboard-control-padding); border: 1px solid var(--u-comp-car-keyboard-control-border); border-radius: var(--u-comp-car-keyboard-control-radius); background: var(--u-comp-car-keyboard-key-surface); color: var(--u-comp-car-keyboard-key-foreground); font: inherit; font-size: var(--u-comp-car-keyboard-key-font-size); }
+.u-car-keyboard__actions { display: flex; flex-wrap: wrap; gap: var(--u-comp-car-keyboard-action-gap); justify-content: end; }
+.u-car-keyboard__action { background: var(--u-comp-car-keyboard-action-surface); color: var(--u-comp-car-keyboard-action-foreground); }
+.u-car-keyboard__confirm { background: var(--u-comp-car-keyboard-confirm-surface); color: var(--u-comp-car-keyboard-confirm-foreground); }
+.u-car-keyboard__key:focus-visible, .u-car-keyboard__action:focus-visible, .u-car-keyboard__confirm:focus-visible { outline: 2px solid var(--u-comp-car-keyboard-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-car-keyboard {
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #f7f9fc;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-car-keyboard__row {
+  gap: 6px;
+}
+
+.u-car-keyboard__key, .u-car-keyboard__action, .u-car-keyboard__confirm {
+  min-width: 36px;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #001b2e;
+  font-size: 15px;
+}
+
+.u-car-keyboard__actions {
+  gap: 8px;
+}
+
+.u-car-keyboard__action {
+  background: #f7f9fc;
+  color: #001b2e;
+}
+
+.u-car-keyboard__confirm {
+  background: #0047ab;
+  color: #ffffff;
+}
+
+.u-car-keyboard__key:focus-visible, .u-car-keyboard__action:focus-visible, .u-car-keyboard__confirm:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

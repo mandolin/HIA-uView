@@ -51,8 +51,8 @@ test('keeps controlled component declarations aligned', async () => {
     await access(resolve(record.contract));
   }
 
-  // <lang><zh-CN>当前增量三项在先前八十项基础上形成八十三项完整声明集合。</zh-CN><en>The current three-item increment forms a complete declared set of eighty-three over the preceding eighty items.</en></lang>
-  assert.equal(manifest.components.length, 83);
+  // <lang><zh-CN>本测试保持前三项受控组件的契约；完整 manifest 可以包含后续受审阅组件。</zh-CN><en>This test retains the first three controlled-component contracts; the complete manifest may contain subsequently reviewed components.</en></lang>
+  assert.equal(manifest.components.length, 86);
 });
 
 /**

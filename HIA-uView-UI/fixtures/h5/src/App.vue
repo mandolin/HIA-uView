@@ -29,6 +29,10 @@
     <UActionSheetItem text="Local choice / 本地选择" value="fixture-choice" />
     <UCitySelect :visible="true" title="Local columns / 本地列" :columns="fixtureSelectorColumns" :model-value="fixtureSelectorValues" close-text="Close / 关闭" confirm-text="Confirm / 确认" />
     <UMessageInput input-label="Local fixed-length input / 本地固定长度输入" model-value="42" :length="4" />
+    <!-- <lang><zh-CN>三类键盘均使用 fixture-owned 的有限静态键/键行和文字，验证受控 emit 表面可被 H5 构建解析；它们不代表金额、车牌地区、身份或系统键盘行为。</zh-CN><en>All three keyboards use fixture-owned finite static keys/key rows and copy to verify controlled emit surfaces are resolved by the H5 build; they represent no money, vehicle-region, identity, or system-keyboard behavior.</en></lang> -->
+    <UNumberKeyboard :visible="true" :keys="fixtureNumberKeys" label="Local numeric keys / 本地数值键" backspace-label="Remove / 删除" confirm-text="Confirm / 确认" />
+    <UCarKeyboard :visible="true" :rows="fixtureCarRows" label="Local row keys / 本地行键" phase="primary" next-phase="secondary" switch-text="Next / 下一组" backspace-label="Remove / 删除" confirm-text="Confirm / 确认" />
+    <UKeyboard :visible="false" mode="number" :number-keys="fixtureNumberKeys" label="Local composed keys / 本地组合键" backspace-label="Remove / 删除" confirm-text="Confirm / 确认" />
     <UBackTop :visible="true" label="Top / 顶部" @back-top="recordP54Intent('top')" />
     <UFab :visible="true" label="Create / 新建" @click="recordP54Intent('fab')" />
     <URootPortal :visible="true" :layer="1200"><UTransition :visible="true" mode="fade"><UTopTips :visible="true" message="Local overlay / 本地浮层" close-text="Close / 关闭" @close="recordP54Intent('tips')" /></UTransition></URootPortal>
@@ -42,7 +46,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { UActionSheetItem, UBackTop, UButton, UCellItem, UCitySelect, UConfigProvider, UDropdown, UDropdownItem, UFab, ULoading, ULoadingPopup, UMask, UMessageInput, UNavbar, UNoNetwork, UNoticeBar, URootPortal, USafeBottom, USection, USelect, USlider, UStatusBar, UText, UTopTips, UTransition } from '../../../src/index.mjs';
+import { UActionSheetItem, UBackTop, UButton, UCarKeyboard, UCellItem, UCitySelect, UConfigProvider, UDropdown, UDropdownItem, UFab, UKeyboard, ULoading, ULoadingPopup, UMask, UMessageInput, UNavbar, UNoNetwork, UNoticeBar, UNumberKeyboard, URootPortal, USafeBottom, USection, USelect, USlider, UStatusBar, UText, UTopTips, UTransition } from '../../../src/index.mjs';
 
 // <lang><zh-CN>fixture 状态只来自本地 ref，便于 H5 smoke 对稳定文本进行检查。</zh-CN><en>Fixture state comes from local refs only, allowing H5 smoke to inspect stable text.</en></lang>
 const selected = ref('public');
@@ -59,6 +63,12 @@ const fixtureSelectorColumns = Object.freeze([
   Object.freeze([Object.freeze({ label: 'One / 一', value: 'one' }), Object.freeze({ label: 'Two / 二', value: 'two' })])
 ]);
 const fixtureSelectorValues = Object.freeze(['first', 'one']);
+// <lang><zh-CN>键和键行均为中性本地 fixture 数据；它们只检验受控键盘组合，不携带金额、地区、车辆或身份含义。</zh-CN><en>Keys and key rows are neutral local fixture data; they test controlled keyboard composition only and carry no money, region, vehicle, or identity meaning.</en></lang>
+const fixtureNumberKeys = Object.freeze(['1', '2', '3', '4']);
+const fixtureCarRows = Object.freeze([
+  Object.freeze(['A', 'B', 'C']),
+  Object.freeze(['1', '2', '3'])
+]);
 
 /**
  * @lang zh-CN 记录 fixture 内观察到的 P54 局部 intent；不将 UI intent 解释为业务完成或执行副作用。

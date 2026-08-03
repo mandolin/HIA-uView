@@ -13,6 +13,7 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-calendar` | `UCalendar` | [UCalendar](calendar.md) | Controlled local date selection / 受控本地日期选择 |
 | `u-card` | `UCard` | [UCard](card.md) | Neutral surface and slots / 中性表面与插槽 |
 | `u-cell` | `UCell` | [UCell](cell.md) | Text row and click intent / 文字行与 click 意图 |
+| `u-car-keyboard` | `UCarKeyboard` | [UCarKeyboard](car-keyboard.md) | Caller-owned finite key rows / 调用方拥有的有限键行 |
 | `u-city-select` | `UCitySelect` | [UCitySelect](city-select.md) | Caller-owned finite column selection / 调用方拥有的有限列选择 |
 | `u-cell-group` | `UCellGroup` | [UCellGroup](cell-group.md) | Information-row group / 信息行分组 |
 | `u-checkbox` | `UCheckbox` | [UCheckbox](checkbox.md) | Controlled boolean/membership intent / 受控布尔或成员选择意图 |
@@ -36,6 +37,7 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-avatar` | `UAvatar` | [UAvatar](avatar.md) | Image or initials placeholder / 图片或 initials 占位 |
 | `u-badge` | `UBadge` | [UBadge](badge.md) | Controlled text or dot badge / 受控文字或 dot 徽标 |
 | `u-input` | `UInput` | [UInput](input.md) | Controlled string input intent / 受控字符串输入意图 |
+| `u-keyboard` | `UKeyboard` | [UKeyboard](keyboard.md) | Controlled local keyboard overlay / 受控局部键盘 overlay |
 | `u-line` | `ULine` | [ULine](line.md) | Local divider primitive / 局部分隔原语 |
 | `u-line-progress` | `ULineProgress` | [ULineProgress](line-progress.md) | Static bounded progress projection / 静态受边界保护进度投影 |
 | `u-link` | `ULink` | [ULink](link.md) | Link-like text without href / 无 href 的链接样式文字 |
@@ -47,6 +49,7 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-nav-bar` | `UNavBar` | [UNavBar](nav-bar.md) | Title and navigation/action intent / 标题与导航或操作意图 |
 | `u-notice` | `UNotice` | [UNotice](notice.md) | Local feedback presentation / 本地反馈呈现 |
 | `u-number-box` | `UNumberBox` | [UNumberBox](number-box.md) | Bounded local numeric intent / 受边界保护的本地数值意图 |
+| `u-number-keyboard` | `UNumberKeyboard` | [UNumberKeyboard](number-keyboard.md) | Caller-owned finite key intent / 调用方拥有的有限键意图 |
 | `u-pagination` | `UPagination` | [UPagination](pagination.md) | Controlled finite page selection / 受控有限页码选择 |
 | `u-picker` | `UPicker` | [UPicker](picker.md) | Controlled finite option selection / 受控有限选项选择 |
 | `u-popup` | `UPopup` | [UPopup](popup.md) | Controlled local overlay / 受控局部浮层 |
@@ -90,6 +93,6 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-config-provider` | `UConfigProvider` | [UConfigProvider](config-provider.md) | Finite theme-density subtree scope / 有限主题密度子树范围 |
 | `u-root-portal` | `URootPortal` | [URootPortal](root-portal.md) | Same-tree overlay-root wrapper / 同树 overlay-root 包装器 |
 
-The index currently contains 83 declared component contracts. `u-navbar` and `u-notice-bar` are separate, bounded APIs; they do not alias the earlier `u-nav-bar` or `u-notice` contracts. Use named imports or the explicit `UView` plugin as documented in [runtime consumption](runtime-consumption.md). Import `style.css` explicitly from application-owned global style setup. The current [compatibility profile](compatibility.md), [examples](examples.md), and [migration guidance](migration-from-uview.md) state the evidence and limits that apply to this index.
+The index currently contains 86 declared component contracts. `u-navbar` and `u-notice-bar` are separate, bounded APIs; they do not alias the earlier `u-nav-bar` or `u-notice` contracts. Use named imports or the explicit `UView` plugin as documented in [runtime consumption](runtime-consumption.md). Import `style.css` explicitly from application-owned global style setup. The current [compatibility profile](compatibility.md), [examples](examples.md), and [migration guidance](migration-from-uview.md) state the evidence and limits that apply to this index.
 
-该索引当前包含 83 个已声明的组件契约。`u-navbar` 与 `u-notice-bar` 是独立、受限的 API，不是既有 `u-nav-bar` 或 `u-notice` 契约的别名。按 [runtime consumption](runtime-consumption.md) 所述使用命名导入或显式 `UView` plugin，并从应用拥有的全局样式设置显式导入 `style.css`。当前 [compatibility profile](compatibility.md)、[examples](examples.md) 与 [migration guidance](migration-from-uview.md) 说明此索引适用的证据和限制。
+该索引当前包含 86 个已声明的组件契约。`u-navbar` 与 `u-notice-bar` 是独立、受限的 API，不是既有 `u-nav-bar` 或 `u-notice` 契约的别名。按 [runtime consumption](runtime-consumption.md) 所述使用命名导入或显式 `UView` plugin，并从应用拥有的全局样式设置显式导入 `style.css`。当前 [compatibility profile](compatibility.md)、[examples](examples.md) 与 [migration guidance](migration-from-uview.md) 说明此索引适用的证据和限制。

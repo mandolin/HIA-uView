@@ -1,0 +1,27 @@
+/**
+ * @component UKeyboardStyle
+ * @lang zh-CN 定义受控局部 keyboard panel 的有限 fixed overlay 和 token 化表面；样式不创建全局 service、焦点锁、路由或平台键盘。
+ * @lang en Defines finite fixed-overlay and tokenized surface for a controlled local keyboard panel; styles create no global service, focus lock, router, or platform keyboard.
+ */
+.u-keyboard { position: fixed; z-index: var(--u-keyboard-layer, var(--u-comp-keyboard-layer)); inset: 0; pointer-events: none; }
+.u-keyboard__panel { position: absolute; z-index: var(--u-keyboard-layer, var(--u-comp-keyboard-layer)); right: 0; bottom: 0; left: 0; display: grid; gap: var(--u-comp-keyboard-gap); padding: var(--u-comp-keyboard-padding); border: 1px solid var(--u-comp-keyboard-border); border-radius: var(--u-comp-keyboard-radius) var(--u-comp-keyboard-radius) 0 0; background: var(--u-comp-keyboard-surface); color: var(--u-comp-keyboard-foreground); pointer-events: auto; }
+.u-keyboard__title { font-size: var(--u-comp-keyboard-title-font-size); font-weight: var(--u-comp-keyboard-title-font-weight); }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-keyboard__panel {
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #f7f9fc;
+  border-radius: 12px 12px 0 0;
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-keyboard__title {
+  font-size: 16px;
+  font-weight: 600;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

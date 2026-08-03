@@ -440,7 +440,10 @@
     { "name": "u-transition", "source": "src/components/u-transition/u-transition.vue", "contract": "docs/transition.md", "locales": ["zh-Hans", "en"] },
     { "name": "u-action-sheet-item", "source": "src/components/u-action-sheet-item/u-action-sheet-item.vue", "contract": "docs/action-sheet-item.md", "locales": ["zh-Hans", "en"] },
     { "name": "u-city-select", "source": "src/components/u-city-select/u-city-select.vue", "contract": "docs/city-select.md", "locales": ["zh-Hans", "en"] },
-    { "name": "u-message-input", "source": "src/components/u-message-input/u-message-input.vue", "contract": "docs/message-input.md", "locales": ["zh-Hans", "en"] }
+    { "name": "u-message-input", "source": "src/components/u-message-input/u-message-input.vue", "contract": "docs/message-input.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-car-keyboard", "source": "src/components/u-car-keyboard/u-car-keyboard.vue", "contract": "docs/car-keyboard.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-keyboard", "source": "src/components/u-keyboard/u-keyboard.vue", "contract": "docs/keyboard.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-number-keyboard", "source": "src/components/u-number-keyboard/u-number-keyboard.vue", "contract": "docs/number-keyboard.md", "locales": ["zh-Hans", "en"] }
   ],
   "fixtures": [
     {
