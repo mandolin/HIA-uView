@@ -26,10 +26,13 @@ import UForm from './components/u-form/u-form.vue';
 import UFormItem from './components/u-form-item/u-form-item.vue';
 import UFullScreen from './components/u-full-screen/u-full-screen.vue';
 import UIcon from './components/u-icon/u-icon.vue';
+import UIndexAnchor from './components/u-index-anchor/u-index-anchor.vue';
+import UIndexList from './components/u-index-list/u-index-list.vue';
 import UKeyboard from './components/u-keyboard/u-keyboard.vue';
 import UImage from './components/u-image/u-image.vue';
 import UAvatar from './components/u-avatar/u-avatar.vue';
 import UAvatarCropper from './components/u-avatar-cropper/u-avatar-cropper.vue';
+import ULazyLoad from './components/u-lazy-load/u-lazy-load.vue';
 import UAlertTips from './components/u-alert-tips/u-alert-tips.vue';
 import UCalendar from './components/u-calendar/u-calendar.vue';
 import UCard from './components/u-card/u-card.vue';
@@ -82,11 +85,13 @@ import UStatusBar from './components/u-status-bar/u-status-bar.vue';
 import UStep from './components/u-step/u-step.vue';
 import USteps from './components/u-steps/u-steps.vue';
 import USticky from './components/u-sticky/u-sticky.vue';
+import USubsection from './components/u-subsection/u-subsection.vue';
 import USwiper from './components/u-swiper/u-swiper.vue';
 import USwitch from './components/u-switch/u-switch.vue';
 import USwipeAction from './components/u-swipe-action/u-swipe-action.vue';
 import UTabbar from './components/u-tabbar/u-tabbar.vue';
 import UTabs from './components/u-tabs/u-tabs.vue';
+import UTabsSwiper from './components/u-tabs-swiper/u-tabs-swiper.vue';
 import UTextarea from './components/u-textarea/u-textarea.vue';
 import UTimeLine from './components/u-time-line/u-time-line.vue';
 import UTimeLineItem from './components/u-time-line-item/u-time-line-item.vue';
@@ -102,6 +107,7 @@ import USafeBottom from './components/u-safe-bottom/u-safe-bottom.vue';
 import UFab from './components/u-fab/u-fab.vue';
 import UValidationMessage from './components/u-validation-message/u-validation-message.vue';
 import UVerificationCode from './components/u-verification-code/u-verification-code.vue';
+import UWaterfall from './components/u-waterfall/u-waterfall.vue';
 
 /**
  * @lang zh-CN 显式 plugin 可注册的稳定模板名称与组件实现映射。该只读集合必须与 component manifest 一致；manifest 继续只服务开发期声明验证，不承担 runtime registry 职责。
@@ -155,8 +161,13 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-grid-item', component: UGridItem }),
   // <lang><zh-CN>图标仅呈现调用方文字符号或 slot，不加载字体、图片或 icon registry。</zh-CN><en>The icon presents caller text or slot only and loads no font, image, or icon registry.</en></lang>
   Object.freeze({ name: 'u-icon', component: UIcon }),
+  // <lang><zh-CN>index anchor/list 只投影 caller groups 与 local select，不观察或控制 scroll。</zh-CN><en>Index anchor/list project caller groups and local select only and neither observe nor control scroll.</en></lang>
+  Object.freeze({ name: 'u-index-anchor', component: UIndexAnchor }),
+  Object.freeze({ name: 'u-index-list', component: UIndexList }),
   // <lang><zh-CN>图片只呈现调用方 src、尺寸、替代文字和错误 intent，不拥有请求或缓存。</zh-CN><en>The image presents caller src, size, alt text, and error intent only and owns no request or cache.</en></lang>
   Object.freeze({ name: 'u-image', component: UImage }),
+  // <lang><zh-CN>lazy-load 只依据 caller active 创建原生 image 并转发事件，不观察 viewport 或管理资源。</zh-CN><en>Lazy-load creates a native image only from caller active and forwards events, observing no viewport and managing no resource.</en></lang>
+  Object.freeze({ name: 'u-lazy-load', component: ULazyLoad }),
   // <lang><zh-CN>头像只提供图片或 initials 占位，不解释身份、性别或等级。</zh-CN><en>The avatar provides image or initials placeholder only and interprets no identity, sex, or level.</en></lang>
   Object.freeze({ name: 'u-avatar', component: UAvatar }),
   // <lang><zh-CN>受控输入只显示调用方字符串并 emit 未修改的本地输入意图。</zh-CN><en>The controlled input displays caller string only and emits unmodified local input intent.</en></lang>
@@ -222,6 +233,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-steps', component: USteps }),
   // <lang><zh-CN>吸顶只投影标准 CSS sticky；调用方负责目标平台支持判断。</zh-CN><en>Sticky projects standard CSS sticky only; the caller owns target-platform support decisions.</en></lang>
   Object.freeze({ name: 'u-sticky', component: USticky }),
+  // <lang><zh-CN>subsection 只报告 caller-controlled 有限选择，不解释领域筛选或同步路由。</zh-CN><en>Subsection reports caller-controlled finite selection only and interprets no domain filter or route synchronization.</en></lang>
+  Object.freeze({ name: 'u-subsection', component: USubsection }),
   // <lang><zh-CN>轮播只呈现静态 slide 与显式前后选择，不使用 autoplay、timer 或媒体源。</zh-CN><en>The swiper presents static slides and explicit previous/next selection only, using no autoplay, timer, or media source.</en></lang>
   Object.freeze({ name: 'u-swiper', component: USwiper }),
   // <lang><zh-CN>切换只回传受控布尔选择，不执行权限、持久化或远程更新。</zh-CN><en>The switch returns controlled boolean selection only and performs no authorization, persistence, or remote update.</en></lang>
@@ -231,6 +244,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-tabbar', component: UTabbar }),
   // <lang><zh-CN>标签栏只回传受控切换，不请求、懒加载或管理隐藏面板。</zh-CN><en>The tab strip returns controlled changes only and requests, lazy-loads, or manages no hidden panel.</en></lang>
   Object.freeze({ name: 'u-tabs', component: UTabs }),
+  // <lang><zh-CN>tabs-swiper 只展示 caller 当前静态 panel 并报告有限候选，不使用手势或原生 swiper。</zh-CN><en>Tabs-swiper displays only the caller current static panel and reports finite candidates, using no gesture or native swiper.</en></lang>
+  Object.freeze({ name: 'u-tabs-swiper', component: UTabsSwiper }),
   // <lang><zh-CN>多行输入只回传受控字符串和焦点/确认 intent，不执行校验、提交或持久化。</zh-CN><en>The textarea returns controlled string and focus/confirm intent only and performs no validation, submission, or persistence.</en></lang>
   Object.freeze({ name: 'u-textarea', component: UTextarea }),
   Object.freeze({ name: 'u-text', component: UText }),
@@ -290,7 +305,9 @@ export const UVIEW_COMPONENTS = Object.freeze([
   // <lang><zh-CN>upload 只呈现 caller file state 并报告 select/preview/remove/retry intent，不操作文件或网络。</zh-CN><en>Upload presents caller file state and reports select/preview/remove/retry intent only and operates no file or network.</en></lang>
   Object.freeze({ name: 'u-upload', component: UUpload }),
   // <lang><zh-CN>verification-code 只投影 caller remaining/status 并报告受授权 request，不发送验证码或计时。</zh-CN><en>Verification-code projects caller remaining/status and reports authorized request only and sends no code or timing.</en></lang>
-  Object.freeze({ name: 'u-verification-code', component: UVerificationCode })
+  Object.freeze({ name: 'u-verification-code', component: UVerificationCode }),
+  // <lang><zh-CN>waterfall 只按确定性 round-robin 投影有限列，不测量高度、重排或无限获取数据。</zh-CN><en>Waterfall projects finite columns by deterministic round robin only and measures no height, reflows nothing, and fetches no infinite data.</en></lang>
+  Object.freeze({ name: 'u-waterfall', component: UWaterfall })
 ]);
 
 /**
@@ -329,4 +346,6 @@ export const UView = Object.freeze({
 export { UActionSheet, UActionSheetItem, UAlertTips, UAvatarCropper, UBackTop, UButton, UCalendar, UCard, UCell, UCellGroup, UCellItem, UCarKeyboard, UCheckbox, UCheckboxGroup, UCitySelect, UCollapse, UCollapseItem, UCol, UConfigProvider, UDropdown, UDropdownItem, UEmpty, UFab, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, UKeyboard, ULine, ULineProgress, ULink, UList, ULoading, ULoadingPage, ULoadingPopup, ULoadmore, UMask, UMessageInput, UModal, UNavbar, UNavBar, UNoNetwork, UNotice, UNoticeBar, UNumberKeyboard, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URootPortal, URow, USafeBottom, USection, USelect, USlider, USwipeAction, UStatusBar, UTag, UBadge, UText, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UTopTips, UTransition, UUpload, UValidationMessage, UVerificationCode };
 // <lang><zh-CN>本批命名导出保持与 manifest/plugin 的同名实现一致；它们不在 import 时注册组件或写入 locale 状态。</zh-CN><en>These batch named exports remain aligned with manifest/plugin implementations; they register no component and write no locale state at import time.</en></lang>
 export { UCircleProgress, UColumnNotice, UCountDown, UFullScreen, URowNotice, UStep, UTimeLine, UTimeLineItem };
+// <lang><zh-CN>本批命名导出继续保持 index、lazy、segment、静态 panel 与确定性列的 caller-owned 边界；它们不在 import 时注册组件或访问平台状态。</zh-CN><en>These batch named exports retain caller-owned boundaries for index, lazy, segment, static panel, and deterministic columns; they register no component and access no platform state at import time.</en></lang>
+export { UIndexAnchor, UIndexList, ULazyLoad, USubsection, UTabsSwiper, UWaterfall };
 export default UView;

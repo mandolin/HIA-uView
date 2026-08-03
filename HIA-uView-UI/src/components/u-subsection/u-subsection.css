@@ -1,0 +1,76 @@
+/**
+ * @component USubsectionStyle
+ * @lang zh-CN 定义有限 subsection controls 的中性、active 与 disabled 呈现；不编码业务筛选或内容加载状态。
+ * @lang en Defines neutral, active, and disabled presentation for finite subsection controls; it encodes no business filter or content-loading state.
+ */
+
+.u-subsection {
+  background: var(--u-comp-subsection-surface);
+  border: 1px solid var(--u-comp-subsection-border);
+  border-radius: var(--u-comp-subsection-radius);
+  display: flex;
+  gap: var(--u-comp-subsection-gap);
+  padding: var(--u-comp-subsection-padding);
+}
+
+.u-subsection__item {
+  background: var(--u-comp-subsection-item-surface);
+  border: 1px solid transparent;
+  border-radius: var(--u-comp-subsection-item-radius);
+  color: var(--u-comp-subsection-foreground);
+  flex: 1 1 0;
+  font-size: var(--u-comp-subsection-font-size);
+  min-height: var(--u-comp-subsection-min-height);
+  padding: var(--u-comp-subsection-item-padding);
+}
+
+.u-subsection__item--active {
+  background: var(--u-comp-subsection-active-surface);
+  border-color: var(--u-comp-subsection-active-border);
+  color: var(--u-comp-subsection-active-foreground);
+}
+
+.u-subsection__item--disabled {
+  opacity: var(--u-comp-subsection-disabled-opacity);
+}
+
+.u-subsection__item:focus-visible {
+  outline: 2px solid var(--u-comp-subsection-focus-ring);
+  outline-offset: 2px;
+}
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-subsection {
+  background: #f7f9fc;
+  border: 1px solid #27364a;
+  border-radius: 10px;
+  gap: 6px;
+  padding: 4px;
+}
+
+.u-subsection__item {
+  background: #ffffff;
+  border-radius: 7px;
+  color: #001b2e;
+  font-size: 14px;
+  min-height: 36px;
+  padding: 0 10px;
+}
+
+.u-subsection__item--active {
+  background: #0047ab;
+  border-color: #0047ab;
+  color: #ffffff;
+}
+
+.u-subsection__item--disabled {
+  opacity: 0.6;
+}
+
+.u-subsection__item:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

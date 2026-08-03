@@ -1,0 +1,125 @@
+/**
+ * @component UTabsSwiperStyle
+ * @lang zh-CN 定义静态 caller-controlled tab/panel 与可选 prev/next controls 的局部布局；不包含 swipe、动画或路由状态。
+ * @lang en Defines local layout for static caller-controlled tabs/panel and optional prev/next controls; it contains no swipe, animation, or route state.
+ */
+
+.u-tabs-swiper {
+  background: var(--u-comp-tabs-swiper-surface);
+  border: 1px solid var(--u-comp-tabs-swiper-border);
+  border-radius: var(--u-comp-tabs-swiper-radius);
+  color: var(--u-comp-tabs-swiper-foreground);
+  display: grid;
+  gap: var(--u-comp-tabs-swiper-gap);
+  padding: var(--u-comp-tabs-swiper-padding);
+}
+
+.u-tabs-swiper__tabs,
+.u-tabs-swiper__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--u-comp-tabs-swiper-control-gap);
+}
+
+.u-tabs-swiper__tab,
+.u-tabs-swiper__control {
+  background: var(--u-comp-tabs-swiper-control-surface);
+  border: 1px solid var(--u-comp-tabs-swiper-control-border);
+  border-radius: var(--u-comp-tabs-swiper-control-radius);
+  color: var(--u-comp-tabs-swiper-control-foreground);
+  font-size: var(--u-comp-tabs-swiper-control-font-size);
+  min-height: var(--u-comp-tabs-swiper-control-min-height);
+  padding: var(--u-comp-tabs-swiper-control-padding);
+}
+
+.u-tabs-swiper__tab--active {
+  background: var(--u-comp-tabs-swiper-active-surface);
+  border-color: var(--u-comp-tabs-swiper-active-border);
+  color: var(--u-comp-tabs-swiper-active-foreground);
+}
+
+.u-tabs-swiper__tab--disabled {
+  opacity: var(--u-comp-tabs-swiper-disabled-opacity);
+}
+
+.u-tabs-swiper__panel {
+  display: grid;
+  gap: var(--u-comp-tabs-swiper-panel-gap);
+  min-height: var(--u-comp-tabs-swiper-panel-min-height);
+}
+
+.u-tabs-swiper__label {
+  font-size: var(--u-comp-tabs-swiper-label-font-size);
+  font-weight: var(--u-comp-tabs-swiper-label-font-weight);
+}
+
+.u-tabs-swiper__description {
+  color: var(--u-comp-tabs-swiper-description-foreground);
+  font-size: var(--u-comp-tabs-swiper-description-font-size);
+}
+
+.u-tabs-swiper__tab:focus-visible,
+.u-tabs-swiper__control:focus-visible {
+  outline: 2px solid var(--u-comp-tabs-swiper-focus-ring);
+  outline-offset: 2px;
+}
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-tabs-swiper {
+  background: #ffffff;
+  border: 1px solid #27364a;
+  border-radius: 12px;
+  color: #001b2e;
+  gap: 12px;
+  padding: 12px;
+}
+
+.u-tabs-swiper__tabs,
+.u-tabs-swiper__controls {
+  gap: 8px;
+}
+
+.u-tabs-swiper__tab,
+.u-tabs-swiper__control {
+  background: #f7f9fc;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  color: #001b2e;
+  font-size: 14px;
+  min-height: 36px;
+  padding: 0 10px;
+}
+
+.u-tabs-swiper__tab--active {
+  background: #0047ab;
+  border-color: #0047ab;
+  color: #ffffff;
+}
+
+.u-tabs-swiper__tab--disabled {
+  opacity: 0.6;
+}
+
+.u-tabs-swiper__panel {
+  gap: 4px;
+  min-height: 44px;
+}
+
+.u-tabs-swiper__label {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.u-tabs-swiper__description {
+  color: #27364a;
+  font-size: 14px;
+}
+
+.u-tabs-swiper__tab:focus-visible,
+.u-tabs-swiper__control:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

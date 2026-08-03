@@ -37,11 +37,14 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-grid` | `UGrid` | [UGrid](grid.md) | Controlled local grid container / 受控本地网格容器 |
 | `u-grid-item` | `UGridItem` | [UGridItem](grid-item.md) | Declarative grid item / 声明式网格项目 |
 | `u-icon` | `UIcon` | [UIcon](icon.md) | Text-symbol or slot icon placeholder / 文字符号或 slot 图标占位 |
+| `u-index-anchor` | `UIndexAnchor` | [UIndexAnchor](index-anchor.md) | Caller-controlled index anchor intent / 调用方受控索引锚点意图 |
+| `u-index-list` | `UIndexList` | [UIndexList](index-list.md) | Finite index-group projection / 有限索引组投影 |
 | `u-image` | `UImage` | [UImage](image.md) | Caller-owned native image projection / 调用方拥有的原生图片投影 |
 | `u-avatar` | `UAvatar` | [UAvatar](avatar.md) | Image or initials placeholder / 图片或 initials 占位 |
 | `u-avatar-cropper` | `UAvatarCropper` | [UAvatarCropper](avatar-cropper.md) | Caller-owned crop geometry intent / 调用方拥有的裁剪几何意图 |
 | `u-badge` | `UBadge` | [UBadge](badge.md) | Controlled text or dot badge / 受控文字或 dot 徽标 |
 | `u-input` | `UInput` | [UInput](input.md) | Controlled string input intent / 受控字符串输入意图 |
+| `u-lazy-load` | `ULazyLoad` | [ULazyLoad](lazy-load.md) | Caller-controlled deferred image projection / 调用方受控延迟图片投影 |
 | `u-keyboard` | `UKeyboard` | [UKeyboard](keyboard.md) | Controlled local keyboard overlay / 受控局部键盘 overlay |
 | `u-line` | `ULine` | [ULine](line.md) | Local divider primitive / 局部分隔原语 |
 | `u-line-progress` | `ULineProgress` | [ULineProgress](line-progress.md) | Static bounded progress projection / 静态受边界保护进度投影 |
@@ -74,10 +77,12 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-steps` | `USteps` | [USteps](steps.md) | Declarative finite step sequence / 声明式有限步骤序列 |
 | `u-step` | `UStep` | [UStep](step.md) | Declarative single-step projection / 声明式单步骤投影 |
 | `u-sticky` | `USticky` | [USticky](sticky.md) | CSS-only sticky projection / 仅 CSS 吸顶投影 |
+| `u-subsection` | `USubsection` | [USubsection](subsection.md) | Controlled finite segment selection / 受控有限区段选择 |
 | `u-swipe-action` | `USwipeAction` | [USwipeAction](swipe-action.md) | Explicit local action slot / 显式局部操作槽 |
 | `u-swiper` | `USwiper` | [USwiper](swiper.md) | Static slide deck / 静态 slide deck |
 | `u-switch` | `USwitch` | [USwitch](switch.md) | Controlled boolean choice / 受控布尔选择 |
 | `u-tabs` | `UTabs` | [UTabs](tabs.md) | Controlled tab strip / 受控标签栏 |
+| `u-tabs-swiper` | `UTabsSwiper` | [UTabsSwiper](tabs-swiper.md) | Controlled static tab-panel projection / 受控静态 tab-panel 投影 |
 | `u-tabbar` | `UTabbar` | [UTabbar](tabbar.md) | Local bottom tab selection / 局部底部标签选择 |
 | `u-tag` | `UTag` | [UTag](tag.md) | Finite-tone text tag / 有限 tone 文字标签 |
 | `u-text` | `UText` | [UText](text.md) | Finite text presentation / 有限文字呈现 |
@@ -101,9 +106,10 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-transition` | `UTransition` | [UTransition](transition.md) | Finite CSS transition wrapper / 有限 CSS transition 包装器 |
 | `u-upload` | `UUpload` | [UUpload](upload.md) | Caller-owned file-state intent list / 调用方拥有的文件状态意图列表 |
 | `u-verification-code` | `UVerificationCode` | [UVerificationCode](verification-code.md) | Caller-owned request-state projection / 调用方拥有的请求状态投影 |
+| `u-waterfall` | `UWaterfall` | [UWaterfall](waterfall.md) | Deterministic finite-column projection / 确定性有限列投影 |
 | `u-config-provider` | `UConfigProvider` | [UConfigProvider](config-provider.md) | Finite theme-density subtree scope / 有限主题密度子树范围 |
 | `u-root-portal` | `URootPortal` | [URootPortal](root-portal.md) | Same-tree overlay-root wrapper / 同树 overlay-root 包装器 |
 
-The index currently contains 97 declared component contracts. `u-navbar` and `u-notice-bar` are separate, bounded APIs; they do not alias the earlier `u-nav-bar` or `u-notice` contracts. Use named imports or the explicit `UView` plugin as documented in [runtime consumption](runtime-consumption.md). Import `style.css` explicitly from application-owned global style setup. The current [compatibility profile](compatibility.md), [examples](examples.md), and [migration guidance](migration-from-uview.md) state the evidence and limits that apply to this index.
+The index currently contains 103 declared component contracts. `u-navbar` and `u-notice-bar` are separate, bounded APIs; they do not alias the earlier `u-nav-bar` or `u-notice` contracts. Use named imports or the explicit `UView` plugin as documented in [runtime consumption](runtime-consumption.md). Import `style.css` explicitly from application-owned global style setup. The current [compatibility profile](compatibility.md), [examples](examples.md), and [migration guidance](migration-from-uview.md) state the evidence and limits that apply to this index.
 
-该索引当前包含 97 个已声明的组件契约。`u-navbar` 与 `u-notice-bar` 是独立、受限的 API，不是既有 `u-nav-bar` 或 `u-notice` 契约的别名。按 [runtime consumption](runtime-consumption.md) 所述使用命名导入或显式 `UView` plugin，并从应用拥有的全局样式设置显式导入 `style.css`。当前 [compatibility profile](compatibility.md)、[examples](examples.md) 与 [migration guidance](migration-from-uview.md) 说明此索引适用的证据和限制。
+该索引当前包含 103 个已声明的组件契约。`u-navbar` 与 `u-notice-bar` 是独立、受限的 API，不是既有 `u-nav-bar` 或 `u-notice` 契约的别名。按 [runtime consumption](runtime-consumption.md) 所述使用命名导入或显式 `UView` plugin，并从应用拥有的全局样式设置显式导入 `style.css`。当前 [compatibility profile](compatibility.md)、[examples](examples.md) 与 [migration guidance](migration-from-uview.md) 说明此索引适用的证据和限制。

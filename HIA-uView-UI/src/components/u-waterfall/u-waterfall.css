@@ -1,0 +1,82 @@
+/**
+ * @component UWaterfallStyle
+ * @lang zh-CN 定义确定性有限列的文本卡片布局；不包含高度测量、图片重排、无穷加载或外部瀑布流服务。
+ * @lang en Defines text-card layout for deterministic finite columns; it contains no height measurement, image reflow, infinite loading, or external masonry service.
+ */
+
+.u-waterfall {
+  display: grid;
+  gap: var(--u-comp-waterfall-gap);
+  grid-template-columns: repeat(var(--u-waterfall-column-count, 2), minmax(0, 1fr));
+}
+
+.u-waterfall__column {
+  display: grid;
+  align-content: start;
+  gap: var(--u-comp-waterfall-item-gap);
+  min-width: 0;
+}
+
+.u-waterfall__item {
+  background: var(--u-comp-waterfall-item-surface);
+  border: 1px solid var(--u-comp-waterfall-item-border);
+  border-radius: var(--u-comp-waterfall-item-radius);
+  color: var(--u-comp-waterfall-foreground);
+  display: grid;
+  gap: var(--u-comp-waterfall-copy-gap);
+  min-height: var(--u-comp-waterfall-item-min-height);
+  padding: var(--u-comp-waterfall-item-padding);
+  text-align: start;
+}
+
+.u-waterfall__label {
+  font-size: var(--u-comp-waterfall-label-font-size);
+  font-weight: var(--u-comp-waterfall-label-font-weight);
+}
+
+.u-waterfall__description {
+  color: var(--u-comp-waterfall-description-foreground);
+  font-size: var(--u-comp-waterfall-description-font-size);
+}
+
+.u-waterfall__item:focus-visible {
+  outline: 2px solid var(--u-comp-waterfall-focus-ring);
+  outline-offset: 2px;
+}
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-waterfall {
+  gap: 12px;
+}
+
+.u-waterfall__column {
+  gap: 12px;
+}
+
+.u-waterfall__item {
+  background: #ffffff;
+  border: 1px solid #27364a;
+  border-radius: 12px;
+  color: #001b2e;
+  gap: 4px;
+  min-height: 72px;
+  padding: 12px;
+}
+
+.u-waterfall__label {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.u-waterfall__description {
+  color: #27364a;
+  font-size: 13px;
+}
+
+.u-waterfall__item:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

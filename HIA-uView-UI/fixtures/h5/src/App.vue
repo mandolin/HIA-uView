@@ -45,6 +45,13 @@
     <UFullScreen :visible="false" title="Local sheet / 本地覆盖面" close-text="Close / 关闭" />
     <UStep title="Local step / 本地步骤" description="Caller projection / 调用方投影" :index="0" status="process" :interactive="true" />
     <UTimeLine aria-label="Local timeline / 本地时间线"><UTimeLineItem title="Local timeline item / 本地时间线项目" time="00:00" description="Static caller projection / 静态调用方投影" status="primary" :is-last="true" /></UTimeLine>
+    <!-- <lang><zh-CN>本段使用 fixture-owned 有限索引、active 图片、区段、静态 panel 和列投影，验证 H5 build 可解析它们；它不读取 viewport、请求资源、使用原生 swiper 或进行高度测量。</zh-CN><en>This section uses fixture-owned finite index, active image, segment, static panel, and column projection to verify H5 build resolution; it reads no viewport, requests no resource, uses no native swiper, and measures no height.</en></lang> -->
+    <UIndexAnchor label="Local index / 本地索引" value="local" :active="true" />
+    <UIndexList :groups="fixtureIndexGroups" active-value="local" aria-label="Local index groups / 本地索引组" />
+    <ULazyLoad :active="false" src="" alt="Local deferred image / 本地延迟图片" placeholder-text="Caller placeholder / 调用方占位" />
+    <USubsection :items="fixtureSegmentItems" model-value="first" aria-label="Local segments / 本地区段" />
+    <UTabsSwiper :items="fixtureSegmentItems" model-value="first" aria-label="Local static panel / 本地静态面板" previous-text="Previous / 上一项" next-text="Next / 下一项" />
+    <UWaterfall :items="fixtureWaterfallItems" :column-count="2" aria-label="Local deterministic columns / 本地确定性列" />
     <UBackTop :visible="true" label="Top / 顶部" @back-top="recordP54Intent('top')" />
     <UFab :visible="true" label="Create / 新建" @click="recordP54Intent('fab')" />
     <URootPortal :visible="true" :layer="1200"><UTransition :visible="true" mode="fade"><UTopTips :visible="true" message="Local overlay / 本地浮层" close-text="Close / 关闭" @close="recordP54Intent('tips')" /></UTransition></URootPortal>
@@ -60,7 +67,7 @@
 import { ref } from 'vue';
 import { UActionSheetItem, UAvatarCropper, UBackTop, UButton, UCarKeyboard, UCellItem, UCitySelect, UConfigProvider, UDropdown, UDropdownItem, UFab, UKeyboard, ULoading, ULoadingPopup, UMask, UMessageInput, UNavbar, UNoNetwork, UNoticeBar, UNumberKeyboard, URootPortal, USafeBottom, USection, USelect, USlider, UStatusBar, UText, UTopTips, UTransition, UUpload, UVerificationCode } from '../../../src/index.mjs';
 // <lang><zh-CN>本批具名导入只把受控 P56.2 表面提供给 H5 fixture；导入本身不注册组件、启动 timer 或写入全局状态。</zh-CN><en>These named imports provide controlled P56.2 surfaces to the H5 fixture only; importing registers no component, starts no timer, and writes no global state.</en></lang>
-import { UCircleProgress, UColumnNotice, UCountDown, UFullScreen, URowNotice, UStep, UTimeLine, UTimeLineItem } from '../../../src/index.mjs';
+import { UCircleProgress, UColumnNotice, UCountDown, UFullScreen, UIndexAnchor, UIndexList, ULazyLoad, URowNotice, UStep, USubsection, UTabsSwiper, UTimeLine, UTimeLineItem, UWaterfall } from '../../../src/index.mjs';
 
 // <lang><zh-CN>fixture 状态只来自本地 ref，便于 H5 smoke 对稳定文本进行检查。</zh-CN><en>Fixture state comes from local refs only, allowing H5 smoke to inspect stable text.</en></lang>
 const selected = ref('public');
@@ -87,6 +94,20 @@ const fixtureCarRows = Object.freeze([
 const fixtureNoticeItems = Object.freeze([
   Object.freeze({ label: 'Local first item / 本地第一项', value: 'first' }),
   Object.freeze({ label: 'Local second item / 本地第二项', value: 'second' })
+]);
+// <lang><zh-CN>索引、区段与列投影数据均是 H5 fixture 拥有的有限本地文字；它们不表示滚动位置、远程图片、行业筛选或无穷数据源。</zh-CN><en>Index, segment, and column-projection data are finite local copy owned by the H5 fixture; they represent no scroll position, remote image, industry filter, or infinite data source.</en></lang>
+const fixtureIndexGroups = Object.freeze([
+  Object.freeze({ label: 'Local / 本地', value: 'local' }),
+  Object.freeze({ label: 'Alternate / 备用', value: 'alternate' })
+]);
+const fixtureSegmentItems = Object.freeze([
+  Object.freeze({ label: 'First / 第一项', value: 'first', description: 'Static caller panel / 静态调用方 panel' }),
+  Object.freeze({ label: 'Second / 第二项', value: 'second', description: 'Finite local projection / 有限局部投影' })
+]);
+const fixtureWaterfallItems = Object.freeze([
+  Object.freeze({ label: 'Column item A / 列项 A', value: 'a' }),
+  Object.freeze({ label: 'Column item B / 列项 B', value: 'b' }),
+  Object.freeze({ label: 'Column item C / 列项 C', value: 'c' })
 ]);
 // <lang><zh-CN>文件记录只是可读本地状态投影，不是文件路径、二进制、上传任务或缓存。</zh-CN><en>File records are readable local-state projections only, not file paths, binary data, upload tasks, or cache.</en></lang>
 const fixtureFiles = Object.freeze([

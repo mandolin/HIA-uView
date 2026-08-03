@@ -1,0 +1,33 @@
+/**
+ * @component UIndexListStyle
+ * @lang zh-CN 定义 caller-owned 索引组的局部容器、有限 anchor 间距与内容区；不描述或操作滚动状态。
+ * @lang en Defines a local container, finite anchor spacing, and content area for caller-owned index groups; it neither describes nor operates scroll state.
+ */
+
+.u-index-list {
+  display: grid;
+  gap: var(--u-comp-index-list-gap);
+}
+
+.u-index-list__anchors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--u-comp-index-list-anchor-gap);
+}
+
+.u-index-list__content {
+  min-width: 0;
+}
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-index-list {
+  gap: 12px;
+}
+
+.u-index-list__anchors {
+  gap: 8px;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

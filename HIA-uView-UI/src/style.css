@@ -45,9 +45,12 @@
 @import "./components/u-grid/u-grid.css";
 @import "./components/u-grid-item/u-grid-item.css";
 @import "./components/u-icon/u-icon.css";
+@import "./components/u-index-anchor/u-index-anchor.css";
+@import "./components/u-index-list/u-index-list.css";
 @import "./components/u-keyboard/u-keyboard.css";
 @import "./components/u-image/u-image.css";
 @import "./components/u-input/u-input.css";
+@import "./components/u-lazy-load/u-lazy-load.css";
 @import "./components/u-line/u-line.css";
 @import "./components/u-line-progress/u-line-progress.css";
 @import "./components/u-link/u-link.css";
@@ -87,11 +90,13 @@
 @import "./components/u-step/u-step.css";
 @import "./components/u-steps/u-steps.css";
 @import "./components/u-sticky/u-sticky.css";
+@import "./components/u-subsection/u-subsection.css";
 @import "./components/u-swipe-action/u-swipe-action.css";
 @import "./components/u-swiper/u-swiper.css";
 @import "./components/u-switch/u-switch.css";
 @import "./components/u-tabbar/u-tabbar.css";
 @import "./components/u-tabs/u-tabs.css";
+@import "./components/u-tabs-swiper/u-tabs-swiper.css";
 @import "./components/u-tag/u-tag.css";
 @import "./components/u-text/u-text.css";
 @import "./components/u-textarea/u-textarea.css";
@@ -105,3 +110,4 @@
 @import "./components/u-fab/u-fab.css";
 @import "./components/u-validation-message/u-validation-message.css";
 @import "./components/u-verification-code/u-verification-code.css";
+@import "./components/u-waterfall/u-waterfall.css";

@@ -1,0 +1,62 @@
+/**
+ * @component UIndexAnchorStyle
+ * @lang zh-CN 定义单个受控 index anchor 的有限文字、边界、active 与 disabled 呈现；不测量位置、不控制滚动或承载领域分类。
+ * @lang en Defines finite copy, boundary, active, and disabled presentation for one controlled index anchor; it measures no position, controls no scrolling, and carries no domain classification.
+ */
+
+.u-index-anchor {
+  align-items: center;
+  background: var(--u-comp-index-anchor-surface);
+  border: 1px solid var(--u-comp-index-anchor-border);
+  border-radius: var(--u-comp-index-anchor-radius);
+  color: var(--u-comp-index-anchor-foreground);
+  display: inline-flex;
+  font-size: var(--u-comp-index-anchor-font-size);
+  justify-content: center;
+  min-height: var(--u-comp-index-anchor-min-height);
+  padding: var(--u-comp-index-anchor-padding);
+}
+
+.u-index-anchor--active {
+  background: var(--u-comp-index-anchor-active-surface);
+  border-color: var(--u-comp-index-anchor-active-border);
+  color: var(--u-comp-index-anchor-active-foreground);
+}
+
+.u-index-anchor--disabled {
+  opacity: var(--u-comp-index-anchor-disabled-opacity);
+}
+
+.u-index-anchor:focus-visible {
+  outline: 2px solid var(--u-comp-index-anchor-focus-ring);
+  outline-offset: 2px;
+}
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-index-anchor {
+  background: #ffffff;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  color: #001b2e;
+  font-size: 14px;
+  min-height: 36px;
+  padding: 0 10px;
+}
+
+.u-index-anchor--active {
+  background: #0047ab;
+  border-color: #0047ab;
+  color: #ffffff;
+}
+
+.u-index-anchor--disabled {
+  opacity: 0.6;
+}
+
+.u-index-anchor:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

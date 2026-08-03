@@ -52,6 +52,14 @@
     <u-step title="本地步骤 / Local step" description="调用方呈现 / Caller projection" :index="0" status="process" :interactive="true" />
     <u-time-line aria-label="本地时间线 / Local timeline"><u-time-line-item title="本地时间线项目 / Local timeline item" time="00:00" description="静态调用方投影 / Static caller projection" status="primary" :is-last="true" /></u-time-line>
 
+    <!-- <lang><zh-CN>本段编译 caller-owned 索引、active 图片、有限区段/静态 panel 与确定性列投影；它不读取 scroll/viewport、不预取、不启动原生 swiper 或按高度重排。</zh-CN><en>This section compiles caller-owned index, active image, finite segment/static panel, and deterministic-column projection; it reads no scroll/viewport, prefetches nothing, starts no native swiper, and performs no height-based reflow.</en></lang> -->
+    <u-index-anchor label="本地索引 / Local index" value="local" :active="true" />
+    <u-index-list :groups="fixtureIndexGroups" active-value="local" aria-label="本地索引组 / Local index groups" />
+    <u-lazy-load :active="false" src="" alt="本地延迟图片 / Local deferred image" placeholder-text="调用方占位 / Caller placeholder" />
+    <u-subsection :items="fixtureSegmentItems" model-value="first" aria-label="本地区段 / Local segments" />
+    <u-tabs-swiper :items="fixtureSegmentItems" model-value="first" aria-label="本地静态面板 / Local static panel" previous-text="上一项 / Previous" next-text="下一项 / Next" />
+    <u-waterfall :items="fixtureWaterfallItems" :column-count="2" aria-label="本地确定性列 / Local deterministic columns" />
+
     <!-- <lang><zh-CN>notice 只呈现页面在确认本地意图后显式写入的消息和可见状态；它不表示保存、请求或业务完成。</zh-CN><en>The notice presents only the message and visibility explicitly written by the page after local intent confirmation; it represents no save, request, or business completion.</en></lang> -->
     <u-notice
       :visible="catalogNoticeVisible"
@@ -281,6 +289,21 @@ const fixtureCarRows = Object.freeze([
 const fixtureNoticeItems = Object.freeze([
   Object.freeze({ label: '本地第一项 / Local first item', value: 'first' }),
   Object.freeze({ label: '本地第二项 / Local second item', value: 'second' })
+]);
+
+// <lang><zh-CN>索引、区段与列投影数据均是页面拥有的有限本地文字；不表示实际滚动位置、远程图片、行业筛选或无穷数据源。</zh-CN><en>Index, segment, and column-projection data are all page-owned finite local copy; they represent no actual scroll position, remote image, industry filter, or infinite data source.</en></lang>
+const fixtureIndexGroups = Object.freeze([
+  Object.freeze({ label: '本地 / Local', value: 'local' }),
+  Object.freeze({ label: '备用 / Alternate', value: 'alternate' })
+]);
+const fixtureSegmentItems = Object.freeze([
+  Object.freeze({ label: '第一项 / First', value: 'first', description: '静态调用方 panel / Static caller panel' }),
+  Object.freeze({ label: '第二项 / Second', value: 'second', description: '有限局部投影 / Finite local projection' })
+]);
+const fixtureWaterfallItems = Object.freeze([
+  Object.freeze({ label: '列项 A / Column item A', value: 'a' }),
+  Object.freeze({ label: '列项 B / Column item B', value: 'b' }),
+  Object.freeze({ label: '列项 C / Column item C', value: 'c' })
 ]);
 
 // <lang><zh-CN>文件记录是页面内可读状态投影，不代表文件路径、bytes、上传任务或缓存。</zh-CN><en>File records are in-page readable state projections and represent no file path, bytes, upload task, or cache.</en></lang>

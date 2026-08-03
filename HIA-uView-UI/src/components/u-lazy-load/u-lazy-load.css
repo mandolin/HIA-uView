@@ -1,0 +1,65 @@
+/**
+ * @component ULazyLoadStyle
+ * @lang zh-CN 定义 caller-controlled image/placeholder/fallback 的局部几何；不包含 viewport 观测、网络或缓存状态。
+ * @lang en Defines local geometry for caller-controlled image, placeholder, and fallback; it contains no viewport observation, network, or cache state.
+ */
+
+.u-lazy-load {
+  align-items: center;
+  background: var(--u-comp-lazy-load-surface);
+  border: 1px solid var(--u-comp-lazy-load-border);
+  border-radius: var(--u-comp-lazy-load-radius);
+  color: var(--u-comp-lazy-load-foreground);
+  display: flex;
+  justify-content: center;
+  min-height: var(--u-comp-lazy-load-min-height);
+  overflow: hidden;
+}
+
+.u-lazy-load__image {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.u-lazy-load__placeholder,
+.u-lazy-load__fallback {
+  align-items: center;
+  color: var(--u-comp-lazy-load-placeholder-foreground);
+  display: flex;
+  font-size: var(--u-comp-lazy-load-font-size);
+  justify-content: center;
+  min-height: var(--u-comp-lazy-load-min-height);
+  padding: var(--u-comp-lazy-load-padding);
+  text-align: center;
+  width: 100%;
+}
+
+.u-lazy-load__fallback {
+  color: var(--u-comp-lazy-load-error-foreground);
+}
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-lazy-load {
+  background: #f7f9fc;
+  border: 1px solid #27364a;
+  border-radius: 12px;
+  color: #001b2e;
+  min-height: 120px;
+}
+
+.u-lazy-load__placeholder,
+.u-lazy-load__fallback {
+  color: #27364a;
+  font-size: 14px;
+  min-height: 120px;
+  padding: 12px;
+}
+
+.u-lazy-load__fallback {
+  color: #001b2e;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */
