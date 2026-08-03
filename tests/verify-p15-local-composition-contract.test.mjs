@@ -19,6 +19,7 @@ import { LOCAL_CATALOG_RECORDS, filterLocalCatalogRecords, findLocalCatalogRecor
 const p15RequiredPaths = Object.freeze([
   'docs/local-composition.md',
   'HIA-uView-UI/fixtures/mp-weixin/README.md',
+  'HIA-uView-UI/pages.json',
   'HIA-uView-UI/fixtures/mp-weixin/src/pages/index/index.vue',
   'HIA-uView-UI/fixtures/mp-weixin/src/pages/index/local-catalog.mjs'
 ]);
@@ -73,13 +74,20 @@ test('keeps mock query and detail projection fixed, local, and synchronous', () 
  */
 test('keeps fixture composition and source boundaries explicit', async () => {
   // <lang><zh-CN>读取页面与 mock 源码，仅用于本地静态断言；测试不会执行 fixture、写入文件或生成 compiler 输出。</zh-CN><en>Reads page and mock source for local static assertions only; the test neither executes fixture, writes files, nor generates compiler output.</en></lang>
-  const [fixtureSource, mockSource] = await Promise.all([
+  const [fixtureSource, mockSource, fixtureInputPages] = await Promise.all([
     readFile(resolve('HIA-uView-UI/fixtures/mp-weixin/src/pages/index/index.vue'), 'utf8'),
-    readFile(resolve('HIA-uView-UI/fixtures/mp-weixin/src/pages/index/local-catalog.mjs'), 'utf8')
+    readFile(resolve('HIA-uView-UI/fixtures/mp-weixin/src/pages/index/local-catalog.mjs'), 'utf8'),
+    readFile(resolve('HIA-uView-UI/pages.json'), 'utf8')
   ]);
 
-  // <lang><zh-CN>组合源码必须保留当前 10 个组件和目录/查询/详情结构，而不通过新组件或自动注册扩展 runtime 表面。</zh-CN><en>Composition source must retain the current ten components and directory/query/detail structure without expanding runtime surface through new components or auto-registration.</en></lang>
-  assert.match(fixtureSource, /UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UInput, UModal, UNavBar, UNotice, URadio, URadioGroup, UStack, UValidationMessage/);
+  // <lang><zh-CN>组合源码必须保留当前 u-* 目录/查询/详情结构；输入根仅以受限 easycom 将这些标签静态解析到叶级 SFC，不经公共 runtime barrel 自动注册。</zh-CN><en>Composition source must retain the current u-* directory/query/detail structure; the input root statically resolves those tags to leaf SFCs only through bounded easycom and never auto-registers through a public runtime barrel.</en></lang>
+  assert.match(fixtureSource, /<u-button/);
+  assert.match(fixtureSource, /<u-cell/);
+  assert.match(fixtureSource, /<u-radio-group/);
+  assert.match(fixtureSource, /<u-checkbox-group/);
+  assert.doesNotMatch(fixtureSource, /from ['"].*index\.mjs['"]/);
+  assert.match(fixtureInputPages, /"autoscan"\s*:\s*false/);
+  assert.match(fixtureInputPages, /"\^u-\(\.\*\)"\s*:\s*"@\/src\/components\/u-\$1\/u-\$1\.vue"/);
   assert.match(fixtureSource, /v-for="record in filteredCatalogRecords"/);
   assert.match(fixtureSource, /@update:model-value="updateCatalogQuery"/);
   assert.match(fixtureSource, /@click="selectCatalogRecord\(record\.id\)"/);

@@ -1,4 +1,10 @@
 {
+  "easycom": {
+    "autoscan": false,
+    "custom": {
+      "^u-(.*)": "@/src/components/u-$1/u-$1.vue"
+    }
+  },
   "pages": [
     {
       "path": "fixtures/mp-weixin/src/pages/index/index",

@@ -4,26 +4,39 @@
 
 `@hia-uview/ui` 为私有且未发布的包。本文定义当前仓库内的消费边界，不构成版本化的外部包保证。
 
-## Named component import / 命名组件导入
+## MP static component resolution / MP 静态组件解析
 
-Use a named component import when an application registers only the components it needs.
+For the current private UniApp Vue 3 `mp-weixin` profile, resolve `u-*` tags through a bounded `pages.json` `easycom` table. This makes the UniApp compiler emit each referenced component's Mini Program JS, JSON, WXML, and WXSS files. It is compile-time resolution only: it does not fetch packages, scan arbitrary directories, execute application code, or globally register components at runtime.
 
-应用只注册所需组件时，使用命名组件导入。
+当前私有 UniApp Vue 3 `mp-weixin` 配置应通过受限的 `pages.json` `easycom` 表解析 `u-*` 标签。这样 UniApp compiler 会为每个被引用组件输出微信小程序所需的 JS、JSON、WXML 与 WXSS 文件。这仅是编译期解析：不拉取包、不扫描任意目录、不执行应用代码，也不在运行时全局注册组件。
 
-```js
-import { UActionSheet, UAvatar, UBadge, UButton, UCell, UCheckbox, UCheckboxGroup, UCountTo, UDivider, UEmpty, UField, UForm, UFormItem, UIcon, UImage, UInput, ULineProgress, ULoadingPage, UModal, UNavBar, UNotice, UNumberBox, UPagination, UPopup, URadio, URadioGroup, URate, USearch, UStack, USteps, USwitch, UTabbar, UTabs, UTag, UTextarea, UToast, UValidationMessage } from '@hia-uview/ui';
+```json
+{
+  "easycom": {
+    "autoscan": false,
+    "custom": {
+      "^u-(.*)": "@/src/components/u-$1/u-$1.vue"
+    }
+  }
+}
 ```
 
-## Explicit plugin / 显式 plugin
+The path above is the repository-local source-root form used by the compile fixture. A future published package may expose a different stable path; this document makes no external package-path guarantee before that release decision.
 
-Use `app.use(UView)` only when deliberate registration of every currently exported HIA component is appropriate. The current private collection contains 45 `u-*` components, including controlled display, list, scroll, feedback, overlay, navigation, steps, and pagination contracts. Importing the module alone has no global registration or style side effect.
+上面的路径是编译 fixture 使用的仓内 source-root 形式。未来发布的包可能暴露不同的稳定路径；在发布决策前，本文不对外部包路径作保证。
 
-仅当适合有意注册当前所有已导出 HIA 组件时才使用 `app.use(UView)`。当前私有集合包含 45 个 `u-*` 组件，包括受控展示、列表、滚动、反馈、浮层、导航、步骤和分页契约。单独 import module 不会产生全局注册或样式副作用。
+## Named import and explicit plugin boundary / 命名导入与显式 plugin 边界
+
+Named imports and `app.use(UView)` remain runtime APIs for repository H5 and jsdom contract usage. They are not the current `mp-weixin` consumption mechanism and must not replace the static `easycom` mapping above, because a public barrel can hide leaf SFC dependencies from the Mini Program compiler.
+
+命名导入和 `app.use(UView)` 仍是仓内 H5 与 jsdom 契约使用的 runtime API。它们不是当前 `mp-weixin` 的消费机制，不能替代上面的静态 `easycom` 映射；公共 barrel 可能向小程序 compiler 隐藏叶级 SFC 依赖。
 
 ```js
-import UView from '@hia-uview/ui';
+import { UButton, UCheckbox, UCheckboxGroup, URadio, URadioGroup } from '@hia-uview/ui';
 
-app.use(UView);
+// H5/jsdom repository runtime usage only.
+// 仅限仓内 H5/jsdom runtime 使用。
+void [UButton, UCheckbox, UCheckboxGroup, URadio, URadioGroup];
 ```
 
 ## Explicit style entry / 显式样式入口
@@ -38,6 +51,6 @@ Import the HIA complete style entry from application-owned global style setup. I
 
 ## Current limits / 当前限制
 
-The entry supports only the private UniApp Vue 3 `mp-weixin` profile. It is not yet a release, auto-import, App/H5, device, accessibility-tree, or cross-platform support commitment. Runtime tests use jsdom and compiler tests produce `mp-weixin` output; neither replaces WeChat DevTools or physical-device evidence.
+The entry supports only the private UniApp Vue 3 `mp-weixin` profile. Its bounded `easycom` table is not a general auto-import feature or a package-release promise. It is not yet an App/H5, device, accessibility-tree, or cross-platform support commitment. Runtime tests use jsdom and compiler tests produce `mp-weixin` output; neither replaces WeChat DevTools or physical-device evidence.
 
-该入口仅支持私有 UniApp Vue 3 `mp-weixin` 配置。它尚不是发布、自动导入、App/H5、真机、无障碍树或跨端支持承诺。runtime 测试使用 jsdom，compiler 测试生成 `mp-weixin` 输出；两者都不能替代微信开发者工具或真机证据。
+该入口仅支持私有 UniApp Vue 3 `mp-weixin` 配置。它的受限 `easycom` 表不是通用自动导入功能，也不是包发布承诺。它尚不是 App/H5、真机、无障碍树或跨端支持承诺。runtime 测试使用 jsdom，compiler 测试生成 `mp-weixin` 输出；两者都不能替代微信开发者工具或真机证据。

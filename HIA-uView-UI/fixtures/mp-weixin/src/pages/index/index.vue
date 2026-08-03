@@ -194,16 +194,7 @@
 <script setup>
 // <lang><zh-CN>导入 Vue 的局部 ref/computed 与固定本地目录 helper；页面不导入全局 store、Tool、平台 API 或外部数据访问库。</zh-CN><en>Imports Vue local ref/computed and fixed local catalog helpers; the page imports no global store, Tool, platform API, or external data-access library.</en></lang>
 import { computed, ref } from 'vue';
-// <lang><zh-CN>显式导入本仓 runtime 组件；template 编译通过 script setup 绑定这些局部实现，不使用自动注册。</zh-CN><en>Explicitly imports repository runtime components; template compilation binds these local implementations through script setup and uses no auto-registration.</en></lang>
-import { UButton, UCell, UCheckbox, UCheckboxGroup, UEmpty, UField, UInput, UModal, UNavBar, UNotice, URadio, URadioGroup, UStack, UValidationMessage } from '../../../../../src/index.mjs';
-// <lang><zh-CN>高频控件通过第二个显式导入保持新增实现和旧 fixture 组件边界清晰；两次导入均不触发自动注册。</zh-CN><en>High-frequency controls use a second explicit import to keep new implementations and the existing fixture component boundary clear; neither import triggers auto-registration.</en></lang>
-import { UForm, UFormItem, UNumberBox, URate, USearch, USwitch, UTextarea } from '../../../../../src/index.mjs';
-// <lang><zh-CN>展示批次使用第三个显式导入，保持每组 fixture 依赖可读且不启用自动注册。</zh-CN><en>The display batch uses a third explicit import so each fixture dependency group stays readable without enabling auto-registration.</en></lang>
-import { UAvatar, UBadge, UCountTo, UDivider, UIcon, UImage, ULineProgress, UTag } from '../../../../../src/index.mjs';
-// <lang><zh-CN>P43 显式导入受控浮层、反馈和导航组件；它们不通过全局 registry 自动注册。</zh-CN><en>Explicitly imports controlled overlay, feedback, and navigation components for P43; they are not auto-registered through a global registry.</en></lang>
-import { UActionSheet, ULoadingPage, UPagination, UPopup, USteps, UTabbar, UTabs, UToast } from '../../../../../src/index.mjs';
-// <lang><zh-CN>P44 显式导入列表、滚动和信息承载组件；它们只消费页面本地状态，不启用平台服务。</zh-CN><en>Explicitly imports P44 list, scroll, and information-content components; they consume page-local state only and enable no platform service.</en></lang>
-import { UCollapse, UCollapseItem, UList, ULoadmore, UScrollList, USkeleton, USticky, USwiper } from '../../../../../src/index.mjs';
+// <lang><zh-CN>页面的 u-* 标签由输入根 pages.json 的受限 easycom 表静态解析到同仓 SFC；这避免经公共 barrel 转发导致小程序编译器遗漏组件 JS/WXML/WXSS。</zh-CN><en>The page's u-* tags are statically resolved to in-repository SFCs by the bounded easycom table in the input-root pages.json; this avoids Mini Program compiler omissions of component JS/WXML/WXSS caused by public-barrel forwarding.</en></lang>
 // <lang><zh-CN>导入固定匿名 mock 集合与纯同步 helper；它们位于 fixture 内而非 UI runtime 或 Biz package。</zh-CN><en>Imports the fixed anonymous mock collection and pure synchronous helpers; they reside inside the fixture rather than UI runtime or a Biz package.</en></lang>
 import { LOCAL_CATALOG_RECORDS, filterLocalCatalogRecords, findLocalCatalogRecord } from './local-catalog.mjs';
 

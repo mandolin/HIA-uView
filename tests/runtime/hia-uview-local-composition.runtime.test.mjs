@@ -4,9 +4,10 @@
  * @lang en Uses a real Vue runtime to verify local directory, controlled query, empty-result reset, detail selection, confirmation, and local-feedback state transitions in the P15 fixture. The test starts no dev server, network, routing, identity, storage, asynchronous data, timer, Tool, or platform navigation; it does not replace UniApp compiler, WeChat DevTools, device, screen-reader, focus, layering, animation, or cross-platform evidence.
  */
 
-// <lang><zh-CN>导入本地 Vue mount、Vitest 断言与同仓 fixture 页面；测试不安装 global plugin、router、store、Tool 或平台 mock。</zh-CN><en>Imports local Vue mount, Vitest assertions, and the same-repository fixture page; the test installs no global plugin, router, store, Tool, or platform mock.</en></lang>
+// <lang><zh-CN>导入本地 Vue mount、Vitest 断言、同仓 fixture 页面与 UI runtime plugin；plugin 只作为 jsdom 测试 harness 的显式本地注册，不代表 mp-weixin 的静态 easycom 编译路径。</zh-CN><en>Imports local Vue mount, Vitest assertions, the same-repository fixture page, and the UI runtime plugin; the plugin is explicit local registration for the jsdom test harness only and does not represent the mp-weixin static easycom compilation path.</en></lang>
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import UView from '../../HIA-uView-UI/src/index.mjs';
 import LocalCatalogFixture from '../../HIA-uView-UI/fixtures/mp-weixin/src/pages/index/index.vue';
 
 /**
@@ -20,8 +21,8 @@ describe('local catalog composition runtime behavior', () => {
    * @returns {Promise<void>} <lang><zh-CN>无返回值；所有本地 Vue click/input 更新完成后解决。</zh-CN><en>No return value; resolves after every local Vue click/input update completes.</en></lang>
    */
   it('keeps catalog query, selection, confirmation, and feedback with the page', async () => {
-    // <lang><zh-CN>挂载完整 fixture，直接观察其真实 script setup 组合而不替换组件为业务或平台 stub。</zh-CN><en>Mounts the complete fixture and directly observes its real script-setup composition without replacing components with business or platform stubs.</en></lang>
-    const fixture = mount(LocalCatalogFixture);
+    // <lang><zh-CN>以完整 UI plugin 挂载 fixture，使 jsdom 可解析同一模板标签；不会替换为业务或平台 stub，且不影响 MP compiler 的叶级静态解析。</zh-CN><en>Mounts the fixture with the complete UI plugin so jsdom can resolve the same template tags; it substitutes neither business nor platform stubs and does not affect the MP compiler's leaf-level static resolution.</en></lang>
+    const fixture = mount(LocalCatalogFixture, { global: { plugins: [UView] } });
 
     // <lang><zh-CN>初始目录来自三个固定匿名 mock 记录；没有 query 或 selected identifier 时不应显示详情或 feedback。</zh-CN><en>The initial directory comes from three fixed anonymous mock records; with no query or selected identifier it must show neither detail nor feedback.</en></lang>
     expect(fixture.findAll('.fixture-catalog__entry')).toHaveLength(3);

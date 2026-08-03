@@ -76,7 +76,21 @@ async function verifyMpWeixinFixture() {
     assert.equal(projectConfiguration.compileType, 'miniprogram', 'The generated project config must identify a Mini Program compile type.');
     assert.equal(projectConfiguration.appid, 'touristappid', 'The generated project config must retain the fixture-only tourist AppID.');
 
-    // <lang><zh-CN>样式证据必须来自应用 WXSS：第三方/外置 SFC 样式在小程序编译中不能仅依赖组件局部输出。</zh-CN><en>Style evidence must come from application WXSS: external SFC styles in Mini Program compilation cannot rely only on component-local output.</en></lang>
+    // <lang><zh-CN>页面配置必须保留受限 easycom 的静态映射，确保 u-* 标签各自输出小程序组件文件，而非只经运行时 barrel 获得内存组件对象。</zh-CN><en>The page configuration must retain bounded easycom static mappings so each u-* tag emits Mini Program component files rather than obtaining only an in-memory component object through a runtime barrel.</en></lang>
+    const fixtureHomeConfiguration = await readGeneratedJson(outputDirectory, `${fixtureHomePage}.json`);
+    const usingComponents = fixtureHomeConfiguration.usingComponents;
+    assert.equal(typeof usingComponents, 'object', 'The fixture page must declare static Mini Program components.');
+    assert.equal(usingComponents?.['u-button'], '../../../../../src/components/u-button/u-button', 'The fixture page must statically resolve UButton to its leaf SFC output.');
+
+    // <lang><zh-CN>对一个代表性组件同时检查 JS、JSON、WXML 与 WXSS；这样可防止将来重新出现只输出模板而丢失执行或样式文件的退化。</zh-CN><en>Checks JavaScript, JSON, WXML, and WXSS for one representative component; this prevents a regression where only a template is emitted while execution or style files are lost.</en></lang>
+    await Promise.all([
+      access(resolve(outputDirectory, 'src/components/u-button/u-button.js')),
+      access(resolve(outputDirectory, 'src/components/u-button/u-button.json')),
+      access(resolve(outputDirectory, 'src/components/u-button/u-button.wxml')),
+      access(resolve(outputDirectory, 'src/components/u-button/u-button.wxss'))
+    ]);
+
+    // <lang><zh-CN>应用 WXSS 仍需包含完整主题与全局组件规则；组件的独立 WXSS 与此共同构成小程序端可用的样式证据。</zh-CN><en>The app WXSS must still contain the complete theme and global component rules; its combination with component-local WXSS forms the usable Mini Program style evidence.</en></lang>
     const applicationStyles = await readFile(resolve(outputDirectory, 'app.wxss'), 'utf8');
     assert.match(applicationStyles, /\.u-button\{/, 'The generated app WXSS must include UButton rules from the explicit style entry.');
     assert.match(applicationStyles, /\.u-card\{/, 'The generated app WXSS must include UCard rules from the explicit style entry.');
