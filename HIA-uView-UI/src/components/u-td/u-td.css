@@ -1,0 +1,33 @@
+/**
+ * @component UTdStyle
+ * @lang zh-CN 定义静态 view table cell 的文字、间距和有限对齐；不测量列宽、不编辑数据或格式化领域值。
+ * @lang en Defines text, spacing, and finite alignment for a static view table cell; it measures no column width, edits no data, and formats no domain value.
+ */
+
+.u-td {
+  align-items: center;
+  background: var(--u-comp-td-surface);
+  color: var(--u-comp-td-foreground);
+  display: flex;
+  font-size: var(--u-comp-td-font-size);
+  min-height: var(--u-comp-td-min-height);
+  min-width: 0;
+  padding: var(--u-comp-td-padding);
+}
+
+.u-td--start { justify-content: flex-start; text-align: start; }
+.u-td--center { justify-content: center; text-align: center; }
+.u-td--end { justify-content: flex-end; text-align: end; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-td {
+  background: #ffffff;
+  color: #001b2e;
+  font-size: 14px;
+  min-height: 44px;
+  padding: 10px 12px;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

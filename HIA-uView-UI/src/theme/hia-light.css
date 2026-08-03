@@ -1282,4 +1282,25 @@
   --u-comp-waterfall-description-foreground: var(--u-sys-color-text-secondary);
   --u-comp-waterfall-description-font-size: 13px;
   --u-comp-waterfall-focus-ring: var(--u-sys-color-focus);
+
+  /* <lang><zh-CN>本组 token 只服务 view-based table 的局部表面、行、header 与 cell 呈现；它不编码记录数据、排序、筛选、分页、列测量或行业字段。</zh-CN><en>This token group serves only local surface, row, header, and cell presentation for view-based tables; it encodes no record data, sorting, filtering, paging, column measurement, or industry field.</en></lang> */
+  --u-comp-table-surface: var(--u-sys-color-surface);
+  --u-comp-table-radius: 12px;
+  --u-comp-table-foreground: var(--u-sys-color-text);
+  --u-comp-table-border: var(--u-ref-color-neutral-700);
+  --u-comp-tr-border: var(--u-ref-color-neutral-50);
+  --u-comp-tr-clickable-surface: var(--u-sys-color-surface);
+  --u-comp-tr-disabled-opacity: 0.6;
+  --u-comp-tr-focus-ring: var(--u-sys-color-focus);
+  --u-comp-th-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-th-foreground: var(--u-sys-color-text);
+  --u-comp-th-font-size: 14px;
+  --u-comp-th-font-weight: 600;
+  --u-comp-th-min-height: 40px;
+  --u-comp-th-padding: 8px 12px;
+  --u-comp-td-surface: var(--u-sys-color-surface);
+  --u-comp-td-foreground: var(--u-sys-color-text);
+  --u-comp-td-font-size: 14px;
+  --u-comp-td-min-height: 44px;
+  --u-comp-td-padding: 10px 12px;
 }

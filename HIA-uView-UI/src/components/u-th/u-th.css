@@ -1,0 +1,35 @@
+/**
+ * @component UThStyle
+ * @lang zh-CN 定义静态 view header cell 的文字、间距和有限对齐；不表现排序、字段类型或真实列尺寸。
+ * @lang en Defines text, spacing, and finite alignment for a static view header cell; it presents no sorting, field type, or actual column size.
+ */
+
+.u-th {
+  align-items: center;
+  background: var(--u-comp-th-surface);
+  color: var(--u-comp-th-foreground);
+  display: flex;
+  font-size: var(--u-comp-th-font-size);
+  font-weight: var(--u-comp-th-font-weight);
+  min-height: var(--u-comp-th-min-height);
+  min-width: 0;
+  padding: var(--u-comp-th-padding);
+}
+
+.u-th--start { justify-content: flex-start; text-align: start; }
+.u-th--center { justify-content: center; text-align: center; }
+.u-th--end { justify-content: flex-end; text-align: end; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-th {
+  background: #f7f9fc;
+  color: #001b2e;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 40px;
+  padding: 8px 12px;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

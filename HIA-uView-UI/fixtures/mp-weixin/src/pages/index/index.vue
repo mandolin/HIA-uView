@@ -13,7 +13,7 @@
     />
 
     <!-- <lang><zh-CN>P54 组合以调用方声明的文字、尺寸和可见性验证新导航、间距、反馈与同树 overlay 表面能够被小程序编译器解析；它不引入平台读取、路由、滚动、网络或全局 service。</zh-CN><en>The P54 composition uses caller-declared copy, dimensions, and visibility to verify that the Mini Program compiler resolves the new navigation, spacing, feedback, and same-tree overlay surfaces; it introduces no platform read, router, scrolling, network, or global service.</en></lang> -->
-    <u-config-provider density="compact">
+    <u-config-provider density="compact" locale="en">
       <u-status-bar :height="18" />
       <u-navbar title="Fixture navigation / Fixture 导航" left-text="Back / 返回" right-text="Save / 保存" />
       <u-cell-item title="Local entry / 本地条目" label="Caller projection / 调用方投影" value="Ready / 就绪" :arrow="true" :clickable="true" />
@@ -59,6 +59,12 @@
     <u-subsection :items="fixtureSegmentItems" model-value="first" aria-label="本地区段 / Local segments" />
     <u-tabs-swiper :items="fixtureSegmentItems" model-value="first" aria-label="本地静态面板 / Local static panel" previous-text="上一项 / Previous" next-text="下一项 / Next" />
     <u-waterfall :items="fixtureWaterfallItems" :column-count="2" aria-label="本地确定性列 / Local deterministic columns" />
+
+    <!-- <lang><zh-CN>本段编译 view-based table 与 locale 子树标记；行、header、cell 和文字均由页面提供，不查询、排序、测量或加载翻译。</zh-CN><en>This section compiles a view-based table and locale-subtree marker; the page provides rows, headers, cells, and copy, with no query, sort, measurement, or translation loading.</en></lang> -->
+    <u-table aria-label="本地表格 / Local table">
+      <u-tr><u-th label="名称 / Name" /><u-th label="状态 / Status" /></u-tr>
+      <u-tr value="local-row" :clickable="true"><u-td text="本地行 / Local row" /><u-td text="静态 / Static" /></u-tr>
+    </u-table>
 
     <!-- <lang><zh-CN>notice 只呈现页面在确认本地意图后显式写入的消息和可见状态；它不表示保存、请求或业务完成。</zh-CN><en>The notice presents only the message and visibility explicitly written by the page after local intent confirmation; it represents no save, request, or business completion.</en></lang> -->
     <u-notice

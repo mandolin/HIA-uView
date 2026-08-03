@@ -90,9 +90,12 @@ import USwiper from './components/u-swiper/u-swiper.vue';
 import USwitch from './components/u-switch/u-switch.vue';
 import USwipeAction from './components/u-swipe-action/u-swipe-action.vue';
 import UTabbar from './components/u-tabbar/u-tabbar.vue';
+import UTable from './components/u-table/u-table.vue';
 import UTabs from './components/u-tabs/u-tabs.vue';
 import UTabsSwiper from './components/u-tabs-swiper/u-tabs-swiper.vue';
 import UTextarea from './components/u-textarea/u-textarea.vue';
+import UTd from './components/u-td/u-td.vue';
+import UTh from './components/u-th/u-th.vue';
 import UTimeLine from './components/u-time-line/u-time-line.vue';
 import UTimeLineItem from './components/u-time-line-item/u-time-line-item.vue';
 import USection from './components/u-section/u-section.vue';
@@ -102,6 +105,7 @@ import UText from './components/u-text/u-text.vue';
 import UToast from './components/u-toast/u-toast.vue';
 import UTopTips from './components/u-top-tips/u-top-tips.vue';
 import UTransition from './components/u-transition/u-transition.vue';
+import UTr from './components/u-tr/u-tr.vue';
 import UUpload from './components/u-upload/u-upload.vue';
 import USafeBottom from './components/u-safe-bottom/u-safe-bottom.vue';
 import UFab from './components/u-fab/u-fab.vue';
@@ -242,12 +246,17 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-swipe-action', component: USwipeAction }),
   // <lang><zh-CN>底部标签栏只回传局部选择，不执行 router、身份或全局导航。</zh-CN><en>The bottom tabbar returns local selection only and performs no router, identity, or global navigation.</en></lang>
   Object.freeze({ name: 'u-tabbar', component: UTabbar }),
+  // <lang><zh-CN>table 只提供 caller slot 的 view-based 容器，不查询、排序或承诺原生表格行为。</zh-CN><en>Table provides a view-based container for caller slots only and neither queries, sorts, nor promises native-table behavior.</en></lang>
+  Object.freeze({ name: 'u-table', component: UTable }),
   // <lang><zh-CN>标签栏只回传受控切换，不请求、懒加载或管理隐藏面板。</zh-CN><en>The tab strip returns controlled changes only and requests, lazy-loads, or manages no hidden panel.</en></lang>
   Object.freeze({ name: 'u-tabs', component: UTabs }),
   // <lang><zh-CN>tabs-swiper 只展示 caller 当前静态 panel 并报告有限候选，不使用手势或原生 swiper。</zh-CN><en>Tabs-swiper displays only the caller current static panel and reports finite candidates, using no gesture or native swiper.</en></lang>
   Object.freeze({ name: 'u-tabs-swiper', component: UTabsSwiper }),
   // <lang><zh-CN>多行输入只回传受控字符串和焦点/确认 intent，不执行校验、提交或持久化。</zh-CN><en>The textarea returns controlled string and focus/confirm intent only and performs no validation, submission, or persistence.</en></lang>
   Object.freeze({ name: 'u-textarea', component: UTextarea }),
+  // <lang><zh-CN>td/th 只呈现 caller cell/header 文本或 slot，不格式化领域数据、排序或测量列。</zh-CN><en>Td/th present caller cell/header text or slots only and neither format domain data, sort, nor measure columns.</en></lang>
+  Object.freeze({ name: 'u-td', component: UTd }),
+  Object.freeze({ name: 'u-th', component: UTh }),
   Object.freeze({ name: 'u-text', component: UText }),
   // <lang><zh-CN>timeline 与 item 只由 caller slot/字段组合，不排序事件或解析时间。</zh-CN><en>Timeline and item compose only from caller slots/fields and neither sort events nor parse time.</en></lang>
   Object.freeze({ name: 'u-time-line', component: UTimeLine }),
@@ -302,6 +311,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-top-tips', component: UTopTips }),
   // <lang><zh-CN>transition 只投影有限 CSS mode/duration，不实现 JS 动画生命周期。</zh-CN><en>Transition projects finite CSS mode/duration only and implements no JavaScript animation lifecycle.</en></lang>
   Object.freeze({ name: 'u-transition', component: UTransition }),
+  // <lang><zh-CN>tr 只组合 caller cells 并报告可选 local select，不拥有记录、排序或行测量。</zh-CN><en>Tr composes caller cells and reports optional local select only and owns no record, sorting, or row measurement.</en></lang>
+  Object.freeze({ name: 'u-tr', component: UTr }),
   // <lang><zh-CN>upload 只呈现 caller file state 并报告 select/preview/remove/retry intent，不操作文件或网络。</zh-CN><en>Upload presents caller file state and reports select/preview/remove/retry intent only and operates no file or network.</en></lang>
   Object.freeze({ name: 'u-upload', component: UUpload }),
   // <lang><zh-CN>verification-code 只投影 caller remaining/status 并报告受授权 request，不发送验证码或计时。</zh-CN><en>Verification-code projects caller remaining/status and reports authorized request only and sends no code or timing.</en></lang>
@@ -348,4 +359,7 @@ export { UActionSheet, UActionSheetItem, UAlertTips, UAvatarCropper, UBackTop, U
 export { UCircleProgress, UColumnNotice, UCountDown, UFullScreen, URowNotice, UStep, UTimeLine, UTimeLineItem };
 // <lang><zh-CN>本批命名导出继续保持 index、lazy、segment、静态 panel 与确定性列的 caller-owned 边界；它们不在 import 时注册组件或访问平台状态。</zh-CN><en>These batch named exports retain caller-owned boundaries for index, lazy, segment, static panel, and deterministic columns; they register no component and access no platform state at import time.</en></lang>
 export { UIndexAnchor, UIndexList, ULazyLoad, USubsection, UTabsSwiper, UWaterfall };
+// <lang><zh-CN>本批命名导出保持 view table 与局部 locale 的最小边界；table 不拥有数据，locale helper 不读取系统或持久化。</zh-CN><en>These batch named exports retain minimal boundaries for view tables and local locale; tables own no data and locale helpers read no system state or persistence.</en></lang>
+export { UTable, UTr, UTh, UTd };
+export { normalizeULocale, U_SUPPORTED_LOCALES, useULocale } from './config-locale.mjs';
 export default UView;

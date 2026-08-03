@@ -16,7 +16,7 @@
     </UDropdown>
     <UButton label="Local action / 本地操作" />
     <!-- <lang><zh-CN>本段组合 P54 的本地导航、间距、反馈和 overlay 组件；所有文案与可见性均由本 fixture 明确提供。</zh-CN><en>This section composes P54 local navigation, spacing, feedback, and overlay components; the fixture explicitly provides every copy value and visibility selection.</en></lang> -->
-    <UConfigProvider density="compact">
+    <UConfigProvider density="compact" locale="en">
       <UStatusBar :height="18" />
       <UNavbar title="Fixture navigation / Fixture 导航" left-text="Back / 返回" right-text="Save / 保存" @left-click="recordP54Intent('left')" @right-click="recordP54Intent('right')" />
       <UCellItem title="Local entry / 本地条目" label="Caller projection / 调用方投影" value="Ready / 就绪" :arrow="true" :clickable="true" @click="recordP54Intent('cell')" />
@@ -52,6 +52,11 @@
     <USubsection :items="fixtureSegmentItems" model-value="first" aria-label="Local segments / 本地区段" />
     <UTabsSwiper :items="fixtureSegmentItems" model-value="first" aria-label="Local static panel / 本地静态面板" previous-text="Previous / 上一项" next-text="Next / 下一项" />
     <UWaterfall :items="fixtureWaterfallItems" :column-count="2" aria-label="Local deterministic columns / 本地确定性列" />
+    <!-- <lang><zh-CN>本段使用 fixture-owned rows、header、cell 与 locale 子树标记验证 H5 可解析 view table；它不查询、排序、测量或加载翻译。</zh-CN><en>This section uses fixture-owned rows, headers, cells, and locale-subtree marker to verify H5 resolves a view table; it does not query, sort, measure, or load translations.</en></lang> -->
+    <UTable aria-label="Local table / 本地表格">
+      <UTr><UTh label="Name / 名称" /><UTh label="Status / 状态" /></UTr>
+      <UTr value="local-row" :clickable="true"><UTd text="Local row / 本地行" /><UTd text="Static / 静态" /></UTr>
+    </UTable>
     <UBackTop :visible="true" label="Top / 顶部" @back-top="recordP54Intent('top')" />
     <UFab :visible="true" label="Create / 新建" @click="recordP54Intent('fab')" />
     <URootPortal :visible="true" :layer="1200"><UTransition :visible="true" mode="fade"><UTopTips :visible="true" message="Local overlay / 本地浮层" close-text="Close / 关闭" @close="recordP54Intent('tips')" /></UTransition></URootPortal>
@@ -67,7 +72,7 @@
 import { ref } from 'vue';
 import { UActionSheetItem, UAvatarCropper, UBackTop, UButton, UCarKeyboard, UCellItem, UCitySelect, UConfigProvider, UDropdown, UDropdownItem, UFab, UKeyboard, ULoading, ULoadingPopup, UMask, UMessageInput, UNavbar, UNoNetwork, UNoticeBar, UNumberKeyboard, URootPortal, USafeBottom, USection, USelect, USlider, UStatusBar, UText, UTopTips, UTransition, UUpload, UVerificationCode } from '../../../src/index.mjs';
 // <lang><zh-CN>本批具名导入只把受控 P56.2 表面提供给 H5 fixture；导入本身不注册组件、启动 timer 或写入全局状态。</zh-CN><en>These named imports provide controlled P56.2 surfaces to the H5 fixture only; importing registers no component, starts no timer, and writes no global state.</en></lang>
-import { UCircleProgress, UColumnNotice, UCountDown, UFullScreen, UIndexAnchor, UIndexList, ULazyLoad, URowNotice, UStep, USubsection, UTabsSwiper, UTimeLine, UTimeLineItem, UWaterfall } from '../../../src/index.mjs';
+import { UCircleProgress, UColumnNotice, UCountDown, UFullScreen, UIndexAnchor, UIndexList, ULazyLoad, URowNotice, UStep, USubsection, UTable, UTabsSwiper, UTd, UTh, UTimeLine, UTimeLineItem, UTr, UWaterfall } from '../../../src/index.mjs';
 
 // <lang><zh-CN>fixture 状态只来自本地 ref，便于 H5 smoke 对稳定文本进行检查。</zh-CN><en>Fixture state comes from local refs only, allowing H5 smoke to inspect stable text.</en></lang>
 const selected = ref('public');

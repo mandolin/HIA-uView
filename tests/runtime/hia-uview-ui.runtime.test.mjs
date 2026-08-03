@@ -10,7 +10,7 @@ import { resolve } from 'node:path';
 import { createApp } from 'vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import UView, { UActionSheet, UAlertTips, UBackTop, UBadge, UButton, UCalendar, UCard, UCell, UCellGroup, UCellItem, UCheckbox, UCheckboxGroup, UCircleProgress, UCollapse, UCollapseItem, UCol, UColumnNotice, UConfigProvider, UCountDown, UCountTo, UDivider, UDropdown, UDropdownItem, UEmpty, UFab, UField, UForm, UFormItem, UFullScreen, UGap, UGrid, UGridItem, UIcon, UImage, UIndexAnchor, UIndexList, UAvatar, UInput, ULazyLoad, ULine, ULineProgress, ULink, UList, ULoadmore, ULoading, ULoadingPage, ULoadingPopup, UMask, UModal, UNavBar, UNavbar, UNoNetwork, UNotice, UNoticeBar, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URadio, URadioGroup, URate, URootPortal, URow, URowNotice, USafeBottom, USection, USearch, USelect, USlider, UScrollList, USkeleton, UStack, UStatusBar, UStep, USteps, USticky, USubsection, USwipeAction, USwiper, USwitch, UTabbar, UTag, UTabs, UTabsSwiper, UText, UTextarea, UTimeLine, UTimeLineItem, UToast, UTopTips, UTransition, UValidationMessage, UWaterfall, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
+import UView, { UActionSheet, UAlertTips, UBackTop, UBadge, UButton, UCalendar, UCard, UCell, UCellGroup, UCellItem, UCheckbox, UCheckboxGroup, UCircleProgress, UCollapse, UCollapseItem, UCol, UColumnNotice, UConfigProvider, UCountDown, UCountTo, UDivider, UDropdown, UDropdownItem, UEmpty, UFab, UField, UForm, UFormItem, UFullScreen, UGap, UGrid, UGridItem, UIcon, UImage, UIndexAnchor, UIndexList, UAvatar, UInput, ULazyLoad, ULine, ULineProgress, ULink, UList, ULoadmore, ULoading, ULoadingPage, ULoadingPopup, UMask, UModal, UNavBar, UNavbar, UNoNetwork, UNotice, UNoticeBar, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URadio, URadioGroup, URate, URootPortal, URow, URowNotice, USafeBottom, USection, USearch, USelect, USlider, UScrollList, USkeleton, UStack, UStatusBar, UStep, USteps, USticky, USubsection, USwipeAction, USwiper, USwitch, UTabbar, UTable, UTag, UTabs, UTabsSwiper, UText, UTextarea, UTd, UTh, UTimeLine, UTimeLineItem, UToast, UTopTips, UTransition, UTr, UValidationMessage, UWaterfall, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
 
 /**
  * @lang zh-CN 验证 UButton 保持 P10/P11 的 enabled、disabled、loading、slot 与 loadingText 契约，防止 P12 registry 扩展回退既有组件行为。
@@ -340,8 +340,13 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-subsection')).toBe(USubsection);
   expect(application.component('u-tabs-swiper')).toBe(UTabsSwiper);
   expect(application.component('u-waterfall')).toBe(UWaterfall);
-  // <lang><zh-CN>集合长度与当前一百零三项预发布组件声明一致；后续组件批次会在各自审阅中更新此可执行注册断言。</zh-CN><en>Collection length matches the current one-hundred-and-three pre-release component declarations; subsequent component batches update this executable registration assertion in their own review.</en></lang>
-  expect(UVIEW_COMPONENTS).toHaveLength(103);
+  // <lang><zh-CN>view table family 也只能经显式 plugin 注册；它们不获取记录、排序、测量或平台表格服务。</zh-CN><en>The view table family likewise registers only through the explicit plugin; it acquires no record, sorting, measurement, or platform table service.</en></lang>
+  expect(application.component('u-table')).toBe(UTable);
+  expect(application.component('u-tr')).toBe(UTr);
+  expect(application.component('u-th')).toBe(UTh);
+  expect(application.component('u-td')).toBe(UTd);
+  // <lang><zh-CN>集合长度与当前一百零七项预发布组件声明一致；后续组件批次会在各自审阅中更新此可执行注册断言。</zh-CN><en>Collection length matches the current one-hundred-and-seven pre-release component declarations; subsequent component batches update this executable registration assertion in their own review.</en></lang>
+  expect(UVIEW_COMPONENTS).toHaveLength(107);
 
   // <lang><zh-CN>读取 runtime entry 本文以验证 style 仍由应用显式导入，而非由 import 或 plugin 注入。</zh-CN><en>Reads runtime-entry text to verify styles remain application-explicit rather than being injected by import or plugin.</en></lang>
   const runtimeEntry = await readFile(resolve('HIA-uView-UI/src/index.mjs'), 'utf8');

@@ -107,8 +107,8 @@ describe('P54 feedback and overlay surfaces', () => {
 });
 
 /**
- * @lang zh-CN 验证 transition、配置 provider 与 root-portal 保持有限同树呈现，而非全局动画、locale 或 portal 服务。
- * @lang en Verifies that transition, configuration provider, and root portal remain finite same-tree presentation rather than global animation, locale, or portal services.
+ * @lang zh-CN 验证 transition、配置 provider 与 root-portal 保持有限同树呈现，而非全局动画、语言运行时或 portal 服务。
+ * @lang en Verifies that transition, configuration provider, and root portal remain finite same-tree presentation rather than global animation, language runtime, or portal services.
  */
 describe('P54 constrained composition surfaces', () => {
   /**
@@ -116,10 +116,11 @@ describe('P54 constrained composition surfaces', () => {
    * @lang en Verifies that unknown configuration and transition input safely falls back and that root portal retains only slot and finite layer.
    */
   it('keeps configuration and composition finite', () => {
-    // <lang><zh-CN>provider 不接收 locale；未知 theme/density 只能回退既有受审计值。</zh-CN><en>The provider accepts no locale; unknown theme/density can only fall back to already audited values.</en></lang>
-    const provider = mount(UConfigProvider, { props: { theme: 'dark', density: 'expanded' }, slots: { default: 'Scoped content' } });
+    // <lang><zh-CN>provider 的 locale 只限当前双语 UI 子树；未知 theme/density/locale 都必须回退既有受审计值，不读取系统设置。</zh-CN><en>The provider locale is limited to the current bilingual UI subtree; unknown theme/density/locale must all fall back to already audited values without reading system settings.</en></lang>
+    const provider = mount(UConfigProvider, { props: { theme: 'dark', density: 'expanded', locale: 'unknown' }, slots: { default: 'Scoped content' } });
     expect(provider.get('.u-config-provider').classes()).toEqual(expect.arrayContaining(['u-config-provider--light', 'u-config-provider--comfortable']));
     expect(provider.get('.u-config-provider').attributes('data-u-theme')).toBe('light');
+    expect(provider.get('.u-config-provider').attributes('data-u-locale')).toBe('zh-Hans');
     const transition = mount(UTransition, { props: { visible: true, mode: 'unbounded', duration: 5000 }, slots: { default: 'Transition content' } });
     expect(transition.get('.u-transition').classes()).toContain('u-transition--fade');
     expect(transition.get('.u-transition').attributes('style')).toContain('--u-transition-duration: 1000ms');

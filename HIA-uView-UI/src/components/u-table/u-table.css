@@ -1,0 +1,31 @@
+/**
+ * @component UTableStyle
+ * @lang zh-CN 定义 view-based table 容器的局部边界与表面，不生成浏览器 table 布局、数据状态或排序外观。
+ * @lang en Defines local boundary and surface for a view-based table container and generates no browser-table layout, data state, or sort appearance.
+ */
+
+.u-table {
+  background: var(--u-comp-table-surface);
+  border-radius: var(--u-comp-table-radius);
+  color: var(--u-comp-table-foreground);
+  overflow: hidden;
+}
+
+.u-table--bordered {
+  border: 1px solid var(--u-comp-table-border);
+}
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-table {
+  background: #ffffff;
+  border-radius: 12px;
+  color: #001b2e;
+}
+
+.u-table--bordered {
+  border: 1px solid #27364a;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

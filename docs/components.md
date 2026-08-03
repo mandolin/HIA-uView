@@ -84,9 +84,12 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-tabs` | `UTabs` | [UTabs](tabs.md) | Controlled tab strip / 受控标签栏 |
 | `u-tabs-swiper` | `UTabsSwiper` | [UTabsSwiper](tabs-swiper.md) | Controlled static tab-panel projection / 受控静态 tab-panel 投影 |
 | `u-tabbar` | `UTabbar` | [UTabbar](tabbar.md) | Local bottom tab selection / 局部底部标签选择 |
+| `u-table` | `UTable` | [UTable](table.md) | View-based caller slot table container / 基于 view 的调用方 slot 表格容器 |
 | `u-tag` | `UTag` | [UTag](tag.md) | Finite-tone text tag / 有限 tone 文字标签 |
 | `u-text` | `UText` | [UText](text.md) | Finite text presentation / 有限文字呈现 |
 | `u-textarea` | `UTextarea` | [UTextarea](textarea.md) | Controlled multiline input / 受控多行输入 |
+| `u-td` | `UTd` | [UTd](td.md) | Static view-based table cell / 静态 view 表格单元格 |
+| `u-th` | `UTh` | [UTh](th.md) | Static view-based header cell / 静态 view 表头单元格 |
 | `u-time-line` | `UTimeLine` | [UTimeLine](time-line.md) | Local slot-composed timeline / 本地 slot 组合时间线 |
 | `u-time-line-item` | `UTimeLineItem` | [UTimeLineItem](time-line-item.md) | Declarative timeline item / 声明式时间线项目 |
 | `u-toast` | `UToast` | [UToast](toast.md) | Static controlled feedback / 静态受控反馈 |
@@ -104,12 +107,13 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-notice-bar` | `UNoticeBar` | [UNoticeBar](notice-bar.md) | Local notice-strip presentation / 局部通知条呈现 |
 | `u-top-tips` | `UTopTips` | [UTopTips](top-tips.md) | Caller-controlled top feedback / 调用方受控的顶部反馈 |
 | `u-transition` | `UTransition` | [UTransition](transition.md) | Finite CSS transition wrapper / 有限 CSS transition 包装器 |
+| `u-tr` | `UTr` | [UTr](tr.md) | View-based row with optional local intent / 带可选本地意图的 view 行 |
 | `u-upload` | `UUpload` | [UUpload](upload.md) | Caller-owned file-state intent list / 调用方拥有的文件状态意图列表 |
 | `u-verification-code` | `UVerificationCode` | [UVerificationCode](verification-code.md) | Caller-owned request-state projection / 调用方拥有的请求状态投影 |
 | `u-waterfall` | `UWaterfall` | [UWaterfall](waterfall.md) | Deterministic finite-column projection / 确定性有限列投影 |
 | `u-config-provider` | `UConfigProvider` | [UConfigProvider](config-provider.md) | Finite theme-density subtree scope / 有限主题密度子树范围 |
 | `u-root-portal` | `URootPortal` | [URootPortal](root-portal.md) | Same-tree overlay-root wrapper / 同树 overlay-root 包装器 |
 
-The index currently contains 103 declared component contracts. `u-navbar` and `u-notice-bar` are separate, bounded APIs; they do not alias the earlier `u-nav-bar` or `u-notice` contracts. Use named imports or the explicit `UView` plugin as documented in [runtime consumption](runtime-consumption.md). Import `style.css` explicitly from application-owned global style setup. The current [compatibility profile](compatibility.md), [examples](examples.md), and [migration guidance](migration-from-uview.md) state the evidence and limits that apply to this index.
+The index currently contains 107 declared component contracts. `u-navbar` and `u-notice-bar` are separate, bounded APIs; they do not alias the earlier `u-nav-bar` or `u-notice` contracts. Use named imports or the explicit `UView` plugin as documented in [runtime consumption](runtime-consumption.md). Import `style.css` explicitly from application-owned global style setup. The current [compatibility profile](compatibility.md), [examples](examples.md), and [migration guidance](migration-from-uview.md) state the evidence and limits that apply to this index.
 
-该索引当前包含 103 个已声明的组件契约。`u-navbar` 与 `u-notice-bar` 是独立、受限的 API，不是既有 `u-nav-bar` 或 `u-notice` 契约的别名。按 [runtime consumption](runtime-consumption.md) 所述使用命名导入或显式 `UView` plugin，并从应用拥有的全局样式设置显式导入 `style.css`。当前 [compatibility profile](compatibility.md)、[examples](examples.md) 与 [migration guidance](migration-from-uview.md) 说明此索引适用的证据和限制。
+该索引当前包含 107 个已声明的组件契约。`u-navbar` 与 `u-notice-bar` 是独立、受限的 API，不是既有 `u-nav-bar` 或 `u-notice` 契约的别名。按 [runtime consumption](runtime-consumption.md) 所述使用命名导入或显式 `UView` plugin，并从应用拥有的全局样式设置显式导入 `style.css`。当前 [compatibility profile](compatibility.md)、[examples](examples.md) 与 [migration guidance](migration-from-uview.md) 说明此索引适用的证据和限制。

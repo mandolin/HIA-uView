@@ -1,0 +1,50 @@
+/**
+ * @component UTrStyle
+ * @lang zh-CN 定义 view-based table row 的局部栅格、边界和受控交互呈现；不测量列、行高或数据内容。
+ * @lang en Defines local grid, boundary, and controlled interaction presentation for a view-based table row; it measures no columns, row height, or data content.
+ */
+
+.u-tr {
+  align-items: stretch;
+  border-bottom: 1px solid var(--u-comp-tr-border);
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  min-width: 0;
+  padding: 0;
+  text-align: start;
+}
+
+.u-tr--clickable {
+  background: var(--u-comp-tr-clickable-surface);
+}
+
+.u-tr--disabled {
+  opacity: var(--u-comp-tr-disabled-opacity);
+}
+
+.u-tr:focus-visible {
+  outline: 2px solid var(--u-comp-tr-focus-ring);
+  outline-offset: -2px;
+}
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-tr {
+  border-bottom: 1px solid #f7f9fc;
+}
+
+.u-tr--clickable {
+  background: #ffffff;
+}
+
+.u-tr--disabled {
+  opacity: 0.6;
+}
+
+.u-tr:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */
