@@ -13,14 +13,18 @@ import UCell from './components/u-cell/u-cell.vue';
 import UCellItem from './components/u-cell-item/u-cell-item.vue';
 import UCarKeyboard from './components/u-car-keyboard/u-car-keyboard.vue';
 import UCitySelect from './components/u-city-select/u-city-select.vue';
+import UCircleProgress from './components/u-circle-progress/u-circle-progress.vue';
 import UCheckbox from './components/u-checkbox/u-checkbox.vue';
 import UCheckboxGroup from './components/u-checkbox-group/u-checkbox-group.vue';
 import UCollapse from './components/u-collapse/u-collapse.vue';
 import UCollapseItem from './components/u-collapse-item/u-collapse-item.vue';
+import UColumnNotice from './components/u-column-notice/u-column-notice.vue';
+import UCountDown from './components/u-count-down/u-count-down.vue';
 import UEmpty from './components/u-empty/u-empty.vue';
 import UField from './components/u-field/u-field.vue';
 import UForm from './components/u-form/u-form.vue';
 import UFormItem from './components/u-form-item/u-form-item.vue';
+import UFullScreen from './components/u-full-screen/u-full-screen.vue';
 import UIcon from './components/u-icon/u-icon.vue';
 import UKeyboard from './components/u-keyboard/u-keyboard.vue';
 import UImage from './components/u-image/u-image.vue';
@@ -49,6 +53,7 @@ import UPagination from './components/u-pagination/u-pagination.vue';
 import UPopup from './components/u-popup/u-popup.vue';
 import UPicker from './components/u-picker/u-picker.vue';
 import URow from './components/u-row/u-row.vue';
+import URowNotice from './components/u-row-notice/u-row-notice.vue';
 import UTag from './components/u-tag/u-tag.vue';
 import UBadge from './components/u-badge/u-badge.vue';
 import UDivider from './components/u-divider/u-divider.vue';
@@ -74,6 +79,7 @@ import UScrollList from './components/u-scroll-list/u-scroll-list.vue';
 import USkeleton from './components/u-skeleton/u-skeleton.vue';
 import UStack from './components/u-stack/u-stack.vue';
 import UStatusBar from './components/u-status-bar/u-status-bar.vue';
+import UStep from './components/u-step/u-step.vue';
 import USteps from './components/u-steps/u-steps.vue';
 import USticky from './components/u-sticky/u-sticky.vue';
 import USwiper from './components/u-swiper/u-swiper.vue';
@@ -82,6 +88,8 @@ import USwipeAction from './components/u-swipe-action/u-swipe-action.vue';
 import UTabbar from './components/u-tabbar/u-tabbar.vue';
 import UTabs from './components/u-tabs/u-tabs.vue';
 import UTextarea from './components/u-textarea/u-textarea.vue';
+import UTimeLine from './components/u-time-line/u-time-line.vue';
+import UTimeLineItem from './components/u-time-line-item/u-time-line-item.vue';
 import USection from './components/u-section/u-section.vue';
 import USelect from './components/u-select/u-select.vue';
 import USlider from './components/u-slider/u-slider.vue';
@@ -127,6 +135,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-collapse', component: UCollapse }),
   // <lang><zh-CN>折叠子项只呈现标题/slot 并报告 toggle intent，不拥有父级集合。</zh-CN><en>The collapse item presents title/slot and reports toggle intent only; it owns no parent collection.</en></lang>
   Object.freeze({ name: 'u-collapse-item', component: UCollapseItem }),
+  // <lang><zh-CN>纵向 notice 只显示 caller active item 并报告选择，不自动轮播。</zh-CN><en>Column notice displays caller active item and reports selection only; it does not rotate automatically.</en></lang>
+  Object.freeze({ name: 'u-column-notice', component: UColumnNotice }),
   // <lang><zh-CN>空态只展示调用方文字并 emit 可选 action 意图，不读取数据或加载状态。</zh-CN><en>The empty state displays caller text only and emits optional action intent without reading data or loading state.</en></lang>
   Object.freeze({ name: 'u-empty', component: UEmpty }),
   // <lang><zh-CN>字段结构只组织调用方标签、插槽、帮助和独立消息，不拥有表单模型或规则生命周期。</zh-CN><en>The field structure organizes caller label, slot, help, and independent message only and owns no form model or rule lifecycle.</en></lang>
@@ -135,6 +145,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-form', component: UForm }),
   // <lang><zh-CN>表单项只组织标签、帮助和应用声明消息，嵌入控件仍由调用方控制。</zh-CN><en>The form item organizes label, help, and caller-declared message only while the embedded control remains caller-controlled.</en></lang>
   Object.freeze({ name: 'u-form-item', component: UFormItem }),
+  // <lang><zh-CN>full-screen 只呈现 caller visible 的同树 sheet，不调用原生全屏或路由。</zh-CN><en>Full-screen presents a same-tree sheet for caller visible only and calls neither native fullscreen nor routing.</en></lang>
+  Object.freeze({ name: 'u-full-screen', component: UFullScreen }),
   // <lang><zh-CN>空隙只提供有限本地尺寸，不表达业务节奏。</zh-CN><en>The gap provides a finite local size only and expresses no business cadence.</en></lang>
   Object.freeze({ name: 'u-gap', component: UGap }),
   // <lang><zh-CN>网格容器只提供有限列数、间距和 context，不管理业务项目。</zh-CN><en>The grid provides finite columns, gap, and context only and manages no business items.</en></lang>
@@ -193,6 +205,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-rate', component: URate }),
   // <lang><zh-CN>行只排列默认插槽并投影受控 flex 值，不拥有子项或页面语义。</zh-CN><en>The row arranges the default slot and projects controlled flex values only; it owns no child or page semantics.</en></lang>
   Object.freeze({ name: 'u-row', component: URow }),
+  // <lang><zh-CN>横向 notice 只显示 caller active item 并报告选择，不滚动或计时。</zh-CN><en>Row notice displays caller active item and reports selection only and neither scrolls nor times.</en></lang>
+  Object.freeze({ name: 'u-row-notice', component: URowNotice }),
   Object.freeze({ name: 'u-section', component: USection }),
   Object.freeze({ name: 'u-select', component: USelect }),
   Object.freeze({ name: 'u-slider', component: USlider }),
@@ -220,6 +234,9 @@ export const UVIEW_COMPONENTS = Object.freeze([
   // <lang><zh-CN>多行输入只回传受控字符串和焦点/确认 intent，不执行校验、提交或持久化。</zh-CN><en>The textarea returns controlled string and focus/confirm intent only and performs no validation, submission, or persistence.</en></lang>
   Object.freeze({ name: 'u-textarea', component: UTextarea }),
   Object.freeze({ name: 'u-text', component: UText }),
+  // <lang><zh-CN>timeline 与 item 只由 caller slot/字段组合，不排序事件或解析时间。</zh-CN><en>Timeline and item compose only from caller slots/fields and neither sort events nor parse time.</en></lang>
+  Object.freeze({ name: 'u-time-line', component: UTimeLine }),
+  Object.freeze({ name: 'u-time-line-item', component: UTimeLineItem }),
   // <lang><zh-CN>toast 只呈现调用方受控反馈，不使用 timer、队列或全局 service。</zh-CN><en>The toast presents caller-controlled feedback only and uses no timer, queue, or global service.</en></lang>
   Object.freeze({ name: 'u-toast', component: UToast }),
   // <lang><zh-CN>独立校验消息只呈现应用声明的状态和文字，不推断结果或启动异步工作。</zh-CN><en>The independent validation message presents application-declared state and text only and infers no result or starts no asynchronous work.</en></lang>
@@ -232,8 +249,12 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-car-keyboard', component: UCarKeyboard }),
   // <lang><zh-CN>city-select 只投影调用方受控的有限列选择，不含地区数据、定位或地址服务。</zh-CN><en>City-select projects caller-controlled finite column selection only and contains no region data, geolocation, or address service.</en></lang>
   Object.freeze({ name: 'u-city-select', component: UCitySelect }),
+  // <lang><zh-CN>圆形进度只投影 caller value/max，不连接任务、动画或 Canvas。</zh-CN><en>Circle progress projects caller value/max only and connects to no task, animation, or Canvas.</en></lang>
+  Object.freeze({ name: 'u-circle-progress', component: UCircleProgress }),
   // <lang><zh-CN>配置 scope 只包装当前子树的有限 theme/density，不写全局设置。</zh-CN><en>The configuration scope wraps finite theme/density for the current subtree only and writes no global setting.</en></lang>
   Object.freeze({ name: 'u-config-provider', component: UConfigProvider }),
+  // <lang><zh-CN>倒计时只呈现 caller remaining seconds，不读取时钟或启动 timer。</zh-CN><en>Count-down presents caller remaining seconds only and reads no clock or starts no timer.</en></lang>
+  Object.freeze({ name: 'u-count-down', component: UCountDown }),
   // <lang><zh-CN>FAB 只报告 caller-owned click intent，不拖拽或展开菜单。</zh-CN><en>The FAB reports caller-owned click intent only and neither drags nor expands a menu.</en></lang>
   Object.freeze({ name: 'u-fab', component: UFab }),
   // <lang><zh-CN>loading 只显示 caller-controlled 静态状态，不推断异步工作。</zh-CN><en>Loading displays caller-controlled static status only and infers no asynchronous work.</en></lang>
@@ -260,6 +281,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-safe-bottom', component: USafeBottom }),
   // <lang><zh-CN>状态栏 spacer 只使用 caller height，不读取设备系统栏。</zh-CN><en>The status-bar spacer uses caller height only and reads no device system bar.</en></lang>
   Object.freeze({ name: 'u-status-bar', component: UStatusBar }),
+  // <lang><zh-CN>单 step 只呈现 caller 状态与可选选择，不协调父级流程。</zh-CN><en>A single step presents caller status and optional selection only and coordinates no parent flow.</en></lang>
+  Object.freeze({ name: 'u-step', component: UStep }),
   // <lang><zh-CN>顶部提示只呈现 caller feedback，不创建全局队列或 timer。</zh-CN><en>Top tips present caller feedback only and create no global queue or timer.</en></lang>
   Object.freeze({ name: 'u-top-tips', component: UTopTips }),
   // <lang><zh-CN>transition 只投影有限 CSS mode/duration，不实现 JS 动画生命周期。</zh-CN><en>Transition projects finite CSS mode/duration only and implements no JavaScript animation lifecycle.</en></lang>
@@ -304,4 +327,6 @@ export const UView = Object.freeze({
 
 // <lang><zh-CN>导出命名组件供应用按需注册；默认导出保持显式 plugin 入口，二者均不产生 import-time 副作用。</zh-CN><en>Exports named components for application-side registration; the default export remains the explicit plugin entry, and neither creates import-time side effects.</en></lang>
 export { UActionSheet, UActionSheetItem, UAlertTips, UAvatarCropper, UBackTop, UButton, UCalendar, UCard, UCell, UCellGroup, UCellItem, UCarKeyboard, UCheckbox, UCheckboxGroup, UCitySelect, UCollapse, UCollapseItem, UCol, UConfigProvider, UDropdown, UDropdownItem, UEmpty, UFab, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, UKeyboard, ULine, ULineProgress, ULink, UList, ULoading, ULoadingPage, ULoadingPopup, ULoadmore, UMask, UMessageInput, UModal, UNavbar, UNavBar, UNoNetwork, UNotice, UNoticeBar, UNumberKeyboard, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URootPortal, URow, USafeBottom, USection, USelect, USlider, USwipeAction, UStatusBar, UTag, UBadge, UText, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UTopTips, UTransition, UUpload, UValidationMessage, UVerificationCode };
+// <lang><zh-CN>本批命名导出保持与 manifest/plugin 的同名实现一致；它们不在 import 时注册组件或写入 locale 状态。</zh-CN><en>These batch named exports remain aligned with manifest/plugin implementations; they register no component and write no locale state at import time.</en></lang>
+export { UCircleProgress, UColumnNotice, UCountDown, UFullScreen, URowNotice, UStep, UTimeLine, UTimeLineItem };
 export default UView;

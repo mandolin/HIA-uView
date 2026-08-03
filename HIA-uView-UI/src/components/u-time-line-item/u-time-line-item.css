@@ -1,0 +1,78 @@
+/**
+ * @component UTimeLineItemStyle
+ * @lang zh-CN 定义单条时间线的节点、连接线和文字 token；有限状态不解释事件成功或失败。
+ * @lang en Defines node, connector, and text tokens for one timeline item; finite status does not interpret an event as success or failure.
+ */
+.u-time-line-item__control, .u-time-line-item__static { align-items: stretch; background: transparent; border: 0; color: inherit; display: flex; gap: var(--u-comp-time-line-item-gap); padding: 0; text-align: left; width: 100%; }
+.u-time-line-item__rail { align-items: center; display: flex; flex: 0 0 var(--u-comp-time-line-item-rail-width); flex-direction: column; }
+.u-time-line-item__node { background: var(--u-comp-time-line-item-neutral-node); border-radius: 50%; height: var(--u-comp-time-line-item-node-size); width: var(--u-comp-time-line-item-node-size); }
+.u-time-line-item__line { background: var(--u-comp-time-line-item-line); flex: 1; min-height: var(--u-comp-time-line-item-line-min-height); width: var(--u-comp-time-line-item-line-width); }
+.u-time-line-item__content { display: flex; flex: 1; flex-direction: column; gap: var(--u-comp-time-line-item-content-gap); min-width: 0; padding-bottom: var(--u-comp-time-line-item-bottom-padding); }
+.u-time-line-item__time { color: var(--u-comp-time-line-item-time-foreground); font-size: var(--u-comp-time-line-item-time-font-size); }
+.u-time-line-item__title { color: var(--u-comp-time-line-item-foreground); font-size: var(--u-comp-time-line-item-title-font-size); font-weight: var(--u-comp-time-line-item-title-font-weight); }
+.u-time-line-item__description { color: var(--u-comp-time-line-item-description-foreground); font-size: var(--u-comp-time-line-item-description-font-size); }
+.u-time-line-item--primary .u-time-line-item__node { background: var(--u-comp-time-line-item-primary-node); }
+.u-time-line-item--accent .u-time-line-item__node { background: var(--u-comp-time-line-item-accent-node); }
+.u-time-line-item--error .u-time-line-item__node { border: var(--u-comp-time-line-item-error-border-width) dashed var(--u-comp-time-line-item-error-border); box-sizing: border-box; }
+.u-time-line-item__control:focus-visible { outline: 2px solid var(--u-comp-time-line-item-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-time-line-item__control, .u-time-line-item__static {
+  gap: 10px;
+}
+
+.u-time-line-item__rail {
+  flex: 0 0 20px;
+}
+
+.u-time-line-item__node {
+  background: #27364a;
+  height: 10px;
+  width: 10px;
+}
+
+.u-time-line-item__line {
+  min-height: 24px;
+  width: 2px;
+}
+
+.u-time-line-item__content {
+  gap: 4px;
+  padding-bottom: 14px;
+}
+
+.u-time-line-item__time {
+  color: #27364a;
+  font-size: 12px;
+}
+
+.u-time-line-item__title {
+  color: #001b2e;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.u-time-line-item__description {
+  color: #27364a;
+  font-size: 13px;
+}
+
+.u-time-line-item--primary .u-time-line-item__node {
+  background: #0047ab;
+}
+
+.u-time-line-item--accent .u-time-line-item__node {
+  background: #00a8d3;
+}
+
+.u-time-line-item--error .u-time-line-item__node {
+  border: 2px dashed #27364a;
+}
+
+.u-time-line-item__control:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

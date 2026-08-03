@@ -43,6 +43,15 @@
     <u-avatar-cropper :visible="true" select-text="选择来源 / Select source" />
     <u-verification-code :visible="true" label="本地请求状态 / Local request state" status-text="调用方状态 / Caller state" remaining-text="无本地计时器 / No local timer" :remaining-seconds="30" request-text="请求 / Request" :request-enabled="true" />
 
+    <!-- <lang><zh-CN>本段以页面拥有的有限数值、notice、步骤和 timeline 字段编译 P56.2 静态投影；它们不启动 timer、full-screen API、公告轮播、流程或事件数据源。</zh-CN><en>This section compiles P56.2 static projections with page-owned finite number, notice, step, and timeline fields; they start no timer, fullscreen API, notice rotation, workflow, or event data source.</en></lang> -->
+    <u-circle-progress :value="42" :max="80" label="本地数值 / Local value" />
+    <u-column-notice :items="fixtureNoticeItems" :active-index="0" aria-label="本地纵向提示 / Local column notice" />
+    <u-row-notice :items="fixtureNoticeItems" :active-index="1" aria-label="本地横向提示 / Local row notice" />
+    <u-count-down :remaining="3661" aria-label="本地静态剩余时间 / Local static remaining time" />
+    <u-full-screen :visible="false" title="本地覆盖面 / Local sheet" close-text="关闭 / Close" />
+    <u-step title="本地步骤 / Local step" description="调用方呈现 / Caller projection" :index="0" status="process" :interactive="true" />
+    <u-time-line aria-label="本地时间线 / Local timeline"><u-time-line-item title="本地时间线项目 / Local timeline item" time="00:00" description="静态调用方投影 / Static caller projection" status="primary" :is-last="true" /></u-time-line>
+
     <!-- <lang><zh-CN>notice 只呈现页面在确认本地意图后显式写入的消息和可见状态；它不表示保存、请求或业务完成。</zh-CN><en>The notice presents only the message and visibility explicitly written by the page after local intent confirmation; it represents no save, request, or business completion.</en></lang> -->
     <u-notice
       :visible="catalogNoticeVisible"
@@ -266,6 +275,12 @@ const fixtureNumberKeys = Object.freeze(['1', '2', '3', '4']);
 const fixtureCarRows = Object.freeze([
   Object.freeze(['A', 'B', 'C']),
   Object.freeze(['1', '2', '3'])
+]);
+
+// <lang><zh-CN>notice 项是页面本地的有限文字投影，用于编译受控 activeIndex/select 表面；它们没有远程公告、滚动或定时器语义。</zh-CN><en>Notice items are page-local finite copy projections used to compile controlled activeIndex/select surfaces; they carry no remote-announcement, scrolling, or timer semantics.</en></lang>
+const fixtureNoticeItems = Object.freeze([
+  Object.freeze({ label: '本地第一项 / Local first item', value: 'first' }),
+  Object.freeze({ label: '本地第二项 / Local second item', value: 'second' })
 ]);
 
 // <lang><zh-CN>文件记录是页面内可读状态投影，不代表文件路径、bytes、上传任务或缓存。</zh-CN><en>File records are in-page readable state projections and represent no file path, bytes, upload task, or cache.</en></lang>

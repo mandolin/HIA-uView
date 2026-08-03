@@ -49,7 +49,7 @@ test('keeps attachment and verification declarations aligned', async () => {
     await access(resolve(paths.style));
     await access(resolve(record.contract));
   }
-  assert.equal(manifest.components.length, 89);
+  assert.ok(manifest.components.length >= 89);
 });
 
 /**

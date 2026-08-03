@@ -1,0 +1,40 @@
+/**
+ * @component UColumnNoticeStyle
+ * @lang zh-CN 定义单项纵向 notice 的局部 token 样式；不实现位移、轮播或动态高度测量。
+ * @lang en Defines local token styles for a one-item vertical notice; it implements no movement, rotation, or dynamic-height measurement.
+ */
+.u-column-notice { background: var(--u-comp-column-notice-surface); border-left: var(--u-comp-column-notice-border-width) solid var(--u-comp-column-notice-border); box-sizing: border-box; padding: var(--u-comp-column-notice-padding); width: 100%; }
+.u-column-notice__item { align-items: flex-start; background: transparent; border: 0; color: inherit; display: flex; flex-direction: column; gap: var(--u-comp-column-notice-gap); padding: 0; text-align: left; width: 100%; }
+.u-column-notice__label { color: var(--u-comp-column-notice-foreground); font-size: var(--u-comp-column-notice-label-font-size); font-weight: var(--u-comp-column-notice-label-font-weight); }
+.u-column-notice__description { color: var(--u-comp-column-notice-description-foreground); font-size: var(--u-comp-column-notice-description-font-size); }
+.u-column-notice__item:focus-visible { outline: 2px solid var(--u-comp-column-notice-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-column-notice {
+  background: #f7f9fc;
+  border-left: 3px solid #0047ab;
+  padding: 10px 12px;
+}
+
+.u-column-notice__item {
+  gap: 4px;
+}
+
+.u-column-notice__label {
+  color: #001b2e;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.u-column-notice__description {
+  color: #27364a;
+  font-size: 13px;
+}
+
+.u-column-notice__item:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

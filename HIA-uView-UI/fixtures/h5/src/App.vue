@@ -37,6 +37,14 @@
     <UUpload :visible="true" :files="fixtureFiles" label="Local files / 本地文件" select-text="Select / 选择" preview-text="Preview / 预览" remove-text="Remove / 删除" retry-text="Retry / 重试" :max="3" />
     <UAvatarCropper :visible="true" select-text="Select source / 选择来源" />
     <UVerificationCode :visible="true" label="Local request state / 本地请求状态" status-text="Caller state / 调用方状态" remaining-text="No local timer / 无本地计时器" :remaining-seconds="30" request-text="Request / 请求" :request-enabled="true" />
+    <!-- <lang><zh-CN>本段用 fixture-owned 静态数据组合 P56.2 受控数值、notice、sheet、step 和 timeline；它们不开始 timer、原生全屏、自动轮播、流程或远程数据访问。</zh-CN><en>This section composes P56.2 controlled number, notice, sheet, step, and timeline surfaces with fixture-owned static data; they start no timer, native fullscreen, automatic rotation, workflow, or remote data access.</en></lang> -->
+    <UCircleProgress :value="42" :max="80" label="Local value / 本地数值" />
+    <UColumnNotice :items="fixtureNoticeItems" :active-index="0" aria-label="Local column notice / 本地纵向提示" />
+    <URowNotice :items="fixtureNoticeItems" :active-index="1" aria-label="Local row notice / 本地横向提示" />
+    <UCountDown :remaining="3661" aria-label="Local static remaining time / 本地静态剩余时间" />
+    <UFullScreen :visible="false" title="Local sheet / 本地覆盖面" close-text="Close / 关闭" />
+    <UStep title="Local step / 本地步骤" description="Caller projection / 调用方投影" :index="0" status="process" :interactive="true" />
+    <UTimeLine aria-label="Local timeline / 本地时间线"><UTimeLineItem title="Local timeline item / 本地时间线项目" time="00:00" description="Static caller projection / 静态调用方投影" status="primary" :is-last="true" /></UTimeLine>
     <UBackTop :visible="true" label="Top / 顶部" @back-top="recordP54Intent('top')" />
     <UFab :visible="true" label="Create / 新建" @click="recordP54Intent('fab')" />
     <URootPortal :visible="true" :layer="1200"><UTransition :visible="true" mode="fade"><UTopTips :visible="true" message="Local overlay / 本地浮层" close-text="Close / 关闭" @close="recordP54Intent('tips')" /></UTransition></URootPortal>
@@ -51,6 +59,8 @@
 <script setup>
 import { ref } from 'vue';
 import { UActionSheetItem, UAvatarCropper, UBackTop, UButton, UCarKeyboard, UCellItem, UCitySelect, UConfigProvider, UDropdown, UDropdownItem, UFab, UKeyboard, ULoading, ULoadingPopup, UMask, UMessageInput, UNavbar, UNoNetwork, UNoticeBar, UNumberKeyboard, URootPortal, USafeBottom, USection, USelect, USlider, UStatusBar, UText, UTopTips, UTransition, UUpload, UVerificationCode } from '../../../src/index.mjs';
+// <lang><zh-CN>本批具名导入只把受控 P56.2 表面提供给 H5 fixture；导入本身不注册组件、启动 timer 或写入全局状态。</zh-CN><en>These named imports provide controlled P56.2 surfaces to the H5 fixture only; importing registers no component, starts no timer, and writes no global state.</en></lang>
+import { UCircleProgress, UColumnNotice, UCountDown, UFullScreen, URowNotice, UStep, UTimeLine, UTimeLineItem } from '../../../src/index.mjs';
 
 // <lang><zh-CN>fixture 状态只来自本地 ref，便于 H5 smoke 对稳定文本进行检查。</zh-CN><en>Fixture state comes from local refs only, allowing H5 smoke to inspect stable text.</en></lang>
 const selected = ref('public');
@@ -72,6 +82,11 @@ const fixtureNumberKeys = Object.freeze(['1', '2', '3', '4']);
 const fixtureCarRows = Object.freeze([
   Object.freeze(['A', 'B', 'C']),
   Object.freeze(['1', '2', '3'])
+]);
+// <lang><zh-CN>notice 项是 H5 fixture 的有限本地文字投影，只测试 controlled active index；它们不代表公告数据源或自动轮播。</zh-CN><en>Notice items are finite local-copy projections for the H5 fixture and test controlled active index only; they represent no announcement source or automatic rotation.</en></lang>
+const fixtureNoticeItems = Object.freeze([
+  Object.freeze({ label: 'Local first item / 本地第一项', value: 'first' }),
+  Object.freeze({ label: 'Local second item / 本地第二项', value: 'second' })
 ]);
 // <lang><zh-CN>文件记录只是可读本地状态投影，不是文件路径、二进制、上传任务或缓存。</zh-CN><en>File records are readable local-state projections only, not file paths, binary data, upload tasks, or cache.</en></lang>
 const fixtureFiles = Object.freeze([

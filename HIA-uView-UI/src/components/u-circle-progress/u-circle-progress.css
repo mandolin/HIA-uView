@@ -1,0 +1,62 @@
+/**
+ * @component UCircleProgressStyle
+ * @lang zh-CN 定义圆形数值投影的 token 化环与文字样式；conic-gradient 只是渐进视觉增强，不影响数值和标签可读性。
+ * @lang en Defines tokenized ring and text styles for circular numeric projection; conic-gradient is progressive visual enhancement only and does not affect value or label readability.
+ */
+.u-circle-progress { align-items: center; background: conic-gradient(var(--u-comp-circle-progress-bar) 0 var(--u-circle-progress-value), var(--u-comp-circle-progress-track) var(--u-circle-progress-value) 100%); border-radius: 50%; box-sizing: border-box; display: flex; justify-content: center; padding: var(--u-comp-circle-progress-ring-width); }
+.u-circle-progress__content { align-items: center; background: var(--u-comp-circle-progress-surface); border-radius: inherit; display: flex; flex-direction: column; height: 100%; justify-content: center; width: 100%; }
+.u-circle-progress--small { height: var(--u-comp-circle-progress-small-size); width: var(--u-comp-circle-progress-small-size); }
+.u-circle-progress--medium { height: var(--u-comp-circle-progress-medium-size); width: var(--u-comp-circle-progress-medium-size); }
+.u-circle-progress--large { height: var(--u-comp-circle-progress-large-size); width: var(--u-comp-circle-progress-large-size); }
+.u-circle-progress--neutral { --u-comp-circle-progress-bar: var(--u-comp-circle-progress-neutral-bar); }
+.u-circle-progress--accent { --u-comp-circle-progress-bar: var(--u-comp-circle-progress-accent-bar); }
+.u-circle-progress__value { color: var(--u-comp-circle-progress-foreground); font-size: var(--u-comp-circle-progress-value-font-size); font-weight: var(--u-comp-circle-progress-value-font-weight); }
+.u-circle-progress__label { color: var(--u-comp-circle-progress-label-foreground); font-size: var(--u-comp-circle-progress-label-font-size); margin-top: var(--u-comp-circle-progress-label-gap); }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-circle-progress {
+  padding: 6px;
+}
+
+.u-circle-progress__content {
+  background: #ffffff;
+}
+
+.u-circle-progress--small {
+  height: 64px;
+  width: 64px;
+}
+
+.u-circle-progress--medium {
+  height: 96px;
+  width: 96px;
+}
+
+.u-circle-progress--large {
+  height: 128px;
+  width: 128px;
+}
+
+.u-circle-progress--neutral {
+  --u-comp-circle-progress-bar: #27364a;
+}
+
+.u-circle-progress--accent {
+  --u-comp-circle-progress-bar: #00a8d3;
+}
+
+.u-circle-progress__value {
+  color: #001b2e;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.u-circle-progress__label {
+  color: #27364a;
+  font-size: 12px;
+  margin-top: 2px;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

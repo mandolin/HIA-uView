@@ -1,0 +1,40 @@
+/**
+ * @component URowNoticeStyle
+ * @lang zh-CN 定义单项横向 notice 的局部 token 布局；不定义 marquee、位移或动态测量。
+ * @lang en Defines local token layout for a one-item horizontal notice; it defines no marquee, movement, or dynamic measurement.
+ */
+.u-row-notice { background: var(--u-comp-row-notice-surface); border-inline-start: var(--u-comp-row-notice-border-width) solid var(--u-comp-row-notice-border); box-sizing: border-box; padding: var(--u-comp-row-notice-padding); width: 100%; }
+.u-row-notice__item { align-items: baseline; background: transparent; border: 0; color: inherit; display: flex; gap: var(--u-comp-row-notice-gap); padding: 0; text-align: left; width: 100%; }
+.u-row-notice__label { color: var(--u-comp-row-notice-foreground); flex: 0 1 auto; font-size: var(--u-comp-row-notice-label-font-size); font-weight: var(--u-comp-row-notice-label-font-weight); }
+.u-row-notice__description { color: var(--u-comp-row-notice-description-foreground); flex: 1 1 auto; font-size: var(--u-comp-row-notice-description-font-size); min-width: 0; }
+.u-row-notice__item:focus-visible { outline: 2px solid var(--u-comp-row-notice-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-row-notice {
+  background: #f7f9fc;
+  border-inline-start: 3px solid #00a8d3;
+  padding: 10px 12px;
+}
+
+.u-row-notice__item {
+  gap: 8px;
+}
+
+.u-row-notice__label {
+  color: #001b2e;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.u-row-notice__description {
+  color: #27364a;
+  font-size: 13px;
+}
+
+.u-row-notice__item:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

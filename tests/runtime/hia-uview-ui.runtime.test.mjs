@@ -10,7 +10,7 @@ import { resolve } from 'node:path';
 import { createApp } from 'vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import UView, { UActionSheet, UAlertTips, UBackTop, UBadge, UButton, UCalendar, UCard, UCell, UCellGroup, UCellItem, UCheckbox, UCheckboxGroup, UCollapse, UCollapseItem, UCol, UConfigProvider, UCountTo, UDivider, UDropdown, UDropdownItem, UEmpty, UFab, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, ULine, ULineProgress, ULink, UList, ULoadmore, ULoading, ULoadingPage, ULoadingPopup, UMask, UModal, UNavBar, UNavbar, UNoNetwork, UNotice, UNoticeBar, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URadio, URadioGroup, URate, URootPortal, URow, USafeBottom, USection, USearch, USelect, USlider, UScrollList, USkeleton, UStack, UStatusBar, USteps, USticky, USwipeAction, USwiper, USwitch, UTabbar, UTag, UTabs, UText, UTextarea, UToast, UTopTips, UTransition, UValidationMessage, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
+import UView, { UActionSheet, UAlertTips, UBackTop, UBadge, UButton, UCalendar, UCard, UCell, UCellGroup, UCellItem, UCheckbox, UCheckboxGroup, UCircleProgress, UCollapse, UCollapseItem, UCol, UColumnNotice, UConfigProvider, UCountDown, UCountTo, UDivider, UDropdown, UDropdownItem, UEmpty, UFab, UField, UForm, UFormItem, UFullScreen, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, ULine, ULineProgress, ULink, UList, ULoadmore, ULoading, ULoadingPage, ULoadingPopup, UMask, UModal, UNavBar, UNavbar, UNoNetwork, UNotice, UNoticeBar, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URadio, URadioGroup, URate, URootPortal, URow, URowNotice, USafeBottom, USection, USearch, USelect, USlider, UScrollList, USkeleton, UStack, UStatusBar, UStep, USteps, USticky, USwipeAction, USwiper, USwitch, UTabbar, UTag, UTabs, UText, UTextarea, UTimeLine, UTimeLineItem, UToast, UTopTips, UTransition, UValidationMessage, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
 
 /**
  * @lang zh-CN 验证 UButton 保持 P10/P11 的 enabled、disabled、loading、slot 与 loadingText 契约，防止 P12 registry 扩展回退既有组件行为。
@@ -324,7 +324,17 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-status-bar')).toBe(UStatusBar);
   expect(application.component('u-top-tips')).toBe(UTopTips);
   expect(application.component('u-transition')).toBe(UTransition);
-  expect(UVIEW_COMPONENTS).toHaveLength(89);
+  // <lang><zh-CN>本批呈现组件同样只能经显式 plugin 注册；它们不读取全局状态或自行安装。</zh-CN><en>This batch's presentation components likewise register only through the explicit plugin; they read no global state and do not self-install.</en></lang>
+  expect(application.component('u-circle-progress')).toBe(UCircleProgress);
+  expect(application.component('u-column-notice')).toBe(UColumnNotice);
+  expect(application.component('u-count-down')).toBe(UCountDown);
+  expect(application.component('u-full-screen')).toBe(UFullScreen);
+  expect(application.component('u-row-notice')).toBe(URowNotice);
+  expect(application.component('u-step')).toBe(UStep);
+  expect(application.component('u-time-line')).toBe(UTimeLine);
+  expect(application.component('u-time-line-item')).toBe(UTimeLineItem);
+  // <lang><zh-CN>集合长度与当前九十七项预发布组件声明一致；后续组件批次会在各自审阅中更新此可执行注册断言。</zh-CN><en>Collection length matches the current ninety-seven pre-release component declarations; subsequent component batches update this executable registration assertion in their own review.</en></lang>
+  expect(UVIEW_COMPONENTS).toHaveLength(97);
 
   // <lang><zh-CN>读取 runtime entry 本文以验证 style 仍由应用显式导入，而非由 import 或 plugin 注入。</zh-CN><en>Reads runtime-entry text to verify styles remain application-explicit rather than being injected by import or plugin.</en></lang>
   const runtimeEntry = await readFile(resolve('HIA-uView-UI/src/index.mjs'), 'utf8');

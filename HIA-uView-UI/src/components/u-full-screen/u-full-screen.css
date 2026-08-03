@@ -1,0 +1,50 @@
+/**
+ * @component UFullScreenStyle
+ * @lang zh-CN 定义 caller-controlled full-viewport sheet 的局部遮罩和内容 token；它不请求原生全屏或管理全局层级。
+ * @lang en Defines local mask and content tokens for a caller-controlled full-viewport sheet; it requests no native fullscreen and manages no global layer.
+ */
+.u-full-screen { align-items: stretch; background: var(--u-comp-full-screen-backdrop); bottom: 0; display: flex; left: 0; position: fixed; right: 0; top: 0; z-index: var(--u-comp-full-screen-layer); }
+.u-full-screen__sheet { background: var(--u-comp-full-screen-surface); display: flex; flex: 1; flex-direction: column; min-height: 0; }
+.u-full-screen__header { align-items: center; border-bottom: 1px solid var(--u-comp-full-screen-divider); display: flex; gap: var(--u-comp-full-screen-header-gap); justify-content: space-between; padding: var(--u-comp-full-screen-header-padding); }
+.u-full-screen__title { color: var(--u-comp-full-screen-foreground); font-size: var(--u-comp-full-screen-title-font-size); font-weight: var(--u-comp-full-screen-title-font-weight); }
+.u-full-screen__close { background: transparent; border: 0; color: var(--u-comp-full-screen-action-foreground); font: inherit; min-height: var(--u-comp-full-screen-action-min-height); }
+.u-full-screen__body { flex: 1; min-height: 0; padding: var(--u-comp-full-screen-body-padding); }
+.u-full-screen__close:focus-visible { outline: 2px solid var(--u-comp-full-screen-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-full-screen {
+  background: rgba(0, 27, 46, 0.45);
+  z-index: 1400;
+}
+
+.u-full-screen__sheet {
+  background: #ffffff;
+}
+
+.u-full-screen__header {
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.u-full-screen__title {
+  color: #001b2e;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.u-full-screen__close {
+  color: #0047ab;
+  min-height: 36px;
+}
+
+.u-full-screen__body {
+  padding: 16px;
+}
+
+.u-full-screen__close:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

@@ -1,0 +1,31 @@
+/**
+ * @component UCountDownStyle
+ * @lang zh-CN 定义静态剩余时间段的 token 化行内样式；不实现 tick、动画或到期变色逻辑。
+ * @lang en Defines tokenized inline styles for static remaining-time segments; it implements no tick, animation, or expiry-color logic.
+ */
+.u-count-down { align-items: center; color: var(--u-comp-count-down-foreground); display: inline-flex; font-size: var(--u-comp-count-down-font-size); gap: var(--u-comp-count-down-gap); }
+.u-count-down__segment { background: var(--u-comp-count-down-segment-surface); border-radius: var(--u-comp-count-down-segment-radius); color: var(--u-comp-count-down-segment-foreground); font-variant-numeric: tabular-nums; min-width: var(--u-comp-count-down-segment-min-width); padding: var(--u-comp-count-down-segment-padding); text-align: center; }
+.u-count-down__separator { color: var(--u-comp-count-down-separator-foreground); }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-count-down {
+  color: #001b2e;
+  font-size: 14px;
+  gap: 4px;
+}
+
+.u-count-down__segment {
+  background: #f7f9fc;
+  border-radius: 6px;
+  color: #001b2e;
+  min-width: 28px;
+  padding: 4px 6px;
+}
+
+.u-count-down__separator {
+  color: #27364a;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

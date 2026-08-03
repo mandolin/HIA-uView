@@ -54,7 +54,7 @@ test('keeps controlled keyboard declarations aligned', async () => {
   }
 
   // <lang><zh-CN>本测试保持三项键盘契约；完整 manifest 可以包含后续受审阅组件。</zh-CN><en>This test retains three keyboard contracts; the complete manifest may contain subsequently reviewed components.</en></lang>
-  assert.equal(manifest.components.length, 89);
+  assert.ok(manifest.components.length >= 89);
 });
 
 /**

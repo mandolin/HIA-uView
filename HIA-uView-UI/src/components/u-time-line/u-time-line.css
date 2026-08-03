@@ -1,0 +1,15 @@
+/**
+ * @component UTimeLineStyle
+ * @lang zh-CN 定义 slot 组合的纵向时间线容器间距；线、节点与状态由 item 自己呈现。
+ * @lang en Defines vertical timeline-container spacing for slot composition; lines, nodes, and status are presented by each item itself.
+ */
+.u-time-line { display: flex; flex-direction: column; gap: var(--u-comp-time-line-gap); width: 100%; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-time-line {
+  gap: 0;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

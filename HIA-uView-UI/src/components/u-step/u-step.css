@@ -1,0 +1,67 @@
+/**
+ * @component UStepStyle
+ * @lang zh-CN 定义单个步骤的 token 化指示器和文字样式；状态只提供非颜色补充形状与局部视觉，不包含流程语义。
+ * @lang en Defines tokenized indicator and text styles for one step; status supplies non-color supplementary shape and local visuals only and carries no flow semantics.
+ */
+.u-step { width: 100%; }
+.u-step__control, .u-step__static { align-items: flex-start; background: transparent; border: 0; color: inherit; display: flex; gap: var(--u-comp-step-gap); padding: 0; text-align: left; width: 100%; }
+.u-step__indicator { align-items: center; background: var(--u-comp-step-wait-surface); border: var(--u-comp-step-indicator-border-width) solid var(--u-comp-step-wait-border); border-radius: 50%; color: var(--u-comp-step-wait-foreground); display: flex; flex: 0 0 auto; height: var(--u-comp-step-indicator-size); justify-content: center; width: var(--u-comp-step-indicator-size); }
+.u-step__content { display: flex; flex: 1; flex-direction: column; gap: var(--u-comp-step-content-gap); min-width: 0; }
+.u-step__title { color: var(--u-comp-step-foreground); font-size: var(--u-comp-step-title-font-size); font-weight: var(--u-comp-step-title-font-weight); }
+.u-step__description { color: var(--u-comp-step-description-foreground); font-size: var(--u-comp-step-description-font-size); }
+.u-step--process .u-step__indicator { background: var(--u-comp-step-process-surface); border-color: var(--u-comp-step-process-border); color: var(--u-comp-step-process-foreground); }
+.u-step--finish .u-step__indicator { background: var(--u-comp-step-finish-surface); border-color: var(--u-comp-step-finish-border); color: var(--u-comp-step-finish-foreground); }
+.u-step--error .u-step__indicator { border-color: var(--u-comp-step-error-border); border-style: dashed; color: var(--u-comp-step-error-foreground); }
+.u-step__control:focus-visible { outline: 2px solid var(--u-comp-step-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-step__control, .u-step__static {
+  gap: 10px;
+}
+
+.u-step__indicator {
+  background: #f7f9fc;
+  color: #27364a;
+  height: 28px;
+  width: 28px;
+}
+
+.u-step__content {
+  gap: 4px;
+}
+
+.u-step__title {
+  color: #001b2e;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.u-step__description {
+  color: #27364a;
+  font-size: 13px;
+}
+
+.u-step--process .u-step__indicator {
+  background: #0047ab;
+  border-color: #0047ab;
+  color: #ffffff;
+}
+
+.u-step--finish .u-step__indicator {
+  background: #00a8d3;
+  border-color: #00a8d3;
+  color: #001b2e;
+}
+
+.u-step--error .u-step__indicator {
+  border-color: #27364a;
+  color: #001b2e;
+}
+
+.u-step__control:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */
