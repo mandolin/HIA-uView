@@ -1,0 +1,92 @@
+/**
+ * @component UCitySelectStyle
+ * @lang zh-CN 定义 caller-column 选择器的 token 化局部面；样式不创建 popup、滚动服务、定位或数据加载。
+ * @lang en Defines a tokenized local surface for a caller-column selector; styles create no popup, scrolling service, geolocation, or data loading.
+ */
+.u-city-select { display: grid; gap: var(--u-comp-city-select-gap); padding: var(--u-comp-city-select-padding); border: 1px solid var(--u-comp-city-select-border); border-radius: var(--u-comp-city-select-radius); background: var(--u-comp-city-select-surface); color: var(--u-comp-city-select-foreground); }
+.u-city-select__title { font-size: var(--u-comp-city-select-title-font-size); font-weight: var(--u-comp-city-select-title-font-weight); }
+.u-city-select__columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--u-comp-city-select-column-gap); }
+.u-city-select--columns-1 .u-city-select__columns { grid-template-columns: minmax(0, 1fr); }
+.u-city-select--columns-2 .u-city-select__columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.u-city-select__column { display: grid; align-content: start; gap: var(--u-comp-city-select-option-gap); max-height: var(--u-comp-city-select-column-max-height); overflow-y: auto; }
+.u-city-select__option { min-height: var(--u-comp-city-select-option-min-height); padding: var(--u-comp-city-select-option-padding); border: 1px solid var(--u-comp-city-select-option-border); border-radius: var(--u-comp-city-select-option-radius); background: var(--u-comp-city-select-option-surface); color: var(--u-comp-city-select-option-foreground); font: inherit; font-size: var(--u-comp-city-select-option-font-size); text-align: start; }
+.u-city-select__option--selected { border-color: var(--u-comp-city-select-selected-border); background: var(--u-comp-city-select-selected-surface); color: var(--u-comp-city-select-selected-foreground); }
+.u-city-select__option--disabled { opacity: var(--u-comp-city-select-disabled-opacity); }
+.u-city-select__footer { display: flex; gap: var(--u-comp-city-select-footer-gap); justify-content: end; }
+.u-city-select__close, .u-city-select__confirm { min-height: var(--u-comp-city-select-control-min-height); padding: var(--u-comp-city-select-control-padding); border: 1px solid var(--u-comp-city-select-control-border); border-radius: var(--u-comp-city-select-control-radius); font: inherit; }
+.u-city-select__close { background: var(--u-comp-city-select-close-surface); color: var(--u-comp-city-select-close-foreground); }
+.u-city-select__confirm { background: var(--u-comp-city-select-confirm-surface); color: var(--u-comp-city-select-confirm-foreground); }
+.u-city-select__option:focus-visible, .u-city-select__close:focus-visible, .u-city-select__confirm:focus-visible { outline: 2px solid var(--u-comp-city-select-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-city-select {
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #f7f9fc;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-city-select__title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.u-city-select__columns {
+  gap: 8px;
+}
+
+.u-city-select__column {
+  gap: 6px;
+  max-height: 240px;
+}
+
+.u-city-select__option {
+  min-height: 40px;
+  padding: 8px;
+  border: 1px solid #f7f9fc;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #001b2e;
+  font-size: 14px;
+}
+
+.u-city-select__option--selected {
+  border-color: #0047ab;
+  background: #f7f9fc;
+  color: #0047ab;
+}
+
+.u-city-select__option--disabled {
+  opacity: 0.6;
+}
+
+.u-city-select__footer {
+  gap: 8px;
+}
+
+.u-city-select__close, .u-city-select__confirm {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+}
+
+.u-city-select__close {
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-city-select__confirm {
+  background: #0047ab;
+  color: #ffffff;
+}
+
+.u-city-select__option:focus-visible, .u-city-select__close:focus-visible, .u-city-select__confirm:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

@@ -7,9 +7,11 @@
 // <lang><zh-CN>导入当前已批准的独立组件实现；每个组件仍由调用方直接导入或通过显式 plugin 选择注册。</zh-CN><en>Imports the currently approved independent component implementations; callers still choose direct imports or explicit plugin registration for every component.</en></lang>
 import UButton from './components/u-button/u-button.vue';
 import UActionSheet from './components/u-action-sheet/u-action-sheet.vue';
+import UActionSheetItem from './components/u-action-sheet-item/u-action-sheet-item.vue';
 import UBackTop from './components/u-back-top/u-back-top.vue';
 import UCell from './components/u-cell/u-cell.vue';
 import UCellItem from './components/u-cell-item/u-cell-item.vue';
+import UCitySelect from './components/u-city-select/u-city-select.vue';
 import UCheckbox from './components/u-checkbox/u-checkbox.vue';
 import UCheckboxGroup from './components/u-checkbox-group/u-checkbox-group.vue';
 import UCollapse from './components/u-collapse/u-collapse.vue';
@@ -32,6 +34,7 @@ import UInput from './components/u-input/u-input.vue';
 import ULink from './components/u-link/u-link.vue';
 import UModal from './components/u-modal/u-modal.vue';
 import UMask from './components/u-mask/u-mask.vue';
+import UMessageInput from './components/u-message-input/u-message-input.vue';
 import UNavBar from './components/u-nav-bar/u-nav-bar.vue';
 import UNavbar from './components/u-navbar/u-navbar.vue';
 import UNoNetwork from './components/u-no-network/u-no-network.vue';
@@ -93,6 +96,8 @@ import UValidationMessage from './components/u-validation-message/u-validation-m
 export const UVIEW_COMPONENTS = Object.freeze([
   // <lang><zh-CN>action sheet 只呈现调用方声明的有限 item 和 local intent，不执行命令或导航。</zh-CN><en>The action sheet presents caller-declared finite items and local intent only and executes no command or navigation.</en></lang>
   Object.freeze({ name: 'u-action-sheet', component: UActionSheet }),
+  // <lang><zh-CN>action-sheet item 只呈现调用方文字和值并报告 local click，不注入父级或关闭 sheet。</zh-CN><en>The action-sheet item presents caller copy/value and reports local click only; it injects no parent and closes no sheet.</en></lang>
+  Object.freeze({ name: 'u-action-sheet-item', component: UActionSheetItem }),
   // <lang><zh-CN>提示条只呈现调用方受控 tone 与 close intent，不创建全局服务。</zh-CN><en>The alert strip presents caller-controlled tone and close intent only and creates no global service.</en></lang>
   Object.freeze({ name: 'u-alert-tips', component: UAlertTips }),
   // <lang><zh-CN>按钮保留 P10/P11 已验证的独立本地操作边界。</zh-CN><en>The button retains the independently verified local-action boundary from P10/P11.</en></lang>
@@ -215,6 +220,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-back-top', component: UBackTop }),
   // <lang><zh-CN>信息行只呈现 caller text 和 local click intent，不含路由。</zh-CN><en>The information row presents caller text and local click intent only and contains no routing.</en></lang>
   Object.freeze({ name: 'u-cell-item', component: UCellItem }),
+  // <lang><zh-CN>city-select 只投影调用方受控的有限列选择，不含地区数据、定位或地址服务。</zh-CN><en>City-select projects caller-controlled finite column selection only and contains no region data, geolocation, or address service.</en></lang>
+  Object.freeze({ name: 'u-city-select', component: UCitySelect }),
   // <lang><zh-CN>配置 scope 只包装当前子树的有限 theme/density，不写全局设置。</zh-CN><en>The configuration scope wraps finite theme/density for the current subtree only and writes no global setting.</en></lang>
   Object.freeze({ name: 'u-config-provider', component: UConfigProvider }),
   // <lang><zh-CN>FAB 只报告 caller-owned click intent，不拖拽或展开菜单。</zh-CN><en>The FAB reports caller-owned click intent only and neither drags nor expands a menu.</en></lang>
@@ -225,6 +232,8 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-loading-popup', component: ULoadingPopup }),
   // <lang><zh-CN>mask 只呈现 caller-owned overlay 与 click intent，不锁滚动或焦点。</zh-CN><en>The mask presents caller-owned overlay and click intent only and locks neither scrolling nor focus.</en></lang>
   Object.freeze({ name: 'u-mask', component: UMask }),
+  // <lang><zh-CN>message-input 只投影调用方受控字符串和有限格数，不校验或请求验证码。</zh-CN><en>Message-input projects caller-controlled string and finite cell count only and neither validates nor requests a verification code.</en></lang>
+  Object.freeze({ name: 'u-message-input', component: UMessageInput }),
   // <lang><zh-CN>`u-navbar` 是与 `u-nav-bar` 并存的迁移展示面；两者不互为 alias。</zh-CN><en>`u-navbar` is a migration presentation surface coexisting with `u-nav-bar`; the two are not aliases.</en></lang>
   Object.freeze({ name: 'u-navbar', component: UNavbar }),
   // <lang><zh-CN>无网络 panel 只展示 caller-provided 状态与 retry intent，不检测连接。</zh-CN><en>The no-network panel displays caller-provided state and retry intent only and detects no connectivity.</en></lang>
@@ -276,5 +285,5 @@ export const UView = Object.freeze({
 });
 
 // <lang><zh-CN>导出命名组件供应用按需注册；默认导出保持显式 plugin 入口，二者均不产生 import-time 副作用。</zh-CN><en>Exports named components for application-side registration; the default export remains the explicit plugin entry, and neither creates import-time side effects.</en></lang>
-export { UActionSheet, UAlertTips, UBackTop, UButton, UCalendar, UCard, UCell, UCellGroup, UCellItem, UCheckbox, UCheckboxGroup, UCollapse, UCollapseItem, UCol, UConfigProvider, UDropdown, UDropdownItem, UEmpty, UFab, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, ULine, ULineProgress, ULink, UList, ULoading, ULoadingPage, ULoadingPopup, ULoadmore, UMask, UModal, UNavbar, UNavBar, UNoNetwork, UNotice, UNoticeBar, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URootPortal, URow, USafeBottom, USection, USelect, USlider, USwipeAction, UStatusBar, UTag, UBadge, UText, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UTopTips, UTransition, UValidationMessage };
+export { UActionSheet, UActionSheetItem, UAlertTips, UBackTop, UButton, UCalendar, UCard, UCell, UCellGroup, UCellItem, UCheckbox, UCheckboxGroup, UCitySelect, UCollapse, UCollapseItem, UCol, UConfigProvider, UDropdown, UDropdownItem, UEmpty, UFab, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, ULine, ULineProgress, ULink, UList, ULoading, ULoadingPage, ULoadingPopup, ULoadmore, UMask, UMessageInput, UModal, UNavbar, UNavBar, UNoNetwork, UNotice, UNoticeBar, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URootPortal, URow, USafeBottom, USection, USelect, USlider, USwipeAction, UStatusBar, UTag, UBadge, UText, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UTopTips, UTransition, UValidationMessage };
 export default UView;

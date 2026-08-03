@@ -1,0 +1,37 @@
+/**
+ * @component UActionSheetItemStyle
+ * @lang zh-CN 定义受控 action-sheet item 的 token 化文字按钮表面；样式不定位、不创建遮罩，也不接管父级 sheet 布局。
+ * @lang en Defines a tokenized text-button surface for a controlled action-sheet item; styles neither position nor create a mask and do not take over parent-sheet layout.
+ */
+.u-action-sheet-item { display: grid; gap: var(--u-comp-action-sheet-item-gap); width: 100%; min-height: var(--u-comp-action-sheet-item-min-height); padding: var(--u-comp-action-sheet-item-block-padding) var(--u-comp-action-sheet-item-inline-padding); border: 0; border-bottom: 1px solid var(--u-comp-action-sheet-item-border); background: var(--u-comp-action-sheet-item-surface); color: var(--u-comp-action-sheet-item-foreground); font: inherit; font-size: var(--u-comp-action-sheet-item-font-size); text-align: center; }
+.u-action-sheet-item__description { color: var(--u-comp-action-sheet-item-description); font-size: var(--u-comp-action-sheet-item-description-font-size); }
+.u-action-sheet-item--disabled { color: var(--u-comp-action-sheet-item-disabled-foreground); }
+.u-action-sheet-item:focus-visible { outline: 2px solid var(--u-comp-action-sheet-item-focus-ring); outline-offset: -2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-action-sheet-item {
+  gap: 4px;
+  min-height: 48px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f7f9fc;
+  background: #ffffff;
+  color: #001b2e;
+  font-size: 16px;
+}
+
+.u-action-sheet-item__description {
+  color: #27364a;
+  font-size: 13px;
+}
+
+.u-action-sheet-item--disabled {
+  color: #27364a;
+}
+
+.u-action-sheet-item:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

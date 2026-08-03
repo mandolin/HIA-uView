@@ -1,0 +1,37 @@
+/**
+ * @component UMessageInputStyle
+ * @lang zh-CN 定义固定长度 message/code 输入的 token 化单元格与透明原生输入层；样式不创建动画、平台键盘或领域错误状态。
+ * @lang en Defines tokenized cells and a transparent native-input layer for fixed-length message/code input; styles create no animation, platform keyboard, or domain error state.
+ */
+.u-message-input { position: relative; display: grid; grid-template-columns: repeat(var(--u-message-input-length, 4), minmax(0, 1fr)); gap: var(--u-comp-message-input-gap); }
+.u-message-input__native { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; opacity: 0; }
+.u-message-input__cell { display: grid; place-items: center; min-width: var(--u-comp-message-input-cell-size); min-height: var(--u-comp-message-input-cell-size); border: 1px solid var(--u-comp-message-input-border); border-radius: var(--u-comp-message-input-radius); color: var(--u-comp-message-input-foreground); font-size: var(--u-comp-message-input-font-size); }
+.u-message-input--line .u-message-input__cell { border-width: 0 0 2px; border-radius: 0; }
+.u-message-input--disabled { opacity: var(--u-comp-message-input-disabled-opacity); }
+.u-message-input:focus-within { outline: 2px solid var(--u-comp-message-input-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-message-input {
+  gap: 8px;
+}
+
+.u-message-input__cell {
+  min-width: 48px;
+  min-height: 48px;
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  color: #001b2e;
+  font-size: 20px;
+}
+
+.u-message-input--disabled {
+  opacity: 0.6;
+}
+
+.u-message-input:focus-within {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

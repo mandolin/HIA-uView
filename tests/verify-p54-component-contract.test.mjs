@@ -65,8 +65,8 @@ test('keeps P54 component declarations aligned', async () => {
     await access(resolve(record.contract));
   }
 
-  // <lang><zh-CN>P54 只增加本批十五项，不把后续 parity 批次混入当前 checkpoint。</zh-CN><en>P54 adds only this batch of fifteen and does not mix later parity batches into the current checkpoint.</en></lang>
-  assert.equal(manifest.components.length, 80);
+  // <lang><zh-CN>P54 保持自身十五项声明；完整 manifest 还可包含保持同一治理边界的后续组件。</zh-CN><en>P54 retains its own fifteen declarations; the complete manifest may also contain subsequent components under the same governance boundary.</en></lang>
+  assert.equal(manifest.components.length, 83);
 });
 
 /**

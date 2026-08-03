@@ -1,6 +1,6 @@
 # HIA-uView-UI
 
-This workspace contains the HIA-uView UniApp UI implementation and 80 pre-release component contracts, including navigation, safe-area, feedback, local-overlay, form, content, and layout surfaces. The complete set is maintained in the [component index](../docs/components.md), alongside HIA theme tokens, the component manifest, and compiler/build fixtures. It is not published and has no versioned external package API yet.
+This workspace contains the HIA-uView UniApp UI implementation and 83 pre-release component contracts, including navigation, safe-area, feedback, local-overlay, form, content, and layout surfaces. The complete set is maintained in the [component index](../docs/components.md), alongside HIA theme tokens, the component manifest, and compiler/build fixtures. It is not published and has no versioned external package API yet.
 
 The initial target profile is UniApp Vue 3 on the WeChat Mini Program platform. App, H5, and other mini-program targets are not validated or promised yet. See the repository [compatibility profile](../docs/compatibility.md) and [HIA light-theme contract](../docs/theme.md).
 

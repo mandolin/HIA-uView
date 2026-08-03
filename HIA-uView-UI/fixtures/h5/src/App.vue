@@ -25,6 +25,10 @@
       <UNoNetwork :visible="true" title="Caller-declared state / 调用方声明状态" retry-text="Retry / 重试" @retry="recordP54Intent('retry')" />
       <USafeBottom :height="12" />
     </UConfigProvider>
+    <!-- <lang><zh-CN>本段直接组合调用方拥有的 item、有限列和固定长度输入数据，以验证它们在 H5 构建中保持受控呈现；fixture 不赋予它们城市数据、验证码、父级 sheet、请求或持久化职责。</zh-CN><en>This section directly composes caller-owned item, finite-column, and fixed-length-input data to verify controlled rendering in the H5 build; the fixture gives them no city-data, verification-code, parent-sheet, request, or persistence responsibility.</en></lang> -->
+    <UActionSheetItem text="Local choice / 本地选择" value="fixture-choice" />
+    <UCitySelect :visible="true" title="Local columns / 本地列" :columns="fixtureSelectorColumns" :model-value="fixtureSelectorValues" close-text="Close / 关闭" confirm-text="Confirm / 确认" />
+    <UMessageInput input-label="Local fixed-length input / 本地固定长度输入" model-value="42" :length="4" />
     <UBackTop :visible="true" label="Top / 顶部" @back-top="recordP54Intent('top')" />
     <UFab :visible="true" label="Create / 新建" @click="recordP54Intent('fab')" />
     <URootPortal :visible="true" :layer="1200"><UTransition :visible="true" mode="fade"><UTopTips :visible="true" message="Local overlay / 本地浮层" close-text="Close / 关闭" @close="recordP54Intent('tips')" /></UTransition></URootPortal>
@@ -38,7 +42,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { UBackTop, UButton, UCellItem, UConfigProvider, UDropdown, UDropdownItem, UFab, ULoading, ULoadingPopup, UMask, UNavbar, UNoNetwork, UNoticeBar, URootPortal, USafeBottom, USection, USelect, USlider, UStatusBar, UText, UTopTips, UTransition } from '../../../src/index.mjs';
+import { UActionSheetItem, UBackTop, UButton, UCellItem, UCitySelect, UConfigProvider, UDropdown, UDropdownItem, UFab, ULoading, ULoadingPopup, UMask, UMessageInput, UNavbar, UNoNetwork, UNoticeBar, URootPortal, USafeBottom, USection, USelect, USlider, UStatusBar, UText, UTopTips, UTransition } from '../../../src/index.mjs';
 
 // <lang><zh-CN>fixture 状态只来自本地 ref，便于 H5 smoke 对稳定文本进行检查。</zh-CN><en>Fixture state comes from local refs only, allowing H5 smoke to inspect stable text.</en></lang>
 const selected = ref('public');
@@ -49,6 +53,12 @@ const options = Object.freeze([
   Object.freeze({ label: 'Public / 公共', value: 'public' }),
   Object.freeze({ label: 'Private / 私有', value: 'private' })
 ]);
+// <lang><zh-CN>有限列和受控值只服务 H5 组合编译；它们是本地静态数据，不构成地点、城市或业务模型。</zh-CN><en>The finite columns and controlled values serve H5 composition compilation only; they are local static data and form no place, city, or business model.</en></lang>
+const fixtureSelectorColumns = Object.freeze([
+  Object.freeze([Object.freeze({ label: 'First / 第一', value: 'first' }), Object.freeze({ label: 'Second / 第二', value: 'second' })]),
+  Object.freeze([Object.freeze({ label: 'One / 一', value: 'one' }), Object.freeze({ label: 'Two / 二', value: 'two' })])
+]);
+const fixtureSelectorValues = Object.freeze(['first', 'one']);
 
 /**
  * @lang zh-CN 记录 fixture 内观察到的 P54 局部 intent；不将 UI intent 解释为业务完成或执行副作用。

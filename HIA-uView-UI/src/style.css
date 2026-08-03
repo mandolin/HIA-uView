@@ -9,6 +9,7 @@
  * @lang en Component rules are provided through this same explicit entry: it lets the WeChat Mini Program compiler emit them to application WXSS while H5 retains the same theme input. Runtime and plugin still never inject global CSS implicitly.
  */
 @import "./components/u-action-sheet/u-action-sheet.css";
+@import "./components/u-action-sheet-item/u-action-sheet-item.css";
 @import "./components/u-back-top/u-back-top.css";
 @import "./components/u-alert-tips/u-alert-tips.css";
 @import "./components/u-avatar/u-avatar.css";
@@ -18,6 +19,7 @@
 @import "./components/u-card/u-card.css";
 @import "./components/u-cell/u-cell.css";
 @import "./components/u-cell-item/u-cell-item.css";
+@import "./components/u-city-select/u-city-select.css";
 @import "./components/u-cell-group/u-cell-group.css";
 @import "./components/u-checkbox/u-checkbox.css";
 @import "./components/u-checkbox-group/u-checkbox-group.css";
@@ -49,6 +51,7 @@
 @import "./components/u-loadmore/u-loadmore.css";
 @import "./components/u-modal/u-modal.css";
 @import "./components/u-mask/u-mask.css";
+@import "./components/u-message-input/u-message-input.css";
 @import "./components/u-nav-bar/u-nav-bar.css";
 @import "./components/u-navbar/u-navbar.css";
 @import "./components/u-no-network/u-no-network.css";

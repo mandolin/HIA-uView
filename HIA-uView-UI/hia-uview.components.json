@@ -437,7 +437,10 @@
     { "name": "u-safe-bottom", "source": "src/components/u-safe-bottom/u-safe-bottom.vue", "contract": "docs/safe-bottom.md", "locales": ["zh-Hans", "en"] },
     { "name": "u-status-bar", "source": "src/components/u-status-bar/u-status-bar.vue", "contract": "docs/status-bar.md", "locales": ["zh-Hans", "en"] },
     { "name": "u-top-tips", "source": "src/components/u-top-tips/u-top-tips.vue", "contract": "docs/top-tips.md", "locales": ["zh-Hans", "en"] },
-    { "name": "u-transition", "source": "src/components/u-transition/u-transition.vue", "contract": "docs/transition.md", "locales": ["zh-Hans", "en"] }
+    { "name": "u-transition", "source": "src/components/u-transition/u-transition.vue", "contract": "docs/transition.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-action-sheet-item", "source": "src/components/u-action-sheet-item/u-action-sheet-item.vue", "contract": "docs/action-sheet-item.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-city-select", "source": "src/components/u-city-select/u-city-select.vue", "contract": "docs/city-select.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-message-input", "source": "src/components/u-message-input/u-message-input.vue", "contract": "docs/message-input.md", "locales": ["zh-Hans", "en"] }
   ],
   "fixtures": [
     {

@@ -28,6 +28,11 @@
     <u-mask :visible="false" :clickable="true" />
     <u-loading-popup :visible="false" label="Local popup / 本地弹层" :mask-closable="true" />
 
+    <!-- <lang><zh-CN>本段使用页面拥有的有限静态数据编译 item、列选择和固定长度输入；它不请求地区数据、不处理验证码、不注入 action-sheet 父级，也不写入页面以外的状态。</zh-CN><en>This section compiles item, column-selection, and fixed-length-input surfaces with page-owned finite static data; it requests no region data, handles no verification code, injects no action-sheet parent, and writes no state outside the page.</en></lang> -->
+    <u-action-sheet-item text="本地选择 / Local choice" value="fixture-choice" />
+    <u-city-select :visible="true" title="本地列 / Local columns" :columns="fixtureSelectorColumns" :model-value="fixtureSelectorValues" close-text="关闭 / Close" confirm-text="确认 / Confirm" />
+    <u-message-input input-label="本地固定长度输入 / Local fixed-length input" model-value="42" :length="4" />
+
     <!-- <lang><zh-CN>notice 只呈现页面在确认本地意图后显式写入的消息和可见状态；它不表示保存、请求或业务完成。</zh-CN><en>The notice presents only the message and visibility explicitly written by the page after local intent confirmation; it represents no save, request, or business completion.</en></lang> -->
     <u-notice
       :visible="catalogNoticeVisible"
@@ -238,6 +243,13 @@ const catalogNoticeMessage = ref('');
 const fixtureRadioValue = ref('local-a');
 // <lang><zh-CN>P16 checkbox group 的页面自有受控数组；页面替换整个数组而不 mutate group 输入。</zh-CN><en>Page-owned controlled array for the P16 checkbox group; the page replaces the whole array rather than mutating group input.</en></lang>
 const fixtureCheckboxValues = ref(['local-one']);
+
+// <lang><zh-CN>这组有限静态列和值只用于小程序编译组合；它们不表达城市、地点、地址或业务领域数据。</zh-CN><en>These finite static columns and values serve Mini Program compile composition only; they express no city, place, address, or business-domain data.</en></lang>
+const fixtureSelectorColumns = Object.freeze([
+  Object.freeze([Object.freeze({ label: '第一 / First', value: 'first' }), Object.freeze({ label: '第二 / Second', value: 'second' })]),
+  Object.freeze([Object.freeze({ label: '一 / One', value: 'one' }), Object.freeze({ label: '二 / Two', value: 'two' })])
+]);
+const fixtureSelectorValues = Object.freeze(['first', 'one']);
 
 // <lang><zh-CN>新增高频控件均使用页面内局部 refs；它们不进入目录 mock、共享 store 或外部数据源。</zh-CN><en>New high-frequency controls use page-local refs only; they enter no catalog mock, shared store, or external data source.</en></lang>
 const fixtureTextareaValue = ref('');
