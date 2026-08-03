@@ -12,6 +12,22 @@
       @action="resetCatalogQuery"
     />
 
+    <!-- <lang><zh-CN>P54 组合以调用方声明的文字、尺寸和可见性验证新导航、间距、反馈与同树 overlay 表面能够被小程序编译器解析；它不引入平台读取、路由、滚动、网络或全局 service。</zh-CN><en>The P54 composition uses caller-declared copy, dimensions, and visibility to verify that the Mini Program compiler resolves the new navigation, spacing, feedback, and same-tree overlay surfaces; it introduces no platform read, router, scrolling, network, or global service.</en></lang> -->
+    <u-config-provider density="compact">
+      <u-status-bar :height="18" />
+      <u-navbar title="Fixture navigation / Fixture 导航" left-text="Back / 返回" right-text="Save / 保存" />
+      <u-cell-item title="Local entry / 本地条目" label="Caller projection / 调用方投影" value="Ready / 就绪" :arrow="true" :clickable="true" />
+      <u-notice-bar :visible="true" text="Local feedback only / 仅本地反馈" close-text="Dismiss / 关闭" />
+      <u-loading :visible="true" label="Local state / 本地状态" />
+      <u-no-network :visible="true" title="Caller-declared state / 调用方声明状态" retry-text="Retry / 重试" />
+      <u-safe-bottom :height="12" />
+    </u-config-provider>
+    <u-back-top :visible="true" label="Top / 顶部" />
+    <u-fab :visible="true" label="Create / 新建" />
+    <u-root-portal :visible="false"><u-transition :visible="true" mode="fade"><u-top-tips :visible="true" message="Local overlay / 本地浮层" close-text="Close / 关闭" /></u-transition></u-root-portal>
+    <u-mask :visible="false" :clickable="true" />
+    <u-loading-popup :visible="false" label="Local popup / 本地弹层" :mask-closable="true" />
+
     <!-- <lang><zh-CN>notice 只呈现页面在确认本地意图后显式写入的消息和可见状态；它不表示保存、请求或业务完成。</zh-CN><en>The notice presents only the message and visibility explicitly written by the page after local intent confirmation; it represents no save, request, or business completion.</en></lang> -->
     <u-notice
       :visible="catalogNoticeVisible"

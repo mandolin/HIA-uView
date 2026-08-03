@@ -1,0 +1,57 @@
+/**
+ * @component UCellItemStyle
+ * @lang zh-CN 定义受控信息行的 token 化文字、边界、禁用和箭头样式；它不表达导航或业务状态。
+ * @lang en Defines tokenized text, border, disabled, and arrow styling for a controlled information row; it expresses no navigation or business state.
+ */
+.u-cell-item { display: flex; width: 100%; min-height: var(--u-comp-cell-item-min-height); align-items: center; justify-content: space-between; gap: var(--u-comp-cell-item-gap); padding: var(--u-comp-cell-item-block-padding) var(--u-comp-cell-item-inline-padding); border: 0; border-bottom: 1px solid var(--u-comp-cell-item-border); background: var(--u-comp-cell-item-surface); color: var(--u-comp-cell-item-foreground); text-align: left; font: inherit; }
+.u-cell-item__content { min-width: 0; display: grid; gap: var(--u-comp-cell-item-content-gap); }
+.u-cell-item__title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--u-comp-cell-item-title-font-size); }
+.u-cell-item__label, .u-cell-item__value { color: var(--u-comp-cell-item-secondary-foreground); font-size: var(--u-comp-cell-item-secondary-font-size); }
+.u-cell-item__trailing { display: inline-flex; align-items: center; gap: var(--u-comp-cell-item-gap); }
+.u-cell-item__arrow { color: var(--u-comp-cell-item-arrow-foreground); font-size: var(--u-comp-cell-item-arrow-font-size); }
+.u-cell-item--disabled { opacity: var(--u-comp-cell-item-disabled-opacity); }
+.u-cell-item--clickable:focus-visible { outline: 2px solid var(--u-comp-cell-item-focus-ring); outline-offset: -2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-cell-item {
+  min-height: 52px;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f7f9fc;
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-cell-item__content {
+  gap: 4px;
+}
+
+.u-cell-item__title {
+  font-size: 16px;
+}
+
+.u-cell-item__label, .u-cell-item__value {
+  color: #27364a;
+  font-size: 13px;
+}
+
+.u-cell-item__trailing {
+  gap: 8px;
+}
+
+.u-cell-item__arrow {
+  color: #0047ab;
+  font-size: 20px;
+}
+
+.u-cell-item--disabled {
+  opacity: 0.6;
+}
+
+.u-cell-item--clickable:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

@@ -71,7 +71,22 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-textarea` | `UTextarea` | [UTextarea](textarea.md) | Controlled multiline input / 受控多行输入 |
 | `u-toast` | `UToast` | [UToast](toast.md) | Static controlled feedback / 静态受控反馈 |
 | `u-validation-message` | `UValidationMessage` | [UValidationMessage](validation-message.md) | Caller-declared validation presentation / 调用方声明的校验呈现 |
+| `u-navbar` | `UNavbar` | [UNavbar](navbar.md) | Caller-controlled navigation presentation and intent / 调用方受控的导航呈现与意图 |
+| `u-status-bar` | `UStatusBar` | [UStatusBar](status-bar.md) | Caller-declared system-area spacer / 调用方声明的系统区域间距 |
+| `u-safe-bottom` | `USafeBottom` | [USafeBottom](safe-bottom.md) | Caller-declared bottom-safe spacer / 调用方声明的底部安全间距 |
+| `u-back-top` | `UBackTop` | [UBackTop](back-top.md) | Caller-controlled return-to-top intent / 调用方受控的返回顶部意图 |
+| `u-fab` | `UFab` | [UFab](fab.md) | Caller-controlled floating-action intent / 调用方受控的浮动操作意图 |
+| `u-cell-item` | `UCellItem` | [UCellItem](cell-item.md) | Information row with explicit click intent / 具有显式 click 意图的信息行 |
+| `u-loading` | `ULoading` | [ULoading](loading.md) | Local loading presentation / 局部加载呈现 |
+| `u-mask` | `UMask` | [UMask](mask.md) | Caller-controlled local mask / 调用方受控的局部遮罩 |
+| `u-loading-popup` | `ULoadingPopup` | [ULoadingPopup](loading-popup.md) | Controlled loading-mask composition / 受控加载遮罩组合 |
+| `u-no-network` | `UNoNetwork` | [UNoNetwork](no-network.md) | Caller-declared unavailable-state projection / 调用方声明的不可用状态投影 |
+| `u-notice-bar` | `UNoticeBar` | [UNoticeBar](notice-bar.md) | Local notice-strip presentation / 局部通知条呈现 |
+| `u-top-tips` | `UTopTips` | [UTopTips](top-tips.md) | Caller-controlled top feedback / 调用方受控的顶部反馈 |
+| `u-transition` | `UTransition` | [UTransition](transition.md) | Finite CSS transition wrapper / 有限 CSS transition 包装器 |
+| `u-config-provider` | `UConfigProvider` | [UConfigProvider](config-provider.md) | Finite theme-density subtree scope / 有限主题密度子树范围 |
+| `u-root-portal` | `URootPortal` | [URootPortal](root-portal.md) | Same-tree overlay-root wrapper / 同树 overlay-root 包装器 |
 
-Use named imports or the explicit `UView` plugin as documented in [runtime consumption](runtime-consumption.md). Import `style.css` explicitly from application-owned global style setup. The current [compatibility profile](compatibility.md), [examples](examples.md), and [migration guidance](migration-from-uview.md) state the evidence and limits that apply to this index.
+The index currently contains 80 declared component contracts. `u-navbar` and `u-notice-bar` are separate, bounded APIs; they do not alias the earlier `u-nav-bar` or `u-notice` contracts. Use named imports or the explicit `UView` plugin as documented in [runtime consumption](runtime-consumption.md). Import `style.css` explicitly from application-owned global style setup. The current [compatibility profile](compatibility.md), [examples](examples.md), and [migration guidance](migration-from-uview.md) state the evidence and limits that apply to this index.
 
-按 [runtime consumption](runtime-consumption.md) 所述使用命名导入或显式 `UView` plugin，并从应用拥有的全局样式设置显式导入 `style.css`。当前 [compatibility profile](compatibility.md)、[examples](examples.md) 与 [migration guidance](migration-from-uview.md) 说明此索引适用的证据和限制。
+该索引当前包含 80 个已声明的组件契约。`u-navbar` 与 `u-notice-bar` 是独立、受限的 API，不是既有 `u-nav-bar` 或 `u-notice` 契约的别名。按 [runtime consumption](runtime-consumption.md) 所述使用命名导入或显式 `UView` plugin，并从应用拥有的全局样式设置显式导入 `style.css`。当前 [compatibility profile](compatibility.md)、[examples](examples.md) 与 [migration guidance](migration-from-uview.md) 说明此索引适用的证据和限制。

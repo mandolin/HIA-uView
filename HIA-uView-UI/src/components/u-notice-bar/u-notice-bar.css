@@ -1,0 +1,58 @@
+/**
+ * @component UNoticeBarStyle
+ * @lang zh-CN 定义非滚动横幅的有限 tone 与文字优先可读性；状态颜色始终有符号/边界/文字补充。
+ * @lang en Defines finite tones and text-first readability for a non-scrolling banner; state color always has symbol, border, and text reinforcement.
+ */
+.u-notice-bar { display: flex; align-items: center; gap: var(--u-comp-notice-bar-gap); padding: var(--u-comp-notice-bar-padding); border: 1px solid var(--u-comp-notice-bar-info-border); border-radius: var(--u-comp-notice-bar-radius); background: var(--u-comp-notice-bar-info-surface); color: var(--u-comp-notice-bar-info-foreground); font-size: var(--u-comp-notice-bar-font-size); }
+.u-notice-bar__marker { font-weight: var(--u-comp-notice-bar-marker-font-weight); }
+.u-notice-bar__text { min-width: 0; flex: 1; }
+.u-notice-bar__close { min-height: var(--u-comp-notice-bar-close-min-height); border: 0; background: transparent; color: inherit; font: inherit; }
+.u-notice-bar--success { border-color: var(--u-comp-notice-bar-success-border); background: var(--u-comp-notice-bar-success-surface); color: var(--u-comp-notice-bar-success-foreground); }
+.u-notice-bar--warning { border-color: var(--u-comp-notice-bar-warning-border); background: var(--u-comp-notice-bar-warning-surface); color: var(--u-comp-notice-bar-warning-foreground); }
+.u-notice-bar--error { border-color: var(--u-comp-notice-bar-error-border); background: var(--u-comp-notice-bar-error-surface); color: var(--u-comp-notice-bar-error-foreground); }
+.u-notice-bar__close:focus-visible { outline: 2px solid var(--u-comp-notice-bar-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-notice-bar {
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #0047ab;
+  border-radius: 8px;
+  background: #f7f9fc;
+  color: #0047ab;
+  font-size: 14px;
+}
+
+.u-notice-bar__marker {
+  font-weight: 700;
+}
+
+.u-notice-bar__close {
+  min-height: 36px;
+}
+
+.u-notice-bar--success {
+  border-color: #00a8d3;
+  background: #00a8d3;
+  color: #001b2e;
+}
+
+.u-notice-bar--warning {
+  border-color: #27364a;
+  background: #f7f9fc;
+  color: #001b2e;
+}
+
+.u-notice-bar--error {
+  border-color: #27364a;
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-notice-bar__close:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

@@ -1,0 +1,21 @@
+/**
+ * @component ULoadingPopupStyle
+ * @lang zh-CN 定义 local loading panel 的 token 化表面；其有限层级由嵌入 UMask 承担，panel 不创建全局 overlay root。
+ * @lang en Defines a tokenized surface for a local loading panel; embedded UMask owns finite layering and the panel creates no global overlay root.
+ */
+.u-loading-popup__panel { position: fixed; top: 50%; left: 50%; z-index: var(--u-comp-loading-popup-layer); display: grid; place-items: center; min-width: var(--u-comp-loading-popup-min-width); min-height: var(--u-comp-loading-popup-min-height); padding: var(--u-comp-loading-popup-padding); border: 1px solid var(--u-comp-loading-popup-border); border-radius: var(--u-comp-loading-popup-radius); background: var(--u-comp-loading-popup-surface); transform: translate(-50%, -50%); }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-loading-popup__panel {
+  z-index: 1101;
+  min-width: 132px;
+  min-height: 96px;
+  padding: 20px;
+  border: 1px solid #27364a;
+  border-radius: 12px;
+  background: #ffffff;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

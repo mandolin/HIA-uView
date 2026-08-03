@@ -1,0 +1,60 @@
+/**
+ * @component UTopTipsStyle
+ * @lang zh-CN 定义 token 化的 local top tips 覆盖面；有限层级来自主题 token，组件不创建全局 service 或动画计时。
+ * @lang en Defines a tokenized local top-tips overlay surface; finite layer comes from theme token and the component creates no global service or animation timer.
+ */
+.u-top-tips { position: fixed; top: var(--u-comp-top-tips-offset); right: var(--u-comp-top-tips-offset); left: var(--u-comp-top-tips-offset); z-index: var(--u-comp-top-tips-layer); display: flex; align-items: center; gap: var(--u-comp-top-tips-gap); padding: var(--u-comp-top-tips-padding); border: 1px solid var(--u-comp-top-tips-info-border); border-radius: var(--u-comp-top-tips-radius); background: var(--u-comp-top-tips-info-surface); color: var(--u-comp-top-tips-info-foreground); }
+.u-top-tips__message { min-width: 0; flex: 1; font-size: var(--u-comp-top-tips-font-size); }
+.u-top-tips__close { min-height: var(--u-comp-top-tips-close-min-height); border: 0; background: transparent; color: inherit; font: inherit; }
+.u-top-tips--success { border-color: var(--u-comp-top-tips-success-border); background: var(--u-comp-top-tips-success-surface); color: var(--u-comp-top-tips-success-foreground); }
+.u-top-tips--warning { border-color: var(--u-comp-top-tips-warning-border); background: var(--u-comp-top-tips-warning-surface); color: var(--u-comp-top-tips-warning-foreground); }
+.u-top-tips--error { border-color: var(--u-comp-top-tips-error-border); background: var(--u-comp-top-tips-error-surface); color: var(--u-comp-top-tips-error-foreground); }
+.u-top-tips__close:focus-visible { outline: 2px solid var(--u-comp-top-tips-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-top-tips {
+  top: 12px;
+  right: 12px;
+  left: 12px;
+  z-index: 1300;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #0047ab;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-top-tips__message {
+  font-size: 14px;
+}
+
+.u-top-tips__close {
+  min-height: 36px;
+}
+
+.u-top-tips--success {
+  border-color: #00a8d3;
+  background: #00a8d3;
+  color: #001b2e;
+}
+
+.u-top-tips--warning {
+  border-color: #27364a;
+  background: #f7f9fc;
+  color: #001b2e;
+}
+
+.u-top-tips--error {
+  border-color: #27364a;
+  background: #ffffff;
+  color: #001b2e;
+}
+
+.u-top-tips__close:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

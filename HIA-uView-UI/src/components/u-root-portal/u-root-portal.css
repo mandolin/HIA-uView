@@ -1,0 +1,6 @@
+/**
+ * @component URootPortalStyle
+ * @lang zh-CN 定义当前树内的局部 portal 表面；position 仅服务调用方 slot 的本地叠放，不移动节点到应用根。
+ * @lang en Defines a local portal surface within the current tree; positioning serves local stacking of caller slot only and moves no node to application root.
+ */
+.u-root-portal { position: relative; z-index: var(--u-root-portal-layer, var(--u-comp-root-portal-layer)); }

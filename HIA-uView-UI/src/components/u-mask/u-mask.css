@@ -1,0 +1,15 @@
+/**
+ * @component UMaskStyle
+ * @lang zh-CN 定义受控局部遮罩的覆盖表面；有限 layer 来自组件私有 token，组件不锁滚动或管理焦点。
+ * @lang en Defines an overlay surface for a controlled local mask; finite layer comes from component-private properties, and the component locks no scrolling or manages no focus.
+ */
+.u-mask { position: fixed; inset: 0; z-index: var(--u-mask-layer, var(--u-comp-mask-layer)); background: var(--u-comp-mask-surface); opacity: var(--u-mask-opacity, var(--u-comp-mask-opacity)); }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-mask {
+  background: #001b2e;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

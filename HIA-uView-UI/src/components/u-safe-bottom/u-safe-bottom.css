@@ -1,0 +1,15 @@
+/**
+ * @component USafeBottomStyle
+ * @lang zh-CN 定义底部占位的中性表面；它不访问浏览器 env()、设备 API 或固定定位。
+ * @lang en Defines a neutral surface for the bottom spacer; it accesses no browser env(), device API, or fixed positioning.
+ */
+.u-safe-bottom { display: block; width: 100%; background: var(--u-comp-safe-bottom-surface); }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-safe-bottom {
+  background: #ffffff;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

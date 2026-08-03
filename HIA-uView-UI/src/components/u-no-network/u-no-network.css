@@ -1,0 +1,54 @@
+/**
+ * @component UNoNetworkStyle
+ * @lang zh-CN 定义文字优先的无网络状态面板；它使用形状、文字和边界而非外部图像或仅颜色状态。
+ * @lang en Defines a text-first no-network state panel; it uses shape, text, and border rather than an external image or color-only state.
+ */
+.u-no-network { display: flex; align-items: center; gap: var(--u-comp-no-network-gap); padding: var(--u-comp-no-network-padding); border: 1px dashed var(--u-comp-no-network-border); border-radius: var(--u-comp-no-network-radius); background: var(--u-comp-no-network-surface); color: var(--u-comp-no-network-foreground); }
+.u-no-network__marker { display: inline-grid; width: var(--u-comp-no-network-marker-size); height: var(--u-comp-no-network-marker-size); place-items: center; border: 1px solid currentColor; border-radius: 50%; font-weight: 700; }
+.u-no-network__content { min-width: 0; flex: 1; display: grid; gap: var(--u-comp-no-network-content-gap); }
+.u-no-network__title { font-size: var(--u-comp-no-network-title-font-size); font-weight: var(--u-comp-no-network-title-font-weight); }
+.u-no-network__description { color: var(--u-comp-no-network-description-foreground); font-size: var(--u-comp-no-network-description-font-size); }
+.u-no-network__retry { min-height: var(--u-comp-no-network-retry-min-height); border: 0; background: transparent; color: var(--u-comp-no-network-retry-foreground); font: inherit; }
+.u-no-network__retry:focus-visible { outline: 2px solid var(--u-comp-no-network-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-no-network {
+  gap: 12px;
+  padding: 16px;
+  border: 1px dashed #27364a;
+  border-radius: 12px;
+  background: #f7f9fc;
+  color: #001b2e;
+}
+
+.u-no-network__marker {
+  width: 28px;
+  height: 28px;
+}
+
+.u-no-network__content {
+  gap: 4px;
+}
+
+.u-no-network__title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.u-no-network__description {
+  color: #27364a;
+  font-size: 14px;
+}
+
+.u-no-network__retry {
+  min-height: 40px;
+  color: #0047ab;
+}
+
+.u-no-network__retry:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

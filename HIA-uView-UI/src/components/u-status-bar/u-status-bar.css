@@ -1,0 +1,15 @@
+/**
+ * @component UStatusBarStyle
+ * @lang zh-CN 定义中性状态栏占位表面；实际高度仅由受控 Vue style 提供，不读取设备信息。
+ * @lang en Defines a neutral status-bar spacer surface; actual height comes only from controlled Vue style and reads no device information.
+ */
+.u-status-bar { display: block; width: 100%; background: var(--u-comp-status-bar-surface); }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-status-bar {
+  background: #ffffff;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

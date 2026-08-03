@@ -422,7 +422,22 @@
         "zh-Hans",
         "en"
       ]
-    }
+    },
+    { "name": "u-back-top", "source": "src/components/u-back-top/u-back-top.vue", "contract": "docs/back-top.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-cell-item", "source": "src/components/u-cell-item/u-cell-item.vue", "contract": "docs/cell-item.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-config-provider", "source": "src/components/u-config-provider/u-config-provider.vue", "contract": "docs/config-provider.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-fab", "source": "src/components/u-fab/u-fab.vue", "contract": "docs/fab.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-loading", "source": "src/components/u-loading/u-loading.vue", "contract": "docs/loading.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-loading-popup", "source": "src/components/u-loading-popup/u-loading-popup.vue", "contract": "docs/loading-popup.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-mask", "source": "src/components/u-mask/u-mask.vue", "contract": "docs/mask.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-navbar", "source": "src/components/u-navbar/u-navbar.vue", "contract": "docs/navbar.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-no-network", "source": "src/components/u-no-network/u-no-network.vue", "contract": "docs/no-network.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-notice-bar", "source": "src/components/u-notice-bar/u-notice-bar.vue", "contract": "docs/notice-bar.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-root-portal", "source": "src/components/u-root-portal/u-root-portal.vue", "contract": "docs/root-portal.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-safe-bottom", "source": "src/components/u-safe-bottom/u-safe-bottom.vue", "contract": "docs/safe-bottom.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-status-bar", "source": "src/components/u-status-bar/u-status-bar.vue", "contract": "docs/status-bar.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-top-tips", "source": "src/components/u-top-tips/u-top-tips.vue", "contract": "docs/top-tips.md", "locales": ["zh-Hans", "en"] },
+    { "name": "u-transition", "source": "src/components/u-transition/u-transition.vue", "contract": "docs/transition.md", "locales": ["zh-Hans", "en"] }
   ],
   "fixtures": [
     {

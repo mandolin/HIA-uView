@@ -1,0 +1,26 @@
+/**
+ * @component UBackTopStyle
+ * @lang zh-CN 定义受控回顶 intent 的本地文本按钮外观；它不固定到视口，位置由调用方布局决定。
+ * @lang en Defines local text-button appearance for controlled back-top intent; it is not fixed to the viewport and caller layout decides its position.
+ */
+.u-back-top { min-height: var(--u-comp-back-top-min-height); padding: var(--u-comp-back-top-block-padding) var(--u-comp-back-top-inline-padding); border: 1px solid var(--u-comp-back-top-border); border-radius: var(--u-comp-back-top-radius); background: var(--u-comp-back-top-surface); color: var(--u-comp-back-top-foreground); font: inherit; font-size: var(--u-comp-back-top-font-size); }
+.u-back-top:focus-visible { outline: 2px solid var(--u-comp-back-top-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-back-top {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #0047ab;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #0047ab;
+  font-size: 14px;
+}
+
+.u-back-top:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

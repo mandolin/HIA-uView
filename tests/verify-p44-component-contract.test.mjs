@@ -40,7 +40,7 @@ test('keeps P44 component declarations aligned', async () => {
     await access(resolve(componentRecord.contract));
   }
   // <lang><zh-CN>P44 仍验证自身八项声明；manifest 还包含后续 P48/P49 各十项组件。</zh-CN><en>P44 still verifies its eight declarations; the manifest also contains ten later P48 and ten P49 components.</en></lang>
-  assert.equal(manifest.components.length, 65);
+  assert.equal(manifest.components.length, 80);
 });
 
 /**

@@ -7,11 +7,11 @@ HIA-uView 有意为当前已实现组件保留熟悉的 `u-*` 模板名称和 `U
 ## Before changing code / 修改代码前
 
 1. Read the [component index](components.md), each linked component contract, [runtime consumption](runtime-consumption.md), [compatibility profile](compatibility.md), and [upstream source-intake policy](upstream-source-intake.md).
-2. Compare only the components your application actually owns. HIA-uView currently has 45 private components and does not implement automatic-import, global service, picker, request, storage, router, form-engine, or business-module compatibility layers; its list, scroll, popup, toast, tabbar, and pagination contracts remain caller-controlled local projections.
+2. Compare only the components your application actually owns. HIA-uView currently has 80 pre-release component contracts and does not implement automatic-import, global service, picker, request, storage, router, form-engine, or business-module compatibility layers; its list, scroll, popup, toast, tabbar, and pagination contracts remain caller-controlled local projections. `u-navbar` and `u-notice-bar` are new, distinct contracts rather than aliases of `u-nav-bar` and `u-notice`.
 3. Keep the application responsible for data, routes, requests, identity, permissions, domain text, business validation, and lifecycle decisions. HIA-uView-Biz helpers, when they exist, belong in its separate `main-repo`.
 
 1. 阅读 [component index](components.md)、每个关联组件契约、[runtime consumption](runtime-consumption.md)、[compatibility profile](compatibility.md) 及 [upstream source-intake policy](upstream-source-intake.md)。
-2. 只比较应用实际拥有的组件。HIA-uView 当前有 45 个私有组件，未实现 automatic-import、global service、picker、request、storage、router、form-engine 或业务模块兼容层；list、scroll、popup、toast、tabbar 和 pagination 仍是调用方受控的局部投影。
+2. 只比较应用实际拥有的组件。HIA-uView 当前有 80 个预发布组件契约，未实现 automatic-import、global service、picker、request、storage、router、form-engine 或业务模块兼容层；list、scroll、popup、toast、tabbar 和 pagination 仍是调用方受控的局部投影。`u-navbar` 与 `u-notice-bar` 是新建且独立的契约，不是 `u-nav-bar` 与 `u-notice` 的别名。
 3. 应用仍负责数据、路由、请求、身份、权限、领域文字、业务校验和生命周期决定。未来 HIA-uView-Biz 的辅助工具也属于独立 `main-repo`。
 
 ## Manual migration steps / 人工迁移步骤

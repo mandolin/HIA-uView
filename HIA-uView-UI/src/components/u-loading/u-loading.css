@@ -1,0 +1,48 @@
+/**
+ * @component ULoadingStyle
+ * @lang zh-CN 定义静态 loading indicator 的 token 化尺寸和 CSS 动画；动画不使用 JavaScript timer，也不推断异步生命周期。
+ * @lang en Defines tokenized size and CSS animation for a static loading indicator; animation uses no JavaScript timer and infers no async lifecycle.
+ */
+.u-loading { display: inline-flex; align-items: center; gap: var(--u-comp-loading-gap); color: var(--u-comp-loading-primary-foreground); font-size: var(--u-comp-loading-font-size); }
+.u-loading__indicator { width: var(--u-comp-loading-size-md); height: var(--u-comp-loading-size-md); border: var(--u-comp-loading-border-width) solid currentColor; border-right-color: transparent; border-radius: 50%; animation: u-loading-spin var(--u-comp-loading-duration) linear infinite; }
+.u-loading--sm .u-loading__indicator { width: var(--u-comp-loading-size-sm); height: var(--u-comp-loading-size-sm); }
+.u-loading--lg .u-loading__indicator { width: var(--u-comp-loading-size-lg); height: var(--u-comp-loading-size-lg); }
+.u-loading--neutral { color: var(--u-comp-loading-neutral-foreground); }
+.u-loading--accent { color: var(--u-comp-loading-accent-foreground); }
+@keyframes u-loading-spin { to { transform: rotate(360deg); } }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-loading {
+  gap: 8px;
+  color: #0047ab;
+  font-size: 14px;
+}
+
+.u-loading__indicator {
+  width: 20px;
+  height: 20px;
+  border: 2px solid currentColor;
+  animation: u-loading-spin 720ms linear infinite;
+}
+
+.u-loading--sm .u-loading__indicator {
+  width: 14px;
+  height: 14px;
+}
+
+.u-loading--lg .u-loading__indicator {
+  width: 28px;
+  height: 28px;
+}
+
+.u-loading--neutral {
+  color: #27364a;
+}
+
+.u-loading--accent {
+  color: #00a8d3;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

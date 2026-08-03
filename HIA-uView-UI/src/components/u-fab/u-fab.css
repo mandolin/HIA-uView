@@ -1,0 +1,29 @@
+/**
+ * @component UFabStyle
+ * @lang zh-CN 定义局部 FAB 的 token 化视觉和有限位置标记；组件不使用 fixed 定位或全局 z-index，调用方容器决定实际叠放上下文。
+ * @lang en Defines tokenized appearance and finite position markers for local FAB; the component uses neither fixed positioning nor global z-index, and caller container decides actual stacking context.
+ */
+.u-fab { display: inline-flex; align-items: center; justify-content: center; min-height: var(--u-comp-fab-min-height); padding: var(--u-comp-fab-block-padding) var(--u-comp-fab-inline-padding); border: 1px solid var(--u-comp-fab-border); border-radius: var(--u-comp-fab-radius); background: var(--u-comp-fab-surface); color: var(--u-comp-fab-foreground); font: inherit; font-size: var(--u-comp-fab-font-size); }
+/* <lang><zh-CN>有限 class 只提供 caller 可选择的局部对齐提示；不脱离正常布局流。</zh-CN><en>Finite classes provide caller-selectable local alignment cues only and do not leave normal layout flow.</en></lang> */
+.u-fab--bottom-right, .u-fab--top-right { justify-self: end; }
+.u-fab--bottom-left, .u-fab--top-left { justify-self: start; }
+.u-fab:focus-visible { outline: 2px solid var(--u-comp-fab-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-fab {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #0047ab;
+  border-radius: 999px;
+  background: #0047ab;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.u-fab:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

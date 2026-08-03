@@ -1,0 +1,45 @@
+/**
+ * @component UNavbarStyle
+ * @lang zh-CN 定义受控 `u-navbar` 的三列布局和有标签 control 样式；规则只消费主题 token，不创建 fixed 系统栏、路由或业务层级。
+ * @lang en Defines three-column layout and labeled-control styling for controlled `u-navbar`; rules consume theme tokens only and create no fixed system bar, router, or business layer.
+ */
+
+/* <lang><zh-CN>根栏使用 grid 维持左右内容不等宽时标题仍居中的结构；它不使用平台安全区或裸层级值。</zh-CN><en>The root bar uses grid so the title remains centered when side content has unequal width; it uses neither platform safe area nor a bare layer value.</en></lang> */
+.u-navbar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr); align-items: center; min-height: var(--u-comp-navbar-min-height); padding: var(--u-comp-navbar-block-padding) var(--u-comp-navbar-inline-padding); gap: var(--u-comp-navbar-gap); background: var(--u-comp-navbar-surface); color: var(--u-comp-navbar-foreground); border-bottom: 1px solid var(--u-comp-navbar-border); }
+/* <lang><zh-CN>侧栏只排列自身 slot 或内建文字 control，不拥有导航状态。</zh-CN><en>Side regions arrange only their own slot or built-in text control and own no navigation state.</en></lang> */
+.u-navbar__side { min-width: 0; }
+.u-navbar__side--right { text-align: right; }
+/* <lang><zh-CN>标题截断只处理空间不足，不改变调用方文字或 locale。</zh-CN><en>Title truncation handles insufficient space only and changes neither caller text nor locale.</en></lang> */
+.u-navbar__title { overflow: hidden; text-align: center; text-overflow: ellipsis; white-space: nowrap; font-size: var(--u-comp-navbar-title-font-size); font-weight: var(--u-comp-navbar-title-font-weight); }
+/* <lang><zh-CN>内建 control 保持文本可读和最小触控高度；disabled 原生语义由 button 负责。</zh-CN><en>The built-in control retains readable text and minimum touch height; native disabled semantics remain owned by button.</en></lang> */
+.u-navbar__control { min-height: var(--u-comp-navbar-control-min-height); padding: 0; border: 0; background: transparent; color: var(--u-comp-navbar-control-foreground); font: inherit; font-size: var(--u-comp-navbar-control-font-size); }
+.u-navbar__control:focus-visible { outline: 2px solid var(--u-comp-navbar-focus-ring); outline-offset: 2px; }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-navbar {
+  min-height: 48px;
+  padding: 8px 16px;
+  gap: 8px;
+  background: #ffffff;
+  color: #001b2e;
+  border-bottom: 1px solid #f7f9fc;
+}
+
+.u-navbar__title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.u-navbar__control {
+  min-height: 40px;
+  color: #0047ab;
+  font-size: 15px;
+}
+
+.u-navbar__control:focus-visible {
+  outline: 2px solid #0047ab;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

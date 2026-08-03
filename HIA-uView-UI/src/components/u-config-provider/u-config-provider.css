@@ -1,0 +1,26 @@
+/**
+ * @component UConfigProviderStyle
+ * @lang zh-CN 定义有限 theme/density scope 的局部变量投影；它不改变 :root、系统主题或全局字体。
+ * @lang en Defines local-variable projection for finite theme/density scope; it changes neither :root, system theme, nor global font.
+ */
+.u-config-provider { color: var(--u-comp-config-provider-foreground); background: var(--u-comp-config-provider-surface); }
+.u-config-provider--compact { --u-comp-config-provider-density-gap: var(--u-comp-config-provider-compact-gap); }
+.u-config-provider--comfortable { --u-comp-config-provider-density-gap: var(--u-comp-config-provider-comfortable-gap); }
+
+/* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
+/* #ifdef MP-WEIXIN */
+/* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
+.u-config-provider {
+  color: inherit;
+  background: transparent;
+}
+
+.u-config-provider--compact {
+  --u-comp-config-provider-density-gap: 8px;
+}
+
+.u-config-provider--comfortable {
+  --u-comp-config-provider-density-gap: 12px;
+}
+/* HIA-uView MP-Weixin literal fallback end. */
+/* #endif */

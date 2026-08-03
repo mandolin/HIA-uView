@@ -10,7 +10,7 @@ import { resolve } from 'node:path';
 import { createApp } from 'vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import UView, { UActionSheet, UAlertTips, UButton, UCalendar, UCard, UCell, UCellGroup, UCheckbox, UCheckboxGroup, UCollapse, UCollapseItem, UCol, UDropdown, UDropdownItem, UEmpty, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, ULine, ULineProgress, ULink, UList, ULoadmore, ULoadingPage, UModal, UNavBar, UNotice, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URow, USection, USelect, USlider, USwipeAction, UTag, UBadge, UText, UDivider, UCountTo, URadio, URadioGroup, URate, USearch, UScrollList, USkeleton, UStack, USteps, USticky, USwiper, USwitch, UTabbar, UTabs, UTextarea, UToast, UValidationMessage, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
+import UView, { UActionSheet, UAlertTips, UBackTop, UBadge, UButton, UCalendar, UCard, UCell, UCellGroup, UCellItem, UCheckbox, UCheckboxGroup, UCollapse, UCollapseItem, UCol, UConfigProvider, UCountTo, UDivider, UDropdown, UDropdownItem, UEmpty, UFab, UField, UForm, UFormItem, UGap, UGrid, UGridItem, UIcon, UImage, UAvatar, UInput, ULine, ULineProgress, ULink, UList, ULoadmore, ULoading, ULoadingPage, ULoadingPopup, UMask, UModal, UNavBar, UNavbar, UNoNetwork, UNotice, UNoticeBar, UNumberBox, UPagination, UPicker, UPopup, UReadMore, URadio, URadioGroup, URate, URootPortal, URow, USafeBottom, USection, USearch, USelect, USlider, UScrollList, USkeleton, UStack, UStatusBar, USteps, USticky, USwipeAction, USwiper, USwitch, UTabbar, UTag, UTabs, UText, UTextarea, UToast, UTopTips, UTransition, UValidationMessage, UVIEW_COMPONENTS } from '../../HIA-uView-UI/src/index.mjs';
 
 /**
  * @lang zh-CN 验证 UButton 保持 P10/P11 的 enabled、disabled、loading、slot 与 loadingText 契约，防止 P12 registry 扩展回退既有组件行为。
@@ -240,7 +240,7 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-toast')).toBeUndefined();
   expect(application.component('u-validation-message')).toBeUndefined();
 
-  // <lang><zh-CN>显式安装是唯一注册入口；集合长度与当前六十五项私有组件声明一致。</zh-CN><en>Explicit installation is the only registration entry; collection length matches the current sixty-five private component declarations.</en></lang>
+  // <lang><zh-CN>显式安装是唯一注册入口；集合长度与当前八十项预发布组件声明一致。</zh-CN><en>Explicit installation is the only registration entry; collection length matches the current eighty pre-release component declarations.</en></lang>
   application.use(UView);
 
   expect(application.component('u-button')).toBe(UButton);
@@ -308,7 +308,23 @@ it('keeps registration and style consumption explicit', async () => {
   expect(application.component('u-text')).toBe(UText);
   expect(application.component('u-toast')).toBe(UToast);
   expect(application.component('u-validation-message')).toBe(UValidationMessage);
-  expect(UVIEW_COMPONENTS).toHaveLength(65);
+  // <lang><zh-CN>P54 组件也只能由同一显式 plugin 安装；它们不通过 import 或全局副作用自行注册。</zh-CN><en>P54 components are installed only by the same explicit plugin; they do not self-register through import or global side effect.</en></lang>
+  expect(application.component('u-back-top')).toBe(UBackTop);
+  expect(application.component('u-cell-item')).toBe(UCellItem);
+  expect(application.component('u-config-provider')).toBe(UConfigProvider);
+  expect(application.component('u-fab')).toBe(UFab);
+  expect(application.component('u-loading')).toBe(ULoading);
+  expect(application.component('u-loading-popup')).toBe(ULoadingPopup);
+  expect(application.component('u-mask')).toBe(UMask);
+  expect(application.component('u-navbar')).toBe(UNavbar);
+  expect(application.component('u-no-network')).toBe(UNoNetwork);
+  expect(application.component('u-notice-bar')).toBe(UNoticeBar);
+  expect(application.component('u-root-portal')).toBe(URootPortal);
+  expect(application.component('u-safe-bottom')).toBe(USafeBottom);
+  expect(application.component('u-status-bar')).toBe(UStatusBar);
+  expect(application.component('u-top-tips')).toBe(UTopTips);
+  expect(application.component('u-transition')).toBe(UTransition);
+  expect(UVIEW_COMPONENTS).toHaveLength(80);
 
   // <lang><zh-CN>读取 runtime entry 本文以验证 style 仍由应用显式导入，而非由 import 或 plugin 注入。</zh-CN><en>Reads runtime-entry text to verify styles remain application-explicit rather than being injected by import or plugin.</en></lang>
   const runtimeEntry = await readFile(resolve('HIA-uView-UI/src/index.mjs'), 'utf8');

@@ -1,0 +1,10 @@
+/**
+ * @component UTransitionStyle
+ * @lang zh-CN 定义有限 CSS transition mode；它只在当前树内呈现，不测量或搬移 DOM/小程序节点。
+ * @lang en Defines finite CSS-transition modes; it presents only inside the current tree and neither measures nor relocates DOM/mini-program nodes.
+ */
+.u-transition { transition: opacity var(--u-transition-duration, var(--u-comp-transition-duration)) var(--u-comp-transition-timing), transform var(--u-transition-duration, var(--u-comp-transition-duration)) var(--u-comp-transition-timing); }
+.u-transition--fade { opacity: 1; }
+.u-transition--slide-up { transform: translateY(0); }
+.u-transition--slide-down { transform: translateY(0); }
+.u-transition--zoom { transform: scale(1); }

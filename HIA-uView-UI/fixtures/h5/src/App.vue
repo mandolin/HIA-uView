@@ -15,22 +15,51 @@
       <UDropdownItem value="private" label="Private / 私有" />
     </UDropdown>
     <UButton label="Local action / 本地操作" />
+    <!-- <lang><zh-CN>本段组合 P54 的本地导航、间距、反馈和 overlay 组件；所有文案与可见性均由本 fixture 明确提供。</zh-CN><en>This section composes P54 local navigation, spacing, feedback, and overlay components; the fixture explicitly provides every copy value and visibility selection.</en></lang> -->
+    <UConfigProvider density="compact">
+      <UStatusBar :height="18" />
+      <UNavbar title="Fixture navigation / Fixture 导航" left-text="Back / 返回" right-text="Save / 保存" @left-click="recordP54Intent('left')" @right-click="recordP54Intent('right')" />
+      <UCellItem title="Local entry / 本地条目" label="Caller projection / 调用方投影" value="Ready / 就绪" :arrow="true" :clickable="true" @click="recordP54Intent('cell')" />
+      <UNoticeBar :visible="true" text="Local feedback only / 仅本地反馈" close-text="Dismiss / 关闭" @close="recordP54Intent('notice')" />
+      <ULoading :visible="true" label="Local state / 本地状态" />
+      <UNoNetwork :visible="true" title="Caller-declared state / 调用方声明状态" retry-text="Retry / 重试" @retry="recordP54Intent('retry')" />
+      <USafeBottom :height="12" />
+    </UConfigProvider>
+    <UBackTop :visible="true" label="Top / 顶部" @back-top="recordP54Intent('top')" />
+    <UFab :visible="true" label="Create / 新建" @click="recordP54Intent('fab')" />
+    <URootPortal :visible="true" :layer="1200"><UTransition :visible="true" mode="fade"><UTopTips :visible="true" message="Local overlay / 本地浮层" close-text="Close / 关闭" @close="recordP54Intent('tips')" /></UTransition></URootPortal>
+    <UMask :visible="false" :clickable="true" @click="recordP54Intent('mask')" />
+    <ULoadingPopup :visible="false" label="Local popup / 本地弹层" :mask-closable="true" @close="recordP54Intent('popup')" />
     <p data-smoke="selected">{{ selected }}</p>
     <p data-smoke="level">{{ level }}</p>
+    <p data-smoke="p54-intent">{{ p54Intent }}</p>
   </main>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { UButton, UDropdown, UDropdownItem, USection, USelect, USlider, UText } from '../../../src/index.mjs';
+import { UBackTop, UButton, UCellItem, UConfigProvider, UDropdown, UDropdownItem, UFab, ULoading, ULoadingPopup, UMask, UNavbar, UNoNetwork, UNoticeBar, URootPortal, USafeBottom, USection, USelect, USlider, UStatusBar, UText, UTopTips, UTransition } from '../../../src/index.mjs';
 
 // <lang><zh-CN>fixture 状态只来自本地 ref，便于 H5 smoke 对稳定文本进行检查。</zh-CN><en>Fixture state comes from local refs only, allowing H5 smoke to inspect stable text.</en></lang>
 const selected = ref('public');
 const level = ref(5);
+// <lang><zh-CN>本地观察文字只记录 P54 intent 名称，用于 H5 build/smoke，不触发路由、滚动、网络或存储。</zh-CN><en>Local observation copy records only a P54 intent name for H5 build/smoke and triggers no router, scrolling, network, or storage.</en></lang>
+const p54Intent = ref('none');
 const options = Object.freeze([
   Object.freeze({ label: 'Public / 公共', value: 'public' }),
   Object.freeze({ label: 'Private / 私有', value: 'private' })
 ]);
+
+/**
+ * @lang zh-CN 记录 fixture 内观察到的 P54 局部 intent；不将 UI intent 解释为业务完成或执行副作用。
+ * @lang en Records a P54 local intent observed by the fixture; it neither interprets UI intent as business completion nor performs a side effect.
+ * @param {string} intent <lang><zh-CN>受限 fixture 事件名称。</zh-CN><en>Constrained fixture event name.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写当前组件 ref。</zh-CN><en>No return value; writes only the current-component ref.</en></lang>
+ */
+function recordP54Intent(intent) {
+  // <lang><zh-CN>测试夹具仅反映已发生的事件，不建立业务状态机或跨页面协议。</zh-CN><en>The test fixture only reflects the event that occurred and establishes no business state machine or cross-page protocol.</en></lang>
+  p54Intent.value = intent;
+}
 </script>
 
 <style>

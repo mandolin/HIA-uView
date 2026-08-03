@@ -37,3 +37,25 @@ No third-party UI source code, UI runtime dependency, asset, font, icon, theme r
 Before any reviewed upstream source is adopted, add a per-item entry here following [the source-intake policy](docs/upstream-source-intake.md). The entry must identify the source repository, package version, immutable commit, exact source path, license/notice, HIA target path, change summary and verification evidence.
 
 Third-party notices are additive: do not remove an existing notice merely because HIA later modifies the adopted code.
+
+## Reviewed MIT component derivations
+
+The following components are independently rewritten after reviewing the named files from `anyup/uView-Pro`, `uview-pro@0.6.13`, immutable commit `3bc1948d8f7c5d2bcb1ba3434cede1e709391a62`. The source files are covered by the repository MIT License. No upstream `$u` runtime, TypeScript props/types, assets, images, fonts, icons, brand material, networking, router, platform-system access, or generated output is incorporated. Each target is verified by the repository component contract tests, runtime tests where applicable, and H5/`mp-weixin` fixtures before release.
+
+| Upstream source path | HIA target | Adoption form |
+| --- | --- | --- |
+| `src/uni_modules/uview-pro/components/u-navbar/u-navbar.vue` | `HIA-uView-UI/src/components/u-navbar/u-navbar.vue` | Materially derived, independently rewritten controlled title/side-intent surface. |
+| `src/uni_modules/uview-pro/components/u-status-bar/u-status-bar.vue` | `HIA-uView-UI/src/components/u-status-bar/u-status-bar.vue` | Materially derived, independently rewritten caller-height spacer. |
+| `src/uni_modules/uview-pro/components/u-safe-bottom/u-safe-bottom.vue` | `HIA-uView-UI/src/components/u-safe-bottom/u-safe-bottom.vue` | Materially derived, independently rewritten caller-height spacer. |
+| `src/uni_modules/uview-pro/components/u-back-top/u-back-top.vue` | `HIA-uView-UI/src/components/u-back-top/u-back-top.vue` | Materially derived, independently rewritten click-intent surface without scroll observation. |
+| `src/uni_modules/uview-pro/components/u-cell-item/u-cell-item.vue` | `HIA-uView-UI/src/components/u-cell-item/u-cell-item.vue` | Materially derived, independently rewritten local information row. |
+| `src/uni_modules/uview-pro/components/u-loading/u-loading.vue` | `HIA-uView-UI/src/components/u-loading/u-loading.vue` | Materially derived, independently rewritten static indicator. |
+| `src/uni_modules/uview-pro/components/u-loading-popup/u-loading-popup.vue` | `HIA-uView-UI/src/components/u-loading-popup/u-loading-popup.vue` | Materially derived, independently rewritten local overlay composition. |
+| `src/uni_modules/uview-pro/components/u-mask/u-mask.vue` | `HIA-uView-UI/src/components/u-mask/u-mask.vue` | Materially derived, independently rewritten controlled mask. |
+| `src/uni_modules/uview-pro/components/u-no-network/u-no-network.vue` | `HIA-uView-UI/src/components/u-no-network/u-no-network.vue` | Materially derived, independently rewritten text-first panel; upstream `image.ts` asset excluded. |
+| `src/uni_modules/uview-pro/components/u-notice-bar/u-notice-bar.vue` | `HIA-uView-UI/src/components/u-notice-bar/u-notice-bar.vue` | Materially derived, independently rewritten non-scrolling banner. |
+| `src/uni_modules/uview-pro/components/u-top-tips/u-top-tips.vue` | `HIA-uView-UI/src/components/u-top-tips/u-top-tips.vue` | Materially derived, independently rewritten local feedback tip. |
+| `src/uni_modules/uview-pro/components/u-transition/u-transition.vue` | `HIA-uView-UI/src/components/u-transition/u-transition.vue` | Materially derived, independently rewritten finite CSS transition surface. |
+| `src/uni_modules/uview-pro/components/u-config-provider/u-config-provider.vue` | `HIA-uView-UI/src/components/u-config-provider/u-config-provider.vue` | Materially derived, independently rewritten same-tree theme/density scope. |
+| `src/uni_modules/uview-pro/components/u-root-portal/u-root-portal.vue` | `HIA-uView-UI/src/components/u-root-portal/u-root-portal.vue` | Materially derived, independently rewritten same-tree portal fallback. |
+| `src/uni_modules/uview-pro/components/u-fab/u-fab.vue` | `HIA-uView-UI/src/components/u-fab/u-fab.vue` | Materially derived, independently rewritten labeled local action control. |
