@@ -1,8 +1,8 @@
 # HIA-uView-Tool contract / HIA-uView-Tool 工具契约
 
-> Status / 状态：Private read-only `doctor`、`check contract`、`check adoption`、`inspect components` 与 `inspect compatibility` commands are implemented. `scaffold component` remains reserved, and `@hia-uview/tool` has no published package export.
+> Status / 状态：Private read-only `doctor`、`check contract`、`check adoption`、`inspect components`、`inspect compatibility` 与 `inspect api-compatibility` commands are implemented. `scaffold component` remains reserved, and `@hia-uview/tool` has no published package export.
 
-> 私有只读 `doctor`、`check contract`、`check adoption`、`inspect components` 与 `inspect compatibility` 命令已经实现。`scaffold component` 仍为预留命令，且 `@hia-uview/tool` 尚未作为 npm 包导出。
+> 私有只读 `doctor`、`check contract`、`check adoption`、`inspect components`、`inspect compatibility` 与 `inspect api-compatibility` 命令已经实现。`scaffold component` 仍为预留命令，且 `@hia-uview/tool` 尚未作为 npm 包导出。
 
 HIA-uView-Tool is a development-time companion for checking and inspecting HIA-uView-UI metadata. It is never an application, UI-component, or business-framework runtime dependency. It is not a HIA-uView-Biz helper: business modules, API/adapter/Directus/identity helpers, pages, domain configuration, and related CLI work belong in HIA-uView-Biz `main-repo`.
 
@@ -21,6 +21,7 @@ The executable name is `hia-uview-tool`. Every implemented command consumes only
 | `check adoption` | Checks that a bounded application adoption manifest agrees with a configuration-declared UI component manifest. / 检查受边界约束的应用 adoption manifest 是否与配置中声明的 UI component manifest 一致。 | Read-only. / 只读。 |
 | `inspect components` | Produces a text or JSON report of declared component metadata and diagnostics. / 生成已声明组件元数据和诊断的 text/JSON 报告。 | Read-only. / 只读。 |
 | `inspect compatibility` | Reports declared verified and unverified compatibility evidence without upgrading it to device or release evidence. / 报告声明的已验证与未验证兼容性 evidence，不将其升级为设备或发布证据。 | Read-only. / 只读。 |
+| `inspect api-compatibility` | Reports the versioned component API/migration inventory and derives current compatible/mapped/unsupported/unresolved counts. / 报告版本化组件 API/迁移盘点，并现场派生 compatible/mapped/unsupported/unresolved 计数。 | Read-only. / 只读。 |
 | `scaffold component` | Reserved for a future component skeleton generator. / 为未来组件骨架生成器预留。 | Must require explicit `--write`; its default is dry-run. / 必须要求显式 `--write`；默认 dry-run。 |
 
 No command may execute project scripts, template expressions, package-manager commands, Git commands, network requests, subprocesses, builds, or DevTools. A future write command must declare every target relative to the selected project root, refuse unsafe or existing targets by default, and show a dry-run plan before writing.
@@ -29,9 +30,9 @@ No command may execute project scripts, template expressions, package-manager co
 
 ## Declarative configuration / 声明式配置
 
-The configuration file is `hia-uview.config.json`. It is JSON validated by a versioned local schema; it is not JavaScript, TypeScript, or an executable hook. Version 1 accepts `projectRoot: "."` only, plus the `mp-weixin` profile, `zh-Hans`/`en` UI locale, text/JSON report format, and relative component/adoption/compatibility-manifest paths.
+The configuration file is `hia-uview.config.json`. It is JSON validated by a versioned local schema; it is not JavaScript, TypeScript, or an executable hook. Version 1 accepts `projectRoot: "."` only, plus the `mp-weixin` profile, `zh-Hans`/`en` UI locale, text/JSON report format, and relative component/adoption/platform-compatibility/API-compatibility manifest paths.
 
-配置文件为 `hia-uview.config.json`。它由带版本的本地 schema 校验，是 JSON 而非 JavaScript、TypeScript 或可执行 hook。版本 1 仅接受 `projectRoot: "."`，以及 `mp-weixin` 配置、`zh-Hans`/`en` UI locale、text/JSON 报告格式和相对 component/adoption/compatibility manifest 路径。
+配置文件为 `hia-uview.config.json`。它由带版本的本地 schema 校验，是 JSON 而非 JavaScript、TypeScript 或可执行 hook。版本 1 仅接受 `projectRoot: "."`，以及 `mp-weixin` 配置、`zh-Hans`/`en` UI locale、text/JSON 报告格式和相对 component/adoption/平台兼容/API 兼容 manifest 路径。
 
 ```json
 {
@@ -42,19 +43,20 @@ The configuration file is `hia-uview.config.json`. It is JSON validated by a ver
   "report": { "format": "text" },
   "componentManifests": ["HIA-uView-UI/hia-uview.components.json"],
   "adoptionManifests": [],
-  "compatibilityManifests": ["HIA-uView-UI/hia-uview.compatibility.json"]
+  "compatibilityManifests": ["HIA-uView-UI/hia-uview.compatibility.json"],
+  "apiCompatibilityManifests": ["HIA-uView-UI/hia-uview.api-compatibility.json"]
 }
 ```
 
-`componentManifests` is required. `adoptionManifests` and `compatibilityManifests` are optional arrays, but their corresponding command reports a failing diagnostic when no manifest is declared. The contract rejects unknown executable fields, remote URLs, package names to install, shell snippets, hooks, credentials, and absolute or escaping paths. Documentation locales (`zh-CN`, `en`) remain a source-documentation concern; `locale` selects the UI/runtime message locale (`zh-Hans` or `en`).
+`componentManifests` is required. `adoptionManifests`, `compatibilityManifests`, and `apiCompatibilityManifests` are optional arrays, but their corresponding command reports a failing diagnostic when no manifest is declared. The contract rejects unknown executable fields, remote URLs, package names to install, shell snippets, hooks, credentials, and absolute or escaping paths. Documentation locales (`zh-CN`, `en`) remain a source-documentation concern; `locale` selects the UI/runtime message locale (`zh-Hans` or `en`).
 
-`componentManifests` 是必填项。`adoptionManifests` 与 `compatibilityManifests` 是可选数组，但对应命令在未声明 manifest 时会报告失败诊断。契约拒绝未知的可执行字段、远程 URL、待安装包名、shell 片段、hook、凭据以及绝对路径或越界路径。Documentation Sys 的文档语言（`zh-CN`、`en`）仍属于源码文档关注点；`locale` 选择 UI/运行时消息语言（`zh-Hans` 或 `en`）。
+`componentManifests` 是必填项。`adoptionManifests`、`compatibilityManifests` 与 `apiCompatibilityManifests` 是可选数组，但对应命令在未声明 manifest 时会报告失败诊断。契约拒绝未知的可执行字段、远程 URL、待安装包名、shell 片段、hook、凭据以及绝对路径或越界路径。Documentation Sys 的文档语言（`zh-CN`、`en`）仍属于源码文档关注点；`locale` 选择 UI/运行时消息语言（`zh-Hans` 或 `en`）。
 
 ## UI metadata manifests / UI 元数据 manifest
 
-The component manifest is a UI-package declaration, not an application scan. Its `styleEntry`, `source`, and `contract` values are relative to the directory containing that manifest; the Tool checks their syntax only and never reads their contents. Component records require a unique, code-point-sorted `name` and a `locales` array containing only `zh-Hans` and/or `en`.
+The component manifest is a UI-package declaration, not an application scan. In version 1, `styleEntry` and component `source` are relative to the directory containing the component manifest, while component `contract` is relative to the selected Tool project root. The Tool checks their relative-path syntax only and never reads their contents. This explicit split preserves the current repository data contract; a future schema version may unify the bases but must not reinterpret version 1 silently. Component records require a unique, code-point-sorted `name` and a `locales` array containing only `zh-Hans` and/or `en`.
 
-component manifest 是 UI 包声明，而不是应用扫描。它的 `styleEntry`、`source` 与 `contract` 值相对于该 manifest 所在目录；Tool 仅检查其路径语法，绝不读取其内容。component record 必须具有唯一且按代码点排序的 `name`，并使用只包含 `zh-Hans` 和/或 `en` 的 `locales` 数组。
+component manifest 是 UI 包声明，而不是应用扫描。在版本 1 中，`styleEntry` 与组件 `source` 相对于 component manifest 所在目录，组件 `contract` 则相对于选定的 Tool project root。Tool 仅检查其相对路径语法，绝不读取其内容。这一显式区分保留当前仓库数据契约；未来 schema version 可以统一基准，但不得静默重新解释版本 1。component record 必须具有唯一且按代码点排序的 `name`，并使用只包含 `zh-Hans` 和/或 `en` 的 `locales` 数组。
 
 ```json
 {
@@ -108,6 +110,20 @@ compatibility evidence manifest 记录受限证据，而非平台声明。`verif
 }
 ```
 
+## API migration inventory / API 迁移盘点
+
+The API compatibility manifest is a comparison and migration inventory, not platform evidence. It binds an immutable upstream reference to one declared local component manifest, contains exactly the audited shared component rows, and records each prop/event/slot/imperative capability as `compatible`, `mapped`, or `unsupported`. The component migration summary is explicitly `api-items-only`; easycom, types, aliases, and platform stay separate. `complete` with no items means “audited and none”; an unresolved inventory must directly reference its owning component-and-surface issue. Defaults are limited to JSON literals, array/object factory classifications with contents intentionally omitted, opaque digests, or directly issue-linked unresolved facts and are never evaluated.
+
+API compatibility manifest 是比较与迁移盘点，而不是平台证据。它把 immutable 上游 reference 绑定到一份已声明的本地 component manifest，只包含已审计的同名组件行，并将每个 prop/event/slot/imperative 能力记录为 `compatible`、`mapped` 或 `unsupported`。组件 migration summary 显式限定为 `api-items-only`；easycom、types、aliases 与 platform 保持独立。`complete` 加空 items 表示“已审计且无项目”；未解决 inventory 必须直接引用同时拥有当前组件与表面的 issue。default 仅允许 JSON literal、有意省略内容的 array/object factory 分类、opaque digest 或直接关联 issue 的 unresolved 事实，绝不会被求值。
+
+The props scope records bounded runtime option facts, while event, slot, and imperative scopes are `names-only`. It does not infer payloads, scoped-slot bindings, method signatures, parent/child injection, global event channels, or behavior. Easycom reporting also separates the bounded repository `mp-weixin` fixture mapping from the package-stable/public contract; the former may exist while the latter remains unsupported.
+
+props scope 记录受限 runtime option 事实，而 event、slot 与 imperative scope 只到 `names-only`。它不推断 payload、scoped-slot binding、方法签名、父子注入、全局事件通道或行为。Easycom 报告也会区分受限仓内 `mp-weixin` fixture 映射与 package-stable/public 契约；前者可以存在，而后者仍处于 unsupported。
+
+`inspect api-compatibility` derives totals from validated records and does not trust a manifest-provided summary. An exit code of `0` means the inventory structure, ordering, cross-links, and issue references are valid. Current `unsupported` or issue-backed `unresolved` results remain visible facts and do not by themselves fail the Tool or imply that an implementation change has already been made. The complete schema and immutable comparison boundary are documented in [API compatibility inventory](api-compatibility.md).
+
+`inspect api-compatibility` 会从已校验记录现场派生统计，不信任 manifest 自报 summary。退出码 `0` 表示盘点结构、排序、关联和 issue 引用有效。当前 `unsupported` 或有 issue 依据的 `unresolved` 仍是可见事实，它们本身不会让 Tool 失败，也不表示实现已经改变。完整 schema 与 immutable 比较边界见 [API 兼容盘点](api-compatibility.md)。
+
 ## Results and exit codes / 结果与退出码
 
 Text output is intended for people and JSON output for automation. JSON contains stable diagnostic codes, declared relative metadata paths, and (for `inspect`) only the requested bounded metadata. It must not include source text, generated Documentation Sys output, credentials, private workspace details, unrequested absolute paths, or inferred environment support.
@@ -130,6 +146,6 @@ Text output is intended for people and JSON output for automation. JSON contains
 
 ## Validation requirements / 验证要求
 
-Before a Tool command is released, fixtures must demonstrate valid and invalid JSON configuration, a missing project root, an escaping path, an unsupported profile, deterministic text/JSON diagnostics, no network or subprocess execution, and no UI/runtime dependency edge. P17 additionally requires positive and negative component/adoption/compatibility manifests, no absolute paths or source contents in inspect output, and explicit tests proving that forbidden business adoption fields fail. A future scaffold fixture must additionally prove default dry-run, explicit write permission, target allowlisting, and refusal to overwrite.
+Before a Tool command is released, fixtures must demonstrate valid and invalid JSON configuration, a missing project root, an escaping path, an unsupported profile, deterministic text/JSON diagnostics, no network or subprocess execution, and no UI/runtime dependency edge. Positive and negative component/adoption/platform-compatibility/API-compatibility manifests must cover stable ordering, path safety, exact cross-links, status/default enums, mapped targets, unsupported reasons, unresolved issue references, and output privacy. Tests must also prove that forbidden business adoption fields fail. A future scaffold fixture must additionally prove default dry-run, explicit write permission, target allowlisting, and refusal to overwrite.
 
-Tool 命令发布前，fixture 必须证明有效与无效 JSON 配置、缺失项目根目录、越界路径、不受支持配置、确定性的文本/JSON 诊断、没有网络或子进程执行，以及不存在 UI/运行时依赖边。P17 还要求 component/adoption/compatibility manifest 的正反 fixture、inspect 输出中没有绝对路径或源码正文，以及明确证明被禁止的业务 adoption 字段失败的测试。未来脚手架 fixture 还必须证明默认 dry-run、显式写入许可、目标白名单和拒绝覆盖。
+Tool 命令发布前，fixture 必须证明有效与无效 JSON 配置、缺失项目根目录、越界路径、不受支持配置、确定性的文本/JSON 诊断、没有网络或子进程执行，以及不存在 UI/运行时依赖边。component/adoption/平台兼容/API 兼容 manifest 的正反 fixture 必须覆盖稳定排序、路径安全、精确关联、status/default 枚举、mapped target、unsupported reason、unresolved issue 引用和输出隐私；测试还必须明确证明被禁止的业务 adoption 字段失败。未来脚手架 fixture 还必须证明默认 dry-run、显式写入许可、目标白名单和拒绝覆盖。

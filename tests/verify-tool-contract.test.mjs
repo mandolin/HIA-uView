@@ -6,8 +6,8 @@ import { executeToolCommand, runToolCli } from '../HIA-uView-Tool/src/index.mjs'
 
 /**
  * @module verify-tool-contract.test
- * @lang zh-CN 验证 P17 Tool 的只读 doctor/check/inspect 配置、component/adoption/compatibility manifest、退出码和输出隐私边界；测试不通过子进程、网络或源码扫描掩盖实现范围。
- * @lang en Verifies P17 Tool read-only doctor, check, and inspect configuration, component/adoption/compatibility manifests, exit codes, and output privacy boundary; tests do not mask implementation scope through subprocess, network, or source scanning.
+ * @lang zh-CN 验证 Tool 的只读 doctor/check/inspect 配置、component/adoption/platform/API compatibility manifest、退出码和输出隐私边界；测试不通过子进程、网络或源码扫描掩盖实现范围。
+ * @lang en Verifies Tool read-only doctor, check, and inspect configuration, component/adoption/platform/API-compatibility manifests, exit codes, and output privacy boundary; tests do not mask implementation scope through subprocess, network, or source scanning.
  */
 
 /**
@@ -64,8 +64,8 @@ test('inspects declared components and compatibility evidence without upgrading 
 });
 
 /**
- * @lang zh-CN 验证不安全路径、未知根命令与 P17 各 JSON contract 的负例使用稳定诊断，而非读取目标外文件或接受业务字段。
- * @lang en Verifies that unsafe paths, unknown root command, and negative P17 JSON contracts use stable diagnostics rather than reading outside targets or accepting business fields.
+ * @lang zh-CN 验证不安全路径、未知根命令与各 JSON contract 的负例使用稳定诊断，而非读取目标外文件或接受业务字段。
+ * @lang en Verifies that unsafe paths, unknown root command, and negative JSON contracts use stable diagnostics rather than reading outside targets or accepting business fields.
  */
 test('rejects escaping invocation, broken contracts, and forbidden adoption fields', async () => {
   // <lang><zh-CN>越界配置、远程样式 path 与未知命令覆盖最早的调用边界。</zh-CN><en>Escaping configuration, remote-style path, and unknown command cover the earliest invocation boundary.</en></lang>
@@ -78,6 +78,8 @@ test('rejects escaping invocation, broken contracts, and forbidden adoption fiel
   const adoption = await executeToolCommand(['check', 'adoption', '--config', 'tests/fixtures/tool/invalid-adoption.config.json']);
   // <lang><zh-CN>负 compatibility fixture 将 device 伪装为 verified evidence，并重复未验证环境，必须被拒绝。</zh-CN><en>The negative compatibility fixture disguises device as verified evidence and repeats an unverified environment, both of which must be rejected.</en></lang>
   const compatibility = await executeToolCommand(['inspect', 'compatibility', '--config', 'tests/fixtures/tool/invalid-compatibility.config.json']);
+  // <lang><zh-CN>旧配置未声明 API matrix 时，新 inspect 必须给出项目级缺失诊断，而不是扫描组件或网络自动生成输入。</zh-CN><en>When a legacy configuration declares no API matrix, the new inspect must return a project-level missing diagnostic rather than scanning components or the network to generate input.</en></lang>
+  const apiCompatibility = await executeToolCommand(['inspect', 'api-compatibility', '--config', 'tests/fixtures/tool/valid.config.json']);
 
   assert.equal(escaping.ok, false);
   assert.ok(escaping.diagnostics.some((diagnostic) => diagnostic.code === 'CONFIG_PROJECT_ROOT_INVALID'));
@@ -92,6 +94,7 @@ test('rejects escaping invocation, broken contracts, and forbidden adoption fiel
   assert.ok(adoption.diagnostics.some((diagnostic) => diagnostic.code === 'ADOPTION_COMPONENT_UNAVAILABLE'));
   assert.ok(compatibility.diagnostics.some((diagnostic) => diagnostic.code === 'COMPATIBILITY_EVIDENCE_KIND_UNSUPPORTED'));
   assert.ok(compatibility.diagnostics.some((diagnostic) => diagnostic.code === 'COMPATIBILITY_UNVERIFIED_DUPLICATE'));
+  assert.ok(apiCompatibility.diagnostics.some((diagnostic) => diagnostic.code === 'API_COMPATIBILITY_MANIFESTS_MISSING'));
 });
 
 /**
@@ -100,7 +103,7 @@ test('rejects escaping invocation, broken contracts, and forbidden adoption fiel
  */
 test('keeps all Tool source free of execution, runtime, and business imports', async () => {
   // <lang><zh-CN>明确列出全部 Tool 源文件，避免递归文件发现本身掩盖或扩大此静态门禁范围。</zh-CN><en>List every Tool source file explicitly, avoiding recursive file discovery that could itself hide or expand this static-gate scope.</en></lang>
-  const sourceFiles = ['config.mjs', 'metadata.mjs', 'adoption.mjs', 'compatibility.mjs', 'inspect.mjs', 'report.mjs', 'index.mjs', 'cli.mjs'];
+  const sourceFiles = ['config.mjs', 'metadata.mjs', 'adoption.mjs', 'compatibility.mjs', 'api-compatibility.mjs', 'inspect.mjs', 'report.mjs', 'index.mjs', 'cli.mjs'];
   // <lang><zh-CN>源文本仅用于禁止模式 sentinel，不作为 Tool 运行时输入或 inspect 输出。</zh-CN><en>Source text is used only for forbidden-pattern sentinels and is not Tool runtime input or inspect output.</en></lang>
   const source = await Promise.all(sourceFiles.map((fileName) => readFile(resolve('HIA-uView-Tool/src', fileName), 'utf8')));
   const combined = source.join('\n');

@@ -1,19 +1,20 @@
 import { createDiagnostic, loadConfiguration } from './config.mjs';
 import { loadAdoptionManifest } from './adoption.mjs';
 import { loadCompatibilityManifest } from './compatibility.mjs';
-import { createCompatibilityInspection, createComponentInspection } from './inspect.mjs';
+import { loadApiCompatibilityManifest } from './api-compatibility.mjs';
+import { createApiCompatibilityInspection, createCompatibilityInspection, createComponentInspection } from './inspect.mjs';
 import { loadComponentManifest } from './metadata.mjs';
 import { createReport, formatReport, getExitCode } from './report.mjs';
 
 /**
  * @module hia-uview-tool
- * @lang zh-CN 实现 HIA-uView-Tool 的受限只读 CLI 调用链：检查 UI component/adoption 契约并查看 component/compatibility metadata；命令只读取已声明 JSON，不运行项目代码、网络、包管理器、Git、构建或子进程。
- * @lang en Implements the constrained read-only CLI chain for HIA-uView-Tool: checks UI component and adoption contracts and inspects component and compatibility metadata; commands read only declared JSON and never run project code, network, package manager, Git, builds, or subprocesses.
+ * @lang zh-CN 实现 HIA-uView-Tool 的受限只读 CLI 调用链：检查 UI component/adoption 契约并查看 component、平台 evidence 与 API migration metadata；命令只读取已声明 JSON，不运行项目代码、网络、包管理器、Git、构建或子进程。
+ * @lang en Implements the constrained read-only CLI chain for HIA-uView-Tool: checks UI component and adoption contracts and inspects component, platform-evidence, and API-migration metadata; commands read only declared JSON and never run project code, network, package manager, Git, builds, or subprocesses.
  */
 
 /**
- * @lang zh-CN 解析 P17 CLI 参数，允许一个根命令、其受限 target 与一个仓库内配置路径；未声明 position/option 不会被静默解释为脚本或文件输入。
- * @lang en Parses P17 CLI arguments, allowing one root command, its bounded target, and one repository-local configuration path; undeclared positions or options are never silently interpreted as script or file input.
+ * @lang zh-CN 解析公开 CLI 参数，允许一个根命令、其受限 target 与一个仓库内配置路径；未声明 position/option 不会被静默解释为脚本或文件输入。
+ * @lang en Parses public CLI arguments, allowing one root command, its bounded target, and one repository-local configuration path; undeclared positions or options are never silently interpreted as script or file input.
  */
 export function parseInvocation(argv) {
   // <lang><zh-CN>首个 token 是根命令；余下 token 只会被解析为 `--config` 或 command target。</zh-CN><en>The first token is the root command; remaining tokens are parsed only as `--config` or a command target.</en></lang>
@@ -63,8 +64,8 @@ export function parseInvocation(argv) {
   if (command === 'check' && (positionals.length > 1 || !['contract', 'adoption'].includes(target))) {
     diagnostics.push(createDiagnostic('INVOCATION_TARGET_INVALID', 'Command "check" target must be "contract" or "adoption".', 'invocation'));
   }
-  if (command === 'inspect' && (positionals.length !== 1 || !['components', 'compatibility'].includes(target))) {
-    diagnostics.push(createDiagnostic('INVOCATION_TARGET_INVALID', 'Command "inspect" target must be "components" or "compatibility".', 'invocation'));
+  if (command === 'inspect' && (positionals.length !== 1 || !['api-compatibility', 'components', 'compatibility'].includes(target))) {
+    diagnostics.push(createDiagnostic('INVOCATION_TARGET_INVALID', 'Command "inspect" target must be "api-compatibility", "components", or "compatibility".', 'invocation'));
   }
 
   return { command, target, configurationPath, diagnostics };
@@ -182,6 +183,36 @@ export async function executeToolCommand(argv, rootDirectory = process.cwd()) {
       const diagnostics = [...runtimeDiagnostics, ...collectDiagnostics(compatibilityManifests)];
       // <lang><zh-CN>报告将 verified/unverified 声明原样投影为受限 details，不将其提升为平台认证。</zh-CN><en>The report projects verified and unverified declarations into bounded details without promoting them to platform certification.</en></lang>
       const details = createCompatibilityInspection(compatibilityManifests);
+      return createReport(invocation.command, configuration, diagnostics, details);
+    }
+
+    if (invocation.command === 'inspect' && invocation.target === 'api-compatibility') {
+      // <lang><zh-CN>API/migration inventory 必须由 configuration 显式列出；Tool 不从 SFC、类型、文档、上游 checkout 或网络生成矩阵。</zh-CN><en>The API/migration inventory must be explicitly listed by configuration; the Tool does not generate a matrix from SFCs, types, documentation, an upstream checkout, or network.</en></lang>
+      const apiCompatibilityPaths = configuration.apiCompatibilityManifests ?? [];
+      if (apiCompatibilityPaths.length === 0) {
+        return createReport(invocation.command, configuration, [
+          ...runtimeDiagnostics,
+          createDiagnostic('API_COMPATIBILITY_MANIFESTS_MISSING', 'Configuration must declare at least one API compatibility manifest for "inspect api-compatibility".')
+        ]);
+      }
+
+      // <lang><zh-CN>先加载同一配置白名单中的 component manifests，令矩阵只能引用已声明的本地 UI component boundary，而不是任意应用或上游文件。</zh-CN><en>Load component manifests from the same configuration allowlist first so the matrix can reference only declared local UI component boundaries rather than arbitrary application or upstream files.</en></lang>
+      const componentManifests = await loadConfiguredComponentManifests(rootDirectory, configuration);
+      // <lang><zh-CN>每份矩阵 JSON 只在配置指定的安全相对路径读取，并仅与内存中的 component manifest 索引关联。</zh-CN><en>Each matrix JSON is read only at its configuration-declared safe relative path and links only to the in-memory component-manifest index.</en></lang>
+      const apiCompatibilityManifests = await Promise.all(apiCompatibilityPaths.map((manifestPath) => loadApiCompatibilityManifest(
+        rootDirectory,
+        manifestPath,
+        configuration,
+        componentManifests.byPath
+      )));
+      // <lang><zh-CN>unsupported/unresolved 是已记录的当前迁移事实，不是 schema 失败；details 会汇总它们，而 diagnostics 只表示矩阵不完整或不一致。</zh-CN><en>Unsupported and unresolved are recorded current migration facts rather than schema failures; details summarize them while diagnostics represent only an incomplete or inconsistent matrix.</en></lang>
+      const diagnostics = [
+        ...runtimeDiagnostics,
+        ...collectDiagnostics(componentManifests.entries),
+        ...collectDiagnostics(apiCompatibilityManifests)
+      ];
+      // <lang><zh-CN>投影只包含已校验矩阵的公开 metadata 与现场派生统计，不读取 target 文件或信任 manifest 自报 summary。</zh-CN><en>The projection contains only validated public matrix metadata and locally derived counts; it reads no target file and trusts no manifest-reported summary.</en></lang>
+      const details = createApiCompatibilityInspection(apiCompatibilityManifests);
       return createReport(invocation.command, configuration, diagnostics, details);
     }
 

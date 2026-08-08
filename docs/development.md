@@ -8,19 +8,21 @@
 ## Commands
 
 ```bash
-npm run check
-npm test
-npm run test:runtime
-npm run docs:check
-npm run tool:doctor
-npm run tool:check
-node HIA-uView-Tool/src/cli.mjs inspect components
-node HIA-uView-Tool/src/cli.mjs inspect compatibility
-node HIA-uView-Tool/src/cli.mjs check adoption --config path/to/hia-uview.config.json
-npm run build:fixture:mp-weixin
+mise exec -- npm run check
+mise exec -- npm test
+mise exec -- npm run test:runtime
+mise exec -- npm run docs:check
+mise exec -- npm run tool:doctor
+mise exec -- npm run tool:check
+mise exec -- npm run tool:inspect:components
+mise exec -- npm run tool:inspect:compatibility
+mise exec -- npm run tool:inspect:api-compatibility
+mise exec -- node HIA-uView-Tool/src/cli.mjs check adoption --config path/to/hia-uview.config.json
+mise exec -- npm run build:fixture:mp-weixin
+mise exec -- npm run build:fixture:h5
 ```
 
-`npm run check` verifies required files, the UI/Tool package metadata, and the Documentation Sys gate. `npm test` runs the Node contracts and private Vue runtime tests; `npm run test:runtime` runs only the latter. The runtime tests use one-shot `vitest run` with jsdom and do not start a Vitest UI/API/browser/watch server. `npm run docs:check` runs the static bilingual JSDoc check, a real HIA JSDoc generation pass, and the generated-output privacy check. `npm run tool:doctor` and `npm run tool:check` execute the default read-only Tool checks. `inspect components`, `inspect compatibility`, and `check adoption` read only declared JSON manifests; they neither scan application source nor execute builds, scripts, packages, Git, network, or DevTools. `npm run build:fixture:mp-weixin` performs the local compiler fixture only; its generated output is ignored and is not a device or release claim. Do not add a root dependency tree for HIA-uView-Biz or any other workspace. Future UI and Tool dependencies must be installed and locked inside this repository after their license and compatibility reviews.
+`npm run check` verifies required files, the UI/Tool package metadata, and the Documentation Sys gate. `npm test` runs the Node contracts and private Vue runtime tests; `npm run test:runtime` runs only the latter. The runtime tests use one-shot `vitest run` with jsdom and do not start a Vitest UI/API/browser/watch server. `npm run docs:check` runs the static bilingual JSDoc check, a real HIA JSDoc generation pass, and the generated-output privacy check. The five listed Tool scripts execute read-only checks/inspections under the repository's `mise` environment. `inspect components`, `inspect compatibility`, `inspect api-compatibility`, and `check adoption` read only declared JSON manifests; they neither scan source nor execute builds, scripts, packages, Git, network, an upstream checkout, or DevTools. `npm run build:fixture:mp-weixin` performs the local compiler fixture only. `npm run build:fixture:h5` provides bounded static-build smoke evidence and is not an H5 runtime/support claim. Generated output is ignored; neither build is a device or release claim. Do not add a root dependency tree for HIA-uView-Biz or any other workspace. Future UI and Tool dependencies must be installed and locked inside this repository after their license and compatibility reviews.
 
 ## Development toolchain risk
 
@@ -44,4 +46,4 @@ All new code must follow [the Documentation Sys contract](documentation.md). Doc
 
 ## Tool boundary
 
-HIA-uView-Tool is development-only. Its implemented pre-release CLI, declarative configuration, output, and runtime-isolation rules are defined in the [Tool contract](tool.md). `scaffold component` and every write action remain unavailable. Do not substitute project scripts, executable configuration, a package install, source scanner, or Biz helper for the documented contract. The bounded [adoption metadata contract](tool-adoption.md) is UI-only; business helpers remain in HIA-uView-Biz `main-repo`.
+HIA-uView-Tool is development-only. Its implemented pre-release CLI, declarative configuration, output, and runtime-isolation rules are defined in the [Tool contract](tool.md). `scaffold component` and every Tool write action remain unavailable. The separate offline [API compatibility generator](api-compatibility.md#offline-regeneration--离线重新生成) is a repository-maintainer script with one fixed output and explicit `--write`; it is not a Tool runtime command. Do not substitute project scripts, executable configuration, a package install, source scanner, or Biz helper for the documented Tool contract. The bounded [adoption metadata contract](tool-adoption.md) is UI-only; business helpers remain in HIA-uView-Biz `main-repo`.

@@ -3,13 +3,13 @@ import { isAbsolute, resolve } from 'node:path';
 
 /**
  * @module tool-config
- * @lang zh-CN 为 HIA-uView-Tool 的首轮只读 JSON 配置提供解析与 schema 校验；不执行配置内容，也不接受远程、绝对或越界路径。
- * @lang en Provides parsing and schema validation for the first read-only JSON configuration of HIA-uView-Tool; does not execute configuration content and rejects remote, absolute, and escaping paths.
+ * @lang zh-CN 为 HIA-uView-Tool 的版本化只读 JSON 配置提供解析与 schema 校验；不执行配置内容，也不接受远程、绝对或越界路径。
+ * @lang en Provides parsing and schema validation for HIA-uView-Tool versioned read-only JSON configuration; does not execute configuration content and rejects remote, absolute, and escaping paths.
  */
 
 /**
- * @lang zh-CN 首轮配置允许的固定字段；未知字段被拒绝，避免通过配置悄然引入可执行能力。
- * @lang en Fixed fields allowed by the first configuration schema; unknown fields are rejected so configuration cannot silently introduce executable capability.
+ * @lang zh-CN 配置版本 1 允许的固定字段；未知字段被拒绝，避免通过配置悄然引入可执行能力。
+ * @lang en Fixed fields allowed by configuration version 1; unknown fields are rejected so configuration cannot silently introduce executable capability.
  */
 const allowedConfigurationFields = new Set([
   'version',
@@ -19,7 +19,8 @@ const allowedConfigurationFields = new Set([
   'report',
   'componentManifests',
   'adoptionManifests',
-  'compatibilityManifests'
+  'compatibilityManifests',
+  'apiCompatibilityManifests'
 ]);
 
 /**
@@ -124,7 +125,7 @@ export function validateConfiguration(configuration) {
     }
   }
 
-  // <lang><zh-CN>版本、root、profile、locale 与 report 是固定 P17 输入边界；每项独立报告以支持一次修正多项 metadata 问题。</zh-CN><en>Version, root, profile, locale, and report are fixed P17 input boundaries; report each independently so one metadata repair can address multiple issues.</en></lang>
+  // <lang><zh-CN>版本、root、profile、locale 与 report 是固定公开输入边界；每项独立报告以支持一次修正多项 metadata 问题。</zh-CN><en>Version, root, profile, locale, and report are fixed public input boundaries; report each independently so one metadata repair can address multiple issues.</en></lang>
   if (configuration.version !== 1) {
     diagnostics.push(createDiagnostic('CONFIG_VERSION_UNSUPPORTED', 'Configuration version must be 1.', 'invocation'));
   }
@@ -153,6 +154,9 @@ export function validateConfiguration(configuration) {
 
   // <lang><zh-CN>compatibility manifest 同样是可选输入；预校验保证 inspect 不会因一份越界声明扩大读取范围。</zh-CN><en>Compatibility manifests are likewise optional inputs; prevalidation ensures inspect cannot expand read scope through an escaping declaration.</en></lang>
   validateManifestPathArray(configuration.compatibilityManifests, 'compatibilityManifests', 'COMPATIBILITY_MANIFESTS', 'COMPATIBILITY_MANIFEST', diagnostics, false);
+
+  // <lang><zh-CN>API compatibility manifest 是独立于平台 evidence 的可选输入；即使未请求对应 inspect，也先拒绝越界、URI 或重复路径。</zh-CN><en>API-compatibility manifests are optional inputs separate from platform evidence; reject escaping, URI, or duplicate paths even before the corresponding inspect is requested.</en></lang>
+  validateManifestPathArray(configuration.apiCompatibilityManifests, 'apiCompatibilityManifests', 'API_COMPATIBILITY_MANIFESTS', 'API_COMPATIBILITY_MANIFEST', diagnostics, false);
 
   return diagnostics;
 }

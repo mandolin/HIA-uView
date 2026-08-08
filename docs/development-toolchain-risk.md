@@ -64,7 +64,7 @@ Risk is not managed by default through a one-time block. It is reduced progressi
 
 | 触发条件 / Trigger | 必须动作 / Required action |
 | --- | --- |
-| C2/P3 收尾、DCloud/Vite/Vue/Vitest/Test Utils/jsdom 升级或 lockfile 大幅变化 / C2/P3 closeout, DCloud/Vite/Vue/Vitest/Test Utils/jsdom upgrade, or material lockfile change | 重新运行安全、许可证、编译、runtime test 和包内容审计；仅在兼容性证据充分时升级。 / Re-run security, license, compilation, runtime-test, and package-content audits; upgrade only with sufficient compatibility evidence. |
+| 每次构建链或发布准备复核节点、DCloud/Vite/Vue/Vitest/Test Utils/jsdom 升级或 lockfile 大幅变化 / Every toolchain or release-readiness review checkpoint, DCloud/Vite/Vue/Vitest/Test Utils/jsdom upgrade, or material lockfile change | 重新运行安全、许可证、编译、runtime test 和包内容审计；仅在兼容性证据充分时升级。 / Re-run security, license, compilation, runtime-test, and package-content audits; upgrade only with sufficient compatibility evidence. |
 | 需要启动开发服务器、处理不受信任输入、使用外部 CI 或扩大协作者范围 / A dev server, untrusted input, external CI, or a broader contributor scope is needed | 先做专门威胁建模与隔离设计；未获新决定前不扩大使用范围。 / First perform dedicated threat modeling and isolation design; do not expand scope without a new decision. |
 | 准备发布 npm 包、生产构建或公开可复用 starter / Preparing an npm release, production build, or public reusable starter | 将此例外提升为发布门禁：修复、替换或以经过审计的官方组合消除不接受的风险，并更新公告。 / Promote this exception to a release gate: remediate, replace, or use an audited official combination to eliminate unacceptable risk, then update the notice. |
 | 上游提供兼容的修复版本或官方公告 / Upstream provides a compatible fixed version or official advisory | 复现审计和 fixture build；通过后升级并降低或关闭例外。 / Repeat the audit and fixture build; upgrade and reduce or close the exception after they pass. |

@@ -61,6 +61,6 @@ After changing a default-light token or a component declaration that consumes on
 
 ## Current limits / 当前限制
 
-The entry supports only the private UniApp Vue 3 `mp-weixin` profile. Its bounded `easycom` table is not a general auto-import feature or a package-release promise. It is not yet an App/H5, device, accessibility-tree, or cross-platform support commitment. Runtime tests use jsdom and compiler tests produce `mp-weixin` output; neither replaces WeChat DevTools or physical-device evidence.
+The only active support profile is private UniApp Vue 3 `mp-weixin`. The same repository entry has bounded H5 static-build and jsdom contract usage, but those checks do not establish an H5 runtime/support profile. Its bounded `easycom` table is not a general auto-import feature or a package-release promise. It is not yet an App/H5, device, accessibility-tree, or cross-platform support commitment. Runtime tests use jsdom and compiler tests produce `mp-weixin` output; neither replaces WeChat DevTools or physical-device evidence.
 
-该入口仅支持私有 UniApp Vue 3 `mp-weixin` 配置。它的受限 `easycom` 表不是通用自动导入功能，也不是包发布承诺。它尚不是 App/H5、真机、无障碍树或跨端支持承诺。runtime 测试使用 jsdom，compiler 测试生成 `mp-weixin` 输出；两者都不能替代微信开发者工具或真机证据。
+当前唯一 active support profile 是私有 UniApp Vue 3 `mp-weixin`。同一仓库 entry 已有受限 H5 static-build 与 jsdom contract 使用，但这些检查不建立 H5 runtime/support profile。受限 `easycom` 表不是通用自动导入功能，也不是包发布承诺。它尚不是 App/H5、真机、无障碍树或跨端支持承诺。runtime 测试使用 jsdom，compiler 测试生成 `mp-weixin` 输出；两者都不能替代微信开发者工具或真机证据。

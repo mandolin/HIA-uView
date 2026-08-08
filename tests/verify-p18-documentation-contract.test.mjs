@@ -5,8 +5,8 @@ import test from 'node:test';
 
 /**
  * @module verify-p18-documentation-contract.test
- * @lang zh-CN 验证 P18 的公开组件、示例、Tool 与人工迁移说明保持可发现且不夸大预发布兼容性或验证证据；测试只读取仓内 Markdown，不执行示例或应用代码。
- * @lang en Verifies that P18 public component, example, Tool, and manual-migration guidance remains discoverable without overstating pre-release compatibility or validation evidence; the test reads repository Markdown only and executes neither examples nor application code.
+ * @lang zh-CN 验证公开组件、示例、Tool 与人工迁移说明保持可发现且不夸大预发布兼容性或验证证据；测试只读取仓内 Markdown，不执行示例或应用代码。
+ * @lang en Verifies that public component, example, Tool, and manual-migration guidance remains discoverable without overstating pre-release compatibility or validation evidence; the test reads repository Markdown only and executes neither examples nor application code.
  */
 
 /**
@@ -21,8 +21,8 @@ async function readPublicDocument(relativePath) {
 }
 
 /**
- * @lang zh-CN 验证 README、runtime consumption 与 component index 同时覆盖 14 个当前组件和 P17 的只读 Tool 命令面。
- * @lang en Verifies that README, runtime consumption, and component index jointly cover all 14 current components and the P17 read-only Tool command surface.
+ * @lang zh-CN 验证 README、runtime consumption 与 component index 保持关键组件入口和当前只读 Tool 命令面可发现；完整 107 项集合由独立 component manifest 契约锁定。
+ * @lang en Verifies that README, runtime consumption, and the component index keep key component entry points and the current read-only Tool command surface discoverable; the complete 107-item set is locked by the separate component-manifest contract.
  */
 test('keeps current components and Tool commands discoverable from public entry points', async () => {
   // <lang><zh-CN>固定文档读取集合覆盖根入口、UI workspace 入口、runtime import 示例和组件索引；不需要站点构建器或链接爬虫。</zh-CN><en>The fixed document-read set covers root entry, UI-workspace entry, runtime-import example, and component index; it needs neither a site builder nor link crawler.</en></lang>
@@ -32,7 +32,7 @@ test('keeps current components and Tool commands discoverable from public entry 
     readPublicDocument('docs/runtime-consumption.md'),
     readPublicDocument('docs/components.md')
   ]);
-  // <lang><zh-CN>四个选择组件是 P16/P17 后最容易在早期 README 中遗漏的公开导航项。</zh-CN><en>The four choice components are the public navigation items most likely to be missed in an early README after P16 and P17.</en></lang>
+  // <lang><zh-CN>四个选择组件跨越单项/分组与单选/多选，是容易在概要 README 中遗漏的关键公开导航项。</zh-CN><en>The four choice components span single/group and radio/checkbox surfaces and are key public navigation entries easily omitted from summary READMEs.</en></lang>
   const choiceComponents = ['URadio', 'URadioGroup', 'UCheckbox', 'UCheckboxGroup'];
   // <lang><zh-CN>根 README、UI README 和 index 均应包含每个选择组件名称，以防只更新一处导航造成使用者迷失。</zh-CN><en>Root README, UI README, and index must each include every choice-component name so updating one navigation entry alone cannot mislead consumers.</en></lang>
   for (const componentName of choiceComponents) {

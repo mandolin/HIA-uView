@@ -11,5 +11,8 @@
   ],
   "compatibilityManifests": [
     "HIA-uView-UI/hia-uview.compatibility.json"
+  ],
+  "apiCompatibilityManifests": [
+    "HIA-uView-UI/hia-uview.api-compatibility.json"
   ]
 }

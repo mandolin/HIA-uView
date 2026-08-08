@@ -79,6 +79,21 @@ function formatInspectionDetails(details) {
     return lines;
   }
 
+  if (details.kind === 'api-compatibility') {
+    // <lang><zh-CN>API compatibility 文本只呈现固定比较版本、现场总计和逐组件 disposition 摘要；声明 scope 内的全部 mapping 保留在 JSON 输出中。</zh-CN><en>API-compatibility text presents only the fixed comparison version, on-the-fly totals, and per-component disposition summaries; every mapping within the declared scopes remains available in JSON output.</en></lang>
+    for (const manifest of details.manifests) {
+      // <lang><zh-CN>标题绑定安全相对 manifest 路径和其中声明的不可变上游版本/commit，避免将浮动分支或 source-intake lock 与本次比较混同。</zh-CN><en>The heading binds a safe relative manifest path to its declared immutable upstream version and commit, avoiding confusion of a floating branch or source-intake lock with this comparison.</en></lang>
+      lines.push(`- ${manifest.path}: ${manifest.comparison.package.id}@${manifest.comparison.package.version}; ${manifest.comparison.commit}`);
+      // <lang><zh-CN>总计明确区分 inventory 完整性成功与当前 unsupported/unresolved 数；passed 只表示矩阵可读，不表示 API 全部兼容。</zh-CN><en>Totals distinguish inventory-integrity success from current unsupported and unresolved counts; passed means only that the matrix is readable, not that every API is compatible.</en></lang>
+      lines.push(`  - summary: ${manifest.summary.componentCount} components; ${manifest.summary.itemCount} API items; ${manifest.summary.dispositions.compatible} compatible; ${manifest.summary.dispositions.mapped} mapped; ${manifest.summary.dispositions.unsupported} unsupported; ${manifest.summary.unresolvedInventories} unresolved inventories; ${manifest.summary.issueCount} issues`);
+      for (const component of manifest.components) {
+        // <lang><zh-CN>逐组件行把 API-item summary 与 package easycom/type 交付分开，不输出 defaults、issue 正文或 source digest。</zh-CN><en>Each component line separates the API-item summary from package easycom and type delivery without emitting defaults, issue bodies, or source digests.</en></lang>
+        lines.push(`  - ${component.name} [${component.priority}]: ${component.summary.itemCount} API items; ${component.summary.dispositions.compatible}/${component.summary.dispositions.mapped}/${component.summary.dispositions.unsupported} compatible/mapped/unsupported; API-surface ${component.summary.migration}; package easycom ${component.summary.easycom}; types ${component.summary.types}`);
+      }
+    }
+    return lines;
+  }
+
   // <lang><zh-CN>只有固定 inspect kind 才能进入可读文本，防止未来未审计 details 被 formatter 意外输出。</zh-CN><en>Only fixed inspect kinds may enter human-readable text, preventing future unaudited details from being output accidentally by the formatter.</en></lang>
   return [];
 }
