@@ -16,7 +16,8 @@
 .u-steps__label { color: var(--u-comp-steps-label-foreground); font-size: var(--u-comp-steps-label-size); }
 .u-steps__description { color: var(--u-comp-steps-description-foreground); font-size: var(--u-comp-steps-description-size); }
 .u-steps__line { background: var(--u-comp-steps-line); flex: 1; height: var(--u-comp-steps-line-width); margin-top: calc(var(--u-comp-steps-indicator-size) / 2); }
-.u-steps--vertical .u-steps__line { height: auto; margin-left: calc(var(--u-comp-steps-indicator-size) / 2); min-height: var(--u-comp-steps-vertical-line-height); width: var(--u-comp-steps-line-width); }
+/* <lang><zh-CN>纵向连接线脱离 item 的横向 flex 主轴，并从当前圆点下缘延伸到下一项间距；否则 `flex: 1` 会把 1px 线错误拉成横向色块。</zh-CN><en>The vertical connector leaves the item's horizontal flex axis and extends from the current marker's lower edge through the next-item gap; otherwise `flex: 1` incorrectly stretches the 1px line into a horizontal block.</en></lang> */
+.u-steps--vertical .u-steps__line { position: absolute; top: var(--u-comp-steps-indicator-size); bottom: calc(var(--u-comp-steps-gap) * -1); left: calc((var(--u-comp-steps-indicator-size) - var(--u-comp-steps-line-width)) / 2); flex: none; height: auto; margin: 0; min-height: 0; width: var(--u-comp-steps-line-width); }
 
 /* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
 /* #ifdef MP-WEIXIN */
@@ -74,8 +75,9 @@
 }
 
 .u-steps--vertical .u-steps__line {
-  margin-left: calc(24px / 2);
-  min-height: 24px;
+  top: 24px;
+  bottom: calc(12px * -1);
+  left: calc((24px - 1px) / 2);
   width: 1px;
 }
 /* HIA-uView MP-Weixin literal fallback end. */

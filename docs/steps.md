@@ -10,3 +10,7 @@
 The root namespace is `u-steps` and consumes `--u-comp-steps-*`. Status is presentation input, not a conclusion about a real process.
 
 根命名空间为 `u-steps`，消费 `--u-comp-steps-*`。status 只是呈现输入，不是对真实流程的结论。
+
+In vertical direction, the connector remains aligned beneath the finite status marker and does not consume horizontal content width.
+
+在纵向模式下，连接线始终对齐在有限状态圆点下方，不占用横向正文宽度。

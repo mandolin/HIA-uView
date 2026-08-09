@@ -76,6 +76,8 @@ test('keeps P43 source inside overlay and navigation boundaries', async () => {
   assert.match(componentSources[2], /Array\.from/);
   assert.match(componentSources[3], /maskClosable/);
   assert.match(componentSources[4], /safeSteps/);
+  // <lang><zh-CN>纵向步骤连接线必须脱离横向 flex 主轴，防止 1px 连接线回归为占满正文宽度的色块。</zh-CN><en>The vertical steps connector must leave the horizontal flex axis, preventing the 1px connector from regressing into a block that fills content width.</en></lang>
+  assert.match(styleSources[4], /\.u-steps--vertical \.u-steps__line \{[^}]*position:\s*absolute;[^}]*flex:\s*none;/s);
   assert.match(componentSources[5], /modelValue/);
   assert.match(componentSources[6], /role="tablist"/);
   assert.match(componentSources[7], /isVisible/);
