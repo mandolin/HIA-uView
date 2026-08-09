@@ -94,6 +94,17 @@ function formatInspectionDetails(details) {
     return lines;
   }
 
+  if (details.kind === 'migration-actions') {
+    // <lang><zh-CN>迁移动作文本只呈现已验证的 operation、当前 disposition、选择 locale 后的 guidance/limitation 与 docs 相对路径；它不生成 patch 或打开文档正文。</zh-CN><en>Migration-action text presents only verified operation, current disposition, locale-selected guidance/limitation, and docs relative paths; it generates no patch and opens no documentation body.</en></lang>
+    for (const manifest of details.manifests) {
+      lines.push(`- ${manifest.path}: ${manifest.summary.actionCount} actions; ${manifest.summary.dispositions.compatible}/${manifest.summary.dispositions.mapped}/${manifest.summary.dispositions.unsupported} compatible/mapped/unsupported; matrix ${manifest.apiCompatibilityManifest}`);
+      for (const action of manifest.actions) {
+        lines.push(`  - ${action.id} [${action.priority}; ${action.disposition}; ${action.operation}]: ${action.guidance} Limits: ${action.limitations} Docs: ${action.docs.join(', ')}`);
+      }
+    }
+    return lines;
+  }
+
   // <lang><zh-CN>只有固定 inspect kind 才能进入可读文本，防止未来未审计 details 被 formatter 意外输出。</zh-CN><en>Only fixed inspect kinds may enter human-readable text, preventing future unaudited details from being output accidentally by the formatter.</en></lang>
   return [];
 }

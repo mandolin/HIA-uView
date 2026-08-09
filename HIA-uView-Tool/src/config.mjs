@@ -20,7 +20,8 @@ const allowedConfigurationFields = new Set([
   'componentManifests',
   'adoptionManifests',
   'compatibilityManifests',
-  'apiCompatibilityManifests'
+  'apiCompatibilityManifests',
+  'migrationActionManifests'
 ]);
 
 /**
@@ -157,6 +158,9 @@ export function validateConfiguration(configuration) {
 
   // <lang><zh-CN>API compatibility manifest 是独立于平台 evidence 的可选输入；即使未请求对应 inspect，也先拒绝越界、URI 或重复路径。</zh-CN><en>API-compatibility manifests are optional inputs separate from platform evidence; reject escaping, URI, or duplicate paths even before the corresponding inspect is requested.</en></lang>
   validateManifestPathArray(configuration.apiCompatibilityManifests, 'apiCompatibilityManifests', 'API_COMPATIBILITY_MANIFESTS', 'API_COMPATIBILITY_MANIFEST', diagnostics, false);
+
+  // <lang><zh-CN>迁移动作包与 API matrix 分开显式声明；预校验路径保证只读报告不能借 action 文案扩大文件读取范围。</zh-CN><en>Migration-action packets are explicitly declared separately from API matrices; path prevalidation ensures the read-only report cannot expand file-read scope through action copy.</en></lang>
+  validateManifestPathArray(configuration.migrationActionManifests, 'migrationActionManifests', 'MIGRATION_ACTION_MANIFESTS', 'MIGRATION_ACTION_MANIFEST', diagnostics, false);
 
   return diagnostics;
 }

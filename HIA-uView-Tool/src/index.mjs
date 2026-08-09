@@ -2,7 +2,8 @@ import { createDiagnostic, loadConfiguration } from './config.mjs';
 import { loadAdoptionManifest } from './adoption.mjs';
 import { loadCompatibilityManifest } from './compatibility.mjs';
 import { loadApiCompatibilityManifest } from './api-compatibility.mjs';
-import { createApiCompatibilityInspection, createCompatibilityInspection, createComponentInspection } from './inspect.mjs';
+import { loadMigrationActionManifest } from './migration-actions.mjs';
+import { createApiCompatibilityInspection, createCompatibilityInspection, createComponentInspection, createMigrationActionInspection } from './inspect.mjs';
 import { loadComponentManifest } from './metadata.mjs';
 import { createReport, formatReport, getExitCode } from './report.mjs';
 
@@ -64,8 +65,8 @@ export function parseInvocation(argv) {
   if (command === 'check' && (positionals.length > 1 || !['contract', 'adoption'].includes(target))) {
     diagnostics.push(createDiagnostic('INVOCATION_TARGET_INVALID', 'Command "check" target must be "contract" or "adoption".', 'invocation'));
   }
-  if (command === 'inspect' && (positionals.length !== 1 || !['api-compatibility', 'components', 'compatibility'].includes(target))) {
-    diagnostics.push(createDiagnostic('INVOCATION_TARGET_INVALID', 'Command "inspect" target must be "api-compatibility", "components", or "compatibility".', 'invocation'));
+  if (command === 'inspect' && (positionals.length !== 1 || !['api-compatibility', 'components', 'compatibility', 'migration-actions'].includes(target))) {
+    diagnostics.push(createDiagnostic('INVOCATION_TARGET_INVALID', 'Command "inspect" target must be "api-compatibility", "components", "compatibility", or "migration-actions".', 'invocation'));
   }
 
   return { command, target, configurationPath, diagnostics };
@@ -213,6 +214,32 @@ export async function executeToolCommand(argv, rootDirectory = process.cwd()) {
       ];
       // <lang><zh-CN>投影只包含已校验矩阵的公开 metadata 与现场派生统计，不读取 target 文件或信任 manifest 自报 summary。</zh-CN><en>The projection contains only validated public matrix metadata and locally derived counts; it reads no target file and trusts no manifest-reported summary.</en></lang>
       const details = createApiCompatibilityInspection(apiCompatibilityManifests);
+      return createReport(invocation.command, configuration, diagnostics, details);
+    }
+
+    if (invocation.command === 'inspect' && invocation.target === 'migration-actions') {
+      // <lang><zh-CN>动作包必须显式声明；缺失是项目 metadata 诊断，Tool 不从 matrix 自动臆测调用方应修改什么。</zh-CN><en>Action packets must be explicitly declared; absence is a project-metadata diagnostic, and the Tool never guesses what callers should modify from a matrix.</en></lang>
+      const actionPaths = configuration.migrationActionManifests ?? [];
+      if (actionPaths.length === 0) {
+        return createReport(invocation.command, configuration, [
+          ...runtimeDiagnostics,
+          createDiagnostic('MIGRATION_ACTION_MANIFESTS_MISSING', 'Configuration must declare at least one migration action manifest for "inspect migration-actions".')
+        ]);
+      }
+      // <lang><zh-CN>先加载同一配置白名单中的 API matrix；action loader 只关联其内存 record，不打开 action 指向的 docs/source。</zh-CN><en>Loads API matrices from the same configuration allowlist first; the action loader links only their in-memory records and opens no docs/source named by actions.</en></lang>
+      const componentManifests = await loadConfiguredComponentManifests(rootDirectory, configuration);
+      const matrixPaths = configuration.apiCompatibilityManifests ?? [];
+      const apiCompatibilityManifests = await Promise.all(matrixPaths.map((manifestPath) => loadApiCompatibilityManifest(rootDirectory, manifestPath, configuration, componentManifests.byPath)));
+      // <lang><zh-CN>只把无诊断 matrix 放进 action 索引，避免 action report 对不完整 API inventory 产生可信建议。</zh-CN><en>Places only diagnostic-free matrices in the action index, preventing an action report from producing trusted guidance over an incomplete API inventory.</en></lang>
+      const matrices = new Map(apiCompatibilityManifests.filter((entry) => entry.diagnostics.length === 0 && entry.manifest).map((entry) => [entry.path, entry]));
+      const actionManifests = await Promise.all(actionPaths.map((manifestPath) => loadMigrationActionManifest(rootDirectory, manifestPath, configuration, matrices)));
+      const diagnostics = [
+        ...runtimeDiagnostics,
+        ...collectDiagnostics(componentManifests.entries),
+        ...collectDiagnostics(apiCompatibilityManifests),
+        ...collectDiagnostics(actionManifests)
+      ];
+      const details = createMigrationActionInspection(actionManifests, configuration.locale);
       return createReport(invocation.command, configuration, diagnostics, details);
     }
 

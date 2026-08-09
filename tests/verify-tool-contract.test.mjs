@@ -6,8 +6,8 @@ import { executeToolCommand, runToolCli } from '../HIA-uView-Tool/src/index.mjs'
 
 /**
  * @module verify-tool-contract.test
- * @lang zh-CN 验证 Tool 的只读 doctor/check/inspect 配置、component/adoption/platform/API compatibility manifest、退出码和输出隐私边界；测试不通过子进程、网络或源码扫描掩盖实现范围。
- * @lang en Verifies Tool read-only doctor, check, and inspect configuration, component/adoption/platform/API-compatibility manifests, exit codes, and output privacy boundary; tests do not mask implementation scope through subprocess, network, or source scanning.
+ * @lang zh-CN 验证 Tool 的只读 doctor/check/inspect 配置、component/adoption/platform/API compatibility/迁移动作 manifest、退出码和输出隐私边界；测试不通过子进程、网络或源码扫描掩盖实现范围。
+ * @lang en Verifies Tool read-only doctor, check, and inspect configuration, component/adoption/platform/API-compatibility/migration-action manifests, exit codes, and output privacy boundary; tests do not mask implementation scope through subprocess, network, or source scanning.
  */
 
 /**
@@ -103,7 +103,7 @@ test('rejects escaping invocation, broken contracts, and forbidden adoption fiel
  */
 test('keeps all Tool source free of execution, runtime, and business imports', async () => {
   // <lang><zh-CN>明确列出全部 Tool 源文件，避免递归文件发现本身掩盖或扩大此静态门禁范围。</zh-CN><en>List every Tool source file explicitly, avoiding recursive file discovery that could itself hide or expand this static-gate scope.</en></lang>
-  const sourceFiles = ['config.mjs', 'metadata.mjs', 'adoption.mjs', 'compatibility.mjs', 'api-compatibility.mjs', 'inspect.mjs', 'report.mjs', 'index.mjs', 'cli.mjs'];
+  const sourceFiles = ['config.mjs', 'metadata.mjs', 'adoption.mjs', 'compatibility.mjs', 'api-compatibility.mjs', 'migration-actions.mjs', 'inspect.mjs', 'report.mjs', 'index.mjs', 'cli.mjs'];
   // <lang><zh-CN>源文本仅用于禁止模式 sentinel，不作为 Tool 运行时输入或 inspect 输出。</zh-CN><en>Source text is used only for forbidden-pattern sentinels and is not Tool runtime input or inspect output.</en></lang>
   const source = await Promise.all(sourceFiles.map((fileName) => readFile(resolve('HIA-uView-Tool/src', fileName), 'utf8')));
   const combined = source.join('\n');

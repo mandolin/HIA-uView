@@ -38,6 +38,10 @@ Text output provides a stable summary and one line per component. Configure `rep
 
 text 输出提供稳定汇总和每组件一行的摘要。需要查看声明范围内的完整记录时，将 `report.format` 配置为 `json`。命令成功只表示这些声明范围结构完整、内部一致；并不表示 unsupported 或 unresolved 数量为零。
 
+For reviewed caller guidance over a deliberately smaller part of this matrix, use the separate read-only [migration action packet](migration-actions.md). It cross-checks declared item priority/disposition and scope coverage, but does not scan or modify a consumer project.
+
+如需获取本矩阵中经审阅、范围刻意更小的调用方指引，请使用独立的只读[迁移动作包](migration-actions.md)。它会交叉核对声明 item 的 priority/disposition 及 scope coverage，但不会扫描或修改 consumer project。
+
 ## Declared scopes / 声明范围
 
 The props inventory covers runtime option facts: type set and declaration order, required state, controlled default classification, and an opaque validator-presence digest where applicable. Event, slot, and imperative inventories are explicitly `names-only`; runtime aliases are limited to declared aliases. `complete` therefore means complete only within the container's recorded scope.

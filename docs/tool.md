@@ -1,8 +1,8 @@
 # HIA-uView-Tool contract / HIA-uView-Tool 工具契约
 
-> Status / 状态：Private read-only `doctor`、`check contract`、`check adoption`、`inspect components`、`inspect compatibility` 与 `inspect api-compatibility` commands are implemented. `scaffold component` remains reserved, and `@hia-uview/tool` has no published package export.
+> Status / 状态：Private read-only `doctor`、`check contract`、`check adoption`、`inspect components`、`inspect compatibility`、`inspect api-compatibility` 与 `inspect migration-actions` commands are implemented. `scaffold component` remains reserved, and `@hia-uview/tool` has no published package export.
 
-> 私有只读 `doctor`、`check contract`、`check adoption`、`inspect components`、`inspect compatibility` 与 `inspect api-compatibility` 命令已经实现。`scaffold component` 仍为预留命令，且 `@hia-uview/tool` 尚未作为 npm 包导出。
+> 私有只读 `doctor`、`check contract`、`check adoption`、`inspect components`、`inspect compatibility`、`inspect api-compatibility` 与 `inspect migration-actions` 命令已经实现。`scaffold component` 仍为预留命令，且 `@hia-uview/tool` 尚未作为 npm 包导出。
 
 HIA-uView-Tool is a development-time companion for checking and inspecting HIA-uView-UI metadata. It is never an application, UI-component, or business-framework runtime dependency. It is not a HIA-uView-Biz helper: business modules, API/adapter/Directus/identity helpers, pages, domain configuration, and related CLI work belong in HIA-uView-Biz `main-repo`.
 
@@ -22,6 +22,7 @@ The executable name is `hia-uview-tool`. Every implemented command consumes only
 | `inspect components` | Produces a text or JSON report of declared component metadata and diagnostics. / 生成已声明组件元数据和诊断的 text/JSON 报告。 | Read-only. / 只读。 |
 | `inspect compatibility` | Reports declared verified and unverified compatibility evidence without upgrading it to device or release evidence. / 报告声明的已验证与未验证兼容性 evidence，不将其升级为设备或发布证据。 | Read-only. / 只读。 |
 | `inspect api-compatibility` | Reports the versioned component API/migration inventory and derives current compatible/mapped/unsupported/unresolved counts. / 报告版本化组件 API/迁移盘点，并现场派生 compatible/mapped/unsupported/unresolved 计数。 | Read-only. / 只读。 |
+| `inspect migration-actions` | Reports explicitly reviewed, scope-complete caller guidance cross-checked against a declared API matrix. / 报告经显式审阅、对声明 scope 完整且与 API matrix 交叉核对的调用方指引。 | Read-only; never applies a migration. / 只读；绝不应用迁移。 |
 | `scaffold component` | Reserved for a future component skeleton generator. / 为未来组件骨架生成器预留。 | Must require explicit `--write`; its default is dry-run. / 必须要求显式 `--write`；默认 dry-run。 |
 
 No command may execute project scripts, template expressions, package-manager commands, Git commands, network requests, subprocesses, builds, or DevTools. A future write command must declare every target relative to the selected project root, refuse unsafe or existing targets by default, and show a dry-run plan before writing.
@@ -44,7 +45,8 @@ The configuration file is `hia-uview.config.json`. It is JSON validated by a ver
   "componentManifests": ["HIA-uView-UI/hia-uview.components.json"],
   "adoptionManifests": [],
   "compatibilityManifests": ["HIA-uView-UI/hia-uview.compatibility.json"],
-  "apiCompatibilityManifests": ["HIA-uView-UI/hia-uview.api-compatibility.json"]
+  "apiCompatibilityManifests": ["HIA-uView-UI/hia-uview.api-compatibility.json"],
+  "migrationActionManifests": ["HIA-uView-UI/hia-uview.migration-actions.json"]
 }
 ```
 
@@ -123,6 +125,16 @@ props scope 记录受限 runtime option 事实，而 event、slot 与 imperative
 `inspect api-compatibility` derives totals from validated records and does not trust a manifest-provided summary. An exit code of `0` means the inventory structure, ordering, cross-links, and issue references are valid. Current `unsupported` or issue-backed `unresolved` results remain visible facts and do not by themselves fail the Tool or imply that an implementation change has already been made. The complete schema and immutable comparison boundary are documented in [API compatibility inventory](api-compatibility.md).
 
 `inspect api-compatibility` 会从已校验记录现场派生统计，不信任 manifest 自报 summary。退出码 `0` 表示盘点结构、排序、关联和 issue 引用有效。当前 `unsupported` 或有 issue 依据的 `unresolved` 仍是可见事实，它们本身不会让 Tool 失败，也不表示实现已经改变。完整 schema 与 immutable 比较边界见 [API 兼容盘点](api-compatibility.md)。
+
+## Migration action packets / 迁移动作包
+
+`inspect migration-actions` reads one or more configuration-declared action packets and their explicitly declared API matrix. Each action must point to an existing matrix item with the same priority and disposition; all items in the packet's component/priority scope must appear exactly once. The report selects its existing bilingual guidance and relative documentation links, but never reads those documentation bodies or an application.
+
+`inspect migration-actions` 读取一个或多个 configuration 明示的动作包及其显式声明的 API matrix。每个 action 必须指向已有 matrix item，且 priority 与 disposition 必须一致；动作包 component/priority scope 内的所有 item 必须恰好出现一次。报告只选择既有的双语 guidance 和相对 documentation link，但绝不读取这些 documentation body 或 application。
+
+The action report is a constrained planning aid, not a source scanner, automatic rewrite, migration-completion judgment, or support promise. Its current packet scope and its finite operations are documented in [Migration action packets](migration-actions.md).
+
+动作报告是受约束的规划辅助资料，不是 source scanner、自动重写工具、迁移完成判断或支持承诺。当前动作包的 scope 及有限 operation 见 [迁移动作包](migration-actions.md)。
 
 ## Results and exit codes / 结果与退出码
 

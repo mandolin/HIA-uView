@@ -14,5 +14,8 @@
   ],
   "apiCompatibilityManifests": [
     "HIA-uView-UI/hia-uview.api-compatibility.json"
+  ],
+  "migrationActionManifests": [
+    "HIA-uView-UI/hia-uview.migration-actions.json"
   ]
 }

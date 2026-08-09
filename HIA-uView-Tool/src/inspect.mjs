@@ -219,3 +219,47 @@ export function createApiCompatibilityInspection(apiCompatibilityManifests) {
     })
   };
 }
+
+/**
+ * @lang zh-CN 将有效迁移动作包投影为 locale 已选择的安全动作报告；它不读取引用的文档、组件或应用文件。
+ * @lang en Projects valid migration-action packets into a locale-selected safe action report. It reads no referenced documentation, component, or application file.
+ * @param {Array<object>} actionManifests <lang><zh-CN>已加载迁移动作包结果。</zh-CN><en>Loaded migration-action packet results.</en></lang>
+ * @param {'zh-Hans'|'en'} locale <lang><zh-CN>configuration 已验证的报告 locale。</zh-CN><en>Report locale validated by configuration.</en></lang>
+ * @returns {object} <lang><zh-CN>仅含安全 action metadata 的 inspect details。</zh-CN><en>Inspect details containing only safe action metadata.</en></lang>
+ */
+export function createMigrationActionInspection(actionManifests, locale) {
+  // <lang><zh-CN>无诊断且含 manifest 的 entry 才能进入报告，防止不完整 action 被呈现为可执行迁移建议。</zh-CN><en>Only diagnostic-free entries containing a manifest may enter the report, preventing incomplete actions from being presented as actionable migration guidance.</en></lang>
+  const validEntries = actionManifests.filter((entry) => entry.diagnostics.length === 0 && entry.manifest);
+  // <lang><zh-CN>按安全相对路径排序多个声明包，保持跨主机 text/JSON 输出稳定。</zh-CN><en>Sorts multiple declared packets by safe relative path, keeping cross-host text/JSON output stable.</en></lang>
+  const orderedEntries = sortByPath(validEntries);
+
+  return {
+    kind: 'migration-actions',
+    manifests: orderedEntries.map((entry) => {
+      // <lang><zh-CN>逐 action 选择已存在的双语文本，并只复制 ID、当前 matrix fact、公开 docs 相对路径与有限操作。</zh-CN><en>Selects existing bilingual text per action and copies only IDs, current matrix facts, public docs relative paths, and finite operations.</en></lang>
+      const actions = entry.manifest.actions.map((action) => ({
+        id: action.id,
+        component: action.component,
+        itemId: action.itemId,
+        priority: action.priority,
+        disposition: action.disposition,
+        operation: action.operation,
+        guidance: action.guidance[locale],
+        limitations: action.limitations[locale],
+        docs: [...action.docs]
+      }));
+      // <lang><zh-CN>summary 由已验证 actions 现场派生，不信任 manifest 自报总数。</zh-CN><en>The summary is derived live from validated actions and trusts no manifest-reported total.</en></lang>
+      const dispositions = { compatible: 0, mapped: 0, unsupported: 0 };
+      for (const action of actions) dispositions[action.disposition] += 1;
+      return {
+        path: entry.path,
+        version: entry.manifest.version,
+        profile: entry.manifest.profile,
+        apiCompatibilityManifest: entry.manifest.apiCompatibilityManifest,
+        scope: structuredClone(entry.manifest.scope),
+        summary: { actionCount: actions.length, dispositions },
+        actions
+      };
+    })
+  };
+}
