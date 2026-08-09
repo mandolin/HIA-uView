@@ -20,6 +20,7 @@ The dependencies in this section are accepted only for the controlled local deve
 | `@dcloudio/vite-plugin-uni` | `3.0.0-5010520260709002`; `sha512-HynSNsicIj8KJ9OztI3hVcU7inFw/vzQGauqfzlLV+yBNRhAGqxx9WKN/NZiN6HVpOc8xTyICr0x4XlI7r7f7A==` | Apache-2.0 | Official UniApp Vite compiler plugin for the local fixture; development only. |
 | `vite` | `5.2.8`; `sha512-OyZR+c1CE8yeHw5V5t59aXsUPPVTHMDjEZz8MgguLL/Q7NblxhZUlTu9xSPqlsUO/y+X7dlU05jdhvyycD55DA==` | MIT | Exact Vite peer aligned with the recorded official compiler fixture; development only. |
 | `vue` | `3.4.21`; `sha512-5hjyV/jLEIKD/jYl4cavMcnzKwjMKohureP8ejn3hhEjwhWIhWeuzL2kJAjzl/WyVsgPY56Sy4Z40C3lVshxXA==` | MIT | Exact Vue compiler version aligned with the recorded official fixture; development only. |
+| `typescript` | `5.7.3`; `sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==` | Apache-2.0 | Verifies the private package-owned declaration entry and disposable local-consumer fixture; root development only and never a UI/Tool runtime dependency or published bundle requirement. |
 
 ## Development runtime-test dependencies
 

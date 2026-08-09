@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "profile": "uniapp-vue3-mp-weixin",
+  "easycom": {
+    "autoscan": false,
+    "custom": {
+      "^u-(.*)": "@/node_modules/@hia-uview/ui/src/components/u-$1/u-$1.vue"
+    }
+  }
+}

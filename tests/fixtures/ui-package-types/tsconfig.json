@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": "../../..",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "strict": true,
+    "target": "ES2022",
+    "paths": {
+      "@hia-uview/ui": [
+        "HIA-uView-UI/types/index.d.ts"
+      ],
+      "@hia-uview/ui/global": [
+        "HIA-uView-UI/types/global-components.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "consumer.ts"
+  ]
+}

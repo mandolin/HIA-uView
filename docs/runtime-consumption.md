@@ -21,9 +21,9 @@ For the current private UniApp Vue 3 `mp-weixin` profile, resolve `u-*` tags thr
 }
 ```
 
-The path above is the repository-local source-root form used by the compile fixture. A future published package may expose a different stable path; this document makes no external package-path guarantee before that release decision.
+The path above is the repository-local source-root form used by the compile fixture. The private package trial separately provides an explicit static fragment at `@hia-uview/ui/easycom/mp-weixin.json`; its consumer-owned merge path is documented in [private package consumption](private-package-consumption.md). Neither form is a general auto-import or package-release compatibility promise.
 
-上面的路径是编译 fixture 使用的仓内 source-root 形式。未来发布的包可能暴露不同的稳定路径；在发布决策前，本文不对外部包路径作保证。
+上面的路径是编译 fixture 使用的仓内 source-root 形式。私有包试用另外在 `@hia-uview/ui/easycom/mp-weixin.json` 提供显式静态片段；其消费者自有的合并路径见[私有包消费](private-package-consumption.md)。两种形式都不是通用自动导入或包发布兼容性承诺。
 
 ## Named import and explicit plugin boundary / 命名导入与显式 plugin 边界
 
@@ -44,6 +44,10 @@ void [UButton, UCheckbox, UCheckboxGroup, URadio, URadioGroup];
 Import the HIA complete style entry from application-owned global style setup. It contains the default light-theme tokens and current component rules, including the global rules required by the WeChat Mini Program compilation path. The runtime module and plugin never inject it automatically.
 
 在应用自有的全局样式设置中导入 HIA 完整样式入口。它包含默认浅色主题 token 和当前组件规则，其中也包含微信小程序编译路径所需的全局规则。runtime module 与 plugin 绝不自动注入它。
+
+The private package also provides package-owned TypeScript declarations and an optional, limited `@hia-uview/ui/global` template augmentation. See [private package consumption](private-package-consumption.md) for its exact scope; it is compile-time only and does not change this explicit runtime/style boundary.
+
+私有包还提供 package-owned TypeScript declaration 和可选、有限的 `@hia-uview/ui/global` template augmentation。其精确范围见[私有包消费](private-package-consumption.md)；它只发生在编译期，不会改变此处的显式 runtime/style 边界。
 
 ```css
 @import "@hia-uview/ui/style.css";

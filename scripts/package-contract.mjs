@@ -29,13 +29,21 @@ const expectedPackageMetadata = [
 const packagesWithoutRuntimeDependencies = new Set(['@hia-uview/ui', '@hia-uview/tool']);
 
 /**
- * @lang zh-CN UI 私有 runtime entry 在当前实现阶段必须公开的 source export 映射；这些映射不是已发布的 semver 兼容性承诺。
- * @lang en Source export mappings that the private UI runtime entry must expose in the current implementation stage; these mappings are not a published semver compatibility commitment.
+ * @lang zh-CN UI 私有预发布包必须公开的显式 export 映射；这些映射不是已发布的 semver 兼容性承诺。
+ * @lang en Explicit export mappings that the private pre-release UI package must expose; these mappings are not a published semver compatibility commitment.
  */
 const expectedUiExports = {
-  '.': './src/index.mjs',
+  '.': {
+    types: './types/index.d.ts',
+    default: './src/index.mjs'
+  },
+  './global': {
+    types: './types/global-components.d.ts',
+    default: './types/global-components.mjs'
+  },
   './style.css': './src/style.css',
-  './theme/hia-light.css': './src/theme/hia-light.css'
+  './theme/hia-light.css': './src/theme/hia-light.css',
+  './easycom/mp-weixin.json': './easycom/mp-weixin.json'
 };
 
 /**
@@ -174,7 +182,15 @@ export async function validatePackageContracts(rootDirectory = process.cwd()) {
     }
 
     if (packageJson.name === '@hia-uview/ui' && JSON.stringify(packageJson.exports) !== JSON.stringify(expectedUiExports)) {
-      issues.push('HIA-uView-UI must expose only the documented private runtime and explicit style entries.');
+      issues.push('HIA-uView-UI must expose only the documented private runtime, type, static Easycom, and explicit style entries.');
+    }
+
+    if (packageJson.name === '@hia-uview/ui' && packageJson.types !== './types/index.d.ts') {
+      issues.push('HIA-uView-UI must expose its package-owned TypeScript entry at ./types/index.d.ts.');
+    }
+
+    if (packageJson.name === '@hia-uview/ui' && packageJson.peerDependencies?.vue !== '>=3.4.0 <4.0.0') {
+      issues.push('HIA-uView-UI must declare the documented Vue peer range.');
     }
   }
 
