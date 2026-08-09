@@ -312,6 +312,87 @@ describe('UNavBar runtime behavior', () => {
 });
 
 /**
+ * @lang zh-CN 验证受控输入族只回传调用方拥有的本地意图；它们不创建查询、校验、提交、持久化或导航流程。
+ * @lang en Verifies that the controlled-input family returns only caller-owned local intent; it creates no query, validation, submission, persistence, or navigation flow.
+ */
+describe('controlled input migration runtime behavior', () => {
+  /**
+   * @lang zh-CN 验证 UInput 显示数字初值、只读时不写回值，并保留启用状态的 click/confirm 本地观察。
+   * @lang en Verifies that UInput displays a numeric initial value, does not write back while readonly, and retains enabled click/confirm local observation.
+   * @returns {Promise<void>} <lang><zh-CN>无返回值；异步事件触发与断言完成后解决。</zh-CN><en>No return value; resolves after asynchronous event triggers and assertions complete.</en></lang>
+   */
+  it('keeps UInput numeric display and readonly interaction bounded', async () => {
+    // <lang><zh-CN>readonly 实例用数字初值验证 prop 接受范围，同时不安装表单、validator 或平台 service。</zh-CN><en>The readonly instance uses a numeric initial value to verify the prop acceptance range and installs no form, validator, or platform service.</en></lang>
+    const input = mount(UInput, { props: { modelValue: 42, readonly: true } });
+
+    // <lang><zh-CN>原生 input 属性必须保留可见数字，并以 readonly 表明不能产生受控写回。</zh-CN><en>The native input attribute must retain the visible number and use readonly to indicate it cannot produce controlled writeback.</en></lang>
+    const nativeInput = input.get('input.u-input');
+    expect(nativeInput.element.value).toBe('42');
+    expect(nativeInput.attributes()).toHaveProperty('readonly');
+
+    // <lang><zh-CN>直接触发 input 用于验证 handler guard，避免测试只依赖浏览器/小程序原生 readonly 行为。</zh-CN><en>Directly triggers input to verify the handler guard, avoiding a test that depends only on browser or Mini Program native readonly behavior.</en></lang>
+    await nativeInput.trigger('input', { detail: { value: '43' } });
+    expect(input.emitted('update:modelValue')).toBeUndefined();
+    expect(input.emitted('input')).toBeUndefined();
+
+    // <lang><zh-CN>click/confirm 只是启用表面的原始本地观察，不写回值、不校验也不提交。</zh-CN><en>Click/confirm are only raw local observations of an enabled surface and neither write back, validate, nor submit a value.</en></lang>
+    await nativeInput.trigger('click');
+    await nativeInput.trigger('confirm');
+    expect(input.emitted('click')).toHaveLength(1);
+    expect(input.emitted('confirm')).toHaveLength(1);
+  });
+
+  /**
+   * @lang zh-CN 验证 USearch 和 UTextarea 在一次编辑中按固定顺序报告 update、input、change，并将 click 保持为本地观察。
+   * @lang en Verifies that USearch and UTextarea report update, input, and change in fixed order for one edit and retain click as local observation.
+   * @returns {Promise<void>} <lang><zh-CN>无返回值；异步事件触发与断言完成后解决。</zh-CN><en>No return value; resolves after asynchronous event triggers and assertions complete.</en></lang>
+   */
+  it('reports search and multiline changes without starting application work', async () => {
+    // <lang><zh-CN>查询实例只提供受控初值；测试不绑定 fetch、定时器、router 或业务筛选。</zh-CN><en>The search instance provides only a controlled initial value; the test binds no fetch, timer, router, or business filter.</en></lang>
+    const search = mount(USearch, { props: { modelValue: 'old' } });
+
+    // <lang><zh-CN>原生输入候选值应在三个事件中保持一致，允许调用方选择任何一个受控观察入口。</zh-CN><en>The native input candidate value must remain equal in all three events, allowing the caller to choose any controlled observation entry.</en></lang>
+    await search.get('input.u-search__input').trigger('input', { detail: { value: 'next' } });
+    expect(search.emitted('update:modelValue')).toEqual([['next']]);
+    expect(search.emitted('input')).toEqual([['next']]);
+    expect(search.emitted('change')).toEqual([['next']]);
+
+    // <lang><zh-CN>根点击只产生一次 click 观察；它不会调用 search action 或改变受控值。</zh-CN><en>A root click produces only one click observation; it invokes no search action and changes no controlled value.</en></lang>
+    await search.get('.u-search').trigger('click');
+    expect(search.emitted('click')).toHaveLength(1);
+    expect(search.emitted('search')).toBeUndefined();
+
+    // <lang><zh-CN>多行实例复用同一受控事件顺序，但不创建独立模型副本或异步任务。</zh-CN><en>The multiline instance reuses the same controlled event order but creates no independent model copy or asynchronous task.</en></lang>
+    const textarea = mount(UTextarea, { props: { modelValue: 'old' } });
+    await textarea.get('textarea.u-textarea__field').trigger('input', { detail: { value: 'next' } });
+    expect(textarea.emitted('update:modelValue')).toEqual([['next']]);
+    expect(textarea.emitted('input')).toEqual([['next']]);
+    expect(textarea.emitted('change')).toEqual([['next']]);
+    await textarea.get('.u-textarea').trigger('click');
+    expect(textarea.emitted('click')).toHaveLength(1);
+  });
+
+  /**
+   * @lang zh-CN 验证 field 与 form-item 只呈现标签、必填提示和调用方 slot，不获得模型或字段重置职责。
+   * @lang en Verifies that field and form-item present only label, required cue, and caller slot and acquire no model or field-reset responsibility.
+   */
+  it('keeps field structures presentational', () => {
+    // <lang><zh-CN>两个结构实例显式提供数字零文本与 caller slot，确认呈现不依赖模型或 validator。</zh-CN><en>The two structural instances explicitly provide zero-like text and caller slots, confirming presentation has no dependency on a model or validator.</en></lang>
+    const field = mount(UField, { props: { label: 'Field label', required: true }, slots: { default: '<text>Caller control</text>' } });
+    const formItem = mount(UFormItem, { props: { label: 'Item label', required: true }, slots: { default: '<text>Caller content</text>' } });
+
+    expect(field.text()).toContain('Field label');
+    expect(field.text()).toContain('*');
+    expect(field.text()).toContain('Caller control');
+    expect(field.emitted()).toEqual({});
+    expect(formItem.text()).toContain('Item label');
+    expect(formItem.text()).toContain('*');
+    expect(formItem.text()).toContain('Caller content');
+    expect(formItem.emitted()).toEqual({});
+  });
+});
+
+/**
  * @lang zh-CN 验证 UCell 为 clickable 行输出原生 control、仅在未 disabled 时 emit click，并让禁用状态保留非颜色类。
  * @lang en Verifies that UCell renders a native control for a clickable row, emits click only while not disabled, and retains a non-color class for disabled state.
  */

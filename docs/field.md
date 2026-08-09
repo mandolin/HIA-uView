@@ -21,6 +21,10 @@
 
 `UField` 有一个用于应用自有控件（例如 `UInput`）的默认插槽。该插槽仍自行负责其值、禁用状态、原生属性和事件。`UField` 不触发事件，也不拦截或转换插槽控件的事件。
 
+The `label` and `required` props are presentation-compatible with their recorded upstream names only. They do not turn `UField` into a controlled input, forward `disabled` or `readonly`, or expose upstream input/confirm/click events.
+
+`label` 和 `required` 属性仅在呈现意义上与已记录的上游名称兼容。它们不会将 `UField` 变成受控输入、转发 `disabled` 或 `readonly`，也不会暴露上游的输入/确认/点击事件。
+
 ## Composition and validation boundary / 组合与校验边界
 
 The proposed structure renders the visible label and optional required marker before the default slot, retains optional help text, and composes `UValidationMessage` below it. A validation message is visible only when `validationState` is `validating` or `error` and `validationMessage` is non-empty. The application chooses whether and when to change these props, including all asynchronous validation, cancellation, retry, submission, and error-recovery behavior.

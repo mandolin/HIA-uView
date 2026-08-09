@@ -203,11 +203,21 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-empty|props|text',
   'u-icon|props|label',
   'u-image|props|src',
+  'u-input|props|disabled',
+  'u-input|props|modelValue',
+  'u-input|props|readonly',
   'u-pagination|props|modelValue',
   'u-pagination|props|pageSize',
   'u-pagination|props|total',
+  'u-search|props|disabled',
+  'u-search|props|modelValue',
   'u-text|props|show',
-  'u-text|props|text'
+  'u-text|props|text',
+  'u-textarea|props|readonly',
+  'u-field|props|label',
+  'u-field|props|required',
+  'u-form-item|props|label',
+  'u-form-item|props|required'
 ]);
 
 /**

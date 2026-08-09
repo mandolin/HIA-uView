@@ -88,6 +88,8 @@
           :model-value="catalogQuery"
           placeholder="输入样例文字 / Enter sample text"
           @update:model-value="updateCatalogQuery"
+          @click="recordFixturePresentationIntent('input-click')"
+          @confirm="recordFixturePresentationIntent('input-confirm')"
         />
       </u-field>
 
@@ -99,6 +101,8 @@
             placeholder="输入备注 / Enter a note"
             :show-count="true"
             @update:model-value="updateFixtureTextareaValue"
+            @change="recordFixturePresentationIntent('textarea-change')"
+            @click="recordFixturePresentationIntent('textarea-click')"
           />
         </u-form-item>
         <u-form-item label="本地开关 / Local switch">
@@ -111,7 +115,15 @@
           <u-rate :model-value="fixtureRateValue" @update:model-value="updateFixtureRateValue" />
         </u-form-item>
         <u-form-item label="受控查询 / Controlled search">
-          <u-search :model-value="catalogQuery" show-action action-text="查询 / Search" @update:model-value="updateCatalogQuery" @search="handleFixtureSearch" />
+          <u-search
+            :model-value="catalogQuery"
+            show-action
+            action-text="查询 / Search"
+            @update:model-value="updateCatalogQuery"
+            @change="recordFixturePresentationIntent('search-change')"
+            @click="recordFixturePresentationIntent('search-click')"
+            @search="handleFixtureSearch"
+          />
         </u-form-item>
       </u-form>
 

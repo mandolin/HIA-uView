@@ -14,9 +14,12 @@
     :value="modelValue"
     :placeholder="placeholder"
     :disabled="disabled"
+    :readonly="readonly"
     @input="handleInput"
     @focus="handleFocus"
     @blur="handleBlur"
+    @click="handleClick"
+    @confirm="handleConfirm"
   />
 </template>
 
@@ -28,11 +31,11 @@ defineOptions({
   name: 'u-input'
 });
 
-// <lang><zh-CN>受控输入只接受应用自有字符串、提示文字和禁用意图；它不接收规则、回调、样式逃生口或平台能力开关。</zh-CN><en>The controlled input accepts only application-owned strings, hint text, and disabled intent; it accepts no rules, callbacks, style escape hatches, or platform-capability switches.</en></lang>
+// <lang><zh-CN>受控输入只接受应用自有的字符串或数字、提示文字和本地可用性意图；它不接收规则、回调、样式逃生口或平台能力开关。</zh-CN><en>The controlled input accepts only application-owned strings or numbers, hint text, and local-availability intent; it accepts no rules, callbacks, style escape hatches, or platform-capability switches.</en></lang>
 const props = defineProps({
-  // <lang><zh-CN>可见值由调用方提供并在事件后自行更新；空默认值避免组件生成领域文字或隐式状态。</zh-CN><en>The caller supplies and updates the visible value after events; an empty default prevents the component from generating domain copy or implicit state.</en></lang>
+  // <lang><zh-CN>可见值由调用方提供并在事件后自行更新；数字值只作为原生可见值传入，而新的编辑意图仍以未修改字符串回传。</zh-CN><en>The caller supplies and updates the visible value after events; a number is passed only as a native visible value, while a new editing intent still returns as an unmodified string.</en></lang>
   modelValue: {
-    type: String,
+    type: [String, Number],
     default: ''
   },
   // <lang><zh-CN>提示文字同样归调用方所有；它不能替代调用方在字段结构中提供的可见标签。</zh-CN><en>Hint text also belongs to the caller; it cannot replace a visible label supplied by the caller in field structure.</en></lang>
@@ -44,11 +47,16 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  // <lang><zh-CN>只读状态交由原生输入呈现；它不创建遮罩、选择器、自动焦点或内部值副本。</zh-CN><en>Readonly state is presented by the native input; it creates no overlay, selector, auto-focus behavior, or internal value copy.</en></lang>
+  readonly: {
+    type: Boolean,
+    default: false
   }
 });
 
-// <lang><zh-CN>四个受限事件只报告未修改的输入或原始焦点意图；应用在组件外拥有校验、回滚和后续流程。</zh-CN><en>The four constrained events report only unmodified input or original focus intent; the application owns validation, rollback, and follow-up flow outside the component.</en></lang>
-const emit = defineEmits(['update:modelValue', 'input', 'focus', 'blur']);
+// <lang><zh-CN>六个受限事件只报告未修改的输入或原始本地意图；应用在组件外拥有校验、回滚和后续流程。</zh-CN><en>The six constrained events report only unmodified input or original local intent; the application owns validation, rollback, and follow-up flow outside the component.</en></lang>
+const emit = defineEmits(['update:modelValue', 'input', 'focus', 'blur', 'click', 'confirm']);
 
 // <lang><zh-CN>由禁用状态派生根类，使不可用外观与 handler guard 使用同一调用方状态。</zh-CN><en>Derives root classes from disabled state so unavailable appearance and handler guards use the same caller-owned state.</en></lang>
 const inputClasses = computed(() => [
@@ -92,8 +100,8 @@ function extractInputValue(event) {
  * @returns {void} <lang><zh-CN>无返回值；符合条件时依次 emit `update:modelValue` 与 `input`。</zh-CN><en>No return value; when eligible, emits `update:modelValue` followed by `input`.</en></lang>
  */
 function handleInput(event) {
-  // <lang><zh-CN>禁用 guard 必须先于值读取和事件转发执行，使非原生直接 handler 调用也保持零事件契约。</zh-CN><en>The disabled guard must run before value reading and event forwarding so non-native direct handler calls also retain the zero-event contract.</en></lang>
-  if (props.disabled) {
+  // <lang><zh-CN>不可编辑 guard 必须先于值读取和事件转发执行，使非原生直接 handler 调用也保持零写回契约。</zh-CN><en>The non-editable guard must run before value reading and event forwarding so non-native direct handler calls also retain the zero-writeback contract.</en></lang>
+  if (props.disabled || props.readonly) {
     return;
   }
 
@@ -137,6 +145,38 @@ function handleBlur(event) {
 
   // <lang><zh-CN>原样交还平台失焦事件；应用可自行决定是否更新其校验或呈现状态。</zh-CN><en>Returns the platform blur event unchanged; the application may independently decide whether to update its validation or presentation state.</en></lang>
   emit('blur', event);
+}
+
+/**
+ * @lang zh-CN 在启用状态下转发原始点击意图；只读输入仍可报告本地点击，组件不把它解释为选择、打开或导航。
+ * @lang en Forwards original click intent while enabled; a readonly input may still report a local click, which the component never interprets as selection, opening, or navigation.
+ * @param {unknown} event <lang><zh-CN>原生点击事件。</zh-CN><en>Native click event.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；符合条件时 emit `click`。</zh-CN><en>No return value; when eligible, emits `click`.</en></lang>
+ */
+function handleClick(event) {
+  // <lang><zh-CN>禁用 guard 保证非原生直接调用不会绕过原生 unavailable 状态。</zh-CN><en>The disabled guard ensures a direct non-native call cannot bypass native unavailable state.</en></lang>
+  if (props.disabled) {
+    return;
+  }
+
+  // <lang><zh-CN>保留原始事件给应用决定其本地流程；组件不保存任何点击状态。</zh-CN><en>Preserves the original event for the application to decide its local flow; the component stores no click state.</en></lang>
+  emit('click', event);
+}
+
+/**
+ * @lang zh-CN 在启用状态下转发原始确认意图；确认不表示校验、提交、持久化或后端成功。
+ * @lang en Forwards original confirm intent while enabled; confirmation means no validation, submission, persistence, or backend success.
+ * @param {unknown} event <lang><zh-CN>原生确认事件。</zh-CN><en>Native confirm event.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；符合条件时 emit `confirm`。</zh-CN><en>No return value; when eligible, emits `confirm`.</en></lang>
+ */
+function handleConfirm(event) {
+  // <lang><zh-CN>禁用 guard 与其他本地意图保持一致；readonly 不等同 disabled，原生仍可报告确认意图。</zh-CN><en>The disabled guard matches other local intents; readonly is not disabled, so the native surface may still report confirm intent.</en></lang>
+  if (props.disabled) {
+    return;
+  }
+
+  // <lang><zh-CN>原样交还事件，避免组件推断确认后的业务动作。</zh-CN><en>Returns the event unchanged so the component never infers a business action after confirmation.</en></lang>
+  emit('confirm', event);
 }
 </script>
 

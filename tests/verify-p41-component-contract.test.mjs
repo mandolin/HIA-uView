@@ -75,11 +75,11 @@ test('keeps P41 source inside controlled local boundaries', async () => {
   }
 
   // <lang><zh-CN>高频组件必须保持受控值/意图表面，不能偷偷加入 validator、请求或字段 registry。</zh-CN><en>High-frequency components must retain controlled-value/intent surfaces and cannot smuggle in validators, requests, or field registries.</en></lang>
-  assert.match(componentSources[0], /defineEmits\(\['update:modelValue', 'input', 'focus', 'blur', 'confirm'\]\)/);
+  assert.match(componentSources[0], /defineEmits\(\['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click'\]\)/);
   assert.match(componentSources[1], /defineEmits\(\['update:modelValue', 'change'\]\)/);
   assert.match(componentSources[2], /defineEmits\(\['update:modelValue', 'input', 'change'\]\)/);
   assert.match(componentSources[3], /defineEmits\(\['update:modelValue', 'input', 'change'\]\)/);
-  assert.match(componentSources[4], /defineEmits\(\['update:modelValue', 'input', 'focus', 'blur', 'confirm', 'search', 'clear'\]\)/);
+  assert.match(componentSources[4], /defineEmits\(\['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click', 'search', 'clear'\]\)/);
   assert.match(componentSources[5], /defineExpose\(\{ requestSubmit, requestReset \}\)/);
   assert.match(componentSources[6], /UValidationMessage/);
 });

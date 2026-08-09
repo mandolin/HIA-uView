@@ -11,9 +11,10 @@
 
 | Prop / 属性 | Type / 类型 | Default / 默认值 | Contract / 约定 |
 | --- | --- | --- | --- |
-| `modelValue` | `string` | `''` | Controlled visible value. The caller updates it after receiving an event; the component never mutates, trims, formats, stores, or validates it. / 受控的可见值。调用方在接收事件后更新它；组件绝不修改、裁剪、格式化、存储或校验它。 |
+| `modelValue` | `string \| number` | `''` | Controlled visible value. The caller updates it after receiving an event; a numeric initial value is displayed by the native surface, while new editing intent remains an unmodified string. The component never mutates, trims, formats, stores, or validates it. / 受控的可见值。调用方在接收事件后更新它；数字初始值由原生表面显示，而新的编辑意图仍是未修改的字符串。组件绝不修改、裁剪、格式化、存储或校验它。 |
 | `placeholder` | `string` | `''` | Caller-owned native input hint. It is not a replacement for a visible field label. / 调用方自有的原生输入提示；它不能替代可见字段标签。 |
 | `disabled` | `boolean` | `false` | Makes the native input unavailable and defensively suppresses all component input/focus/blur emissions. / 使原生输入不可用，并防御性地抑制所有组件的输入、聚焦和失焦事件。 |
+| `readonly` | `boolean` | `false` | Passes local read-only presentation to the native input. It creates no overlay, selector, hidden value, or validation state. / 将本地只读呈现传递给原生输入；它不创建遮罩、选择器、隐藏值或校验状态。 |
 
 | Event / 事件 | Payload / 载荷 | Contract / 约定 |
 | --- | --- | --- |
@@ -21,10 +22,12 @@
 | `input` | `value: string` | Emits the same unmodified value after `update:modelValue`, so callers may observe intent without treating the component as a validator. / 在 `update:modelValue` 后触发相同的未修改值，使调用方能够观察意图而不把组件当作校验器。 |
 | `focus` | native platform event | Emits once for an enabled focus event. / 对一次启用状态的聚焦事件恰好触发一次。 |
 | `blur` | native platform event | Emits once for an enabled blur event. / 对一次启用状态的失焦事件恰好触发一次。 |
+| `click` | native platform event | Emits an enabled local click observation. It does not open, select, navigate, or focus automatically. / 回传启用状态的本地点击观察；它不自动打开、选择、导航或聚焦。 |
+| `confirm` | native platform event | Emits an enabled local confirm observation. It is not validation, submission, persistence, or backend success. / 回传启用状态的本地确认观察；它不是校验、提交、持久化或后端成功。 |
 
-The component expects a string `modelValue`. Callers that use nullable, numeric, masked, or domain-specific values must adapt those values outside the component and own the resulting validation and error semantics.
+The component accepts a string or number `modelValue`; an editing event always returns a candidate string. Callers that use nullable, masked, or domain-specific values must adapt those values outside the component and own the resulting validation and error semantics.
 
-组件期望 `modelValue` 为字符串。使用可空、数字、掩码或领域专属值的调用方必须在组件外完成适配，并自行拥有相应的校验和错误语义。
+组件接受字符串或数字 `modelValue`；编辑事件始终回传候选字符串。使用可空、掩码或领域专属值的调用方必须在组件外完成适配，并自行拥有相应的校验和错误语义。
 
 ## Controlled-value and interaction boundary / 受控值与交互边界
 
@@ -32,9 +35,9 @@ The rendered value always comes from the latest `modelValue` prop. A native inpu
 
 渲染值始终来自最新的 `modelValue` prop。原生输入事件只报告候选字符串；除非调用方提供新的 prop 值，否则它不会永久更新显示。该设计有意避免隐藏表单状态，并将异步校验、回滚和提交策略保留在应用中。
 
-When `disabled` is true, the native control is disabled and the component emits none of the four documented events, including when a test or non-native caller invokes a handler directly. `UInput` does not create a `change` abstraction, automatic focus, debounce, throttle, maximum-length policy, password/payment mode, multiline mode, or native form capability proxy.
+When `disabled` is true, the native control is disabled and the component emits none of the documented events, including when a test or non-native caller invokes a handler directly. `readonly` blocks local value writeback but does not convert a possible native click or confirm observation into a business action. `UInput` does not create a `change` abstraction, automatic focus, debounce, throttle, maximum-length policy, password/payment mode, multiline mode, or native form capability proxy.
 
-当 `disabled` 为真时，原生控件被禁用，并且组件不触发四个已文档化事件中的任何一个，包括测试或非原生调用方直接调用 handler 的情形。`UInput` 不创建 `change` 抽象、自动聚焦、防抖、节流、最大长度策略、密码/支付模式、多行模式或原生表单能力代理。
+当 `disabled` 为真时，原生控件被禁用，并且组件不触发任何已文档化事件，包括测试或非原生调用方直接调用 handler 的情形。`readonly` 会阻止本地值写回，但不会将可能出现的原生点击或确认观察变成业务动作。`UInput` 不创建 `change` 抽象、自动聚焦、防抖、节流、最大长度策略、密码/支付模式、多行模式或原生表单能力代理。
 
 ## Theme and customization / 主题与定制
 

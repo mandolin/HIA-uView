@@ -4,7 +4,7 @@
 @lang en Provides controlled multiline string input; the component displays caller-owned value and returns local input intent without validation, submission, persistence, or data requests.
 -->
 <template>
-  <view :class="rootClasses">
+  <view :class="rootClasses" @click="handleClick">
     <textarea
       class="u-textarea__field"
       :value="modelValue"
@@ -50,7 +50,7 @@ const props = defineProps({
 });
 
 // <lang><zh-CN>事件只报告受控更新、原始输入和焦点意图；应用拥有写回、校验和后续流程。</zh-CN><en>Events report controlled update, raw input, and focus intent only; the application owns writeback, validation, and follow-up flow.</en></lang>
-const emit = defineEmits(['update:modelValue', 'input', 'focus', 'blur', 'confirm']);
+const emit = defineEmits(['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click']);
 
 // <lang><zh-CN>根类由调用方状态派生，保证视觉状态与事件 guard 使用同一事实。</zh-CN><en>Root classes derive from caller state so visual state and event guards use one fact.</en></lang>
 const rootClasses = computed(() => [
@@ -92,6 +92,8 @@ function handleInput(event) {
   const nextValue = extractValue(event);
   emit('update:modelValue', nextValue);
   emit('input', nextValue);
+  // <lang><zh-CN>change 与 input 使用同一候选字符串；它不表示原生失焦、校验或提交完成。</zh-CN><en>Change uses the same candidate string as input; it represents no native blur, validation, or submission completion.</en></lang>
+  emit('change', nextValue);
 }
 
 /**
@@ -134,6 +136,22 @@ function handleConfirm(event) {
     return;
   }
   emit('confirm', event);
+}
+
+/**
+ * @lang zh-CN 转发启用多行区域的原始点击意图；组件不把点击解释为打开、选择、导航或编辑完成。
+ * @lang en Forwards original click intent from an enabled multiline region; the component never interprets it as opening, selection, navigation, or editing completion.
+ * @param {unknown} event <lang><zh-CN>多行区域收到的原生点击事件。</zh-CN><en>Native click event received by the multiline region.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；符合条件时 emit `click`。</zh-CN><en>No return value; when eligible, emits `click`.</en></lang>
+ */
+function handleClick(event) {
+  // <lang><zh-CN>禁用区域不得报告点击；readonly 是可见状态而非 disabled，仍可由调用方观察本地点击。</zh-CN><en>A disabled region must not report clicks; readonly is visible state rather than disabled, so the caller may still observe a local click.</en></lang>
+  if (props.disabled) {
+    return;
+  }
+
+  // <lang><zh-CN>保留原始平台事件，避免组件缓存或解释平台输入细节。</zh-CN><en>Preserves the original platform event, avoiding component caching or interpretation of platform-input details.</en></lang>
+  emit('click', event);
 }
 </script>
 

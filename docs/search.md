@@ -17,9 +17,9 @@
 | `clearText` | `string` | `×` |
 | `showAction` / `actionText` | `boolean` / `string` | `false` / `''` |
 
-Events are `update:modelValue`, `input`, `focus`, `blur`, `confirm`, `search`, and `clear`. `search` carries the current controlled string; no event means that a request succeeded.
+Events are `update:modelValue`, `input`, `change`, `focus`, `blur`, `confirm`, `click`, `search`, and `clear`. `input` and `change` receive the same unmodified candidate string; `click` is only an enabled local observation. `search` carries the current controlled string; no event means that a request succeeded.
 
-事件包括 `update:modelValue`、`input`、`focus`、`blur`、`confirm`、`search` 和 `clear`。`search` 携带当前受控字符串；任何事件都不表示请求成功。
+事件包括 `update:modelValue`、`input`、`change`、`focus`、`blur`、`confirm`、`click`、`search` 和 `clear`。`input` 和 `change` 接收同一未修改候选字符串；`click` 只是启用状态的本地观察。`search` 携带当前受控字符串；任何事件都不表示请求成功。
 
 The root namespace is `u-search` and consumes `--u-comp-search-*`. Compose a visible label and disclose the chosen query policy in the caller.
 

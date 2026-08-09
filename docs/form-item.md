@@ -7,6 +7,10 @@
 
 `UFormItem` 呈现标签、必填提示、帮助文字、插槽控件和已有的 `UValidationMessage`。它不向 `UForm` 注册、不运行 validator、不读取值，也不推断有效性。
 
+Its `label` and `required` props are presentation-compatible with their recorded upstream names only. The component intentionally provides no `resetField`, model binding, field registry, or validation lifecycle.
+
+其 `label` 和 `required` 属性仅在呈现意义上与已记录的上游名称兼容。组件有意不提供 `resetField`、模型绑定、字段注册或校验生命周期。
+
 ## Public API / 公开 API
 
 | Prop / 属性 | Type / 类型 | Default / 默认值 |

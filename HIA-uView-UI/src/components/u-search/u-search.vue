@@ -4,7 +4,7 @@
 @lang en Provides controlled query text and search/clear intent; the component performs no request, deduplication, debounce, cache, navigation, or result generation.
 -->
 <template>
-  <view :class="rootClasses">
+  <view :class="rootClasses" @click="handleClick">
     <input
       class="u-search__input"
       :value="modelValue"
@@ -40,7 +40,7 @@ const props = defineProps({
 });
 
 // <lang><zh-CN>事件只报告文本、焦点和 action intent；不对 query 进行任何业务处理。</zh-CN><en>Events report text, focus, and action intent only; query receives no business processing here.</en></lang>
-const emit = defineEmits(['update:modelValue', 'input', 'focus', 'blur', 'confirm', 'search', 'clear']);
+const emit = defineEmits(['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click', 'search', 'clear']);
 
 // <lang><zh-CN>根类提供禁用视觉状态，保持 input 和按钮使用同一 guard。</zh-CN><en>The root provides disabled visual state while input and buttons share the same guard.</en></lang>
 const rootClasses = computed(() => ['u-search', { 'u-search--disabled': props.disabled }]);
@@ -79,6 +79,8 @@ function handleInput(event) {
   const nextValue = extractValue(event);
   emit('update:modelValue', nextValue);
   emit('input', nextValue);
+  // <lang><zh-CN>change 使用相同未修改字符串报告输入变化，不等待或假定查询动作。</zh-CN><en>Change reports the same unmodified string for input change and neither waits for nor assumes a query action.</en></lang>
+  emit('change', nextValue);
 }
 
 /**
@@ -118,6 +120,22 @@ function handleConfirm(event) {
     return;
   }
   emit('confirm', event);
+}
+
+/**
+ * @lang zh-CN 转发启用搜索区域的原始点击意图；它不自动聚焦、请求、导航或打开筛选面板。
+ * @lang en Forwards original click intent from an enabled search region; it does not auto-focus, request, navigate, or open a filter panel.
+ * @param {unknown} event <lang><zh-CN>搜索区域收到的原生点击事件。</zh-CN><en>Native click event received by the search region.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；符合条件时 emit `click`。</zh-CN><en>No return value; when eligible, emits `click`.</en></lang>
+ */
+function handleClick(event) {
+  // <lang><zh-CN>禁用区域不得报告点击，避免嵌套原生控件的事件冒泡绕过调用方状态。</zh-CN><en>A disabled region must not report clicks, avoiding nested native-control bubbling bypassing caller state.</en></lang>
+  if (props.disabled) {
+    return;
+  }
+
+  // <lang><zh-CN>保留原始点击事件；调用方自行决定是否记录、聚焦或触发其他本地呈现。</zh-CN><en>Preserves the original click event; the caller independently decides whether to observe, focus, or trigger other local presentation.</en></lang>
+  emit('click', event);
 }
 
 /**

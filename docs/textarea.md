@@ -17,9 +17,9 @@
 | `maxlength` | `number` | `140` | Native presentation constraint only; the component does not truncate. / 仅为原生呈现约束，组件不截断。 |
 | `autoHeight` / `focus` / `showCount` | `boolean` | `false` | Caller-selected native presentation options. / 调用方选择的原生呈现选项。 |
 
-Events are `update:modelValue`, `input`, `focus`, `blur`, and `confirm`. The first two carry the unmodified string; focus/blur/confirm carry local intent and never mean validation or submission.
+Events are `update:modelValue`, `input`, `change`, `focus`, `blur`, `confirm`, and `click`. The first three carry the same unmodified string; focus/blur/confirm/click carry local intent and never mean validation or submission.
 
-事件包括 `update:modelValue`、`input`、`focus`、`blur` 和 `confirm`。前两个事件携带未修改字符串；聚焦/失焦/确认只携带本地意图，不表示校验或提交。
+事件包括 `update:modelValue`、`input`、`change`、`focus`、`blur`、`confirm` 和 `click`。前三个事件携带同一未修改字符串；聚焦/失焦/确认/点击只携带本地意图，不表示校验或提交。
 
 ## Boundaries, theme, and accessibility / 边界、主题与无障碍
 

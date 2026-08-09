@@ -85,8 +85,8 @@ test('keeps P13 source inside controlled presentation and ROP boundaries', async
     assert.match(componentSource, /<lang><zh-CN>/);
   }
 
-  // <lang><zh-CN>UInput 必须公开固定四事件、原生 disabled guard 和跨事件形状字符串提取；它不在此测试中被赋予规则或完成职责。</zh-CN><en>UInput must expose fixed four events, a native disabled guard, and cross-event-shape string extraction; this test assigns it no rule or completion responsibility.</en></lang>
-  assert.match(inputSource, /defineEmits\(\['update:modelValue', 'input', 'focus', 'blur'\]\)/);
+  // <lang><zh-CN>UInput 必须公开受控更新、输入、焦点、失焦及本地 click/confirm 观察，并保持原生 unavailable guard 和跨事件形状字符串提取；它不在此测试中被赋予规则或完成职责。</zh-CN><en>UInput must expose controlled update, input, focus, blur, and local click/confirm observation while retaining a native unavailable guard and cross-event-shape string extraction; this test assigns it no rule or completion responsibility.</en></lang>
+  assert.match(inputSource, /defineEmits\(\['update:modelValue', 'input', 'focus', 'blur', 'click', 'confirm'\]\)/);
   assert.match(inputSource, /if \(props\.disabled\)/);
   assert.match(inputSource, /event\?\.detail\?\.value/);
   assert.match(inputSource, /event\?\.target\?\.value/);
