@@ -7,7 +7,9 @@
 .u-section__heading { display: flex; flex: 1; flex-direction: column; gap: var(--u-comp-section-heading-gap); min-width: 0; }
 .u-section__title { font-size: var(--u-comp-section-title-size); font-weight: 600; }
 .u-section__subtitle { color: var(--u-comp-section-subtitle); font-size: var(--u-comp-section-subtitle-size); }
-.u-section__action { background: transparent; border: 0; color: var(--u-comp-section-action); min-height: var(--u-comp-section-action-height); padding: 0; }
+/* <lang><zh-CN>右侧 action 清除 Web 与小程序 button 的宿主外观，使可点击文字保持区块内的轻量层级；可访问名称和点击语义仍由原生 button 保留。</zh-CN><en>The right action removes host button chrome on Web and Mini Program so clickable text retains a lightweight section hierarchy; the native button still preserves its accessible name and click semantics.</en></lang> */
+.u-section__action { appearance: none; background: transparent; border: 0; border-radius: 0; color: var(--u-comp-section-action); font: inherit; line-height: inherit; min-height: var(--u-comp-section-action-height); padding: 0; }
+.u-section__action::after { border: 0; }
 
 /* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
 /* #ifdef MP-WEIXIN */
