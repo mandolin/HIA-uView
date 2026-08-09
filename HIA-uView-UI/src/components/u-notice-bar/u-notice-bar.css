@@ -5,7 +5,8 @@
  */
 .u-notice-bar { display: flex; align-items: center; gap: var(--u-comp-notice-bar-gap); padding: var(--u-comp-notice-bar-padding); border: 1px solid var(--u-comp-notice-bar-info-border); border-radius: var(--u-comp-notice-bar-radius); background: var(--u-comp-notice-bar-info-surface); color: var(--u-comp-notice-bar-info-foreground); font-size: var(--u-comp-notice-bar-font-size); }
 .u-notice-bar__marker { font-weight: var(--u-comp-notice-bar-marker-font-weight); }
-.u-notice-bar__text { min-width: 0; flex: 1; }
+/* <lang><zh-CN>正文使用原生 button 以报告 caller-owned click intent；重置浏览器按钮外观而不伪造链接、路由或全局操作。</zh-CN><en>The body uses a native button to report caller-owned click intent; it resets browser-button appearance without fabricating a link, route, or global action.</en></lang> */
+.u-notice-bar__text { min-width: 0; flex: 1; border: 0; background: transparent; color: inherit; font: inherit; padding: 0; text-align: start; }
 .u-notice-bar__close { min-height: var(--u-comp-notice-bar-close-min-height); border: 0; background: transparent; color: inherit; font: inherit; }
 .u-notice-bar--success { border-color: var(--u-comp-notice-bar-success-border); background: var(--u-comp-notice-bar-success-surface); color: var(--u-comp-notice-bar-success-foreground); }
 .u-notice-bar--warning { border-color: var(--u-comp-notice-bar-warning-border); background: var(--u-comp-notice-bar-warning-surface); color: var(--u-comp-notice-bar-warning-foreground); }

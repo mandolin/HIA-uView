@@ -1,35 +1,55 @@
 <!--
 @component UNoticeBar
-@lang zh-CN 提供 caller-controlled、非滚动的横幅反馈面；调用方拥有可见性、文字、tone 与关闭决定，组件不轮播、计时、自动消失或管理全局队列。
-@lang en Provides a caller-controlled, non-scrolling banner-feedback surface; the caller owns visibility, text, tone, and close decision, while the component does not rotate, time, auto-dismiss, or manage a global queue.
+@lang zh-CN 提供 caller-controlled、非滚动的横幅反馈面；调用方拥有可见性、文字、tone 与关闭/点击决定，组件不轮播、计时、自动消失或管理全局队列。
+@lang en Provides a caller-controlled, non-scrolling banner-feedback surface; the caller owns visibility, text, tone, and close/click decisions, while the component does not rotate, time, auto-dismiss, or manage a global queue.
 -->
 <template>
-  <!-- @lang zh-CN 受控模板呈现说明如下。
-  @lang en Controlled template-presentation explanation follows.
-  <lang><zh-CN>只有 visible 与非空 text 同时成立才输出横幅，避免无文字符号被误解为完整提醒。</zh-CN><en>The banner outputs only when visible and non-empty text both hold, avoiding a textless symbol being mistaken for a complete notice.</en></lang> -->
-  <view v-if="isVisible" :class="noticeClasses" role="status" aria-live="polite"><text class="u-notice-bar__marker" aria-hidden="true">!</text><text class="u-notice-bar__text">{{ text }}</text><button v-if="hasClose" class="u-notice-bar__close" type="button" @click="emitClose"><text>{{ closeText }}</text></button></view>
+  <!--
+  @lang zh-CN 只有解析后的可见状态和非空文字同时成立才输出横幅；文字 button 只报告本地 click intent。
+  @lang en The banner outputs only when resolved visibility and nonempty text both hold; the text button reports local click intent only.
+  <lang><zh-CN>close 与 click 均不写回可见性或管理反馈队列。</zh-CN><en>Neither close nor click writes visibility back or manages a feedback queue.</en></lang>
+  -->
+  <view v-if="isVisible" :class="noticeClasses" role="status" aria-live="polite">
+    <text class="u-notice-bar__marker" aria-hidden="true">!</text>
+    <button class="u-notice-bar__text" type="button" @click="emitClick">{{ text }}</button>
+    <button v-if="hasClose" class="u-notice-bar__close" type="button" @click="emitClose"><text>{{ closeText }}</text></button>
+  </view>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 
-// <lang><zh-CN>稳定名称与现有 inline `u-notice` 并存；两者不 alias，避免误称 API 兼容。</zh-CN><en>The stable name coexists with existing inline `u-notice`; the two are not aliases, avoiding a false API-compatibility claim.</en></lang>
+// <lang><zh-CN>稳定名称与既有 inline `u-notice` 并存；两者不 alias，避免误称 API 兼容。</zh-CN><en>The stable name coexists with existing inline `u-notice`; the two are not aliases, avoiding a false API-compatibility claim.</en></lang>
 defineOptions({ name: 'u-notice-bar' });
 
-// <lang><zh-CN>有限 tone 只选择视觉 token，不将应用消息解释为任何业务或后端结果。</zh-CN><en>Finite tones select visual tokens only and do not interpret application messages as business or backend results.</en></lang>
+// <lang><zh-CN>有限 tone 只选择视觉 token，不将应用消息解释为业务或后端结果。</zh-CN><en>Finite tones select visual tokens only and do not interpret application messages as business or backend results.</en></lang>
 const supportedTones = Object.freeze(['info', 'success', 'warning', 'error']);
 
-// <lang><zh-CN>调用方拥有 visible/text/tone/closeText；空 closeText 不生成默认本地化 close control。</zh-CN><en>The caller owns visible/text/tone/closeText; empty closeText generates no default localized close control.</en></lang>
-const props = defineProps({ visible: { type: Boolean, default: false }, text: { type: String, default: '' }, tone: { type: String, default: 'info' }, closeText: { type: String, default: '' } });
+// <lang><zh-CN>visible 是既有 HIA 显式 alias；未声明时采用上游熟悉的 show，并保持调用方的显式可见性优先。</zh-CN><en>Visible is the existing explicit HIA alias; when absent, upstream-familiar show applies while preserving caller explicit-visibility precedence.</en></lang>
+const props = defineProps({
+  // <lang><zh-CN>显式 visible 覆盖 show；undefined 表示调用方未选择 HIA alias。</zh-CN><en>An explicit visible overrides show; undefined means the caller did not choose the HIA alias.</en></lang>
+  visible: { type: Boolean, default: undefined },
+  // <lang><zh-CN>show 保持上游布尔默认 true；空 text 仍不会产生无内容横幅。</zh-CN><en>Show retains the upstream boolean default true; empty text still produces no contentless banner.</en></lang>
+  show: { type: Boolean, default: true },
+  // <lang><zh-CN>text 是调用方拥有的本地化正文；组件不会从 list、后端或全局消息源生成它。</zh-CN><en>Text is caller-owned localized body copy; the component generates none from a list, backend, or global message source.</en></lang>
+  text: { type: String, default: '' },
+  // <lang><zh-CN>tone 只能选择有限呈现 token；未知值回退 info。</zh-CN><en>Tone may select only finite presentation tokens; unknown values fall back to info.</en></lang>
+  tone: { type: String, default: 'info' },
+  // <lang><zh-CN>非空 closeText 才创建关闭 control；组件不生成默认本地化文字。</zh-CN><en>A nonempty closeText creates the close control; the component generates no default localized copy.</en></lang>
+  closeText: { type: String, default: '' }
+});
 
-// <lang><zh-CN>close 只是本地 intent；应用决定横幅是否消失、替换或保留。</zh-CN><en>Close is local intent only; the application decides whether the banner disappears, is replaced, or is retained.</en></lang>
-const emit = defineEmits(['close']);
+// <lang><zh-CN>close 与 click 都是本地 intent；应用决定横幅是否消失、替换、导航或保留。</zh-CN><en>Close and click are both local intents; the application decides whether the banner disappears, is replaced, navigates, or is retained.</en></lang>
+const emit = defineEmits(['click', 'close']);
 
-// <lang><zh-CN>未知 tone 回退 info，保持 class 和主题 token 表面有限。</zh-CN><en>An unknown tone falls back to info, keeping class and theme-token surface finite.</en></lang>
-const safeTone = computed(() => supportedTones.includes(props.tone) ? props.tone : 'info');
+// <lang><zh-CN>unknown tone 回退 info，保持 class 和主题 token 表面有限。</zh-CN><en>An unknown tone falls back to info, keeping class and theme-token surface finite.</en></lang>
+const safeTone = computed(() => (supportedTones.includes(props.tone) ? props.tone : 'info'));
 
-// <lang><zh-CN>可见性要求 caller visible 和可读文字；文本不由组件默认生成。</zh-CN><en>Visibility requires caller-visible state and readable text; text is not default-generated by the component.</en></lang>
-const isVisible = computed(() => props.visible && props.text.trim().length > 0);
+// <lang><zh-CN>只在未显式使用 visible 时采用 show；这不读取页面、路由或全局 feedback state。</zh-CN><en>Uses show only when visible is not explicit; it reads no page, route, or global-feedback state.</en></lang>
+const requestedVisible = computed(() => (props.visible === undefined ? props.show : props.visible));
+
+// <lang><zh-CN>可见性要求调用方请求显示且有可读文字；文本不由组件默认生成。</zh-CN><en>Visibility requires caller-requested display and readable text; text is not default-generated by the component.</en></lang>
+const isVisible = computed(() => requestedVisible.value && props.text.trim().length > 0);
 
 // <lang><zh-CN>根 class 只含固定命名空间及已规范化 tone。</zh-CN><en>Root classes contain only the fixed namespace and normalized tone.</en></lang>
 const noticeClasses = computed(() => ['u-notice-bar', `u-notice-bar--${safeTone.value}`]);
@@ -38,16 +58,34 @@ const noticeClasses = computed(() => ['u-notice-bar', `u-notice-bar--${safeTone.
 const hasClose = computed(() => props.closeText.trim().length > 0);
 
 /**
- * @lang zh-CN 转发有文字 close control 的 intent；不写回 visible 或启动自动消失计时器。
- * @lang en Forwards intent from a labeled close control; it writes no visible state and starts no auto-dismiss timer.
+ * @lang zh-CN 转发有文字横幅正文的 local click intent；不解释文字、不导航且不从 list 推导索引。
+ * @lang en Forwards local click intent from labeled banner body; it interprets no text, navigates nowhere, and derives no index from a list.
+ * @param {unknown} event <lang><zh-CN>原始平台点击事件。</zh-CN><en>Original platform click event.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；符合 guard 时 emit `click`。</zh-CN><en>No return value; emits `click` when the guard passes.</en></lang>
+ */
+function emitClick(event) {
+  // <lang><zh-CN>隐藏或空文字横幅保持零事件，保护直接 handler 调用不产生虚假通知操作。</zh-CN><en>Hidden or textless banners retain zero events, protecting direct handler calls from producing a false notice action.</en></lang>
+  if (!isVisible.value) {
+    return;
+  }
+
+  // <lang><zh-CN>事件对象只交回调用方；组件不保留、转换或把它当作业务完成。</zh-CN><en>The event object is handed back only to the caller; the component neither retains nor transforms it nor treats it as business completion.</en></lang>
+  emit('click', event);
+}
+
+/**
+ * @lang zh-CN 转发有文字 close control 的 intent；不写回 visible/show 或启动自动消失计时器。
+ * @lang en Forwards intent from a labeled close control; it writes no visible/show state and starts no auto-dismiss timer.
  * @param {unknown} event <lang><zh-CN>原始平台点击事件。</zh-CN><en>Original platform click event.</en></lang>
  * @returns {void} <lang><zh-CN>无返回值；符合 guard 时 emit `close`。</zh-CN><en>No return value; emits `close` when the guard passes.</en></lang>
  */
 function emitClose(event) {
   // <lang><zh-CN>guard 保护隐藏横幅和无标签 control，保持直接 handler 调用零副作用。</zh-CN><en>The guard protects hidden banners and label-less controls, keeping direct handler calls side-effect free.</en></lang>
-  if (!isVisible.value || !hasClose.value) return;
+  if (!isVisible.value || !hasClose.value) {
+    return;
+  }
 
-  // <lang><zh-CN>事件交给调用方；组件不管理反馈队列或时间。</zh-CN><en>Hand the event to the caller; the component manages neither feedback queue nor time.</en></lang>
+  // <lang><zh-CN>事件交给调用方；组件不管理反馈队列、时间或可见性写回。</zh-CN><en>Hand the event to the caller; the component manages neither feedback queue, time, nor visibility writeback.</en></lang>
   emit('close', event);
 }
 </script>

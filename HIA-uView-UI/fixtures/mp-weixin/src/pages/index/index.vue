@@ -17,7 +17,7 @@
       <u-status-bar :height="18" />
       <u-navbar title="Fixture navigation / Fixture 导航" left-text="Back / 返回" right-text="Save / 保存"><text>Caller center / 调用方中央</text></u-navbar>
       <u-cell-item title="Local entry / 本地条目" :label="0" :value="0" :required="true" :arrow="true" :clickable="true" />
-      <u-notice-bar :visible="true" text="Local feedback only / 仅本地反馈" close-text="Dismiss / 关闭" />
+      <u-notice-bar :show="true" text="Local feedback only / 仅本地反馈" close-text="Dismiss / 关闭" />
       <u-loading :show="true" label="Local state / 本地状态" />
       <u-no-network :visible="true" title="Caller-declared state / 调用方声明状态" retry-text="Retry / 重试" />
       <u-safe-bottom :height="12" />
@@ -146,7 +146,7 @@
       <u-stack class="fixture-navigation" gap="sm">
         <u-tabs :model-value="fixtureTabValue" :items="fixtureTabItems" @update:model-value="updateFixtureTabValue" />
         <u-tabs :items="[]" :list="fixtureMigrationTabItems" :current="1" />
-        <u-tabbar :model-value="fixtureTabbarValue" :items="fixtureTabbarItems" @update:model-value="updateFixtureTabbarValue" />
+        <u-tabbar :show="true" :model-value="fixtureTabbarValue" :items="fixtureTabbarItems" @update:model-value="updateFixtureTabbarValue" />
         <u-steps :steps="fixtureStepItems" :current="fixtureStepCurrent" />
         <u-pagination :current="fixturePageValue" :page-count="3" @update:current="updateFixturePageValue" />
         <u-pagination :model-value="2" :page-size="10" :total="21" />

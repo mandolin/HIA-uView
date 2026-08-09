@@ -214,6 +214,8 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-input|props|readonly',
   'u-loading|props|show',
   'u-modal|props|modelValue',
+  // <lang><zh-CN>tabbar 的 show/modelValue 与 notice-bar 的 show 已在 P61 通过显式 alias/default 与 caller-controlled runtime 审计；点击事件仍是 names-only mapped。</zh-CN><en>Tabbar show/modelValue and notice-bar show passed P61 explicit alias/default and caller-controlled runtime audit; click events remain names-only mapped.</en></lang>
+  'u-notice-bar|props|show',
   'u-pagination|props|modelValue',
   'u-pagination|props|pageSize',
   'u-pagination|props|total',
@@ -234,7 +236,9 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-form-item|props|required',
   'u-swipe-action|props|disabled',
   'u-switch|props|disabled',
-  'u-switch|props|loading'
+  'u-switch|props|loading',
+  'u-tabbar|props|modelValue',
+  'u-tabbar|props|show'
 ]);
 
 /**
