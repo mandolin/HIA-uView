@@ -115,7 +115,7 @@
       "name": "@hia-uview/ui",
       "version": "0.0.0",
       "path": "HIA-uView-UI/package.json",
-      "digest": "sha256:a8db0cd5f849c8ccd9d0262eb8be02c4c22deacbf151bee556edf38303d42e8d"
+      "digest": "sha256:d4bc77dc71455c62d4569144c242032130a06ac2ae282eed33f2f4c6db18c22f"
     },
     "componentManifest": {
       "path": "HIA-uView-UI/hia-uview.components.json",
@@ -1735,8 +1735,8 @@
             },
             "priority": "P1",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "show"
             }
           },
@@ -2016,8 +2016,8 @@
         "disposition": "unsupported",
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
-          "compatible": 0,
-          "mapped": 5,
+          "compatible": 1,
+          "mapped": 4,
           "unsupported": 13,
           "unresolved": 0
         }
@@ -52220,10 +52220,12 @@
                 {
                   "name": "disabled",
                   "typeKinds": [
-                    "Boolean"
+                    "Boolean",
+                    "String"
                   ],
                   "typeOrder": [
-                    "Boolean"
+                    "Boolean",
+                    "String"
                   ],
                   "default": {
                     "kind": "literal",
@@ -52238,8 +52240,8 @@
             },
             "priority": "P1",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "disabled"
             }
           },
@@ -52368,12 +52370,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "show",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
+              "target": "show"
             }
           },
           {
@@ -52449,10 +52470,12 @@
                 {
                   "name": "text",
                   "typeKinds": [
+                    "Number",
                     "String"
                   ],
                   "typeOrder": [
-                    "String"
+                    "String",
+                    "Number"
                   ],
                   "default": {
                     "kind": "literal",
@@ -52467,8 +52490,8 @@
             },
             "priority": "P1",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "text"
             }
           },
@@ -52647,9 +52670,9 @@
         "disposition": "unsupported",
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
-          "compatible": 0,
-          "mapped": 6,
-          "unsupported": 12,
+          "compatible": 3,
+          "mapped": 4,
+          "unsupported": 11,
           "unresolved": 0
         }
       },

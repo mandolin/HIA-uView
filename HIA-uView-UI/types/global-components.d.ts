@@ -7,20 +7,24 @@
 import type {
   UCheckbox,
   UCheckboxGroup,
+  UAlertTips,
   UNoticeBar,
   UPicker,
   URadio,
   URadioGroup,
   USwitch,
-  UTabbar
+  UTabbar,
+  UTag
 } from './index';
 
 /**
- * @lang zh-CN 仅声明当前已审计的 choice、local tabbar、banner 与 single-column picker 名称。其余组件必须继续采用显式 named import，直到具备逐项类型 contract。
- * @lang en Declares only currently audited choice, local-tabbar, banner, and single-column-picker names. Remaining components must continue using explicit named imports until per-item type contracts exist.
+ * @lang zh-CN 仅声明当前已审计的 choice、local tabbar、banner、single-column picker 和有限展示名称。其余组件必须继续采用显式 named import，直到具备逐项类型 contract。
+ * @lang en Declares only currently audited choice, local-tabbar, banner, single-column-picker, and finite-display names. Remaining components must continue using explicit named imports until per-item type contracts exist.
  */
 declare module 'vue' {
   interface GlobalComponents {
+    /** 中文：caller-controlled 局部提示条。English: Caller-controlled local alert strip. */
+    UAlertTips: typeof UAlertTips;
     /** 中文：受控 checkbox。English: Controlled checkbox. */
     UCheckbox: typeof UCheckbox;
     /** 中文：受控 checkbox group。English: Controlled checkbox group. */
@@ -37,6 +41,8 @@ declare module 'vue' {
     USwitch: typeof USwitch;
     /** 中文：局部、非路由 tabbar。English: Local non-routing tabbar. */
     UTabbar: typeof UTabbar;
+    /** 中文：有限 token 化文字标签。English: Finite tokenized text tag. */
+    UTag: typeof UTag;
   }
 }
 

@@ -238,7 +238,12 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-switch|props|disabled',
   'u-switch|props|loading',
   'u-tabbar|props|modelValue',
-  'u-tabbar|props|show'
+  'u-tabbar|props|show',
+  // <lang><zh-CN>展示小面只升级经过独立运行时与 compiler fixture 审计的受控 prop；tag 的事件/slot、alert 的 close/click 仍不是完整语义等价。</zh-CN><en>The display micro-surface promotes only controlled props audited by independent runtime and compiler fixtures; tag events/slot and alert close/click remain outside complete semantic equivalence.</en></lang>
+  'u-alert-tips|props|show',
+  'u-tag|props|disabled',
+  'u-tag|props|show',
+  'u-tag|props|text'
 ]);
 
 /**

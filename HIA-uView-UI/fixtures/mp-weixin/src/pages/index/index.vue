@@ -135,7 +135,8 @@
         <u-text :text="fixturePresentationIntent" type="secondary" />
         <u-button text="迁移文字按钮 / Migration text button" @click="recordFixturePresentationIntent('button')" />
         <u-avatar text="HI" alt="initials 占位 / initials placeholder" size="small" />
-        <u-tag :visible="fixtureTagVisible" text="本地标签 / Local tag" tone="primary" closable @close="hideFixtureTag" />
+        <u-tag :visible="fixtureTagVisible" :show="true" :text="7" :disabled="false" tone="primary" closable @close="hideFixtureTag" />
+        <u-alert-tips :show="true" title="本地提示 / Local alert" description="调用方控制可见性 / Caller-controlled visibility" />
         <u-badge :value="fixtureBadgeValue"><text>徽标内容 / Badge content</text></u-badge>
         <u-divider text="局部分隔 / Local divider" />
         <u-count-to :model-value="fixtureCountValue" prefix="#" />

@@ -167,6 +167,46 @@ export interface UPickerProps {
 }
 
 /**
+ * @lang zh-CN 描述 `UAlertTips` 的局部、caller-controlled 可见性和有限文字表面；它不是全局反馈或自动关闭服务。
+ * @lang en Describes the local caller-controlled visibility and finite text surface of `UAlertTips`; it is not a global feedback or auto-dismiss service.
+ */
+export interface UAlertTipsProps {
+  /** 中文：是否投影当前局部提示条。English: Whether to project the current local alert strip. */
+  show?: boolean;
+  /** 中文：有限视觉类型。English: Finite visual type. */
+  type?: 'primary' | 'success' | 'warning' | 'error' | string;
+  /** 中文：调用方提供的标题。English: Caller-provided title. */
+  title?: string;
+  /** 中文：调用方提供的说明。English: Caller-provided description. */
+  description?: string;
+  /** 中文：是否显示局部 close intent control。English: Whether to show a local close-intent control. */
+  closable?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `UTag` 的有限 token 化标签表面；`show` 与既有 `visible` 共同控制投影，任一为 false 都会隐藏本地标签。
+ * @lang en Describes the finite tokenized tag surface of `UTag`; `show` and existing `visible` jointly control projection, and either false hides the local tag.
+ */
+export interface UTagProps {
+  /** 中文：调用方可见文字，数字零保持可见。English: Caller-visible text; numeric zero remains visible. */
+  text?: string | number;
+  /** 中文：有限主题 tone。English: Finite theme tone. */
+  tone?: 'neutral' | 'primary' | 'accent' | string;
+  /** 中文：有限本地尺寸。English: Finite local size. */
+  size?: 'small' | 'medium' | 'large' | string;
+  /** 中文：有限本地形状。English: Finite local shape. */
+  shape?: 'square' | 'rounded' | 'pill' | string;
+  /** 中文：是否呈现 local close intent control。English: Whether to present a local close-intent control. */
+  closable?: boolean;
+  /** 中文：既有 HIA 可见性输入。English: Existing HIA visibility input. */
+  visible?: boolean;
+  /** 中文：迁移用可见性输入；不替代 visible。English: Migration visibility input; it does not replace visible. */
+  show?: boolean;
+  /** 中文：本地交互 guard；非空字符串和 true 都会阻止 click/close intent。English: Local interaction guard; a nonempty string and true both prevent click/close intent. */
+  disabled?: boolean | string;
+}
+
+/**
  * @lang zh-CN 当前受审计的 choice/navigation/feedback 组件保持精确 props 声明；其余导出采用 `UViewComponent` 基线，等待逐项 API 审计。
  * @lang en Current audited choice/navigation/feedback components retain precise prop declarations; the remaining exports use the `UViewComponent` baseline pending per-item API audit.
  */
@@ -185,6 +225,10 @@ export declare const UTabbar: DefineComponent<UTabbarProps>;
 export declare const UNoticeBar: DefineComponent<UNoticeBarProps>;
 /** @lang zh-CN 有限单列本地 picker 组件。 @lang en Finite single-column local picker component. */
 export declare const UPicker: DefineComponent<UPickerProps>;
+/** @lang zh-CN caller-controlled 局部提示条组件。 @lang en Caller-controlled local alert-strip component. */
+export declare const UAlertTips: DefineComponent<UAlertTipsProps>;
+/** @lang zh-CN 有限 token 化文字标签组件。 @lang en Finite tokenized text-tag component. */
+export declare const UTag: DefineComponent<UTagProps>;
 
 /**
  * @lang zh-CN 以下运行时命名导出均已存在，但尚未承诺逐 prop、事件 payload、slot props、expose signature、父子 context 或全局 bus 的完整 TypeScript 形状。
@@ -192,7 +236,6 @@ export declare const UPicker: DefineComponent<UPickerProps>;
  */
 export declare const UActionSheet: UViewComponent;
 export declare const UActionSheetItem: UViewComponent;
-export declare const UAlertTips: UViewComponent;
 export declare const UAvatar: UViewComponent;
 export declare const UAvatarCropper: UViewComponent;
 export declare const UBackTop: UViewComponent;
@@ -274,7 +317,6 @@ export declare const USwiper: UViewComponent;
 export declare const UTable: UViewComponent;
 export declare const UTabs: UViewComponent;
 export declare const UTabsSwiper: UViewComponent;
-export declare const UTag: UViewComponent;
 export declare const UTd: UViewComponent;
 export declare const UText: UViewComponent;
 export declare const UTextarea: UViewComponent;

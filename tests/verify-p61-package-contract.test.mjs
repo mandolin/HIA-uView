@@ -72,14 +72,15 @@ test('declares every current runtime component exactly once without overclaiming
   // <lang><zh-CN>运行时/声明名称集合必须精确相同；这个静态比较不会加载 component implementation 或执行任何 Vue code。</zh-CN><en>Runtime/declaration name sets must be exactly equal; this static comparison loads no component implementation or executes Vue code.</en></lang>
   assert.deepEqual(readDeclarationComponentNames(declarationSource), readRuntimeComponentNames(runtimeSource));
 
-  // <lang><zh-CN>八个已审计表面保持精确 props，其他成员明确采用 generic baseline 而不是编造上游 API 形状。</zh-CN><en>Eight audited surfaces retain precise props, while remaining members explicitly use the generic baseline instead of inventing upstream API shapes.</en></lang>
-  for (const componentName of ['UCheckbox', 'UCheckboxGroup', 'URadio', 'URadioGroup', 'USwitch', 'UTabbar', 'UNoticeBar', 'UPicker']) {
+  // <lang><zh-CN>十个已审计表面保持精确 props，其他成员明确采用 generic baseline 而不是编造上游 API 形状。</zh-CN><en>Ten audited surfaces retain precise props, while remaining members explicitly use the generic baseline instead of inventing upstream API shapes.</en></lang>
+  for (const componentName of ['UAlertTips', 'UCheckbox', 'UCheckboxGroup', 'URadio', 'URadioGroup', 'USwitch', 'UTabbar', 'UNoticeBar', 'UPicker', 'UTag']) {
     assert.match(declarationSource, new RegExp(`export declare const ${componentName}: DefineComponent<`, 'u'));
   }
 
   assert.match(declarationSource, /not yet promise complete TypeScript shapes/u);
   assert.match(globalDeclarationSource, /declare module 'vue'/u);
   assert.match(globalDeclarationSource, /UTabbar: typeof UTabbar/u);
+  assert.match(globalDeclarationSource, /UTag: typeof UTag/u);
 });
 
 test('keeps Easycom static, consumer-owned, and compiler-testable', () => {
