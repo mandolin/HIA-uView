@@ -3,9 +3,13 @@
 > Status / 状态：Private pre-release finite-tone text tag.
 > 状态：私有预发布有限 tone 文字标签。
 
-`UTag` presents caller string/number text with finite `tone`, `size`, and `shape` values. `click` and `close` report intent; the component never resolves categories, executes arbitrary style input, or changes caller state itself.
+`UTag` presents caller string/number text with finite `tone`, `size`, `shape`, and `appearance=solid|outline` values. `click` and `close` report intent; the component never resolves categories, executes arbitrary style input, or changes caller state itself.
 
-`UTag` 使用有限的 `tone`、`size` 和 `shape` 呈现调用方 string/number 文字。`click` 和 `close` 只回传意图；组件不解析分类、不执行任意样式输入，也不自行改变调用方状态。
+`UTag` 使用有限的 `tone`、`size`、`shape` 和 `appearance=solid|outline` 呈现调用方 string/number 文字。`click` 和 `close` 只回传意图；组件不解析分类、不执行任意样式输入，也不自行改变调用方状态。
+
+`outline` keeps the selected finite tone's foreground and uses it as the border color while leaving the surface transparent. It is a presentation choice only and does not imply interactivity, trust, connectivity, or business status.
+
+`outline` 保留所选有限 tone 的前景色，并以同色描边、透明表面呈现。它只是一种展示选择，不表示交互性、可信度、连接状态或业务状态。
 
 The root namespace is `u-tag` and consumes `--u-comp-tag-*`. `show` is the migration visibility input and the existing HIA `visible` input remains supported: both default to `true`, and either explicit `false` hides the local tag. `disabled` accepts `boolean | string` and only blocks local `click`/`close` intent; it is not authorization. Events and the default-slot migration surface remain bounded mappings rather than complete upstream equivalence.
 

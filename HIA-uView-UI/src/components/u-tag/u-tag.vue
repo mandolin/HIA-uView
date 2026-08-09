@@ -34,6 +34,8 @@ const props = defineProps({
   size: { type: String, default: 'medium' },
   // <lang><zh-CN>`shape` 只选择有限圆角形式，不透传调用方 CSS。</zh-CN><en>`shape` selects only finite corner forms and never passes caller CSS through.</en></lang>
   shape: { type: String, default: 'rounded' },
+  // <lang><zh-CN>`appearance` 只选择实心或描边两种受控表面；描边继续使用所选 tone 的文字颜色，不接受任意颜色。</zh-CN><en>`appearance` selects only controlled solid or outline surfaces; outline continues using the chosen tone's text color and accepts no arbitrary color.</en></lang>
+  appearance: { type: String, default: 'solid' },
   // <lang><zh-CN>`closable` 只决定是否提供本地关闭意图 control；组件不会自行修改可见性。</zh-CN><en>`closable` decides only whether to provide a local close-intent control; the component never changes visibility itself.</en></lang>
   closable: { type: Boolean, default: false },
   // <lang><zh-CN>`visible` 是既有 HIA 输入；它与 `show` 以交集规则共存，避免破坏已有调用方的隐藏语义。</zh-CN><en>`visible` is the existing HIA input; it coexists with `show` through an intersection rule, avoiding disruption of existing caller hide semantics.</en></lang>
@@ -50,7 +52,7 @@ const emit = defineEmits(['click', 'close']);
 const isVisible = computed(() => props.visible && props.show);
 // <lang><zh-CN>将数字文字显式转为可呈现字符串，保留零值并避免模板依赖隐式业务格式化。</zh-CN><en>Explicitly converts numeric text into renderable string, preserving zero and avoiding template dependence on implicit business formatting.</en></lang>
 const displayText = computed(() => String(props.text));
-// <lang><zh-CN>根 class 只由有限 tone/size/shape 和禁用状态派生；它不读取父页面样式、全局配置或平台信息。</zh-CN><en>Root classes derive only from finite tone/size/shape and disabled state; they read no parent-page style, global configuration, or platform information.</en></lang>
+// <lang><zh-CN>根 class 只由有限 tone/size/shape/appearance 和禁用状态派生；它不读取父页面样式、全局配置或平台信息。</zh-CN><en>Root classes derive only from finite tone/size/shape/appearance and disabled state; they read no parent-page style, global configuration, or platform information.</en></lang>
 const rootClasses = computed(() => {
   // <lang><zh-CN>未知 tone 回退 neutral，防止任意 class 片段进入渲染树。</zh-CN><en>Unknown tone falls back to neutral, preventing arbitrary class fragments from entering the render tree.</en></lang>
   const tone = ['neutral', 'primary', 'accent'].includes(props.tone) ? props.tone : 'neutral';
@@ -58,8 +60,10 @@ const rootClasses = computed(() => {
   const size = ['small', 'medium', 'large'].includes(props.size) ? props.size : 'medium';
   // <lang><zh-CN>未知 shape 回退 rounded，不将调用方文本解释为 CSS class。</zh-CN><en>Unknown shape falls back to rounded and never interprets caller text as a CSS class.</en></lang>
   const shape = ['square', 'rounded', 'pill'].includes(props.shape) ? props.shape : 'rounded';
+  // <lang><zh-CN>未知 appearance 回退 solid，保持既有调用方视觉并拒绝任意 class 片段。</zh-CN><en>An unknown appearance falls back to solid, preserving existing caller visuals and rejecting arbitrary class fragments.</en></lang>
+  const appearance = ['solid', 'outline'].includes(props.appearance) ? props.appearance : 'solid';
   // <lang><zh-CN>返回稳定 BEM class 列表；disabled 只表示局部交互 guard。</zh-CN><en>Returns a stable BEM class list; disabled represents only a local interaction guard.</en></lang>
-  return ['u-tag', `u-tag--${tone}`, `u-tag--${size}`, `u-tag--${shape}`, { 'u-tag--disabled': props.disabled }];
+  return ['u-tag', `u-tag--${tone}`, `u-tag--${size}`, `u-tag--${shape}`, `u-tag--${appearance}`, { 'u-tag--disabled': props.disabled }];
 });
 
 /**

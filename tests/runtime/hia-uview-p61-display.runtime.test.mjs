@@ -19,6 +19,10 @@ describe('bounded display migration runtime behavior', () => {
     expect(wrapper.find('.u-tag').exists()).toBe(true);
     expect(wrapper.text()).toContain('0');
 
+    // <lang><zh-CN>描边 appearance 只增加受控根类，并保留同一有限 tone、文字和事件边界。</zh-CN><en>Outline appearance only adds the controlled root class while retaining the same finite tone, copy, and event boundary.</en></lang>
+    await wrapper.setProps({ appearance: 'outline' });
+    expect(wrapper.get('.u-tag').classes()).toContain('u-tag--outline');
+
     // <lang><zh-CN>show=false 只移除本地投影，组件不写入 visible 或调用方状态。</zh-CN><en>show=false removes only local projection; the component writes neither visible nor caller state.</en></lang>
     await wrapper.setProps({ show: false });
     expect(wrapper.find('.u-tag').exists()).toBe(false);
