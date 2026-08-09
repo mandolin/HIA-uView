@@ -152,6 +152,91 @@ describe('Foundational presentation compatibility behavior', () => {
 });
 
 /**
+ * @lang zh-CN 验证导航、信息行、标签栏和分页的受控迁移入口；断言仅覆盖本地呈现与事件转发，不把它们扩展为路由、请求、滚动、数据或系统导航证据。
+ * @lang en Verifies controlled migration entries for navigation, information rows, tabs, and pagination; assertions cover local presentation and event forwarding only and do not expand into routing, request, scroll, data, or system-navigation evidence.
+ */
+describe('Navigation and pagination migration behavior', () => {
+  /**
+   * @lang zh-CN 验证信息行呈现数值零、必填提示和 value 为空时的默认 slot，同时保持 click 只是调用方 intent。
+   * @lang en Verifies that an information row presents numeric zero, required cue, and default slot for an empty value while keeping click as caller intent only.
+   * @returns {Promise<void>} <lang><zh-CN>无返回值；异步点击触发完成后解决。</zh-CN><en>No return value; resolves after asynchronous click triggers complete.</en></lang>
+   */
+  it('retains numeric cell content and a caller trailing slot', async () => {
+    // <lang><zh-CN>数值实例同时覆盖零值的可见性、required 星号和明确可点击行；测试不为其分配表单或导航职责。</zh-CN><en>The numeric instance covers zero-value visibility, required asterisk, and explicit clickable row together; the test assigns it no form or navigation responsibility.</en></lang>
+    const numeric = mount(UCellItem, { props: { title: 'Local row', label: 0, value: 0, required: true, clickable: true } });
+
+    // <lang><zh-CN>slot 实例仅在 value 为空时让调用方提供尾部展示，以验证不会和非空 value 混合。</zh-CN><en>The slot instance lets the caller provide trailing presentation only while value is empty, verifying it does not mix with nonempty value.</en></lang>
+    const slotted = mount(UCellItem, { props: { title: 'Local slot row', value: '' }, slots: { default: 'Caller trailing copy' } });
+
+    await numeric.get('button.u-cell-item').trigger('click');
+
+    expect(numeric.text()).toContain('0');
+    expect(numeric.get('.u-cell-item__required').text()).toBe('*');
+    expect(numeric.emitted('click')).toHaveLength(1);
+    expect(slotted.text()).toContain('Caller trailing copy');
+  });
+
+  /**
+   * @lang zh-CN 验证 tabs 在 HIA items 为空时使用迁移 list，并将显式 numeric current 限定为当前有限列表索引。
+   * @lang en Verifies that tabs uses migration list when HIA items is empty and constrains explicit numeric current to an index of the current finite list.
+   * @returns {Promise<void>} <lang><zh-CN>无返回值；异步点击触发完成后解决。</zh-CN><en>No return value; resolves after asynchronous click triggers complete.</en></lang>
+   */
+  it('maps migration current onto finite tabs without taking panel ownership', async () => {
+    // <lang><zh-CN>两个调用方条目只携带可见 label/name 和有限 value；它们不是路由、动态面板或异步数据来源。</zh-CN><en>The two caller items carry only visible label/name and finite value; they are not a route, dynamic panel, or asynchronous data source.</en></lang>
+    const tabs = mount(UTabs, {
+      props: {
+        list: [{ name: 'First tab', value: 'first' }, { name: 'Second tab', value: 'second' }],
+        current: 1
+      }
+    });
+
+    // <lang><zh-CN>current=1 应指向第二项；选择第一项只报告候选 value 给调用方。</zh-CN><en>current=1 must point to the second item; selecting the first item reports only its candidate value to the caller.</en></lang>
+    const controls = tabs.findAll('.u-tabs__item');
+
+    expect(controls[1].classes()).toContain('u-tabs__item--active');
+    await controls[0].trigger('click');
+    expect(tabs.emitted('update:modelValue')[0]).toEqual(['first']);
+    expect(tabs.emitted('change')[0]).toEqual(['first']);
+  });
+
+  /**
+   * @lang zh-CN 验证 pagination 可由迁移 modelValue/pageSize/total 投影有限页数，并在 HIA current/pageCount 存在时保留其优先级。
+   * @lang en Verifies that pagination can project finite page count from migration modelValue/pageSize/total and retains HIA current/pageCount precedence when present.
+   * @returns {Promise<void>} <lang><zh-CN>无返回值；异步点击触发完成后解决。</zh-CN><en>No return value; resolves after asynchronous click triggers complete.</en></lang>
+   */
+  it('projects bounded migration pages and reports both controlled update names', async () => {
+    // <lang><zh-CN>迁移实例由 total/pageSize 得出三页；它不读取 records 或触发查询。</zh-CN><en>The migration instance derives three pages from total/pageSize; it reads no records and starts no query.</en></lang>
+    const migration = mount(UPagination, { props: { modelValue: 2, pageSize: 10, total: 21 } });
+
+    // <lang><zh-CN>既有 HIA pageCount/current 实例验证优先级；迁移输入即使冲突也不能改变其当前展示。</zh-CN><en>The existing HIA pageCount/current instance verifies precedence; migration inputs cannot change its current display even if conflicting.</en></lang>
+    const hiaPreferred = mount(UPagination, { props: { current: 2, pageCount: 4, modelValue: 1, pageSize: 10, total: 11 } });
+
+    expect(migration.text()).toContain('2 / 3');
+    expect(hiaPreferred.text()).toContain('2 / 4');
+
+    // <lang><zh-CN>第三个页码是唯一可前进候选；点击后两个 controlled update 和 change 都仅报告数字三。</zh-CN><en>The third page is the sole forward candidate; after clicking, both controlled updates and change report only number three.</en></lang>
+    const pageControls = migration.findAll('.u-pagination__page');
+
+    await pageControls[2].trigger('click');
+    expect(migration.emitted('update:current')[0]).toEqual([3]);
+    expect(migration.emitted('update:modelValue')[0]).toEqual([3]);
+    expect(migration.emitted('change')[0]).toEqual([3]);
+  });
+
+  /**
+   * @lang zh-CN 验证 navbar 默认 slot 只替换中央标题投影，不改变两侧 intent 或引入系统导航行为。
+   * @lang en Verifies that navbar default slot replaces only central title projection and does not change side intent or introduce system navigation behavior.
+   */
+  it('uses a caller default slot for the navbar center only', () => {
+    // <lang><zh-CN>实例同时提供 title 和默认 slot，确保 slot 优先级可见且不需任何 route 或页面栈 fixture。</zh-CN><en>The instance supplies both title and default slot, ensuring slot precedence is visible and needs no route or page-stack fixture.</en></lang>
+    const navbar = mount(UNavbar, { props: { title: 'Fallback title' }, slots: { default: 'Caller center' } });
+
+    expect(navbar.text()).toContain('Caller center');
+    expect(navbar.text()).not.toContain('Fallback title');
+  });
+});
+
+/**
  * @lang zh-CN 验证 UStack 将所有受限 props 映射为稳定局部类，并保留默认插槽子项而不新增事件。
  * @lang en Verifies that UStack maps every constrained prop to stable local classes and retains default-slot children without adding events.
  */

@@ -20,7 +20,12 @@
     <!-- @lang zh-CN 受控标题结构说明如下。
     @lang en Controlled title structure explanation follows.
     <lang><zh-CN>标题完全由调用方提供；空标题仍保留结构位置，但组件绝不生成业务或双语默认文案。</zh-CN><en>The caller fully provides the title; an empty title retains structural position, but the component never generates business or bilingual default copy.</en></lang> -->
-    <text class="u-navbar__title">{{ title }}</text>
+    <!--
+    @lang zh-CN 默认 slot 可替换中央标题投影；它不创建系统导航栏、返回栈、路由或页面身份。
+    @lang en The default slot may replace central title projection; it creates no system navigation bar, back stack, router, or page identity.
+    <lang><zh-CN>未提供 slot 时保持调用方 title 的既有文字展示，避免迁移入口改变已有页面。</zh-CN><en>When no slot is supplied, existing caller title text presentation remains, preventing the migration entry from changing existing pages.</en></lang>
+    -->
+    <view class="u-navbar__title"><slot><text>{{ title }}</text></slot></view>
 
     <!-- @lang zh-CN 受控右侧结构说明如下。
     @lang en Controlled right-side structure explanation follows.

@@ -15,8 +15,8 @@
     <!-- <lang><zh-CN>P54 组合以调用方声明的文字、尺寸和可见性验证新导航、间距、反馈与同树 overlay 表面能够被小程序编译器解析；它不引入平台读取、路由、滚动、网络或全局 service。</zh-CN><en>The P54 composition uses caller-declared copy, dimensions, and visibility to verify that the Mini Program compiler resolves the new navigation, spacing, feedback, and same-tree overlay surfaces; it introduces no platform read, router, scrolling, network, or global service.</en></lang> -->
     <u-config-provider density="compact" locale="en">
       <u-status-bar :height="18" />
-      <u-navbar title="Fixture navigation / Fixture 导航" left-text="Back / 返回" right-text="Save / 保存" />
-      <u-cell-item title="Local entry / 本地条目" label="Caller projection / 调用方投影" value="Ready / 就绪" :arrow="true" :clickable="true" />
+      <u-navbar title="Fixture navigation / Fixture 导航" left-text="Back / 返回" right-text="Save / 保存"><text>Caller center / 调用方中央</text></u-navbar>
+      <u-cell-item title="Local entry / 本地条目" :label="0" :value="0" :required="true" :arrow="true" :clickable="true" />
       <u-notice-bar :visible="true" text="Local feedback only / 仅本地反馈" close-text="Dismiss / 关闭" />
       <u-loading :visible="true" label="Local state / 本地状态" />
       <u-no-network :visible="true" title="Caller-declared state / 调用方声明状态" retry-text="Retry / 重试" />
@@ -130,12 +130,14 @@
         <u-line-progress :percent="fixtureProgressValue" />
       </u-stack>
 
-      <!-- @lang zh-CN P43 组合只使用页面声明的 tabs、tabbar、steps、pagination 与受控 overlay/feedback；不产生 router、timer、service 或请求。 @lang en The P43 composition uses page-declared tabs, tabbar, steps, pagination, and controlled overlay/feedback only; it creates no router, timer, service, or request. <lang><zh-CN>所有可见状态和 items 由页面 refs 拥有。</zh-CN><en>All visible state and items are owned by page refs.</en></lang> -->
+      <!-- @lang zh-CN 本段只使用页面声明的 tabs、tabbar、steps、pagination 与受控 overlay/feedback；也编译受限迁移 list/current/modelValue/pageSize/total 入口，不产生 router、timer、service 或请求。 @lang en This section uses only page-declared tabs, tabbar, steps, pagination, and controlled overlay/feedback; it also compiles constrained migration list/current/modelValue/pageSize/total entries and creates no router, timer, service, or request. <lang><zh-CN>所有可见状态和 items 由页面 refs 拥有。</zh-CN><en>All visible state and items are owned by page refs.</en></lang> -->
       <u-stack class="fixture-navigation" gap="sm">
         <u-tabs :model-value="fixtureTabValue" :items="fixtureTabItems" @update:model-value="updateFixtureTabValue" />
+        <u-tabs :items="[]" :list="fixtureMigrationTabItems" :current="1" />
         <u-tabbar :model-value="fixtureTabbarValue" :items="fixtureTabbarItems" @update:model-value="updateFixtureTabbarValue" />
         <u-steps :steps="fixtureStepItems" :current="fixtureStepCurrent" />
         <u-pagination :current="fixturePageValue" :page-count="3" @update:current="updateFixturePageValue" />
+        <u-pagination :model-value="2" :page-size="10" :total="21" />
         <u-button label="打开局部 sheet / Open local sheet" @click="openFixtureSheet" />
         <u-toast :visible="fixtureToastVisible" message="局部反馈 / Local feedback" close-text="关闭 / Close" @close="closeFixtureToast" />
         <u-loading-page :visible="fixtureLoadingVisible" text="页面 loading / Page loading" />
@@ -344,6 +346,11 @@ const fixtureTabItems = Object.freeze([
   Object.freeze({ label: '概览 / Overview', value: 'overview' }),
   Object.freeze({ label: '说明 / Notes', value: 'notes' }),
   Object.freeze({ label: '限制 / Limits', value: 'limits' })
+]);
+// <lang><zh-CN>迁移 tabs 项是页面自有的有限静态展示数据，只验证 list/current 编译解析，不形成动态 panel、路由或数据来源。</zh-CN><en>Migration tab items are finite static presentation data owned by the page and verify list/current compilation only; they form no dynamic panel, route, or data source.</en></lang>
+const fixtureMigrationTabItems = Object.freeze([
+  Object.freeze({ name: 'First / 第一项', value: 'first' }),
+  Object.freeze({ name: 'Second / 第二项', value: 'second' })
 ]);
 const fixtureTabbarItems = Object.freeze([
   Object.freeze({ label: '首页 / Home', value: 'home' }),

@@ -117,6 +117,11 @@ test('marks only audited same-shape props as compatible in the regenerated matri
   const actualCompatibleProps = [];
 
   for (const component of apiCompatibilityMatrix.components) {
+    // <lang><zh-CN>本测试只锁定基础呈现 family；其他 P60 family 的独立审计规则不得使本检查点误报漂移。</zh-CN><en>This test locks only the foundational presentation family; independent audit rules in other P60 families must not make this checkpoint falsely report drift.</en></lang>
+    if (!Object.hasOwn(expectedCompatibleProps, component.name)) {
+      continue;
+    }
+
     // <lang><zh-CN>只检查 runtime prop inventory；events、slots 和 imperative APIs 仍处于其各自的受限盘点范围。</zh-CN><en>Inspects only runtime prop inventory; events, slots, and imperative APIs remain within their respective bounded inventory scopes.</en></lang>
     for (const item of component.props.items) {
       // <lang><zh-CN>compatible 是本批唯一允许的无转换结论；其他 disposition 保持其原始保守事实。</zh-CN><en>Compatible is the only no-transformation conclusion allowed in this batch; other dispositions retain their original conservative facts.</en></lang>

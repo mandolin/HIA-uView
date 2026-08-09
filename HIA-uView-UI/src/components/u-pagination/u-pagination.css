@@ -4,6 +4,7 @@
  * @lang en Controlled page-selector styles; consumes finite page tokens only and includes no query or data cache.
  */
 .u-pagination { align-items: center; display: flex; flex-wrap: wrap; gap: var(--u-comp-pagination-gap); }
+.u-pagination__summary { color: var(--u-comp-pagination-foreground); font-size: var(--u-comp-pagination-item-size); min-width: var(--u-comp-pagination-item-min-width); text-align: center; }
 .u-pagination__control, .u-pagination__page { background: var(--u-comp-pagination-surface); border: 1px solid var(--u-comp-pagination-border); border-radius: var(--u-comp-pagination-radius); color: var(--u-comp-pagination-foreground); font-size: var(--u-comp-pagination-item-size); margin: 0; min-height: var(--u-comp-pagination-item-min-height); min-width: var(--u-comp-pagination-item-min-width); padding: var(--u-comp-pagination-item-padding); }
 .u-pagination__page--active { background: var(--u-comp-pagination-active-surface); border-color: var(--u-comp-pagination-active-border); color: var(--u-comp-pagination-active-foreground); font-weight: 600; }
 .u-pagination__control[disabled] { color: var(--u-comp-pagination-disabled-foreground); }
@@ -13,6 +14,12 @@
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-pagination {
   gap: 6px;
+}
+
+.u-pagination__summary {
+  color: #001b2e;
+  font-size: 12px;
+  min-width: 32px;
 }
 
 .u-pagination__control, .u-pagination__page {

@@ -195,11 +195,17 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-button|props|disabled',
   'u-button|props|loading',
   'u-button|props|text',
+  'u-cell-item|props|label',
+  'u-cell-item|props|required',
+  'u-cell-item|props|value',
   'u-empty|props|show',
   'u-empty|props|src',
   'u-empty|props|text',
   'u-icon|props|label',
   'u-image|props|src',
+  'u-pagination|props|modelValue',
+  'u-pagination|props|pageSize',
+  'u-pagination|props|total',
   'u-text|props|show',
   'u-text|props|text'
 ]);

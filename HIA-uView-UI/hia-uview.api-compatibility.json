@@ -8763,10 +8763,12 @@
                 {
                   "name": "label",
                   "typeKinds": [
+                    "Number",
                     "String"
                   ],
                   "typeOrder": [
-                    "String"
+                    "String",
+                    "Number"
                   ],
                   "default": {
                     "kind": "literal",
@@ -8781,8 +8783,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "label"
             }
           },
@@ -8833,12 +8835,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "required",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
+              "target": "required"
             }
           },
           {
@@ -9001,10 +9022,12 @@
                 {
                   "name": "value",
                   "typeKinds": [
+                    "Number",
                     "String"
                   ],
                   "typeOrder": [
-                    "String"
+                    "String",
+                    "Number"
                   ],
                   "default": {
                     "kind": "literal",
@@ -9019,8 +9042,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "value"
             }
           },
@@ -9090,12 +9113,17 @@
               "name": "default"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "default"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "default"
             }
           },
           {
@@ -9235,9 +9263,9 @@
         "disposition": "unsupported",
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
-          "compatible": 0,
-          "mapped": 5,
-          "unsupported": 23,
+          "compatible": 3,
+          "mapped": 4,
+          "unsupported": 21,
           "unresolved": 0
         }
       },
@@ -32675,12 +32703,17 @@
               "name": "default"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "default"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "default"
             }
           },
           {
@@ -32803,8 +32836,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 3,
-          "unsupported": 18,
+          "mapped": 4,
+          "unsupported": 17,
           "unresolved": 0
         }
       },
@@ -35003,12 +35036,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "modelValue",
+                  "typeKinds": [
+                    "Number"
+                  ],
+                  "typeOrder": [
+                    "Number"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": 1
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
+              "target": "modelValue"
             }
           },
           {
@@ -35106,12 +35158,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "pageSize",
+                  "typeKinds": [
+                    "Number"
+                  ],
+                  "typeOrder": [
+                    "Number"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": 10
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
+              "target": "pageSize"
             }
           },
           {
@@ -35236,12 +35307,30 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "total",
+                  "typeKinds": [
+                    "Number"
+                  ],
+                  "typeOrder": [
+                    "Number"
+                  ],
+                  "default": {
+                    "kind": "absent"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
+              "target": "total"
             }
           }
         ],
@@ -35276,12 +35365,17 @@
               "name": "update:modelValue"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "update:modelValue"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "update:modelValue"
             }
           }
         ],
@@ -35297,12 +35391,17 @@
               "name": "default"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "default"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "default"
             }
           }
         ],
@@ -35386,9 +35485,9 @@
         "disposition": "unsupported",
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
-          "compatible": 0,
-          "mapped": 3,
-          "unsupported": 11,
+          "compatible": 3,
+          "mapped": 5,
+          "unsupported": 6,
           "unresolved": 0
         }
       },
@@ -50089,12 +50188,33 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "current",
+                  "typeKinds": [
+                    "Number",
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "Number",
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "expression",
+                    "digest": "sha256:eb045d78d273107348b0300c01d29b7552d622abbc6faf81b3ec55359aa9950c"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "current"
             }
           },
           {
@@ -50407,12 +50527,30 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "list",
+                  "typeKinds": [
+                    "Array"
+                  ],
+                  "typeOrder": [
+                    "Array"
+                  ],
+                  "default": {
+                    "kind": "factory-array"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "list"
             }
           },
           {
@@ -50655,8 +50793,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 1,
-          "unsupported": 26,
+          "mapped": 3,
+          "unsupported": 24,
           "unresolved": 0
         }
       },
