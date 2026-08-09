@@ -18,6 +18,9 @@
 .u-tag--accent { background: var(--u-comp-tag-accent-surface); color: var(--u-comp-tag-accent-foreground); }
 /* <lang><zh-CN>根与 outline modifier 的受控组合以更高 specificity 覆盖 tone 的实心 surface，包括后置的小程序字面值 fallback；边框始终复用当前有限 tone 的文字色。</zh-CN><en>The controlled root-plus-outline-modifier selector overrides solid tone surfaces, including later Mini Program literal fallbacks, with higher specificity; the border always reuses the current finite tone text color.</en></lang> */
 .u-tag.u-tag--outline { background: transparent; border-color: currentColor; }
+/* <lang><zh-CN>primary/accent 描边使用各自实心 surface 色作为透明表面上的前景与边框，避免沿用实心标签的浅色 foreground 后在白底消失。</zh-CN><en>Primary and accent outlines use their solid surface colors as foreground and border on a transparent surface, avoiding the light solid-tag foreground disappearing on white.</en></lang> */
+.u-tag--primary.u-tag--outline { color: var(--u-comp-tag-primary-surface); }
+.u-tag--accent.u-tag--outline { color: var(--u-comp-tag-accent-surface); }
 .u-tag--disabled { opacity: var(--u-comp-tag-disabled-opacity); }
 
 /* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
@@ -65,6 +68,14 @@
 .u-tag--accent {
   background: #00a8d3;
   color: #001b2e;
+}
+
+.u-tag--primary.u-tag--outline {
+  color: #0047ab;
+}
+
+.u-tag--accent.u-tag--outline {
+  color: #00a8d3;
 }
 
 .u-tag--disabled {
