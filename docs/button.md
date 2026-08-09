@@ -24,6 +24,10 @@ The default slot is a text-label slot. When present, it supplies the visible lab
 
 默认插槽是文字标签插槽。存在时，它替代 `label` 或 `text` 提供可见标签，且必须解析为可见文字。首个契约不支持纯图标按钮或任意布局的按钮内容。
 
+The optional named `leading` slot provides one decorative visual before the visible text. It renders only when `label`, `text`, or the default text slot also supplies an action name, and it is hidden from the accessibility tree. The component performs no icon registry lookup and does not infer action meaning from the decoration.
+
+可选的具名 `leading` slot 在可见文字之前提供一项装饰视觉。只有 `label`、`text` 或默认文字 slot 同时提供操作名称时才会呈现，并从无障碍树隐藏。组件不查找图标 registry，也不从装饰推断操作含义。
+
 `UButton` emits only `click(event)`. A normal enabled, non-loading activation emits one `click` with the platform event. Disabled and loading states emit none. The component does not add debounce, throttle, navigation, backend, or business idempotency behavior; callers own those policies.
 
 `UButton` 仅触发 `click(event)`。正常的、启用且非加载状态的激活恰好触发一次并携带平台事件；禁用和加载状态不触发事件。组件不增加防抖、节流、导航、后端或业务幂等逻辑；这些策略由调用方负责。
@@ -82,7 +86,7 @@ Before an implementation is released, its fixture suite must cover the following
 1. Primary, secondary, and text variants in resting and pressed states. / 主、次要和文字变体的静止与按下状态。
 2. Disabled and loading states with visible non-color differentiation. / 具有可见非颜色区分的禁用与加载状态。
 3. Exactly-one `click` for enabled activation, and zero `click` events while disabled or loading. / 启用激活恰好一次 `click`；禁用或加载期间零次 `click`。
-4. `label`/`text` precedence, default-slot text rendering, and long `zh-Hans` and English labels. / `label`/`text` 优先级、默认插槽文字渲染，以及较长的 `zh-Hans` 与英文标签。
+4. `label`/`text` precedence, default-slot text rendering, a leading decoration paired with visible text, suppression of decoration without text, and long `zh-Hans` and English labels. / `label`/`text` 优先级、默认插槽文字渲染、与可见文字配对的前置装饰、无文字时抑制装饰，以及较长的 `zh-Hans` 与英文标签。
 5. Contrast checks for every released foreground/background state pair, including the HIA cobalt primary pair and any cyan treatment. / 每个发布的前景/背景状态组合的对比度检查，包括 HIA 钴蓝主操作组合和任何清透青样式。
 6. The documented minimum touch target or equivalent spacing, plus a recorded `mp-weixin` capability observation. / 已文档化的最小触控目标或等效间距，以及一份记录在案的 `mp-weixin` 能力观察。
 

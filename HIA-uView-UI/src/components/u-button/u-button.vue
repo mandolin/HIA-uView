@@ -1,13 +1,13 @@
 <!--
 @component UButton
-@lang zh-CN HIA-uView 首个独立实现的通用本地操作组件；仅实现已批准的 primary、secondary、text、尺寸、禁用、加载、标签与 click 契约。
-@lang en The first independently implemented generic local-action component in HIA-uView; implements only the approved primary, secondary, text, size, disabled, loading, label, and click contract.
+@lang zh-CN HIA-uView 首个独立实现的通用本地操作组件；仅实现已批准的 primary、secondary、text、尺寸、禁用、加载、可选前置装饰、标签与 click 契约。
+@lang en The first independently implemented generic local-action component in HIA-uView; implements only the approved primary, secondary, text, size, disabled, loading, optional leading decoration, label, and click contract.
 -->
 <template>
   <!--
   @lang zh-CN 原生按钮只绑定已归一的 class、禁用/加载状态和本地 click handler。
   @lang en The native button binds only normalized classes, disabled/loading state, and the local click handler.
-  <lang><zh-CN>加载时显示本地化文字，否则保留调用方 slot 或 label；组件不引入图标、计时器、请求或完成流程。</zh-CN><en>While loading it shows localized text; otherwise it retains caller slot or label, and introduces no icon, timer, request, or completion flow.</en></lang>
+  <lang><zh-CN>加载时显示本地化文字；常规状态可在可见文字前呈现受限装饰，但组件不查找图标、不创建纯图标按钮，也不引入计时器、请求或完成流程。</zh-CN><en>While loading it shows localized text; the normal state may render a bounded decoration before visible copy, but the component performs no icon lookup, creates no icon-only button, and introduces no timer, request, or completion flow.</en></lang>
   -->
   <button
     :class="buttonClasses"
@@ -15,13 +15,19 @@
     :loading="loading"
     @click="handleClick"
   >
+    <!--
+    @lang zh-CN 前置 slot 只有在同时存在可见 label/default slot 时才呈现，并从无障碍树隐藏；操作名称始终由文字承担。
+    @lang en The leading slot renders only alongside a visible label/default slot and remains hidden from the accessibility tree; text always carries the action name.
+    <lang><zh-CN>该装饰不参与操作命名或状态推断。</zh-CN><en>The decoration participates in neither action naming nor state inference.</en></lang>
+    -->
+    <view v-if="!loading && hasLeadingDecoration" class="u-button__leading" aria-hidden="true"><slot name="leading" /></view>
     <text v-if="loading" class="u-button__loading-text">{{ resolvedLoadingText }}</text>
     <slot v-else>{{ resolvedLabel }}</slot>
   </button>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, useSlots } from 'vue';
 import { resolveButtonMessage } from '../../localization/button-messages.mjs';
 
 // <lang><zh-CN>声明稳定的 kebab-case 组件名，使模板、manifest 与显式 plugin registry 使用同一运行时名称。</zh-CN><en>Declares the stable kebab-case component name so templates, the manifest, and the explicit plugin registry use one runtime name.</en></lang>
@@ -86,6 +92,12 @@ const resolvedLoadingText = computed(() => props.loadingText || resolveButtonMes
 
 // <lang><zh-CN>常规状态的可见标签优先保留 HIA 的 `label` 契约，再受控回退到迁移 `text`；默认 slot 仍由模板优先呈现。</zh-CN><en>The normal-state visible label preserves the HIA `label` contract first and then falls back in a controlled way to migration `text`; the template still gives the default slot precedence.</en></lang>
 const resolvedLabel = computed(() => props.label || props.text);
+
+// <lang><zh-CN>slot 引用只用于判定已声明的文字/前置装饰是否同时存在，不读取或改写 slot 内容。</zh-CN><en>The slot reference only determines whether declared text and leading decoration coexist and neither reads nor rewrites slot content.</en></lang>
+const slots = useSlots();
+
+// <lang><zh-CN>前置装饰必须与 label/text 或默认文字 slot 同时存在；缺少文字时拒绝渲染，防止公开面退化为无名称的纯图标按钮。</zh-CN><en>A leading decoration must coexist with label/text or the default text slot; it is suppressed without text, preventing the public surface from degrading into an unnamed icon-only button.</en></lang>
+const hasLeadingDecoration = computed(() => Boolean(slots.leading) && Boolean(slots.default || resolvedLabel.value));
 
 // <lang><zh-CN>根类只由已校验 props 导出，令变体、尺寸、block 和不可操作视觉保持可预测且无全局样式副作用。</zh-CN><en>Root classes derive only from validated props, keeping variant, size, block, and inactive visuals predictable and free of global-style side effects.</en></lang>
 const buttonClasses = computed(() => [

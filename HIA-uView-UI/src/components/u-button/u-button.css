@@ -32,6 +32,9 @@
   border: 0;
 }
 
+/* <lang><zh-CN>前置 slot 仅取得按钮现有 gap 前的一项紧凑装饰位置；调用方可提供视觉资产，但不能通过它取代可见文字或改变按钮布局轴。</zh-CN><en>The leading slot receives only one compact decoration position before the button's existing gap; callers may supply a visual asset but cannot use it to replace visible text or change the button layout axis.</en></lang> */
+.u-button__leading { align-items: center; display: inline-flex; flex: 0 0 auto; justify-content: center; line-height: 1; }
+
 /* <lang><zh-CN>block 只扩展按钮自身宽度；不强制父容器布局、对齐或业务页面间距。</zh-CN><en>Block expands only the button's own width and never forces parent layout, alignment, or business-page spacing.</en></lang> */
 .u-button--block {
   display: flex;

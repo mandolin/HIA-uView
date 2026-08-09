@@ -58,6 +58,22 @@ describe('UButton runtime behavior', () => {
     expect(slotted.text()).toContain('Slot action text');
     expect(loading.text()).toContain('Synchronizing local data');
   });
+
+  /**
+   * @lang zh-CN 验证前置装饰只有在可见文字同时存在时呈现，按钮不会因此扩展为无名称的纯图标操作。
+   * @lang en Verifies that a leading decoration renders only alongside visible text, so the button does not expand into an unnamed icon-only action.
+   * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+   */
+  it('bounds leading decoration to a visible text label', () => {
+    // <lang><zh-CN>带 label 的实例证明装饰进入唯一前置位置，而 label 继续承担操作名称。</zh-CN><en>The labeled instance proves the decoration enters the sole leading position while the label continues to carry the action name.</en></lang>
+    const labeled = mount(UButton, { props: { label: 'Browse venues' }, slots: { leading: '<text class="test-leading">+</text>' } });
+    // <lang><zh-CN>无 label/default slot 的实例证明组件拒绝呈现孤立装饰。</zh-CN><en>The instance without label/default slot proves the component suppresses an isolated decoration.</en></lang>
+    const iconOnly = mount(UButton, { slots: { leading: '<text class="test-leading">+</text>' } });
+
+    expect(labeled.find('.u-button__leading').exists()).toBe(true);
+    expect(labeled.text()).toContain('Browse venues');
+    expect(iconOnly.find('.u-button__leading').exists()).toBe(false);
+  });
 });
 
 /**
