@@ -115,10 +115,13 @@
         </u-form-item>
       </u-form>
 
-      <!-- @lang zh-CN 展示批次只组合本地文字符号、空源图片、initials、有限标签、徽标、分隔、数字和静态进度；不产生资产或任务服务。 @lang en The display batch composes local text symbol, empty-source image, initials, finite tag, badge, divider, number, and static progress only; it creates no asset or task service. <lang><zh-CN>所有值由页面 refs 拥有。</zh-CN><en>All values are owned by page refs.</en></lang> -->
+      <!-- @lang zh-CN 展示批次只组合本地文字符号、调用方图片来源、迁移文字、initials、有限标签、徽标、分隔、数字和静态进度；不产生资产、请求、导航或任务服务。 @lang en The display batch composes local text symbol, caller image source, migration copy, initials, finite tag, badge, divider, number, and static progress only; it creates no asset, request, routing, or task service. <lang><zh-CN>所有值与 click 观察均由页面 refs 拥有。</zh-CN><en>All values and click observations are owned by page refs.</en></lang> -->
       <u-stack class="fixture-display" gap="sm">
-        <u-icon name="•" label="中性符号 / Neutral symbol" />
-        <u-image :src="fixtureImageSource" alt="本地图片占位 / Local image placeholder" size="small" />
+        <u-icon name="•" :label="0" @click="recordFixturePresentationIntent('icon')" />
+        <u-image :src="fixtureImageSource" alt="本地图片占位 / Local image placeholder" size="small" @click="recordFixturePresentationIntent('image')" />
+        <u-text :show="true" :text="42" @click="recordFixturePresentationIntent('text')" />
+        <u-text :text="fixturePresentationIntent" type="secondary" />
+        <u-button text="迁移文字按钮 / Migration text button" @click="recordFixturePresentationIntent('button')" />
         <u-avatar text="HI" alt="initials 占位 / initials placeholder" size="small" />
         <u-tag :visible="fixtureTagVisible" text="本地标签 / Local tag" tone="primary" closable @close="hideFixtureTag" />
         <u-badge :value="fixtureBadgeValue"><text>徽标内容 / Badge content</text></u-badge>
@@ -197,8 +200,11 @@
         <!-- <lang><zh-CN>空态由页面根据派生数组决定；其 action 只请求页面重置本地 query，不加载、重试或滚动任何数据。</zh-CN><en>The page decides empty state from the derived array; its action only asks the page to reset local query and neither loads, retries, nor scrolls any data.</en></lang> -->
         <u-empty
           v-if="filteredCatalogRecords.length === 0"
+          :show="true"
+          src=""
           title="没有本地匹配项 / No local matches"
           description="请重置当前页面查询以恢复固定 mock 目录。"
+          text="迁移说明不会覆盖 description / Migration copy does not override description."
           action-text="重置本地查询 / Reset local query"
           @action="resetCatalogQuery"
         />
@@ -320,6 +326,10 @@ const fixtureFiles = Object.freeze([
 
 // <lang><zh-CN>新增高频控件均使用页面内局部 refs；它们不进入目录 mock、共享 store 或外部数据源。</zh-CN><en>New high-frequency controls use page-local refs only; they enter no catalog mock, shared store, or external data source.</en></lang>
 const fixtureTextareaValue = ref('');
+
+// <lang><zh-CN>基础呈现组件的本地 click 观察只记录有限名称，供 compile fixture 保留调用方事件所有权；它不触发导航、预览、请求或持久化。</zh-CN><en>The local click observation for foundational presentation components records only a finite name so the compile fixture retains caller event ownership; it triggers no routing, preview, request, or persistence.</en></lang>
+const fixturePresentationIntent = ref('none');
+
 const fixtureSwitchValue = ref(false);
 const fixtureNumberValue = ref(1);
 const fixtureRateValue = ref(0);
@@ -562,6 +572,17 @@ const catalogQueryValidationState = computed(() => (catalogQueryValidationMessag
  */
 function updateFixtureTextareaValue(value) {
   fixtureTextareaValue.value = value;
+}
+
+/**
+ * @lang zh-CN 记录基础呈现组件报告的本地 click 名称。它只更新当前页面 ref，不解释图片、文字、图标或按钮意图为业务行为。
+ * @lang en Records a local click name reported by a foundational presentation component. It updates only the current-page ref and does not interpret image, text, icon, or button intent as business behavior.
+ * @param {'button'|'icon'|'image'|'text'} intent <lang><zh-CN>固定 fixture 内允许记录的本地呈现意图名称。</zh-CN><en>Local presentation-intent name allowed by this fixed fixture.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写当前页面观察 ref。</zh-CN><en>No return value; writes only the current-page observation ref.</en></lang>
+ */
+function recordFixturePresentationIntent(intent) {
+  // <lang><zh-CN>来源字符串只来自模板中的四个固定字面量；函数不接受自由文本、不会调用平台 API，也不保留事件对象。</zh-CN><en>The source string comes only from four fixed template literals; the function accepts no free text, calls no platform API, and retains no event object.</en></lang>
+  fixturePresentationIntent.value = intent;
 }
 
 /**

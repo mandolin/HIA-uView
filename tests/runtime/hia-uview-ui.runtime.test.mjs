@@ -61,6 +61,97 @@ describe('UButton runtime behavior', () => {
 });
 
 /**
+ * @lang zh-CN 验证基础呈现组件的迁移文字、可见性、调用方图片源与本地 click 行为；这些断言不扩展为请求、导航、预览、数据或业务流程测试。
+ * @lang en Verifies migration copy, visibility, caller image source, and local click behavior for foundational presentation components; these assertions do not expand into request, routing, preview, data, or business-flow tests.
+ */
+describe('Foundational presentation compatibility behavior', () => {
+  /**
+   * @lang zh-CN 验证按钮在没有 slot 时保留 label 优先级，并在 label 为空时受控显示迁移 text。
+   * @lang en Verifies that the button preserves label precedence without a slot and controlledly displays migration text when label is empty.
+   */
+  it('preserves button label precedence and text fallback', () => {
+    // <lang><zh-CN>冲突实例确保 HIA label 仍覆盖迁移 text，避免升级改变既有调用方可见文案。</zh-CN><en>The conflicting instance ensures HIA label still overrides migration text, avoiding an upgrade that changes existing caller-visible copy.</en></lang>
+    const preferredLabel = mount(UButton, { props: { label: 'Current label', text: 'Legacy text' } });
+
+    // <lang><zh-CN>回退实例只提供 text，以验证受限迁移入口能够独立产生可见标签。</zh-CN><en>The fallback instance supplies only text, verifying that the bounded migration entry can independently produce a visible label.</en></lang>
+    const fallbackText = mount(UButton, { props: { text: 'Legacy text' } });
+
+    expect(preferredLabel.text()).toContain('Current label');
+    expect(preferredLabel.text()).not.toContain('Legacy text');
+    expect(fallbackText.text()).toContain('Legacy text');
+  });
+
+  /**
+   * @lang zh-CN 验证空态由 show 控制投影，description 优先于 text，并仅把非空调用方来源交给嵌套 UImage。
+   * @lang en Verifies that show controls empty-state projection, description takes precedence over text, and only a non-empty caller source is passed to nested UImage.
+   */
+  it('projects empty-state migration surfaces without acquiring data behavior', () => {
+    // <lang><zh-CN>隐藏实例必须完全没有根节点，且不会触发 action、数据读取或状态推断。</zh-CN><en>The hidden instance must have no root node and triggers no action, data read, or state inference.</en></lang>
+    const hidden = mount(UEmpty, { props: { show: false, title: 'Hidden state' } });
+
+    // <lang><zh-CN>可见实例同时给出 HIA 与迁移次级文字，检查 HIA description 保持优先级；固定测试来源只验证模板投影，不发出网络请求。</zh-CN><en>The visible instance supplies both HIA and migration secondary copy, checking that HIA description retains precedence; the fixed test source verifies template projection only and sends no network request.</en></lang>
+    const visible = mount(UEmpty, {
+      props: {
+        title: 'No local entries',
+        description: 'Current description',
+        text: 'Legacy description',
+        src: 'https://example.invalid/local-empty.png'
+      }
+    });
+
+    expect(hidden.find('.u-empty').exists()).toBe(false);
+    expect(visible.text()).toContain('No local entries');
+    expect(visible.text()).toContain('Current description');
+    expect(visible.text()).not.toContain('Legacy description');
+    expect(visible.get('image.u-image__native').attributes('src')).toBe('https://example.invalid/local-empty.png');
+  });
+
+  /**
+   * @lang zh-CN 验证图片和文本只转发原始本地 click，且文本能够呈现有限 numeric text 并由 show 移除投影。
+   * @lang en Verifies that image and text forward only original local click, and text can present bounded numeric text and be removed by show.
+   * @returns {Promise<void>} <lang><zh-CN>无返回值；异步点击触发完成后解决。</zh-CN><en>No return value; resolves after asynchronous click triggers complete.</en></lang>
+   */
+  it('forwards presentation click intent and respects text visibility', async () => {
+    // <lang><zh-CN>图片实例只使用调用方来源与替代文字；断言不观察下载、缓存或预览。</zh-CN><en>The image instance uses only caller source and alternative text; the assertion observes no download, cache, or preview.</en></lang>
+    const image = mount(UImage, { props: { src: 'https://example.invalid/local-image.png', alt: 'Local image' } });
+
+    // <lang><zh-CN>可见文本实例使用数字以覆盖迁移允许的第二种受限类型。</zh-CN><en>The visible text instance uses a number to cover the second bounded type allowed for migration.</en></lang>
+    const text = mount(UText, { props: { text: 42 } });
+
+    // <lang><zh-CN>隐藏文本不投影任何根节点，父级仍拥有决定何时显示的职责。</zh-CN><en>The hidden text projects no root node; the parent retains responsibility for deciding when to display it.</en></lang>
+    const hiddenText = mount(UText, { props: { show: false, text: 'Hidden text' } });
+
+    await image.get('.u-image').trigger('click');
+    await text.get('.u-text').trigger('click');
+
+    expect(image.emitted('click')).toHaveLength(1);
+    expect(text.text()).toContain('42');
+    expect(text.emitted('click')).toHaveLength(1);
+    expect(hiddenText.find('.u-text').exists()).toBe(false);
+  });
+
+  /**
+   * @lang zh-CN 验证数字零作为图标可见标签而不是空标签，并且 enabled/disabled click guard 保持本地零副作用边界。
+   * @lang en Verifies that numeric zero is an icon visible label rather than an empty label and that enabled/disabled click guards retain the local zero-side-effect boundary.
+   * @returns {Promise<void>} <lang><zh-CN>无返回值；异步点击触发完成后解决。</zh-CN><en>No return value; resolves after asynchronous click triggers complete.</en></lang>
+   */
+  it('retains numeric icon labels and guards disabled click intent', async () => {
+    // <lang><zh-CN>数字零实例证明 label 不依赖 JavaScript truthiness；它仍由调用方定义含义。</zh-CN><en>The numeric-zero instance proves label does not depend on JavaScript truthiness; the caller still defines its meaning.</en></lang>
+    const enabled = mount(UIcon, { props: { name: '•', label: 0 } });
+
+    // <lang><zh-CN>禁用实例验证 guard 不会被模板触发绕过，且不产生导航或业务副作用。</zh-CN><en>The disabled instance verifies that the guard cannot be bypassed by a template trigger and creates no navigation or business side effect.</en></lang>
+    const disabled = mount(UIcon, { props: { name: '•', label: 0, disabled: true } });
+
+    await enabled.get('.u-icon').trigger('click');
+    await disabled.get('.u-icon').trigger('click');
+
+    expect(enabled.text()).toContain('0');
+    expect(enabled.emitted('click')).toHaveLength(1);
+    expect(disabled.emitted('click')).toBeUndefined();
+  });
+});
+
+/**
  * @lang zh-CN 验证 UStack 将所有受限 props 映射为稳定局部类，并保留默认插槽子项而不新增事件。
  * @lang en Verifies that UStack maps every constrained prop to stable local classes and retains default-slot children without adding events.
  */

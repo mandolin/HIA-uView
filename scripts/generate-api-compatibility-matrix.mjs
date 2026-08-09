@@ -187,10 +187,22 @@ const P1_COMPONENTS = new Set([
 const SERVICE_COMPONENTS = new Set(['u-modal', 'u-toast']);
 
 /**
- * @lang zh-CN 只有经过人工语义审计的精确规则才能产生 `compatible`。当前集合有意为空，结构同名仅是待复核映射候选。
- * @lang en Only exact rules that passed human semantic audit may produce `compatible`. The set is intentionally empty because structural name matches are review candidates only.
+ * @lang zh-CN 只有经过人工语义审计、独立实现和回归测试的精确规则才能产生 `compatible`。未列入的结构同名能力仍是待复核映射候选。
+ * @lang en Only exact rules that passed semantic audit, independent implementation, and regression tests may produce `compatible`. Structural name matches not listed here remain review candidates.
  */
-const EXPLICIT_COMPATIBILITY_RULES = new Set();
+const EXPLICIT_COMPATIBILITY_RULES = new Set([
+  // <lang><zh-CN>基础呈现组件的 P0 prop 只在类型、默认值、required 与 validator 事实均相同时进入 compatible；事件和 slot 仍保持 names-only mapped。</zh-CN><en>P0 props of foundational presentation components enter compatible only when type, default, required, and validator facts all match; events and slots remain names-only mapped.</en></lang>
+  'u-button|props|disabled',
+  'u-button|props|loading',
+  'u-button|props|text',
+  'u-empty|props|show',
+  'u-empty|props|src',
+  'u-empty|props|text',
+  'u-icon|props|label',
+  'u-image|props|src',
+  'u-text|props|show',
+  'u-text|props|text'
+]);
 
 /**
  * @lang zh-CN 组件 API 的核心状态/交互名称；P0 组件中的这些 capability 保持 P0，P1 组件中保持 P1。

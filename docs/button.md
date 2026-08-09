@@ -17,11 +17,12 @@
 | `disabled` | `boolean` | `false` | Makes the action unavailable and suppresses activation. / 使操作不可用并抑制激活。 |
 | `loading` | `boolean` | `false` | Shows progress, suppresses activation, and keeps the action label available. / 显示进行中状态、抑制激活，并保持操作标签可用。 |
 | `loadingText` | `string` | Component message `component.button.loading` | Replaces the visible label while loading. The first runtime locale plan covers `zh-Hans` and `en`. / 加载时替换可见标签；首个运行时语言计划覆盖 `zh-Hans` 与 `en`。 |
-| `label` | `string` | — | Required when the default slot is absent. It supplies the visible text label. / 默认插槽缺失时必填，提供可见文字标签。 |
+| `label` | `string` | `''` | Primary HIA visible text label. It takes precedence over migration `text` when the default slot is absent. / HIA 的主要可见文字标签。默认插槽缺失时，它优先于迁移 `text`。 |
+| `text` | `string` | `''` | Migration text entry for uView-family callers. It supplies the visible text label only when `label` and the default slot are absent. / 面向 uView 系列调用方的迁移文字入口。仅在 `label` 与默认插槽均缺失时提供可见文字标签。 |
 
-The default slot is a text-label slot. When present, it supplies the visible label instead of `label`; it must resolve to visible text. Icon-only and arbitrary-layout button content are not part of this first contract.
+The default slot is a text-label slot. When present, it supplies the visible label instead of `label` or `text`; it must resolve to visible text. Icon-only and arbitrary-layout button content are not part of this first contract.
 
-默认插槽是文字标签插槽。存在时，它替代 `label` 提供可见标签，且必须解析为可见文字。首个契约不支持纯图标按钮或任意布局的按钮内容。
+默认插槽是文字标签插槽。存在时，它替代 `label` 或 `text` 提供可见标签，且必须解析为可见文字。首个契约不支持纯图标按钮或任意布局的按钮内容。
 
 `UButton` emits only `click(event)`. A normal enabled, non-loading activation emits one `click` with the platform event. Disabled and loading states emit none. The component does not add debounce, throttle, navigation, backend, or business idempotency behavior; callers own those policies.
 
@@ -81,7 +82,7 @@ Before an implementation is released, its fixture suite must cover the following
 1. Primary, secondary, and text variants in resting and pressed states. / 主、次要和文字变体的静止与按下状态。
 2. Disabled and loading states with visible non-color differentiation. / 具有可见非颜色区分的禁用与加载状态。
 3. Exactly-one `click` for enabled activation, and zero `click` events while disabled or loading. / 启用激活恰好一次 `click`；禁用或加载期间零次 `click`。
-4. `label` rendering, default-slot text rendering, and long `zh-Hans` and English labels. / `label` 渲染、默认插槽文字渲染，以及较长的 `zh-Hans` 与英文标签。
+4. `label`/`text` precedence, default-slot text rendering, and long `zh-Hans` and English labels. / `label`/`text` 优先级、默认插槽文字渲染，以及较长的 `zh-Hans` 与英文标签。
 5. Contrast checks for every released foreground/background state pair, including the HIA cobalt primary pair and any cyan treatment. / 每个发布的前景/背景状态组合的对比度检查，包括 HIA 钴蓝主操作组合和任何清透青样式。
 6. The documented minimum touch target or equivalent spacing, plus a recorded `mp-weixin` capability observation. / 已文档化的最小触控目标或等效间距，以及一份记录在案的 `mp-weixin` 能力观察。
 

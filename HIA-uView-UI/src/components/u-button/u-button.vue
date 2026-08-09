@@ -16,7 +16,7 @@
     @click="handleClick"
   >
     <text v-if="loading" class="u-button__loading-text">{{ resolvedLoadingText }}</text>
-    <slot v-else>{{ label }}</slot>
+    <slot v-else>{{ resolvedLabel }}</slot>
   </button>
 </template>
 
@@ -67,6 +67,11 @@ const props = defineProps({
   label: {
     type: String,
     default: ''
+  },
+  // <lang><zh-CN>`text` 是面向既有 uView 调用方的迁移文字入口；当 `label` 为空且没有默认 slot 时才成为可见标签，现有 `label` 保持优先级。</zh-CN><en>`text` is a migration copy entry for existing uView callers; it becomes the visible label only when `label` is empty and no default slot exists, while existing `label` keeps precedence.</en></lang>
+  text: {
+    type: String,
+    default: ''
   }
 });
 
@@ -78,6 +83,9 @@ const isInactive = computed(() => props.disabled || props.loading);
 
 // <lang><zh-CN>加载文案优先使用调用方文字，缺失时才读取受限 locale resolver；不会缓存、请求或写入 locale。</zh-CN><en>Loading copy prefers caller text and consults the constrained locale resolver only when absent; it never caches, requests, or writes locale.</en></lang>
 const resolvedLoadingText = computed(() => props.loadingText || resolveButtonMessage('component.button.loading'));
+
+// <lang><zh-CN>常规状态的可见标签优先保留 HIA 的 `label` 契约，再受控回退到迁移 `text`；默认 slot 仍由模板优先呈现。</zh-CN><en>The normal-state visible label preserves the HIA `label` contract first and then falls back in a controlled way to migration `text`; the template still gives the default slot precedence.</en></lang>
+const resolvedLabel = computed(() => props.label || props.text);
 
 // <lang><zh-CN>根类只由已校验 props 导出，令变体、尺寸、block 和不可操作视觉保持可预测且无全局样式副作用。</zh-CN><en>Root classes derive only from validated props, keeping variant, size, block, and inactive visuals predictable and free of global-style side effects.</en></lang>
 const buttonClasses = computed(() => [

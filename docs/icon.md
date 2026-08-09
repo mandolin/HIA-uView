@@ -7,6 +7,6 @@
 
 `UIcon` 通过 `name` 或默认 slot 呈现调用方文字。它不把名称转换为 glyph、不加载资产、不推断含义，也不导航。
 
-Props are `name`, `label`, `size`, `tone`, and `disabled`; the optional `click` event carries local intent only. The root namespace is `u-icon` and consumes `--u-comp-icon-*` tokens. Use a visible label or caller-owned accessible description when the symbol is not self-explanatory.
+Props are `name`, `label` (`string | number`), `size`, `tone`, and `disabled`; the optional `click` event carries local intent only. Numeric `0` is a visible label, while the empty string is the only no-label value. The root namespace is `u-icon` and consumes `--u-comp-icon-*` tokens. Use a visible label or caller-owned accessible description when the symbol is not self-explanatory.
 
-属性包括 `name`、`label`、`size`、`tone` 和 `disabled`；可选 `click` 事件只携带本地意图。根命名空间为 `u-icon`，消费 `--u-comp-icon-*` token。符号无法自解释时，应由调用方提供可见标签或无障碍描述。
+属性包括 `name`、`label`（`string | number`）、`size`、`tone` 和 `disabled`；可选 `click` 事件只携带本地意图。数值 `0` 是可见标签，只有空字符串表示无标签。根命名空间为 `u-icon`，消费 `--u-comp-icon-*` token。符号无法自解释时，应由调用方提供可见标签或无障碍描述。

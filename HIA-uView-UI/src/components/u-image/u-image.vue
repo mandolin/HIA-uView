@@ -4,7 +4,11 @@
 @lang en Presents a caller-provided native image source, size, shape, and alternative text; it owns no request, cache, upload, download, or bundled asset.
 -->
 <template>
-  <view :class="rootClasses" role="img" :aria-label="alt || errorText">
+  <!--
+  @lang zh-CN 根节点只把本地 click 意图交还调用方，不把图片点击解释为导航、预览、下载或远程操作。
+  @lang en The root returns only local click intent to the caller and never interprets an image click as navigation, preview, download, or remote operation.
+  -->
+  <view :class="rootClasses" role="img" :aria-label="alt || errorText" @click="handleClick">
     <image
       v-if="!hasError || !showError"
       class="u-image__native"
@@ -21,9 +25,10 @@
 <script setup>
 import { computed, ref } from 'vue';
 
-// <lang><zh-CN>模板名保持 u-image 迁移熟悉度，但 src、alt 和错误后续均由调用方拥有。</zh-CN><en>Retains the u-image migration name while the caller owns src, alt, and all error follow-up.</en></lang>
+// <lang><zh-CN>模板名保持 u-image 迁移熟悉度，但 src、alt、点击含义和错误后续均由调用方拥有。</zh-CN><en>Retains the u-image migration name while the caller owns src, alt, click meaning, and all error follow-up.</en></lang>
 defineOptions({ name: 'u-image' });
 
+// <lang><zh-CN>图片只接收有限原生呈现选项与调用方文字；它不接收请求、缓存、上传、下载或预览流程参数。</zh-CN><en>The image accepts only bounded native-presentation options and caller text; it accepts no request, cache, upload, download, or preview-flow parameter.</en></lang>
 const props = defineProps({
   src: { type: String, default: '' },
   alt: { type: String, default: '' },
@@ -35,14 +40,21 @@ const props = defineProps({
   errorText: { type: String, default: '图片不可用 / Image unavailable' }
 });
 
-// <lang><zh-CN>load/error 只报告本地原生呈现状态，不把平台结果转换成远程错误协议。</zh-CN><en>load/error report local native presentation state only and never turn platform results into a remote error protocol.</en></lang>
-const emit = defineEmits(['load', 'error']);
+// <lang><zh-CN>load/error/click 只报告本地原生呈现或调用方意图，不把平台结果转换成远程错误协议或图片操作流程。</zh-CN><en>load/error/click report only local native presentation or caller intent and never turn platform results into a remote error protocol or image-operation flow.</en></lang>
+const emit = defineEmits(['load', 'error', 'click']);
+
+// <lang><zh-CN>错误状态只属于当前组件实例，加载成功会清除它；状态不写入调用方来源、缓存或全局 store。</zh-CN><en>Error state belongs only to the current component instance and a successful load clears it; it writes neither caller source, cache, nor global store.</en></lang>
 const hasError = ref(false);
 
 // <lang><zh-CN>仅允许已知原生 mode，未知值回退到 aspectFill。</zh-CN><en>Allows only known native modes and falls back to aspectFill for unknown values.</en></lang>
 const safeMode = computed(() => ['scaleToFill', 'aspectFit', 'aspectFill', 'widthFix', 'heightFix', 'top', 'bottom', 'center', 'left', 'right'].includes(props.mode) ? props.mode : 'aspectFill');
+
+// <lang><zh-CN>根类仅由有限的形状、尺寸与本地错误状态组合，避免调用方字符串进入未受限 CSS 类。</zh-CN><en>Root classes combine only finite shape, size, and local error state, preventing caller strings from entering unconstrained CSS classes.</en></lang>
 const rootClasses = computed(() => {
+  // <lang><zh-CN>未知形状稳定回退为 square，保持本地展示而不扩大 CSS 表面。</zh-CN><en>An unknown shape stably falls back to square, retaining local presentation without expanding the CSS surface.</en></lang>
   const shape = ['square', 'rounded', 'circle'].includes(props.shape) ? props.shape : 'square';
+
+  // <lang><zh-CN>未知尺寸稳定回退为 medium，组件不测量 viewport 或重排父级布局。</zh-CN><en>An unknown size stably falls back to medium; the component neither measures the viewport nor reflows parent layout.</en></lang>
   const size = ['small', 'medium', 'large'].includes(props.size) ? props.size : 'medium';
   return ['u-image', `u-image--${shape}`, `u-image--${size}`, { 'u-image--error': hasError.value }];
 });
@@ -54,7 +66,10 @@ const rootClasses = computed(() => {
  * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
  */
 function handleLoad(event) {
+  // <lang><zh-CN>原生加载成功仅清除当前实例的错误呈现，不修改调用方的 source 或业务状态。</zh-CN><en>Native load success clears only this instance's error presentation and does not modify caller source or business state.</en></lang>
   hasError.value = false;
+
+  // <lang><zh-CN>原样回传平台事件，方便调用方自行记录或决定后续界面。</zh-CN><en>Forwards the platform event unchanged so the caller may independently record it or decide later UI.</en></lang>
   emit('load', event);
 }
 
@@ -65,8 +80,22 @@ function handleLoad(event) {
  * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
  */
 function handleError(event) {
+  // <lang><zh-CN>原生错误只切换当前 fallback 呈现，不尝试补源、重试、下载或报告远程协议。</zh-CN><en>A native error switches only current fallback presentation and does not attempt source replacement, retry, download, or remote-protocol reporting.</en></lang>
   hasError.value = true;
+
+  // <lang><zh-CN>原样回传平台事件，由调用方决定是否记录、替换来源或改变页面状态。</zh-CN><en>Forwards the platform event unchanged; the caller decides whether to record it, replace the source, or change page state.</en></lang>
   emit('error', event);
+}
+
+/**
+ * @lang zh-CN 转发图片根的原始本地 click 意图；本函数不打开预览、下载资源、导航或解释图片业务含义。
+ * @lang en Forwards original local click intent from the image root; this function opens no preview, downloads no resource, routes nowhere, and interprets no image business meaning.
+ * @param {unknown} event <lang><zh-CN>根节点提供的本地点击事件。</zh-CN><en>Local click event supplied by the root node.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；emit 原始 `click`。</zh-CN><en>No return value; emits original `click`.</en></lang>
+ */
+function handleClick(event) {
+  // <lang><zh-CN>点击语义完全由调用方拥有，因此无需内部 guard、状态写回或平台 API 调用。</zh-CN><en>Click meaning belongs entirely to the caller, so no internal guard, state write-back, or platform API call is required.</en></lang>
+  emit('click', event);
 }
 </script>
 
