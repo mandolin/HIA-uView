@@ -14,6 +14,8 @@
   border-radius: var(--u-comp-button-radius);
   box-sizing: border-box;
   display: inline-flex;
+  /* <lang><zh-CN>原生 button 可能采用平台默认字体；显式继承宿主字体可保持组合页面文字一致，但不引入字体资产、字体 token 或主题 API。</zh-CN><en>A native button can select a platform-default font; explicitly inheriting the host font keeps composed page text consistent without introducing a font asset, font token, or theme API.</en></lang> */
+  font-family: inherit;
   font-size: var(--u-comp-button-font-size-md);
   font-weight: 600;
   gap: var(--u-comp-button-gap);

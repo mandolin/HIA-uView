@@ -24,9 +24,10 @@ const expectedCompatibleProps = Object.freeze({
 });
 
 // <lang><zh-CN>并行读取固定公开输入，避免读取顺序、缓存或目录状态成为隐式契约。</zh-CN><en>Reads fixed public inputs in parallel, avoiding read order, cache, or directory state becoming an implicit contract.</en></lang>
-const [inputSource, searchSource, textareaSource, fieldSource, formItemSource, inputDocumentation, searchDocumentation, textareaDocumentation, fieldDocumentation, formDocumentation, formItemDocumentation, fixtureSource, generatorSource, matrixSource] = await Promise.all([
+const [inputSource, searchSource, searchStyles, textareaSource, fieldSource, formItemSource, inputDocumentation, searchDocumentation, textareaDocumentation, fieldDocumentation, formDocumentation, formItemDocumentation, fixtureSource, generatorSource, matrixSource] = await Promise.all([
   readFile('HIA-uView-UI/src/components/u-input/u-input.vue', 'utf8'),
   readFile('HIA-uView-UI/src/components/u-search/u-search.vue', 'utf8'),
+  readFile('HIA-uView-UI/src/components/u-search/u-search.css', 'utf8'),
   readFile('HIA-uView-UI/src/components/u-textarea/u-textarea.vue', 'utf8'),
   readFile('HIA-uView-UI/src/components/u-field/u-field.vue', 'utf8'),
   readFile('HIA-uView-UI/src/components/u-form-item/u-form-item.vue', 'utf8'),
@@ -70,6 +71,9 @@ test('keeps controlled input and presentational form migration surfaces explicit
   // <lang><zh-CN>查询和多行输入必须同时保留原始 input 与同值 change，点击仅作为受控区域的本地观察。</zh-CN><en>Search and multiline input must retain both raw input and same-value change, while click is only a local observation of the controlled region.</en></lang>
   assert.match(searchSource, /const emit = defineEmits\(\['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click', 'search', 'clear'\]\);/u);
   assert.match(searchSource, /emit\('change', nextValue\);/u);
+  // <lang><zh-CN>查询输入、清除与 action 都必须继承宿主字体；该静态合同防止原生控件恢复平台默认字体，同时不指定任何字体值。</zh-CN><en>Query input, clear, and action controls must all inherit the host font; this static contract prevents native controls from reverting to platform defaults while specifying no font value.</en></lang>
+  assert.match(searchStyles, /\.u-search__input\s*\{[\s\S]*?font-family:\s*inherit;/u);
+  assert.match(searchStyles, /\.u-search__clear,\s*\n\.u-search__action\s*\{[\s\S]*?font-family:\s*inherit;/u);
   assert.match(textareaSource, /const emit = defineEmits\(\['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click'\]\);/u);
   assert.match(textareaSource, /emit\('change', nextValue\);/u);
 

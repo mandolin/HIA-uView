@@ -65,6 +65,10 @@ The primary treatment maps to the documented HIA cobalt semantic action color. A
 
 主操作样式映射到已文档化的 HIA 钴蓝语义操作色。实底清透青样式必须使用已文档化的深色前景，默认不得使用白色。HIA 浅色主题已经实现首轮具体值：主操作为钴蓝/白色，次要操作为白底、钴蓝边框和深海军蓝前景，文字操作为透明背景和钴蓝前景。禁用变体使用 neutral-50 表面或次要文字前景并配合虚线边框；加载状态保留可见本地化文字、原生 loading 指示器和虚线边框。已文档化的尺寸最小高度为 `sm` 40px、`md` 44px、`lg` 48px；`md` 是基础触控目标。
 
+The native button root inherits the application font so its label remains consistent with surrounding caller-owned text. This inheritance is a composition rule, not a font theme API: `UButton` bundles no font and declares no component or system font token.
+
+原生 button 根节点继承应用字体，使按钮标签与周围由调用方拥有的文字保持一致。该继承是组合规则，而不是字体主题 API：`UButton` 不捆绑字体，也不声明组件级或系统级字体 token。
+
 主操作样式映射到已文档化的 HIA 钴蓝语义操作色。实底清透青样式必须使用已文档化的深色前景，默认不得使用白色。具体组件 token 值以及所有状态的对比度组合，均须在发布前由实现 fixture 验证。
 
 ## Accessibility and platform disclosure / 无障碍与平台披露

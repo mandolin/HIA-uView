@@ -25,6 +25,8 @@
   box-sizing: border-box;
   color: var(--u-comp-search-foreground);
   flex: 1;
+  /* <lang><zh-CN>原生 input 显式继承宿主字体，防止其平台默认字体与相邻查询控件分裂；组件不选择或加载字体。</zh-CN><en>The native input explicitly inherits the host font to prevent its platform default from diverging from adjacent query controls; the component selects and loads no font.</en></lang> */
+  font-family: inherit;
   font-size: var(--u-comp-search-font-size);
   min-width: 0;
   padding: 0;
@@ -36,6 +38,8 @@
   background: transparent;
   border: 0;
   color: var(--u-comp-search-action-foreground);
+  /* <lang><zh-CN>清除与 action 控件采用和输入相同的宿主字体，使一个搜索组合保持一致且不建立新的字体定制面。</zh-CN><en>Clear and action controls use the same host font as the input so one search composition stays consistent without creating a new font-customization surface.</en></lang> */
+  font-family: inherit;
   min-height: var(--u-comp-search-control-min-height);
   min-width: var(--u-comp-search-control-min-width);
   padding: 0 var(--u-comp-search-control-padding);

@@ -53,6 +53,8 @@ test('keeps UButton inside its initial component contract', async () => {
   assert.match(component, /resolveButtonMessage\('component\.button\.loading'\)/);
   assert.match(styles, /--u-comp-button-primary-background/);
   assert.match(styles, /--u-comp-button-min-height/);
+  // <lang><zh-CN>原生 button 必须继承宿主字体，避免平台默认字体破坏组合一致性；断言只锁定继承规则，不把字体值提升为组件 token 或 prop。</zh-CN><en>The native button must inherit the host font so a platform default cannot break composition consistency; the assertion locks only the inheritance rule and does not elevate a font value into a component token or prop.</en></lang>
+  assert.match(authoredStyles, /\.u-button\s*\{[\s\S]*?font-family:\s*inherit;/u);
 
   // <lang><zh-CN>拒绝维护者 CSS 中直接 hex 色，确保可见颜色来自已审计 theme token；MP-WEIXIN 生成区块的字面值仅是该默认主题的受门禁投影，不是组件私有设计决定。</zh-CN><en>Rejects direct hexadecimal colors in maintainer-authored CSS so visible color comes from audited theme tokens; literals in the generated MP-WEIXIN block are a gated projection of that default theme, not a component-private design decision.</en></lang>
   assert.notEqual(authoredStyles.length, styles.length, 'UButton must retain the generated Mini Program literal fallback marker.');

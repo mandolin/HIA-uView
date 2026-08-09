@@ -24,3 +24,7 @@ Events are `update:modelValue`, `input`, `change`, `focus`, `blur`, `confirm`, `
 The root namespace is `u-search` and consumes `--u-comp-search-*`. Compose a visible label and disclose the chosen query policy in the caller.
 
 根命名空间为 `u-search`，消费 `--u-comp-search-*`。调用方应组合可见标签，并自行披露采用的查询策略。
+
+The native input, clear control, and action control inherit the application font so the composed query surface stays typographically consistent. `USearch` bundles no font and exposes no font token or font-selection prop; font selection remains application-owned.
+
+原生 input、清除控件和 action 控件继承应用字体，使组合查询表面的文字保持一致。`USearch` 不捆绑字体，也不暴露字体 token 或字体选择 prop；字体选择仍由应用拥有。
