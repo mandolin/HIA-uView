@@ -106,7 +106,7 @@
           />
         </u-form-item>
         <u-form-item label="本地开关 / Local switch">
-          <u-switch :model-value="fixtureSwitchValue" label="启用样例 / Enable sample" @update:model-value="updateFixtureSwitchValue" />
+          <u-switch :model-value="fixtureSwitchValue" :loading="fixtureSwitchBusy" label="启用样例 / Enable sample" @update:model-value="updateFixtureSwitchValue" />
         </u-form-item>
         <u-form-item label="数量 / Quantity">
           <u-number-box :model-value="fixtureNumberValue" :min="0" :max="9" @update:model-value="updateFixtureNumberValue" />
@@ -193,6 +193,11 @@
         <u-checkbox value="local-one" label="本地多选 One / Local checkbox One" />
         <u-checkbox value="local-two" label="本地多选 Two / Local checkbox Two" />
       </u-checkbox-group>
+      <!-- @lang zh-CN 独立选择示例只验证标准 modelValue、数值 value 与 default slot 的静态编译组合；页面仍拥有所有写回。 @lang en The independent choice example verifies only static compiler composition for standard modelValue, numeric value, and a default slot; the page still owns every writeback. <lang><zh-CN>它不连接表单、数据源、导航或业务规则。</zh-CN><en>It connects no form, data source, navigation, or business rule.</en></lang> -->
+      <u-checkbox :model-value="fixtureIndependentCheckboxValue" :value="7" @update:model-value="updateFixtureIndependentCheckboxValue">
+        <text>独立多选 / Independent checkbox</text>
+      </u-checkbox>
+      <u-radio :value="8" label="独立单选 / Independent radio" @change="recordFixtureIndependentRadioValue" />
 
       <!-- <lang><zh-CN>独立消息仅在页面明确声明无本地匹配时呈现；它不把无结果解释为后端错误、权限结论或真实校验结果。</zh-CN><en>The independent message presents only when the page explicitly declares no local match; it does not interpret no result as a backend error, permission conclusion, or real validation result.</en></lang> -->
       <u-validation-message
@@ -300,6 +305,10 @@ const catalogNoticeMessage = ref('');
 const fixtureRadioValue = ref('local-a');
 // <lang><zh-CN>P16 checkbox group 的页面自有受控数组；页面替换整个数组而不 mutate group 输入。</zh-CN><en>Page-owned controlled array for the P16 checkbox group; the page replaces the whole array rather than mutating group input.</en></lang>
 const fixtureCheckboxValues = ref(['local-one']);
+// <lang><zh-CN>独立 checkbox 的页面自有布尔值只用于 compiler fixture；它不表示业务开关或持久化状态。</zh-CN><en>The page-owned independent-checkbox boolean is only for the compiler fixture; it represents neither a business toggle nor persisted state.</en></lang>
+const fixtureIndependentCheckboxValue = ref(false);
+// <lang><zh-CN>独立 radio 的最后本地数值只用于观察透明 event payload；它不驱动路由、查询或领域选择。</zh-CN><en>The independent radio's last local number only observes a transparent event payload; it drives neither routing, query, nor domain selection.</en></lang>
+const fixtureIndependentRadioValue = ref(0);
 
 // <lang><zh-CN>这组有限静态列和值只用于小程序编译组合；它们不表达城市、地点、地址或业务领域数据。</zh-CN><en>These finite static columns and values serve Mini Program compile composition only; they express no city, place, address, or business-domain data.</en></lang>
 const fixtureSelectorColumns = Object.freeze([
@@ -349,6 +358,8 @@ const fixtureTextareaValue = ref('');
 const fixturePresentationIntent = ref('none');
 
 const fixtureSwitchValue = ref(false);
+// <lang><zh-CN>busy flag 只让 compiler 组合 switch loading 输入；默认 false 不会阻塞本 fixture 的本地 switch 写回。</zh-CN><en>The busy flag only lets the compiler compose the switch loading input; its false default does not block this fixture's local switch writeback.</en></lang>
+const fixtureSwitchBusy = ref(false);
 const fixtureNumberValue = ref(1);
 const fixtureRateValue = ref(0);
 const fixtureImageSource = ref('');
@@ -821,6 +832,33 @@ function updateFixtureRadioValue(nextValue) {
 function updateFixtureCheckboxValues(nextValues) {
   // <lang><zh-CN>替换 ref 值保留调用方数组所有权。</zh-CN><en>Replacing ref value retains caller ownership of the array.</en></lang>
   fixtureCheckboxValues.value = nextValues;
+}
+
+/**
+ * @lang zh-CN 接收独立 checkbox 的下一布尔值并只写回当前页面 ref；不触发表单、请求或持久化。
+ * @lang en Receives the independent checkbox's next boolean and writes only the current page ref; it triggers no form, request, or persistence.
+ * @param {boolean} nextValue <lang><zh-CN>checkbox 报告的下一受控值。</zh-CN><en>Next controlled value reported by the checkbox.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function updateFixtureIndependentCheckboxValue(nextValue) {
+  // <lang><zh-CN>页面是唯一写回 owner，组件本身没有 prop mutation 能力。</zh-CN><en>The page is the sole writeback owner; the component itself has no prop-mutation capability.</en></lang>
+  fixtureIndependentCheckboxValue.value = nextValue;
+}
+
+/**
+ * @lang zh-CN 记录独立 radio 原样报告的数值，不把它解释为业务选择、路由或查询参数。
+ * @lang en Records the number reported unchanged by the independent radio without interpreting it as a business choice, route, or query parameter.
+ * @param {string|number} nextValue <lang><zh-CN>radio 报告的透明本地键。</zh-CN><en>Transparent local key reported by the radio.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function recordFixtureIndependentRadioValue(nextValue) {
+  // <lang><zh-CN>fixture 只保留数值键；非数值输入不会被猜测或转换。</zh-CN><en>The fixture retains only a numeric key; a nonnumeric input is neither guessed nor converted.</en></lang>
+  if (typeof nextValue !== 'number') {
+    return;
+  }
+
+  // <lang><zh-CN>写入局部观察 ref，不产生其他副作用。</zh-CN><en>Writes the local observation ref and produces no other side effect.</en></lang>
+  fixtureIndependentRadioValue.value = nextValue;
 }
 </script>
 

@@ -4,11 +4,11 @@
 @lang en Provides controlled boolean-toggle intent; the component only returns the platform selection result and performs no business toggle, persistence, authorization, or remote update.
 -->
 <template>
-  <label :class="rootClasses">
+  <label :class="rootClasses" :aria-busy="loading">
     <switch
       class="u-switch__control"
       :checked="modelValue"
-      :disabled="disabled"
+      :disabled="isInteractionDisabled"
       @change="handleChange"
     />
     <text v-if="label" class="u-switch__label">{{ label }}</text>
@@ -21,18 +21,23 @@ import { computed } from 'vue';
 // <lang><zh-CN>声明模板名，保持代码层迁移使用 `u-switch` 而非品牌前缀。</zh-CN><en>Declares the template name so code-level migration uses `u-switch` rather than a brand prefix.</en></lang>
 defineOptions({ name: 'u-switch' });
 
-// <lang><zh-CN>受控布尔值、禁用和显示文字全部由调用方拥有；组件没有业务 key 或远程参数。</zh-CN><en>Controlled boolean, disabled state, and visible copy are caller-owned; the component has no business key or remote parameter.</en></lang>
+// <lang><zh-CN>受控布尔值、禁用、loading 与显示文字全部由调用方拥有；组件没有业务 key 或远程参数。</zh-CN><en>Controlled boolean, disabled state, loading, and visible copy are caller-owned; the component has no business key or remote parameter.</en></lang>
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
+  // <lang><zh-CN>loading 只把控件置于本地不可交互状态并提供 busy 语义；它不启动请求、计时器或全局 feedback service。</zh-CN><en>Loading only places the control in a locally non-interactive state and provides busy semantics; it starts no request, timer, or global feedback service.</en></lang>
+  loading: { type: Boolean, default: false },
   label: { type: String, default: '' }
 });
 
 // <lang><zh-CN>只报告受控更新和一般 change 意图；调用方决定是否写回或触发业务流程。</zh-CN><en>Reports controlled update and general change intent only; the caller decides whether to write back or trigger business flow.</en></lang>
 const emit = defineEmits(['update:modelValue', 'change']);
 
-// <lang><zh-CN>禁用状态提供非颜色视觉提示并与事件 guard 共用 props.disabled。</zh-CN><en>Disabled state provides a non-color visual cue and shares props.disabled with the event guard.</en></lang>
-const rootClasses = computed(() => ['u-switch', { 'u-switch--disabled': props.disabled }]);
+// <lang><zh-CN>交互禁用聚合显式 disabled 与 caller-controlled loading，使原生 switch、视觉状态和 handler guard 一致。</zh-CN><en>Interaction-disabled aggregates explicit disabled and caller-controlled loading so native switch, visual state, and handler guard stay consistent.</en></lang>
+const isInteractionDisabled = computed(() => props.disabled || props.loading);
+
+// <lang><zh-CN>根类把 loading 呈现为同一不可操作边界，不用颜色或额外业务文案伪造完成状态。</zh-CN><en>Root classes present loading as the same inactive boundary without using color or extra business copy to fabricate completion.</en></lang>
+const rootClasses = computed(() => ['u-switch', { 'u-switch--disabled': isInteractionDisabled.value, 'u-switch--loading': props.loading }]);
 
 /**
  * @lang zh-CN 从已确认的 change 事件读取布尔值；未知形状保持零事件，避免把错误输入猜成 false。
@@ -47,14 +52,14 @@ function extractValue(event) {
 }
 
 /**
- * @lang zh-CN 处理本地切换意图；disabled 或未知事件形状均保持零事件。
- * @lang en Handles local-toggle intent; disabled state or unknown event shape retains zero events.
+ * @lang zh-CN 处理本地切换意图；disabled/loading 或未知事件形状均保持零事件。
+ * @lang en Handles local-toggle intent; disabled/loading state or unknown event shape retains zero events.
  * @param {unknown} event <lang><zh-CN>原生 change 事件。</zh-CN><en>Native change event.</en></param>
  * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
  */
 function handleChange(event) {
-  // <lang><zh-CN>先阻止禁用分支，防止测试或非原生调用直接调用 handler 时越过原生属性。</zh-CN><en>Blocks disabled branches first so direct test or non-native handler calls cannot bypass the native property.</en></lang>
-  if (props.disabled) {
+  // <lang><zh-CN>先阻止 disabled/loading 分支，防止测试或非原生调用直接调用 handler 时越过原生属性。</zh-CN><en>Blocks disabled/loading branches first so direct test or non-native handler calls cannot bypass the native property.</en></lang>
+  if (isInteractionDisabled.value) {
     return;
   }
 

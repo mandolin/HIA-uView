@@ -1,7 +1,7 @@
 <!--
 @component UCheckboxGroup
-@lang zh-CN 向 slot 内 UCheckbox 提供调用方受控字符串成员集合；它创建下一数组并 emit，不 mutate 输入、持久化或解释业务意义。
-@lang en Provides caller-controlled string membership collection to slot-contained UCheckbox; it creates next arrays and emits them without mutating input, persisting, or interpreting business meaning.
+@lang zh-CN 向 slot 内 UCheckbox 提供调用方受控的字符串/数字成员集合；它创建下一数组并 emit，不 mutate 输入、持久化或解释业务意义。
+@lang en Provides a caller-controlled string/number membership collection to slot-contained UCheckbox; it creates next arrays and emits them without mutating input, persisting, or interpreting business meaning.
 -->
 <template>
   <!--
@@ -23,9 +23,9 @@ defineOptions({
   name: 'u-checkbox-group'
 });
 
-// <lang><zh-CN>group 仅接收调用方数组与 disabled；默认空数组不生成默认选择，也不接受 option 数据、规则或业务对象。</zh-CN><en>The group accepts only caller array and disabled; the default empty array generates no default selection and accepts no option data, rule, or business object.</en></lang>
+// <lang><zh-CN>group 仅接收调用方字符串/数字数组与 disabled；默认空数组不生成默认选择，也不接受 option 数据、规则或业务对象。</zh-CN><en>The group accepts only a caller string/number array and disabled; the default empty array generates no default selection and accepts no option data, rule, or business object.</en></lang>
 const props = defineProps({
-  // <lang><zh-CN>modelValue 是调用方拥有的字符串成员集合；下一状态始终由本组件新建数组后交还调用方决定是否写回。</zh-CN><en>ModelValue is the caller-owned string membership collection; next state is always a new array handed back for the caller to decide whether to write it.</en></lang>
+  // <lang><zh-CN>modelValue 是调用方拥有的字符串/数字成员集合；下一状态始终由本组件新建数组后交还调用方决定是否写回。</zh-CN><en>ModelValue is the caller-owned string/number membership collection; next state is always a new array handed back for the caller to decide whether to write it.</en></lang>
   modelValue: {
     type: Array,
     default: () => []
@@ -49,7 +49,7 @@ const isGroupDisabled = computed(() => props.disabled);
 /**
  * @lang zh-CN 根据子项 value 与下一 checked 构造去重的新数组；不修改调用方 prop，也不解释 value 的业务含义。
  * @lang en Builds a deduplicated new array from child value and next checked; it does not mutate caller prop or interpret the business meaning of value.
- * @param {string} value <lang><zh-CN>子项调用方提供的本地键。</zh-CN><en>Caller-provided local key from the child.</en></lang>
+ * @param {string|number} value <lang><zh-CN>子项调用方提供的本地键。</zh-CN><en>Caller-provided local key from the child.</en></lang>
  * @param {boolean} checked <lang><zh-CN>下一呈现成员状态。</zh-CN><en>Next presentation membership state.</en></lang>
  * @returns {void} <lang><zh-CN>无返回值；符合 guard 时 emit 两个下一数组意图。</zh-CN><en>No return value; emits two next-array intents when guard passes.</en></lang>
  */

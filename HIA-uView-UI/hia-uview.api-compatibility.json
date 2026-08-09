@@ -9409,14 +9409,16 @@
                 {
                   "name": "disabled",
                   "typeKinds": [
-                    "Boolean"
+                    "Boolean",
+                    "String"
                   ],
                   "typeOrder": [
+                    "String",
                     "Boolean"
                   ],
                   "default": {
                     "kind": "literal",
-                    "value": false
+                    "value": ""
                   },
                   "required": false,
                   "validator": {
@@ -9427,8 +9429,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "disabled"
             }
           },
@@ -9504,8 +9506,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "label"
             }
           },
@@ -9589,12 +9591,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "modelValue",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
+              "target": "modelValue"
             }
           },
           {
@@ -9711,10 +9732,12 @@
                 {
                   "name": "value",
                   "typeKinds": [
+                    "Number",
                     "String"
                   ],
                   "typeOrder": [
-                    "String"
+                    "String",
+                    "Number"
                   ],
                   "default": {
                     "kind": "literal",
@@ -9729,8 +9752,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "value"
             }
           }
@@ -9766,12 +9789,17 @@
               "name": "update:modelValue"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "update:modelValue"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "update:modelValue"
             }
           }
         ],
@@ -9787,12 +9815,17 @@
               "name": "default"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "default"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "default"
             }
           }
         ],
@@ -9989,9 +10022,9 @@
         "disposition": "unsupported",
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
-          "compatible": 0,
-          "mapped": 4,
-          "unsupported": 20,
+          "compatible": 4,
+          "mapped": 3,
+          "unsupported": 17,
           "unresolved": 0
         }
       },
@@ -10151,8 +10184,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "disabled"
             }
           },
@@ -10725,8 +10758,8 @@
         "disposition": "unsupported",
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
-          "compatible": 0,
-          "mapped": 5,
+          "compatible": 1,
+          "mapped": 4,
           "unsupported": 21,
           "unresolved": 0
         }
@@ -37548,14 +37581,16 @@
                 {
                   "name": "disabled",
                   "typeKinds": [
-                    "Boolean"
+                    "Boolean",
+                    "String"
                   ],
                   "typeOrder": [
+                    "String",
                     "Boolean"
                   ],
                   "default": {
                     "kind": "literal",
-                    "value": false
+                    "value": ""
                   },
                   "required": false,
                   "validator": {
@@ -37566,8 +37601,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "disabled"
             }
           },
@@ -37643,8 +37678,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "label"
             }
           },
@@ -37822,10 +37857,12 @@
                 {
                   "name": "value",
                   "typeKinds": [
+                    "Number",
                     "String"
                   ],
                   "typeOrder": [
-                    "String"
+                    "String",
+                    "Number"
                   ],
                   "default": {
                     "kind": "literal",
@@ -37840,8 +37877,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "value"
             }
           }
@@ -37858,12 +37895,17 @@
               "name": "change"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "change"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "change"
             }
           }
         ],
@@ -37879,12 +37921,17 @@
               "name": "default"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "default"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "default"
             }
           }
         ],
@@ -37968,9 +38015,9 @@
         "disposition": "unsupported",
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
-          "compatible": 0,
-          "mapped": 3,
-          "unsupported": 11,
+          "compatible": 3,
+          "mapped": 2,
+          "unsupported": 9,
           "unresolved": 0
         }
       },
@@ -38130,8 +38177,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "disabled"
             }
           },
@@ -38219,10 +38266,12 @@
                 {
                   "name": "modelValue",
                   "typeKinds": [
+                    "Number",
                     "String"
                   ],
                   "typeOrder": [
-                    "String"
+                    "String",
+                    "Number"
                   ],
                   "default": {
                     "kind": "literal",
@@ -38237,8 +38286,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "modelValue"
             }
           },
@@ -38553,8 +38602,8 @@
         "disposition": "unsupported",
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
-          "compatible": 0,
-          "mapped": 5,
+          "compatible": 2,
+          "mapped": 3,
           "unsupported": 12,
           "unresolved": 0
         }
@@ -48603,8 +48652,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "mapped",
-              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
               "target": "disabled"
             }
           },
@@ -48688,12 +48737,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "loading",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "compatible",
+              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
+              "target": "loading"
             }
           },
           {
@@ -48937,9 +49005,9 @@
         "disposition": "unsupported",
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
-          "compatible": 0,
-          "mapped": 4,
-          "unsupported": 9,
+          "compatible": 2,
+          "mapped": 3,
+          "unsupported": 8,
           "unresolved": 0
         }
       },

@@ -389,7 +389,7 @@ test('inspects the real matrix deterministically without host paths or source bo
     componentCount: 99,
     itemCount: 1740,
     priorities: { P0: 30, P1: 42, P2: 27 },
-    dispositions: { compatible: 30, mapped: 267, unsupported: 1443 },
+    dispositions: { compatible: 42, mapped: 261, unsupported: 1437 },
     unresolvedInventories: 2,
     issueCount: 6
   });

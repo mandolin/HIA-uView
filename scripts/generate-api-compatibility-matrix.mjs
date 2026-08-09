@@ -198,6 +198,12 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-cell-item|props|label',
   'u-cell-item|props|required',
   'u-cell-item|props|value',
+  // <lang><zh-CN>选择组件的以下 props 已由 P61 独立实现、caller-controlled 行为测试和双目标 fixture 审计；事件/slot 仍按 names-only 规则保守映射。</zh-CN><en>The following choice-component props passed P61 independent implementation, caller-controlled behavior tests, and dual-target fixture audit; events/slots remain conservatively mapped under the names-only rule.</en></lang>
+  'u-checkbox|props|disabled',
+  'u-checkbox|props|label',
+  'u-checkbox|props|modelValue',
+  'u-checkbox|props|value',
+  'u-checkbox-group|props|disabled',
   'u-empty|props|show',
   'u-empty|props|src',
   'u-empty|props|text',
@@ -211,6 +217,11 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-pagination|props|modelValue',
   'u-pagination|props|pageSize',
   'u-pagination|props|total',
+  'u-radio|props|disabled',
+  'u-radio|props|label',
+  'u-radio|props|value',
+  'u-radio-group|props|disabled',
+  'u-radio-group|props|modelValue',
   'u-search|props|disabled',
   'u-search|props|modelValue',
   'u-text|props|show',
@@ -221,7 +232,9 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-field|props|required',
   'u-form-item|props|label',
   'u-form-item|props|required',
-  'u-swipe-action|props|disabled'
+  'u-swipe-action|props|disabled',
+  'u-switch|props|disabled',
+  'u-switch|props|loading'
 ]);
 
 /**

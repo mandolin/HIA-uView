@@ -23,11 +23,11 @@ defineOptions({
   name: 'u-radio-group'
 });
 
-// <lang><zh-CN>group 只接受调用方拥有的字符串选择与 disabled；不接收 option 数组、validator、默认选择或业务对象。</zh-CN><en>The group accepts only caller-owned string selection and disabled; it accepts no option array, validator, default selection, or business object.</en></lang>
+// <lang><zh-CN>group 只接受调用方拥有的字符串/数字选择与 disabled；不接收 option 数组、validator、默认选择或业务对象。</zh-CN><en>The group accepts only caller-owned string/number selection and disabled; it accepts no option array, validator, default selection, or business object.</en></lang>
 const props = defineProps({
-  // <lang><zh-CN>modelValue 是调用方拥有的唯一当前选择；空默认值不会虚构默认 radio。</zh-CN><en>ModelValue is the caller-owned sole current selection; the empty default fabricates no default radio.</en></lang>
+  // <lang><zh-CN>modelValue 是调用方拥有的唯一字符串/数字当前选择；空默认值不会虚构默认 radio。</zh-CN><en>ModelValue is the caller-owned sole string/number current selection; the empty default fabricates no default radio.</en></lang>
   modelValue: {
-    type: String,
+    type: [String, Number],
     default: ''
   },
   // <lang><zh-CN>disabled 由 group 集中投影给子项，避免每个 child 推断 group 可用性。</zh-CN><en>Disabled is projected centrally by the group to children, avoiding each child inferring group availability.</en></lang>
@@ -49,7 +49,7 @@ const isGroupDisabled = computed(() => props.disabled);
 /**
  * @lang zh-CN 接收子项未修改的 value，并在 group 启用且 value 尚未选中时 emit 两个调用方处理的选择意图。
  * @lang en Receives unchanged child value and, while the group is enabled and the value is not already selected, emits two caller-handled selection intents.
- * @param {string} value <lang><zh-CN>子项调用方提供的本地键。</zh-CN><en>Caller-provided local key from the child.</en></lang>
+ * @param {string|number} value <lang><zh-CN>子项调用方提供的本地键。</zh-CN><en>Caller-provided local key from the child.</en></lang>
  * @returns {void} <lang><zh-CN>无返回值；符合 guard 时 emit。</zh-CN><en>No return value; emits when guards pass.</en></lang>
  */
 function selectValue(value) {
