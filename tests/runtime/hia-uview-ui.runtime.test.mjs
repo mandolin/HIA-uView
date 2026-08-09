@@ -115,6 +115,9 @@ describe('Foundational presentation compatibility behavior', () => {
     // <lang><zh-CN>图片实例只使用调用方来源与替代文字；断言不观察下载、缓存或预览。</zh-CN><en>The image instance uses only caller source and alternative text; the assertion observes no download, cache, or preview.</en></lang>
     const image = mount(UImage, { props: { src: 'https://example.invalid/local-image.png', alt: 'Local image' } });
 
+    // <lang><zh-CN>流式实例只增加受控根类，由父容器拥有实际宽高；测试不伪造 viewport 或图片固有尺寸。</zh-CN><en>The fluid instance adds only the controlled root class while its parent owns actual geometry; the test fabricates neither viewport nor intrinsic image dimensions.</en></lang>
+    const fluidImage = mount(UImage, { props: { src: 'https://example.invalid/fluid-image.png', alt: 'Fluid local image', fluid: true } });
+
     // <lang><zh-CN>可见文本实例使用数字以覆盖迁移允许的第二种受限类型。</zh-CN><en>The visible text instance uses a number to cover the second bounded type allowed for migration.</en></lang>
     const text = mount(UText, { props: { text: 42 } });
 
@@ -125,6 +128,8 @@ describe('Foundational presentation compatibility behavior', () => {
     await text.get('.u-text').trigger('click');
 
     expect(image.emitted('click')).toHaveLength(1);
+    expect(image.get('.u-image').classes()).not.toContain('u-image--fluid');
+    expect(fluidImage.get('.u-image').classes()).toContain('u-image--fluid');
     expect(text.text()).toContain('42');
     expect(text.emitted('click')).toHaveLength(1);
     expect(hiddenText.find('.u-text').exists()).toBe(false);

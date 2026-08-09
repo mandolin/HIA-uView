@@ -30,13 +30,23 @@ defineOptions({ name: 'u-image' });
 
 // <lang><zh-CN>图片只接收有限原生呈现选项与调用方文字；它不接收请求、缓存、上传、下载或预览流程参数。</zh-CN><en>The image accepts only bounded native-presentation options and caller text; it accepts no request, cache, upload, download, or preview-flow parameter.</en></lang>
 const props = defineProps({
+  // <lang><zh-CN>图片来源由调用方提供；组件不解析、补全或请求该字符串。</zh-CN><en>The caller supplies the image source; the component never parses, completes, or requests this string.</en></lang>
   src: { type: String, default: '' },
+  // <lang><zh-CN>替代文字描述可见图片内容，并同时作为根节点的无障碍名称。</zh-CN><en>Alternative text describes the visible image content and also names the root for accessibility.</en></lang>
   alt: { type: String, default: '' },
+  // <lang><zh-CN>原生缩放模式只经过有限 allowlist 投影，未知值稳定回退。</zh-CN><en>The native scaling mode is projected through a finite allowlist and unknown values fall back deterministically.</en></lang>
   mode: { type: String, default: 'aspectFill' },
+  // <lang><zh-CN>形状只选择受控的直角、圆角或圆形外观。</zh-CN><en>Shape selects only a controlled square, rounded, or circular appearance.</en></lang>
   shape: { type: String, default: 'square' },
+  // <lang><zh-CN>固定尺寸只选择主题声明的三档几何；调用方不能注入任意尺寸值。</zh-CN><en>Fixed size selects only the three theme-declared geometries; callers cannot inject arbitrary dimensions.</en></lang>
   size: { type: String, default: 'medium' },
+  // <lang><zh-CN>流式模式让根节点填满父容器的显式宽高；组件仍不测量 viewport、内容或图片固有尺寸。</zh-CN><en>Fluid mode fills the parent's explicit width and height while the component still measures neither viewport, content, nor intrinsic image size.</en></lang>
+  fluid: { type: Boolean, default: false },
+  // <lang><zh-CN>延迟加载只透传给原生图片节点，不建立缓存或预取策略。</zh-CN><en>Lazy loading is forwarded only to the native image node and establishes no cache or prefetch policy.</en></lang>
   lazyLoad: { type: Boolean, default: true },
+  // <lang><zh-CN>错误可见性只控制本地 fallback 投影，不改变错误事件。</zh-CN><en>Error visibility controls only the local fallback projection and never changes error events.</en></lang>
   showError: { type: Boolean, default: true },
+  // <lang><zh-CN>错误文字由调用方本地化；默认值仅提供双语中性兜底。</zh-CN><en>The caller localizes error copy; the default provides only a neutral bilingual fallback.</en></lang>
   errorText: { type: String, default: '图片不可用 / Image unavailable' }
 });
 
@@ -49,14 +59,18 @@ const hasError = ref(false);
 // <lang><zh-CN>仅允许已知原生 mode，未知值回退到 aspectFill。</zh-CN><en>Allows only known native modes and falls back to aspectFill for unknown values.</en></lang>
 const safeMode = computed(() => ['scaleToFill', 'aspectFit', 'aspectFill', 'widthFix', 'heightFix', 'top', 'bottom', 'center', 'left', 'right'].includes(props.mode) ? props.mode : 'aspectFill');
 
-// <lang><zh-CN>根类仅由有限的形状、尺寸与本地错误状态组合，避免调用方字符串进入未受限 CSS 类。</zh-CN><en>Root classes combine only finite shape, size, and local error state, preventing caller strings from entering unconstrained CSS classes.</en></lang>
+// <lang><zh-CN>根类仅由有限的形状、尺寸、流式布局与本地错误状态组合，避免调用方字符串进入未受限 CSS 类。</zh-CN><en>Root classes combine only finite shape, size, fluid layout, and local error state, preventing caller strings from entering unconstrained CSS classes.</en></lang>
 const rootClasses = computed(() => {
   // <lang><zh-CN>未知形状稳定回退为 square，保持本地展示而不扩大 CSS 表面。</zh-CN><en>An unknown shape stably falls back to square, retaining local presentation without expanding the CSS surface.</en></lang>
   const shape = ['square', 'rounded', 'circle'].includes(props.shape) ? props.shape : 'square';
 
   // <lang><zh-CN>未知尺寸稳定回退为 medium，组件不测量 viewport 或重排父级布局。</zh-CN><en>An unknown size stably falls back to medium; the component neither measures the viewport nor reflows parent layout.</en></lang>
   const size = ['small', 'medium', 'large'].includes(props.size) ? props.size : 'medium';
-  return ['u-image', `u-image--${shape}`, `u-image--${size}`, { 'u-image--error': hasError.value }];
+  // <lang><zh-CN>fluid 是显式 Boolean opt-in；固定尺寸类仍保留为无流式模式时的稳定 fallback。</zh-CN><en>Fluid is an explicit Boolean opt-in; the fixed-size class remains as the stable fallback when fluid mode is absent.</en></lang>
+  return ['u-image', `u-image--${shape}`, `u-image--${size}`, {
+    'u-image--fluid': props.fluid,
+    'u-image--error': hasError.value
+  }];
 });
 
 /**
