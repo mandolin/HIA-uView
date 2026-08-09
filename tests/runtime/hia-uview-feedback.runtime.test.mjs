@@ -7,11 +7,11 @@
 // <lang><zh-CN>导入本地 Vue mount、Vitest 断言和本仓 runtime 组件；测试不安装全局 plugin、路由、Tool 或平台 mock。</zh-CN><en>Imports local Vue mount, Vitest assertions, and repository runtime components; the test installs no global plugin, router, Tool, or platform mock.</en></lang>
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import { UEmpty, UModal, UNotice } from '../../HIA-uView-UI/src/index.mjs';
+import { UEmpty, ULoading, UModal, UNotice, UPopup, USwipeAction, UToast } from '../../HIA-uView-UI/src/index.mjs';
 
 /**
- * @lang zh-CN 验证 UModal 只有调用方 visible 为真时呈现，并将 confirm/cancel 作为不写回状态的纯意图。
- * @lang en Verifies that UModal presents only while caller visible is true and treats confirm/cancel as pure intent that writes back no state.
+ * @lang zh-CN 验证 UModal 只有调用方受控可见值为真时呈现，并将 confirm/cancel 作为带可拒绝写回请求的纯本地意图。
+ * @lang en Verifies that UModal presents only while caller-controlled visibility is true and treats confirm/cancel as pure local intent with a rejectable writeback request.
  */
 describe('UModal runtime behavior', () => {
   /**
@@ -42,10 +42,76 @@ describe('UModal runtime behavior', () => {
     expect(modal.emitted('cancel')).toHaveLength(1);
     expect(modal.emitted('confirm')).toHaveLength(1);
 
-    // <lang><zh-CN>调用方更新 visible 后，modal 立即消失；组件本身没有在 click 后自动写回该 prop。</zh-CN><en>After caller updates visible, the modal disappears immediately; the component itself performed no automatic writeback after click.</en></lang>
+    // <lang><zh-CN>两个本地 control 都先请求 modelValue=false；请求不直接改变显式 visible，调用方仍可选择何时写回。</zh-CN><en>Both local controls first request modelValue=false; the request does not directly change explicit visible, and the caller still chooses when to write back.</en></lang>
+    expect(modal.emitted('update:modelValue')).toEqual([[false], [false]]);
+
+    // <lang><zh-CN>调用方更新 visible 后，modal 立即消失；组件从不直接写回该 prop。</zh-CN><en>After the caller updates visible, the modal disappears immediately; the component never writes that prop directly.</en></lang>
     await modal.setProps({ visible: false });
 
     expect(modal.find('.u-modal').exists()).toBe(false);
+  });
+});
+
+/**
+ * @lang zh-CN 验证受控 popup/loading/toast/swipe-action 的迁移入口只投影有限局部状态和本地意图，不创建 service、计时器、手势或数据操作。
+ * @lang en Verifies that migration entries of controlled popup/loading/toast/swipe-action project only finite local state and local intent and create no service, timer, gesture, or data operation.
+ */
+describe('controlled feedback migration runtime behavior', () => {
+  /**
+   * @lang zh-CN 验证 popup modelValue/show、loading show 和 toast loading 均保留调用方状态所有权。
+   * @lang en Verifies that popup modelValue/show, loading show, and toast loading all retain caller ownership of state.
+   * @returns {Promise<void>} <lang><zh-CN>无返回值；异步 click 触发完成后解决。</zh-CN><en>No return value; resolves after asynchronous click triggers complete.</en></lang>
+   */
+  it('projects migration visibility and static loading without a service', async () => {
+    // <lang><zh-CN>popup 只从 modelValue 取得可见状态；关闭请求和 close intent 由调用方接收。</zh-CN><en>Popup obtains visibility only from modelValue; close request and close intent are received by the caller.</en></lang>
+    const popup = mount(UPopup, { props: { modelValue: true, closeText: 'Close' }, slots: { default: 'Caller popup content' } });
+    await popup.get('.u-popup__close').trigger('click');
+    expect(popup.text()).toContain('Caller popup content');
+    expect(popup.emitted('update:modelValue')).toEqual([[false]]);
+    expect(popup.emitted('close')).toHaveLength(1);
+
+    // <lang><zh-CN>显式 visible 为假必须压过 show，确认旧入口没有被迁移别名意外覆盖。</zh-CN><en>An explicit false visible must override show, confirming the old entry is not accidentally overridden by a migration alias.</en></lang>
+    const hiddenPopup = mount(UPopup, { props: { visible: false, show: true } });
+    expect(hiddenPopup.find('.u-popup').exists()).toBe(false);
+
+    // <lang><zh-CN>loading 默认 show 只产生静态 indicator；显式 visible 仍可以将其隐藏。</zh-CN><en>Loading default show produces only a static indicator; explicit visible may still hide it.</en></lang>
+    const loading = mount(ULoading, { props: { show: true, label: 'Caller loading' } });
+    expect(loading.find('.u-loading').exists()).toBe(true);
+    expect(loading.text()).toContain('Caller loading');
+    const hiddenLoading = mount(ULoading, { props: { visible: false, show: true } });
+    expect(hiddenLoading.find('.u-loading').exists()).toBe(false);
+
+    // <lang><zh-CN>toast loading 只组合局部 indicator，不提供 show()/close() service 或异步状态。</zh-CN><en>Toast loading composes only a local indicator and provides no show()/close() service or asynchronous state.</en></lang>
+    const toast = mount(UToast, { props: { visible: true, message: 'Caller feedback', loading: true } });
+    expect(toast.find('.u-toast').exists()).toBe(true);
+    expect(toast.find('.u-loading').exists()).toBe(true);
+    expect(toast.emitted()).toEqual({});
+  });
+
+  /**
+   * @lang zh-CN 验证 swipe options 只在 actions 为空时投影，并依次报告 click/action；disabled 时所有本地操作保持零事件。
+   * @lang en Verifies that swipe options project only when actions are empty and report click/action in order; while disabled every local operation retains zero events.
+   * @returns {Promise<void>} <lang><zh-CN>无返回值；异步 click 触发完成后解决。</zh-CN><en>No return value; resolves after asynchronous click triggers complete.</en></lang>
+   */
+  it('projects bounded swipe options and guards disabled local intent', async () => {
+    // <lang><zh-CN>show/options 实例使用迁移 text，验证它只形成有限按钮文字和 caller-owned value。</zh-CN><en>The show/options instance uses migration text, verifying that it forms only finite button copy and a caller-owned value.</en></lang>
+    const swipe = mount(USwipeAction, {
+      props: { show: true, options: [{ text: 'Local action', value: 'local' }] },
+      slots: { default: 'Caller row' }
+    });
+    await swipe.get('.u-swipe-action__action').trigger('click');
+    expect(swipe.text()).toContain('Caller row');
+    expect(swipe.text()).toContain('Local action');
+    expect(swipe.emitted('click')).toEqual([['local']]);
+    expect(swipe.emitted('action')).toEqual([['local']]);
+
+    // <lang><zh-CN>disabled 实例即使测试直接触发 button click 也不得报告 click/action/close 或受控下一值。</zh-CN><en>A disabled instance must not report click/action/close or a controlled next value even when a test directly triggers button click.</en></lang>
+    const disabledSwipe = mount(USwipeAction, {
+      props: { show: true, disabled: true, options: [{ text: 'Local action', value: 'local' }] }
+    });
+    await disabledSwipe.get('.u-swipe-action__action').trigger('click');
+    await disabledSwipe.get('.u-swipe-action__close').trigger('click');
+    expect(disabledSwipe.emitted()).toEqual({});
   });
 });
 

@@ -12,6 +12,7 @@
 | Prop / 属性 | Type / 类型 | Default / 默认值 | Contract / 约定 |
 | --- | --- | --- | --- |
 | `visible` | `boolean` | `false` | Caller-owned rendering state. It controls whether the local modal surface exists; events never mutate it. / 调用方自有的渲染状态。它控制局部 modal 表面是否存在；事件绝不修改它。 |
+| `modelValue` | `boolean` | `false` | Controlled migration visibility. When `visible` is not supplied, it controls the local modal surface. Confirm/cancel first request `update:modelValue(false)` and then report their local intent; the caller may accept, reject, or defer the writeback. / 受控迁移可见状态。未提供 `visible` 时，它控制局部 modal 表面。confirm/cancel 会先请求 `update:modelValue(false)`，再报告本地意图；调用方可以接受、拒绝或延后写回。 |
 | `title` | `string` | `''` | Optional caller-owned visible title. Applications must provide meaningful title text whenever dialog context needs one. / 可选的调用方自有可见标题。对话框上下文需要标题时，应用必须提供有意义的文字。 |
 | `confirmText` | `string` | `''` | Optional caller-owned visible label for the confirm control. Empty text renders no confirm control. / confirm 控件的可选调用方自有可见标签。空文字不会渲染 confirm 控件。 |
 | `cancelText` | `string` | `''` | Optional caller-owned visible label for the cancel control. Empty text renders no cancel control. / cancel 控件的可选调用方自有可见标签。空文字不会渲染 cancel 控件。 |
@@ -24,12 +25,13 @@
 | --- | --- | --- |
 | `confirm` | native platform event | Emits once only when `visible` is true and a non-empty `confirmText` control is activated. It never changes `visible`. / 仅在 `visible` 为真且非空 `confirmText` 控件被激活时恰好触发一次；绝不改变 `visible`。 |
 | `cancel` | native platform event | Emits once only when `visible` is true and a non-empty `cancelText` control is activated. It never changes `visible`. / 仅在 `visible` 为真且非空 `cancelText` 控件被激活时恰好触发一次；绝不改变 `visible`。 |
+| `update:modelValue` | `false` | Requests a next controlled migration value before an eligible confirm/cancel intent. It is never a direct prop mutation or an automatic close guarantee. / 在符合条件的 confirm/cancel 意图前请求下一个受控迁移值。它绝不是直接 prop 修改或自动关闭保证。 |
 
 ## Visibility and interaction boundary / 可见性与交互边界
 
-When `visible` is false, `UModal` renders no modal surface and emits neither event, including if a test or non-native caller invokes a handler directly. When it is true, the component may render caller-provided controls, but application code remains responsible for writing a subsequent `visible` prop, handling a request, routing, focus, retry, error recovery, or any other result.
+When an explicitly supplied `visible` is false, `UModal` renders no modal surface and emits neither event, including if a test or non-native caller invokes a handler directly. When `visible` is omitted, `modelValue` is the migration visibility entry. When the modal is true, the component may render caller-provided controls, but application code remains responsible for accepting any requested writeback, handling a request, routing, focus, retry, error recovery, or any other result.
 
-当 `visible` 为假时，`UModal` 不渲染 modal 表面，也不触发任一事件，包括测试或非原生调用方直接调用 handler 的情形。当它为真时，组件可以渲染调用方提供的控件，但应用代码仍负责写入后续 `visible` prop、处理请求、路由、焦点、重试、错误恢复或任何其他结果。
+当显式提供的 `visible` 为假时，`UModal` 不渲染 modal 表面，也不触发任一事件，包括测试或非原生调用方直接调用 handler 的情形。未提供 `visible` 时，`modelValue` 是迁移可见性入口。当 modal 可见时，组件可以渲染调用方提供的控件，但应用代码仍负责接受任何请求的写回、处理请求、路由、焦点、重试、错误恢复或任何其他结果。
 
 The first contract deliberately excludes mask-click and escape dismissal, automatic close, native modal/popup APIs, `Teleport`/portal behavior, focus trap/restore, keyboard behavior, scroll locking, z-index configuration, global dialog services, queues, timers, transitions, routes, `open-type`, form behavior, network, storage, identity, and business commands.
 

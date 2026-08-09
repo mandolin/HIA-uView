@@ -18,7 +18,7 @@
       <u-navbar title="Fixture navigation / Fixture 导航" left-text="Back / 返回" right-text="Save / 保存"><text>Caller center / 调用方中央</text></u-navbar>
       <u-cell-item title="Local entry / 本地条目" :label="0" :value="0" :required="true" :arrow="true" :clickable="true" />
       <u-notice-bar :visible="true" text="Local feedback only / 仅本地反馈" close-text="Dismiss / 关闭" />
-      <u-loading :visible="true" label="Local state / 本地状态" />
+      <u-loading :show="true" label="Local state / 本地状态" />
       <u-no-network :visible="true" title="Caller-declared state / 调用方声明状态" retry-text="Retry / 重试" />
       <u-safe-bottom :height="12" />
     </u-config-provider>
@@ -151,12 +151,15 @@
         <u-pagination :current="fixturePageValue" :page-count="3" @update:current="updateFixturePageValue" />
         <u-pagination :model-value="2" :page-size="10" :total="21" />
         <u-button label="打开局部 sheet / Open local sheet" @click="openFixtureSheet" />
-        <u-toast :visible="fixtureToastVisible" message="局部反馈 / Local feedback" close-text="关闭 / Close" @close="closeFixtureToast" />
+        <u-toast :visible="fixtureToastVisible" message="局部反馈 / Local feedback" :loading="true" close-text="关闭 / Close" @close="closeFixtureToast" />
         <u-loading-page :visible="fixtureLoadingVisible" text="页面 loading / Page loading" />
         <u-action-sheet :visible="fixtureSheetVisible" :items="fixtureActionItems" title="局部操作 / Local actions" cancel-text="取消 / Cancel" @select="handleFixtureAction" @close="closeFixtureSheet" />
-        <u-popup :visible="fixturePopupVisible" title="局部浮层 / Local popup" close-text="关闭 / Close" @close="closeFixturePopup">
+        <u-popup :model-value="fixturePopupVisible" title="局部浮层 / Local popup" close-text="关闭 / Close" @update:model-value="updateFixturePopupVisible" @close="closeFixturePopup">
           <text>调用方 slot 内容 / Caller-owned slot content</text>
         </u-popup>
+        <u-swipe-action :show="true" :options="fixtureSwipeOptions" @click="recordFixturePresentationIntent('swipe-click')">
+          <text>调用方局部内容 / Caller local content</text>
+        </u-swipe-action>
       </u-stack>
 
       <!-- @lang zh-CN P44 组合只使用页面声明的有限列表、状态、折叠值、静态 slide、CSS overflow 和 sticky；不产生请求、缓存、虚拟化、autoplay、timer、WXS 或 observer。 @lang en The P44 composition uses page-declared finite list, status, collapse values, static slides, CSS overflow, and sticky only; it creates no request, cache, virtualization, autoplay, timer, WXS, or observer. <lang><zh-CN>所有 items 与状态由页面 refs 拥有。</zh-CN><en>All items and state are owned by page refs.</en></lang> -->
@@ -249,10 +252,11 @@
 
       <!-- <lang><zh-CN>modal 的可见状态和 confirm/cancel 后续均由页面拥有；slot 只说明当前本地样例，不发起任何数据操作。</zh-CN><en>The page owns modal visibility and all confirm/cancel follow-up; the slot only explains the current local sample and starts no data operation.</en></lang> -->
       <u-modal
-        :visible="catalogModalVisible"
+        :model-value="catalogModalVisible"
         title="确认本地意图 / Confirm local intent"
         confirm-text="确认 / Confirm"
         cancel-text="取消 / Cancel"
+        @update:model-value="updateCatalogModalVisible"
         @confirm="confirmCatalogIntent"
         @cancel="cancelCatalogIntent"
       >
@@ -376,6 +380,10 @@ const fixtureStepItems = Object.freeze([
 const fixtureActionItems = Object.freeze([
   Object.freeze({ label: '显示反馈 / Show feedback', value: 'toast' }),
   Object.freeze({ label: '显示浮层 / Show popup', value: 'popup' })
+]);
+// <lang><zh-CN>swipe options 是页面自有的有限可见文字投影，只用于编译迁移 options/click 表面；它不代表删除、路由或数据写入。</zh-CN><en>Swipe options are a page-owned finite visible-copy projection used only to compile migration options/click surfaces; they represent no deletion, route, or data write.</en></lang>
+const fixtureSwipeOptions = Object.freeze([
+  Object.freeze({ text: '本地操作 / Local action', value: 'local-action', type: 'primary' })
 ]);
 const fixtureTabValue = ref('overview');
 const fixtureTabbarValue = ref('home');
@@ -550,12 +558,34 @@ function closeFixtureToast() {
 }
 
 /**
- * @lang zh-CN 关闭 fixture popup；组件不自动写回 visible。
- * @lang en Closes fixture popup; the component does not write visible automatically.
+ * @lang zh-CN 接受 popup 的受控迁移下一值；它只更新当前页面局部 ref，不写路由、存储或共享状态。
+ * @lang en Accepts the popup controlled-migration next value; it updates only the current page-local ref and writes no route, storage, or shared state.
+ * @param {boolean} value <lang><zh-CN>popup 请求的下一可见值。</zh-CN><en>Next visibility value requested by the popup.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function updateFixturePopupVisible(value) {
+  // <lang><zh-CN>只接受布尔值，避免 fixture 把任意事件 payload 解释为可见状态。</zh-CN><en>Accepts only a Boolean, avoiding the fixture interpreting arbitrary event payload as visibility state.</en></lang>
+  fixturePopupVisible.value = value === true;
+}
+
+/**
+ * @lang zh-CN 关闭 fixture popup；页面在 close intent 后决定将当前局部 ref 设为 false。
+ * @lang en Closes the fixture popup; the page decides to set the current local ref false after close intent.
  * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
  */
 function closeFixturePopup() {
   fixturePopupVisible.value = false;
+}
+
+/**
+ * @lang zh-CN 接受 modal 的受控迁移下一值；它只更新当前页面局部 ref，不表示确认成功、取消完成或业务状态变更。
+ * @lang en Accepts the modal controlled-migration next value; it updates only the current page-local ref and represents no confirmation success, cancellation completion, or business-state change.
+ * @param {boolean} value <lang><zh-CN>modal 请求的下一可见值。</zh-CN><en>Next visibility value requested by the modal.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ */
+function updateCatalogModalVisible(value) {
+  // <lang><zh-CN>只接受布尔值，保持页面而非组件拥有 local modal 可见状态。</zh-CN><en>Accepts only a Boolean, keeping the page rather than the component in ownership of local modal visibility.</en></lang>
+  catalogModalVisible.value = value === true;
 }
 
 // <lang><zh-CN>由当前受控 query 同步派生的本地目录投影；helper 不访问网络、缓存或异步数据源。</zh-CN><en>Local catalog projection synchronously derived from the current controlled query; the helper accesses no network, cache, or asynchronous data source.</en></lang>

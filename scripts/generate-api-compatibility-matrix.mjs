@@ -206,6 +206,8 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-input|props|disabled',
   'u-input|props|modelValue',
   'u-input|props|readonly',
+  'u-loading|props|show',
+  'u-modal|props|modelValue',
   'u-pagination|props|modelValue',
   'u-pagination|props|pageSize',
   'u-pagination|props|total',
@@ -214,10 +216,12 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-text|props|show',
   'u-text|props|text',
   'u-textarea|props|readonly',
+  'u-toast|props|loading',
   'u-field|props|label',
   'u-field|props|required',
   'u-form-item|props|label',
-  'u-form-item|props|required'
+  'u-form-item|props|required',
+  'u-swipe-action|props|disabled'
 ]);
 
 /**

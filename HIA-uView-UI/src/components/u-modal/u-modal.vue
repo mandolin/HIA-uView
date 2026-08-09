@@ -5,11 +5,11 @@
 -->
 <template>
   <!--
-  @lang zh-CN modal 根仅在调用方 visible 为真时存在。
-  @lang en The modal root exists only when caller visible is true.
-  <lang><zh-CN>条件渲染不写回 visible，也不创建全局或页面根节点；应用独自决定任何后续关闭时机。</zh-CN><en>Conditional rendering does not write back visible and creates no global or page-root node; the application alone decides every subsequent close timing.</en></lang>
+  @lang zh-CN modal 根仅在调用方受控的可见值为真时存在。
+  @lang en The modal root exists only when the caller-controlled visibility value is true.
+  <lang><zh-CN>条件渲染不写回 prop，也不创建全局或页面根节点；应用独自决定任何后续关闭时机。</zh-CN><en>Conditional rendering writes back no prop and creates no global or page-root node; the application alone decides every subsequent close timing.</en></lang>
   -->
-  <view v-if="visible" class="u-modal">
+  <view v-if="isVisible" class="u-modal">
     <!--
     @lang zh-CN mask 只提供局部视觉分层。
     @lang en The mask provides local visual layering only.
@@ -67,8 +67,13 @@ defineOptions({
 
 // <lang><zh-CN>modal 只接收调用方受控可见状态、文字与可选文字 control；它不接收关闭策略、mask/escape、层叠、焦点、滚动或业务参数。</zh-CN><en>The modal accepts only caller-controlled visible state, text, and optional text controls; it accepts no close policy, mask/escape, stacking, focus, scrolling, or business parameter.</en></lang>
 const props = defineProps({
-  // <lang><zh-CN>可见状态由应用完全拥有；默认隐藏避免组件在未被选择时生成页面层。</zh-CN><en>Visible state is fully owned by the application; the hidden default prevents a component from generating a page layer when not selected.</en></lang>
+  // <lang><zh-CN>现有 HIA visible 入口优先于迁移 modelValue；未提供时保留 undefined，以便不会遮蔽迁移值。</zh-CN><en>The existing HIA visible entry takes priority over the migration modelValue; when absent it remains undefined so it cannot mask the migration value.</en></lang>
   visible: {
+    type: Boolean,
+    default: undefined
+  },
+  // <lang><zh-CN>迁移 modelValue 是调用方拥有的布尔可见状态；emit 只请求下一值，组件绝不直接改写 prop。</zh-CN><en>The migration modelValue is caller-owned Boolean visibility; an emit only requests the next value and the component never writes a prop directly.</en></lang>
+  modelValue: {
     type: Boolean,
     default: false
   },
@@ -89,8 +94,11 @@ const props = defineProps({
   }
 });
 
-// <lang><zh-CN>两个公开事件只报告调用方主动选择的 local control 意图；应用在组件外处理状态、请求和后续结果。</zh-CN><en>The two public events report only caller-selected local-control intent; the application handles state, request, and subsequent result outside the component.</en></lang>
-const emit = defineEmits(['confirm', 'cancel']);
+// <lang><zh-CN>三个公开事件只报告调用方主动选择的 local control 意图和可见状态请求；应用在组件外处理状态、请求和后续结果。</zh-CN><en>The three public events report only caller-selected local-control intent and a visibility request; the application handles state, request, and subsequent result outside the component.</en></lang>
+const emit = defineEmits(['confirm', 'cancel', 'update:modelValue']);
+
+// <lang><zh-CN>可见性遵循已有 visible 优先、迁移 modelValue 回退的有限规则；组件不合并、缓存或推断多个应用状态源。</zh-CN><en>Visibility follows the finite rule of existing visible precedence with migration modelValue fallback; the component does not merge, cache, or infer multiple application state sources.</en></lang>
+const isVisible = computed(() => props.visible ?? props.modelValue);
 
 // <lang><zh-CN>confirm control 可见性只由非空调用方文字导出，不根据 title、slot 或业务状态猜测操作。</zh-CN><en>Confirm-control visibility derives only from non-empty caller text and does not infer action from title, slot, or business state.</en></lang>
 const hasConfirmControl = computed(() => props.confirmText.length > 0);
@@ -102,32 +110,38 @@ const hasCancelControl = computed(() => props.cancelText.length > 0);
 const hasActions = computed(() => hasConfirmControl.value || hasCancelControl.value);
 
 /**
- * @lang zh-CN 在 modal 可见且 confirm control 有文字时转发 confirm 意图；本函数不关闭 modal、不写 visible，也不执行完成操作。
- * @lang en Forwards confirm intent only while the modal is visible and confirm control has text; this function does not close the modal, write visible, or perform a completion action.
+ * @lang zh-CN 在 modal 可见且 confirm control 有文字时先请求迁移 modelValue 为 false，再转发 confirm 意图；本函数不直接关闭 modal 或执行完成操作。
+ * @lang en Requests migration modelValue false and then forwards confirm intent only while the modal is visible and confirm control has text; this function does not directly close the modal or perform a completion action.
  * @param {unknown} event <lang><zh-CN>内建 UButton 提供的原始本地点击事件。</zh-CN><en>Original local click event supplied by the built-in UButton.</en></lang>
  * @returns {void} <lang><zh-CN>无返回值；符合条件时 emit `confirm`。</zh-CN><en>No return value; when eligible, emits `confirm`.</en></lang>
  */
 function handleConfirm(event) {
   // <lang><zh-CN>先执行双重 guard，使隐藏 modal 或缺失文字 control 即使收到直接 handler 调用也保持零事件。</zh-CN><en>Runs a dual guard first so a hidden modal or missing text control retains zero events even when receiving a direct handler call.</en></lang>
-  if (!props.visible || !hasConfirmControl.value) {
+  if (!isVisible.value || !hasConfirmControl.value) {
     return;
   }
 
-  // <lang><zh-CN>保留原始 local event 给应用层；组件不解释确认目的或决定下一个 visible 状态。</zh-CN><en>Preserves the original local event for the application layer; the component does not interpret confirmation purpose or decide the next visible state.</en></lang>
+  // <lang><zh-CN>先发出受控写回请求；应用可以接受、拒绝或延后写回，组件不会观察或强制该决定。</zh-CN><en>Emits the controlled-writeback request first; the application may accept, reject, or defer writeback and the component neither observes nor enforces that decision.</en></lang>
+  emit('update:modelValue', false);
+
+  // <lang><zh-CN>随后保留原始 local event 给应用层；组件不解释确认目的或决定下一个 visible 状态。</zh-CN><en>Then preserves the original local event for the application layer; the component does not interpret confirmation purpose or decide the next visible state.</en></lang>
   emit('confirm', event);
 }
 
 /**
- * @lang zh-CN 在 modal 可见且 cancel control 有文字时转发 cancel 意图；本函数不关闭 modal、不写 visible，也不恢复焦点或路由。
- * @lang en Forwards cancel intent only while the modal is visible and cancel control has text; this function does not close the modal, write visible, restore focus, or route.
+ * @lang zh-CN 在 modal 可见且 cancel control 有文字时先请求迁移 modelValue 为 false，再转发 cancel 意图；本函数不直接关闭 modal、恢复焦点或路由。
+ * @lang en Requests migration modelValue false and then forwards cancel intent only while the modal is visible and cancel control has text; this function does not directly close the modal, restore focus, or route.
  * @param {unknown} event <lang><zh-CN>内建 UButton 提供的原始本地点击事件。</zh-CN><en>Original local click event supplied by the built-in UButton.</en></lang>
  * @returns {void} <lang><zh-CN>无返回值；符合条件时 emit `cancel`。</zh-CN><en>No return value; when eligible, emits `cancel`.</en></lang>
  */
 function handleCancel(event) {
   // <lang><zh-CN>guard 与 confirm 路径对称，确保本地 control 的存在和可见状态始终共同约束事件。</zh-CN><en>The guard is symmetric with the confirm path, ensuring local-control existence and visible state always constrain the event together.</en></lang>
-  if (!props.visible || !hasCancelControl.value) {
+  if (!isVisible.value || !hasCancelControl.value) {
     return;
   }
+
+  // <lang><zh-CN>受控写回请求不等同立即关闭；它只给 v-model 调用方一个明确、可拒绝的下一值。</zh-CN><en>The controlled-writeback request is not an immediate close; it only gives a v-model caller one explicit, rejectable next value.</en></lang>
+  emit('update:modelValue', false);
 
   // <lang><zh-CN>原样交还 cancel 意图；应用可独自决定关闭、保留、请求或其他后续行为。</zh-CN><en>Returns cancel intent unchanged; the application alone may decide close, retention, request, or other follow-up behavior.</en></lang>
   emit('cancel', event);
