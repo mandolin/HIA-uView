@@ -21,3 +21,7 @@
 Consumes `--u-comp-alert-tips-*`; accessibility and device behavior remain subject to the `mp-weixin` fixture and platform verification.
 
 消费 `--u-comp-alert-tips-*`；无障碍与设备行为仍需结合 `mp-weixin` fixture 和平台验证。
+
+The root inherits the caller's `font-family`, keeping title, description, slotted copy, and close control aligned with application typography. `UAlertTips` does not select, download, bundle, or register a font and introduces no font token or theme API.
+
+组件根继承调用方的 `font-family`，使标题、说明、插槽文字与关闭 control 遵循应用排版。`UAlertTips` 不选择、下载、捆绑或注册字体，也不新增字体 token 或主题 API。

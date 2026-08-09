@@ -17,9 +17,10 @@ const expectedCompatibleProps = Object.freeze({
 });
 
 // <lang><zh-CN>并行读取 source、contract、fixture、类型、生成器与提交矩阵，测试不重新生成或改写任何输入。</zh-CN><en>Reads source, contracts, fixture, types, generator, and committed matrix in parallel; the test regenerates or rewrites no input.</en></lang>
-const [tagSource, alertSource, tagDocumentation, alertDocumentation, fixtureSource, typeSource, generatorSource, matrixSource] = await Promise.all([
+const [tagSource, alertSource, alertStyles, tagDocumentation, alertDocumentation, fixtureSource, typeSource, generatorSource, matrixSource] = await Promise.all([
   readFile('HIA-uView-UI/src/components/u-tag/u-tag.vue', 'utf8'),
   readFile('HIA-uView-UI/src/components/u-alert-tips/u-alert-tips.vue', 'utf8'),
+  readFile('HIA-uView-UI/src/components/u-alert-tips/u-alert-tips.css', 'utf8'),
   readFile('docs/tag.md', 'utf8'),
   readFile('docs/alert-tips.md', 'utf8'),
   readFile('HIA-uView-UI/fixtures/mp-weixin/src/pages/index/index.vue', 'utf8'),
@@ -75,6 +76,10 @@ test('keeps display documentation, package types, and compiler fixture aligned',
   assert.match(tagDocumentation, /`disabled` accepts `boolean \| string`/u);
   assert.match(alertDocumentation, /`show` only controls projection/u);
   assert.match(alertDocumentation, /caller decides whether to update `show`/u);
+  // <lang><zh-CN>提示条根必须继承宿主字体，公开 contract 同时明确组件不拥有字体资产或字体主题 API。</zh-CN><en>The alert root must inherit the host font, while the public contract states that the component owns neither font assets nor a font theme API.</en></lang>
+  assert.match(alertStyles, /\.u-alert-tips\s*\{[^}]*font-family:\s*inherit;/su);
+  assert.match(alertDocumentation, /inherits the caller's `font-family`/u);
+  assert.match(alertDocumentation, /does not select, download, bundle, or register a font/u);
 
   // <lang><zh-CN>package declarations只承诺四项已审计 prop；全局增强仍是显式 opt-in，不构成 runtime 自动注册。</zh-CN><en>Package declarations promise only the four audited props; global augmentation remains explicit opt-in and creates no runtime auto-registration.</en></lang>
   assert.match(typeSource, /export interface UAlertTipsProps/u);
