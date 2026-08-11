@@ -3,7 +3,7 @@
  * @lang zh-CN 下拉容器样式只提供局部排列和边界。
  * @lang en Dropdown container styles provide local arrangement and boundary only.
  */
-.u-dropdown { display: flex; gap: var(--u-comp-dropdown-gap); min-width: 0; }
+.u-dropdown { align-items: flex-start; display: flex; gap: var(--u-comp-dropdown-gap); min-width: 0; }
 .u-dropdown--disabled { opacity: var(--u-comp-dropdown-disabled-opacity); }
 
 /* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */

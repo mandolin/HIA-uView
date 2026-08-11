@@ -6,6 +6,10 @@
 .u-dropdown-item { background: var(--u-comp-dropdown-item-surface); border: 1px solid var(--u-comp-dropdown-item-border); border-radius: var(--u-comp-dropdown-item-radius); color: var(--u-comp-dropdown-item-foreground); min-height: var(--u-comp-dropdown-item-height); padding: 0 var(--u-comp-dropdown-item-padding); }
 .u-dropdown-item--selected { background: var(--u-comp-dropdown-item-selected-background); color: var(--u-comp-dropdown-item-selected-foreground); }
 .u-dropdown-item--disabled { opacity: var(--u-comp-dropdown-item-disabled-opacity); }
+.u-dropdown-item__controlled { display: flex; flex-direction: column; gap: var(--u-comp-dropdown-gap); min-width: 0; }
+.u-dropdown-item__trigger { width: 100%; }
+.u-dropdown-item__panel { display: flex; flex-direction: column; gap: var(--u-comp-dropdown-gap); min-width: 0; }
+.u-dropdown-item__option { text-align: left; width: 100%; }
 
 /* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
 /* #ifdef MP-WEIXIN */
@@ -26,6 +30,14 @@
 
 .u-dropdown-item--disabled {
   opacity: 0.6;
+}
+
+.u-dropdown-item__controlled {
+  gap: 8px;
+}
+
+.u-dropdown-item__panel {
+  gap: 8px;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
 /* #endif */
