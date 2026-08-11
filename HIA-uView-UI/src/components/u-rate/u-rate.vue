@@ -28,6 +28,8 @@ defineOptions({ name: 'u-rate' });
 // <lang><zh-CN>分级范围和符号由调用方声明；组件不把数字解释为评分模型。</zh-CN><en>Range and symbols are caller-declared; the component does not interpret the number as a rating model.</en></lang>
 const props = defineProps({
   modelValue: { type: Number, default: 0 },
+  // <lang><zh-CN>迁移 current 只有在显式提供时优先；undefined 保留 modelValue 的受控所有权。</zh-CN><en>The migration current value takes precedence only when explicitly supplied; undefined preserves modelValue-controlled ownership.</en></lang>
+  current: { type: Number, default: undefined },
   count: { type: Number, default: 5 },
   disabled: { type: Boolean, default: false },
   activeSymbol: { type: String, default: '★' },
@@ -47,10 +49,13 @@ const safeCount = computed(() => {
   return Number.isFinite(props.count) && props.count > 0 ? Math.floor(props.count) : 1;
 });
 
-// <lang><zh-CN>显示值限制到 0 与 count 之间；它不改变 modelValue 或向调用方写回。</zh-CN><en>Display value is bounded between zero and count; it changes neither modelValue nor caller state.</en></lang>
+// <lang><zh-CN>显式 current（包括 0）优先于 modelValue；显式异常值也不会静默回退到另一个受控来源。</zh-CN><en>An explicit current value, including zero, takes precedence over modelValue; an explicitly invalid value also never silently falls back to another controlled source.</en></lang>
+const selectedSourceValue = computed(() => props.current !== undefined ? props.current : props.modelValue);
+
+// <lang><zh-CN>显示值限制到 0 与 count 之间；它不改变 current/modelValue 或向调用方写回。</zh-CN><en>Display value is bounded between zero and count; it changes neither current/modelValue nor caller state.</en></lang>
 const displayValue = computed(() => {
   // <lang><zh-CN>有限数字才可比较，异常值按零呈现而不猜测业务默认评分。</zh-CN><en>Only finite numbers are comparable; invalid values present as zero without guessing a business default.</en></lang>
-  const candidate = Number.isFinite(props.modelValue) ? Math.floor(props.modelValue) : 0;
+  const candidate = Number.isFinite(selectedSourceValue.value) ? Math.floor(selectedSourceValue.value) : 0;
   return Math.min(safeCount.value, Math.max(0, candidate));
 });
 
@@ -65,12 +70,13 @@ const rootClasses = computed(() => ['u-rate', { 'u-rate--disabled': props.disabl
  */
 function select(position) {
   // <lang><zh-CN>禁用 guard 使直接调用与原生 disabled 属性保持相同语义。</zh-CN><en>The disabled guard gives direct calls the same semantics as the native disabled attribute.</en></lang>
-  if (props.disabled) {
+  if (props.disabled || !Number.isFinite(position)) {
     return;
   }
 
   // <lang><zh-CN>位置来自有限模板循环，因此只需再次限制到 safeCount 以防未来调用方传入异常值。</zh-CN><en>The position comes from a finite template loop, so it is bounded again to safeCount for future direct callers.</en></lang>
   const nextValue = Math.min(safeCount.value, Math.max(1, Math.floor(position)));
+  // <lang><zh-CN>固定顺序先请求 model 写回，再发送旧 input 兼容事件，最后报告 change；current 本身不被组件修改。</zh-CN><en>The fixed order requests model writeback first, then sends the legacy input compatibility event, and finally reports change; the component never modifies current itself.</en></lang>
   emit('update:modelValue', nextValue);
   emit('input', nextValue);
   emit('change', nextValue);
