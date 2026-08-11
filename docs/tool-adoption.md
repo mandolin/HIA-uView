@@ -12,7 +12,7 @@ The command checks the following relationships:
 - The adoption style entries include the selected UI manifest's style entry resolved relative to the Tool project root.
 - Paths, names, and lists are unique and in code-point order, making text and JSON reports deterministic.
 
-An adoption manifest cannot declare page paths, routes, APIs, requests, backend adapters, Directus, business modules, permissions, identity, credentials, hooks, arbitrary script locations, template expressions, or domain data. Those are application or HIA-uView-Biz concerns and belong in `main-repo`.
+An adoption manifest cannot declare page paths, routes, APIs, requests, backend adapters, Directus, business modules, permissions, identity, credentials, hooks, arbitrary script locations, template expressions, or domain data. Those are application or HIA-uView-Biz concerns and belong outside this UI-and-Tool repository.
 
 ## Example
 

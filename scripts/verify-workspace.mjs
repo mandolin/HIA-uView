@@ -7,7 +7,7 @@
 // <lang><zh-CN>导入本地文件存在性校验、路径解析和 package 契约验证；脚本不写入仓库、不执行项目代码或访问网络。</zh-CN><en>Imports local file-existence checks, path resolution, and package-contract validation; the script writes no repository file, executes no project code, and accesses no network.</en></lang>
 import { access } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { validatePackageContracts } from './package-contract.mjs';
+import { validatePackageContracts as validateDeclaredPackageContracts } from './package-contract.mjs';
 
 /**
  * @lang zh-CN 初始化质量门禁必须存在的稳定仓库内相对文件。该冻结前清单把公开消费说明、组件源码、主题、Tool 和 Documentation Sys 配置保持在同一基础完整性检查内，而不读取仓库外路径。
@@ -18,11 +18,14 @@ const requiredFiles = [
   'AGENTS.md',
   'LICENSE',
   'HIA-uView-UI/package.json',
+  'HIA-uView-UI/THIRD_PARTY_NOTICES.md',
+  'HIA-uView-UI/LICENSES/uView-Pro-MIT.txt',
   'HIA-uView-UI/main.js',
   'HIA-uView-UI/manifest.json',
   'HIA-uView-UI/pages.json',
   'HIA-uView-UI/hia-uview.components.json',
   'HIA-uView-UI/hia-uview.api-compatibility.json',
+  'HIA-uView-UI/hia-uview.api-semantic-review.json',
   'HIA-uView-UI/src/theme/hia-light.css',
   'HIA-uView-UI/src/index.mjs',
   'HIA-uView-UI/src/style.css',
@@ -52,6 +55,7 @@ const requiredFiles = [
   'HIA-uView-UI/hia-uview.compatibility.json',
   'HIA-uView-UI/hia-uview.migration-actions.json',
   'scripts/generate-api-compatibility-matrix.mjs',
+  'scripts/generate-p0-migration-actions.mjs',
   'docs/api-compatibility.md',
   'docs/development.md',
   'docs/development-toolchain-risk.md',
@@ -99,9 +103,9 @@ async function verifyRequiredFiles() {
  * @lang en Validates the root workspace and both public packages for their names, private initialization state, license, and Node-version requirement to prevent undeclared package-boundary drift.
  * @returns {Promise<void>} <lang><zh-CN>无返回值；发现契约问题时抛出错误。</zh-CN><en>Resolves without a value and throws when a contract issue is found.</en></lang>
  */
-async function verifyPackageContracts() {
+async function verifyPackageMetadataContracts() {
   // <lang><zh-CN>收集 package 元数据和分发边界问题；校验函数不执行 UI、Tool、compiler 或项目代码。</zh-CN><en>Collects package-metadata and distribution-boundary issues; the validation function executes no UI, Tool, compiler, or project code.</en></lang>
-  const issues = await validatePackageContracts();
+  const issues = await validateDeclaredPackageContracts();
 
   if (issues.length > 0) {
     // <lang><zh-CN>按单行问题输出稳定失败文本，不泄露依赖目录、用户路径或 package 内容正文。</zh-CN><en>Outputs stable failure text per issue without leaking dependency directories, user paths, or package-content body.</en></lang>
@@ -110,5 +114,5 @@ async function verifyPackageContracts() {
 }
 
 await verifyRequiredFiles();
-await verifyPackageContracts();
+await verifyPackageMetadataContracts();
 console.log(`HIA-uView package-contract gate passed (${requiredFiles.length} required files).`);

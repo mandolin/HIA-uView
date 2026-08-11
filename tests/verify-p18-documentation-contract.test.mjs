@@ -71,6 +71,6 @@ test('keeps examples and migration guidance manual, UI-only, and evidence-bounde
   assert.match(migration, /\*\*not\*\* a fork with a complete upstream API surface/i);
   assert.match(migration, /Replace one documented component at a time/i);
   assert.match(migration, /There is no codemod, source scanner, automatic import rewriter, or Tool `--write` mode/i);
-  // <lang><zh-CN>业务能力必须仍然指向独立 Biz main-repo，防止 UI 迁移材料悄然承诺 API、身份或领域工具。</zh-CN><en>Business capability must still point to separate Biz main-repo, preventing UI migration material from silently promising API, identity, or domain tooling.</en></lang>
-  assert.match(migration, /HIA-uView-Biz helpers.*main-repo/i);
+  // <lang><zh-CN>业务能力必须仍然指向独立 Biz 仓库，防止 UI 迁移材料悄然承诺 API、身份或领域工具。</zh-CN><en>Business capability must still point to the separate Biz repository, preventing UI migration material from silently promising API, identity, or domain tooling.</en></lang>
+  assert.match(migration, /HIA-uView-Biz helpers.*separate HIA-uView-Biz repository/i);
 });

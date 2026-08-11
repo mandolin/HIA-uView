@@ -13,4 +13,4 @@ Themes, styles, accessibility, and localization use a separate [design-system co
 
 Source documentation uses a development-only [HIA Documentation Sys integration](documentation.md). It is outside the UI runtime boundary and its generated artifacts are not package inputs.
 
-HIA-uView-Biz is a separate repository. It may consume a released UI version, a documented local link, or a dedicated integration fixture, but it must not import UI source files or share a parent lockfile. Biz modules, domain configuration, API/adapter/Directus helpers, identity, pages, and business-tooling CLI capabilities belong in its `main-repo`, not in HIA-uView-Tool. No versioned runtime component API has been published yet.
+HIA-uView-Biz is a separate repository. It may consume a released UI version, a documented local link, or a dedicated integration fixture, but it must not import UI source files or share a parent lockfile. Biz modules, domain configuration, API/adapter/Directus helpers, identity, pages, and business-tooling CLI capabilities belong in that separate Biz repository, not in HIA-uView-Tool. No versioned runtime component API has been published yet.

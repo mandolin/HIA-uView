@@ -4,15 +4,25 @@
  * @lang en Reads and validates declarative HIA-uView migration-action packets. It links only API matrices declared by configuration, scans no application or source, and neither generates, executes, nor writes migration code.
  */
 
+// <lang><zh-CN>Node crypto 只重新计算已加载 matrix item 的 SHA-256，不读取新文件或访问网络。</zh-CN><en>Node crypto only recomputes SHA-256 for an already-loaded matrix item and reads no new file or network resource.</en></lang>
+import { createHash } from 'node:crypto';
+// <lang><zh-CN>配置 helper 提供稳定诊断与仓内相对路径门禁。</zh-CN><en>Configuration helpers provide stable diagnostics and repository-relative path gates.</en></lang>
 import { createDiagnostic, isSafeRelativePath, normalizeRelativePath } from './config.mjs';
+// <lang><zh-CN>metadata helper 提供稳定排序检查及单文件受控 JSON 加载。</zh-CN><en>Metadata helpers provide stable-order checks and controlled single-file JSON loading.</en></lang>
 import { isCodePointSorted, readDeclaredJson } from './metadata.mjs';
 
-/** @lang zh-CN manifest v1 的唯一公开字段。 @lang en The only public fields of manifest v1. */
+/** @lang zh-CN manifest v1/v2 共有的唯一公开字段。 @lang en Sole public fields shared by manifest v1 and v2. */
 const manifestFields = Object.freeze(['version', 'kind', 'profile', 'apiCompatibilityManifest', 'scope', 'actions']);
+/** @lang zh-CN v1 action 的只读兼容字段。 @lang en Read-only compatibility fields for a v1 action. */
+const actionFieldsV1 = Object.freeze(['id', 'component', 'itemId', 'priority', 'disposition', 'operation', 'guidance', 'limitations', 'docs']);
+/** @lang zh-CN v2 action 在 v1 基础上增加 matrix 来源指纹。 @lang en A v2 action adds a matrix source fingerprint to the v1 fields. */
+const actionFieldsV2 = Object.freeze(['id', 'component', 'itemId', 'priority', 'sourceFingerprint', 'disposition', 'operation', 'guidance', 'limitations', 'docs']);
 /** @lang zh-CN Tool 支持的固定文案 locale。 @lang en Fixed copy locales supported by the Tool. */
 const locales = Object.freeze(['en', 'zh-Hans']);
 /** @lang zh-CN 可由动作包引用的 API container。 @lang en API containers eligible for action-packet references. */
 const dimensions = Object.freeze(['props', 'events', 'slots', 'imperativeApis']);
+/** @lang zh-CN v2 来源指纹允许的唯一文本格式。 @lang en Sole textual format accepted for a v2 source fingerprint. */
+const sourceFingerprintPattern = /^sha256:[0-9a-f]{64}$/u;
 
 /**
  * @lang zh-CN 判断值是否为普通 JSON record；数组/null/primitive 不能承载受控 schema。
@@ -34,6 +44,65 @@ function isRecord(value) {
 function isText(value) {
   // <lang><zh-CN>限制长度，避免动作 JSON 被用作大段文档或源码正文载体。</zh-CN><en>Bounds length so action JSON cannot serve as a carrier for large documentation or source bodies.</en></lang>
   return typeof value === 'string' && value.trim().length > 0 && value.trim().length <= 360;
+}
+
+/**
+ * @lang zh-CN 使用稳定字符串顺序比较两个 JSON object key，与生成器的规范化顺序保持一致。
+ * @lang en Compares two JSON object keys with stable string order matching the generator's canonicalization order.
+ * @param {string} left <lang><zh-CN>左键。</zh-CN><en>Left key.</en></lang>
+ * @param {string} right <lang><zh-CN>右键。</zh-CN><en>Right key.</en></lang>
+ * @returns {number} <lang><zh-CN>排序比较结果。</zh-CN><en>Sort comparison result.</en></lang>
+ */
+function compareCodePoints(left, right) {
+  // <lang><zh-CN>完全相等返回零，其余按稳定标识的直接字符串先后关系排序。</zh-CN><en>Exact equality returns zero; all other stable identifiers use direct string precedence.</en></lang>
+  return left === right ? 0 : left < right ? -1 : 1;
+}
+
+/**
+ * @lang zh-CN 把纯 JSON 值转换为递归键排序的规范字符串，独立于 manifest 提供的指纹。
+ * @lang en Converts a pure JSON value to a recursively key-sorted canonical string independently of the manifest-provided fingerprint.
+ * @param {unknown} value <lang><zh-CN>来自已验证 matrix 的纯 JSON 值。</zh-CN><en>Pure JSON value from the validated matrix.</en></lang>
+ * @returns {string} <lang><zh-CN>无空白的规范 JSON。</zh-CN><en>Whitespace-free canonical JSON.</en></lang>
+ */
+function canonicalizeJson(value) {
+  // <lang><zh-CN>标量沿用 JSON 编码，保持 string escape、boolean 与 null 的精确语义。</zh-CN><en>Scalars use JSON encoding to retain exact string-escape, boolean, and null semantics.</en></lang>
+  if (value === null || typeof value !== 'object') {
+    // <lang><zh-CN>有效 matrix 应为纯 JSON；此门禁避免无表示值被静默排除在摘要之外。</zh-CN><en>A valid matrix must be pure JSON; this gate prevents unrepresentable values from silently falling outside the digest.</en></lang>
+    const scalar = JSON.stringify(value);
+    if (scalar === undefined) throw new TypeError('Migration action fingerprint input must be pure JSON.');
+    return scalar;
+  }
+  // <lang><zh-CN>数组次序是完整 semantics 的组成部分，不能为了摘要而重排。</zh-CN><en>Array order is part of complete semantics and cannot be reordered for a digest.</en></lang>
+  if (Array.isArray(value)) return `[${value.map((entry) => canonicalizeJson(entry)).join(',')}]`;
+  // <lang><zh-CN>对象键递归排序，令等价 JSON object 的原始字段顺序不影响指纹。</zh-CN><en>Object keys are recursively sorted so original field order of equivalent JSON objects cannot affect the fingerprint.</en></lang>
+  const entries = Object.keys(value)
+    .sort(compareCodePoints)
+    .map((key) => `${JSON.stringify(key)}:${canonicalizeJson(value[key])}`);
+  return `{${entries.join(',')}}`;
+}
+
+/**
+ * @lang zh-CN 从可信 matrix 独立重算 action identity、priority、migration 三元组与完整 semantics 的 SHA-256 指纹。
+ * @lang en Independently recomputes the SHA-256 fingerprint over action identity, priority, the migration triple, and complete semantics from the trusted matrix.
+ * @param {string} componentName <lang><zh-CN>当前 component 名称。</zh-CN><en>Current component name.</en></lang>
+ * @param {object} item <lang><zh-CN>当前 matrix item。</zh-CN><en>Current matrix item.</en></lang>
+ * @returns {string} <lang><zh-CN>带 `sha256:` 前缀的来源指纹。</zh-CN><en>Source fingerprint prefixed with `sha256:`.</en></lang>
+ */
+function buildSourceFingerprint(componentName, item) {
+  // <lang><zh-CN>固定 payload 只由已加载 matrix 事实构成；缺失 target 明确成为 null。</zh-CN><en>The fixed payload contains only loaded matrix facts; an absent target explicitly becomes null.</en></lang>
+  const payload = {
+    component: componentName,
+    itemId: item.id,
+    priority: item.priority,
+    migration: {
+      target: item.migration?.target ?? null,
+      disposition: item.migration?.disposition,
+      reasonCode: item.migration?.reasonCode
+    },
+    semantics: item.semantics
+  };
+  // <lang><zh-CN>重新计算值不读取 action 文案或其自报 fingerprint，因此能发现旧文案所依据事实的漂移。</zh-CN><en>The recomputed value reads neither action copy nor its reported fingerprint, so it can detect drift in the facts underlying old copy.</en></lang>
+  return `sha256:${createHash('sha256').update(canonicalizeJson(payload), 'utf8').digest('hex')}`;
 }
 
 /**
@@ -172,15 +241,17 @@ function validateScope(scope, index, diagnostics) {
  * @param {unknown} action <lang><zh-CN>待校验 action。</zh-CN><en>Action to validate.</en></lang>
  * @param {{components:Set<string>,priorities:Set<string>}} scope <lang><zh-CN>已解析 scope。</zh-CN><en>Parsed scope.</en></lang>
  * @param {Map<string, Map<string, object>>} index <lang><zh-CN>matrix 索引。</zh-CN><en>Matrix index.</en></lang>
+ * @param {1|2} manifestVersion <lang><zh-CN>声明的 manifest schema 版本。</zh-CN><en>Declared manifest schema version.</en></lang>
  * @param {Array<object>} diagnostics <lang><zh-CN>共享诊断数组。</zh-CN><en>Shared diagnostic array.</en></lang>
  * @returns {string|null} <lang><zh-CN>有效 action ID 或 null。</zh-CN><en>Valid action ID or null.</en></lang>
  */
-function validateAction(action, scope, index, diagnostics) {
+function validateAction(action, scope, index, manifestVersion, diagnostics) {
   if (!isRecord(action)) {
     add(diagnostics, 'MIGRATION_ACTIONS_ACTION_INVALID', 'Every migration action must be a JSON object.');
     return null;
   }
-  exactFields(action, ['id', 'component', 'itemId', 'priority', 'disposition', 'operation', 'guidance', 'limitations', 'docs'], 'Migration action', diagnostics);
+  // <lang><zh-CN>v1 仅用于历史只读输入；v2 强制每项声明来源指纹，其他版本沿用最小 v1 schema 并由顶层版本门禁拒绝。</zh-CN><en>v1 exists only for historical read-only input; v2 requires a source fingerprint on every item, while other versions use the minimal v1 schema and are rejected by the top-level version gate.</en></lang>
+  exactFields(action, manifestVersion === 2 ? actionFieldsV2 : actionFieldsV1, 'Migration action', diagnostics);
   // <lang><zh-CN>稳定 ID 只能是 component/itemId，防止同一 matrix item 使用任意显示别名重复输出。</zh-CN><en>The stable ID can only be component/itemId, preventing one matrix item from being output repeatedly under arbitrary display aliases.</en></lang>
   const expectedId = isText(action.component) && isText(action.itemId) ? `${action.component}/${action.itemId}` : null;
   if (!isText(action.id) || action.id !== expectedId) add(diagnostics, 'MIGRATION_ACTIONS_ID_INVALID', 'Migration action id must equal component/itemId.');
@@ -192,6 +263,19 @@ function validateAction(action, scope, index, diagnostics) {
   } else {
     if (action.priority !== item.priority) add(diagnostics, 'MIGRATION_ACTIONS_PRIORITY_MISMATCH', `Migration action priority must match matrix item: ${action.id}.`);
     if (action.disposition !== item.migration.disposition) add(diagnostics, 'MIGRATION_ACTIONS_DISPOSITION_MISMATCH', `Migration action disposition must match matrix item: ${action.id}.`);
+    // <lang><zh-CN>v2 指纹必须格式正确并与可信 matrix 独立重算值相同；v1 继续保持不要求指纹的只读兼容。</zh-CN><en>A v2 fingerprint must have the exact format and match a value independently recomputed from the trusted matrix; v1 retains read-only compatibility without requiring one.</en></lang>
+    if (manifestVersion === 2) {
+      if (!sourceFingerprintPattern.test(action.sourceFingerprint ?? '')) {
+        add(diagnostics, 'MIGRATION_ACTIONS_SOURCE_FINGERPRINT_INVALID', `Migration action sourceFingerprint must be a SHA-256 digest: ${action.id ?? 'unknown'}.`);
+      } else if (!isRecord(item.semantics)) {
+        // <lang><zh-CN>v2 action 不能绑定缺少完整 semantics 的旧 matrix item；以稳定诊断拒绝，而不是让摘要函数对 undefined 抛出异常。</zh-CN><en>A v2 action cannot bind an older matrix item without complete semantics; reject it with a stable diagnostic instead of letting the digest helper throw on undefined.</en></lang>
+        add(diagnostics, 'MIGRATION_ACTIONS_SOURCE_FINGERPRINT_UNAVAILABLE', `Migration action sourceFingerprint requires matrix item semantics: ${action.id ?? 'unknown'}.`);
+      } else {
+        // <lang><zh-CN>期望值只由当前 component/item 事实生成，不信任 action 的其他重复字段。</zh-CN><en>The expected value comes only from current component/item facts and trusts no other duplicated action field.</en></lang>
+        const expectedSourceFingerprint = buildSourceFingerprint(action.component, item);
+        if (action.sourceFingerprint !== expectedSourceFingerprint) add(diagnostics, 'MIGRATION_ACTIONS_SOURCE_FINGERPRINT_MISMATCH', `Migration action sourceFingerprint must match current matrix facts: ${action.id ?? 'unknown'}.`);
+      }
+    }
     // <lang><zh-CN>operation 从当前 disposition 机械派生，避免 compatible/mapped/unsupported 的人工指引相互矛盾。</zh-CN><en>Operation is mechanically derived from current disposition, preventing human guidance from contradicting compatible/mapped/unsupported.</en></lang>
     const operation = item.migration.disposition === 'compatible' ? 'use-as-is' : item.migration.disposition === 'mapped' ? 'adapt-call-site' : 'keep-existing-or-compose';
     if (action.operation !== operation) add(diagnostics, 'MIGRATION_ACTIONS_OPERATION_INVALID', `Migration action operation must match matrix disposition: ${action.id ?? 'unknown'}.`);
@@ -218,7 +302,7 @@ export function validateMigrationActionManifest(manifest, manifestPath, configur
   // <lang><zh-CN>先做顶层 schema/配置关联，再校验 action，确保无效 matrix 不会生成可被信任的迁移建议。</zh-CN><en>Validates top-level schema/configuration linkage before actions, ensuring an invalid matrix cannot generate trusted migration guidance.</en></lang>
   const diagnostics = [];
   exactFields(manifest, manifestFields, `Migration action manifest ${manifestPath}`, diagnostics);
-  if (manifest.version !== 1) add(diagnostics, 'MIGRATION_ACTIONS_VERSION_UNSUPPORTED', `Migration action manifest version must be 1: ${manifestPath}.`);
+  if (manifest.version !== 1 && manifest.version !== 2) add(diagnostics, 'MIGRATION_ACTIONS_VERSION_UNSUPPORTED', `Migration action manifest version must be 1 or 2: ${manifestPath}.`);
   if (manifest.kind !== 'hia-uview-migration-actions') add(diagnostics, 'MIGRATION_ACTIONS_KIND_INVALID', `Migration action manifest kind is unsupported: ${manifestPath}.`);
   if (manifest.profile !== configuration.profile) add(diagnostics, 'MIGRATION_ACTIONS_PROFILE_MISMATCH', `Migration action manifest profile must match configuration profile: ${manifestPath}.`);
   // <lang><zh-CN>引用路径必须同时通过配置白名单与加载成功索引；没有备用 file scan。</zh-CN><en>The reference path must pass both configuration allowlist and successful-load index; there is no fallback file scan.</en></lang>
@@ -235,7 +319,7 @@ export function validateMigrationActionManifest(manifest, manifestPath, configur
   // <lang><zh-CN>保留每项有效 ID，用于重复、顺序和“每个 scoped matrix item 恰一次”门禁。</zh-CN><en>Retains each valid ID for duplicate/order and “each scoped matrix item exactly once” gates.</en></lang>
   const ids = [];
   for (const action of manifest.actions) {
-    const id = validateAction(action, scope, index, diagnostics);
+    const id = validateAction(action, scope, index, manifest.version, diagnostics);
     if (id) ids.push(id);
   }
   if (new Set(ids).size !== ids.length) add(diagnostics, 'MIGRATION_ACTIONS_ID_DUPLICATE', 'Migration action ids must not repeat.');
