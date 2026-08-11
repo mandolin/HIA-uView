@@ -1,70 +1,43 @@
 # UInput component contract / UInput 组件契约
 
-> Status / 状态：Private pre-release contract. Independent implementation, Vue runtime behavior tests, and an `mp-weixin` compile fixture exist; `UInput` remains a private, unpublished package API.
-> 私有的预发布契约。独立实现、Vue runtime 行为测试和 `mp-weixin` 编译 fixture 已存在；`UInput` 仍是私有、未发布的包 API。
+> Status / 状态：Private pre-release controlled-input contract with standalone and form-composed runtime coverage.
+> 具有独立与表单组合 runtime 覆盖的私有预发布受控输入契约。
 
-`UInput` is a proposed controlled single-line text input for the private UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. It renders caller-owned text state and reports local input intent back to the caller. It does not own a form model, validation rule, asynchronous work, submission, navigation, persistence, or analytics.
+`UInput` renders caller-owned single-line text and reports local intent. It owns no hidden value, rule, submission, navigation, persistence, request, analytics, or business formatting.
 
-`UInput` 是面向私有 UniApp Vue 3 与微信小程序（`mp-weixin`）配置的受控单行文本输入组件候选。它渲染调用方自有的文字状态，并将本地输入意图回传给调用方。它不拥有表单模型、校验规则、异步工作、提交、导航、持久化或分析行为。
+`UInput` 渲染调用方拥有的单行文字并报告局部意图。它不拥有隐藏值、规则、提交、导航、持久化、请求、分析或业务格式化。
 
 ## Public API / 公开 API
 
 | Prop / 属性 | Type / 类型 | Default / 默认值 | Contract / 约定 |
 | --- | --- | --- | --- |
-| `modelValue` | `string \| number` | `''` | Controlled visible value. The caller updates it after receiving an event; a numeric initial value is displayed by the native surface, while new editing intent remains an unmodified string. The component never mutates, trims, formats, stores, or validates it. / 受控的可见值。调用方在接收事件后更新它；数字初始值由原生表面显示，而新的编辑意图仍是未修改的字符串。组件绝不修改、裁剪、格式化、存储或校验它。 |
-| `placeholder` | `string` | `''` | Caller-owned native input hint. It is not a replacement for a visible field label. / 调用方自有的原生输入提示；它不能替代可见字段标签。 |
-| `disabled` | `boolean` | `false` | Makes the native input unavailable and defensively suppresses all component input/focus/blur emissions. / 使原生输入不可用，并防御性地抑制所有组件的输入、聚焦和失焦事件。 |
-| `readonly` | `boolean` | `false` | Passes local read-only presentation to the native input. It creates no overlay, selector, hidden value, or validation state. / 将本地只读呈现传递给原生输入；它不创建遮罩、选择器、隐藏值或校验状态。 |
+| `modelValue` | `string \| number` | `''` | Controlled visible value; editing candidates are always unmodified strings. / 受控可见值；编辑候选始终是未经修改的字符串。 |
+| `placeholder` | `string` | `''` | Caller-owned hint, not a substitute for a visible label. / 调用方拥有的提示，不能替代可见标签。 |
+| `disabled` | `boolean` | `false` | Local unavailable state, OR-combined with the nearest `UFormItem`. / 局部不可用状态，与最近 `UFormItem` 按 OR 合并。 |
+| `readonly` | `boolean` | `false` | Local non-editable state, OR-combined with the nearest `UFormItem`. / 局部不可编辑状态，与最近 `UFormItem` 按 OR 合并。 |
 
 | Event / 事件 | Payload / 载荷 | Contract / 约定 |
 | --- | --- | --- |
-| `update:modelValue` | `value: string` | Emits the unmodified next text value once for each enabled native input event. / 每次启用状态的原生输入事件恰好触发一次未经修改的下一文字值。 |
-| `input` | `value: string` | Emits the same unmodified value after `update:modelValue`, so callers may observe intent without treating the component as a validator. / 在 `update:modelValue` 后触发相同的未修改值，使调用方能够观察意图而不把组件当作校验器。 |
-| `focus` | native platform event | Emits once for an enabled focus event. / 对一次启用状态的聚焦事件恰好触发一次。 |
-| `blur` | native platform event | Emits once for an enabled blur event. / 对一次启用状态的失焦事件恰好触发一次。 |
-| `click` | native platform event | Emits an enabled local click observation. It does not open, select, navigate, or focus automatically. / 回传启用状态的本地点击观察；它不自动打开、选择、导航或聚焦。 |
-| `confirm` | native platform event | Emits an enabled local confirm observation. It is not validation, submission, persistence, or backend success. / 回传启用状态的本地确认观察；它不是校验、提交、持久化或后端成功。 |
+| `update:modelValue` | `value: string` | First value intent for each accepted input event. / 每次被接受输入事件的首个值意图。 |
+| `input` | `value: string` | Same unmodified string, emitted after `update:modelValue`. / 与前者相同的未经修改字符串，在其后触发。 |
+| `focus` / `blur` | platform event / 平台事件 | Original observation while enabled. / 启用状态下的原始观察。 |
+| `click` | none / 无 | Enabled local click observation with no cross-platform event payload. / 启用状态的局部点击观察，不扩散跨平台事件 payload。 |
+| `confirm` | `value: string` | Confirmed string extracted from a documented event shape. / 从已记录事件形状提取的确认字符串。 |
 
-The component accepts a string or number `modelValue`; an editing event always returns a candidate string. Callers that use nullable, masked, or domain-specific values must adapt those values outside the component and own the resulting validation and error semantics.
+## Controlled and form-composed behavior / 受控与表单组合行为
 
-组件接受字符串或数字 `modelValue`；编辑事件始终回传候选字符串。使用可空、掩码或领域专属值的调用方必须在组件外完成适配，并自行拥有相应的校验和错误语义。
+The rendered value always comes from the latest prop. An accepted native input emits `update:modelValue` and then `input`; the application decides whether to write the candidate back. Only `detail.value` and `target.value` strings are accepted. A malformed event emits nothing instead of inventing an empty value.
 
-## Controlled-value and interaction boundary / 受控值与交互边界
+渲染值始终来自最新 prop。被接受的原生输入会依次触发 `update:modelValue` 与 `input`；是否写回候选值由应用决定。只接受字符串形式的 `detail.value` 与 `target.value`。畸形事件不会伪造空值，而是零事件。
 
-The rendered value always comes from the latest `modelValue` prop. A native input event reports a candidate string, but does not update the display permanently unless the caller supplies the new prop value. This deliberately avoids hidden form state and keeps asynchronous validation, rollback, and submission policy in the application.
+Inside the nearest `UFormItem`, an accepted input waits for caller writeback through Vue's next update and then notifies matching `change` rules. Enabled blur emits the original event first and then notifies matching `blur` rules. `UInput` deliberately has no public `change` event: form notification is a private parent-child protocol, not a second caller event.
 
-渲染值始终来自最新的 `modelValue` prop。原生输入事件只报告候选字符串；除非调用方提供新的 prop 值，否则它不会永久更新显示。该设计有意避免隐藏表单状态，并将异步校验、回滚和提交策略保留在应用中。
+位于最近 `UFormItem` 内时，被接受的输入会等待调用方经 Vue 下一次更新完成写回，再通知匹配的 `change` 规则。启用状态的 blur 先触发原始事件，再通知匹配的 `blur` 规则。`UInput` 有意不提供公开 `change` 事件：表单通知是私有父子协议，不是第二个调用方事件。
 
-When `disabled` is true, the native control is disabled and the component emits none of the documented events, including when a test or non-native caller invokes a handler directly. `readonly` blocks local value writeback but does not convert a possible native click or confirm observation into a business action. `UInput` does not create a `change` abstraction, automatic focus, debounce, throttle, maximum-length policy, password/payment mode, multiline mode, or native form capability proxy.
+Effective `disabled` suppresses every event even when a handler is invoked directly. Effective `readonly` blocks value events but may still report actual focus, blur, click, and valid confirm observations; it is not an action authorization. No timer, debounce, trim, mask, maxlength policy, automatic focus, or form submission is introduced.
 
-当 `disabled` 为真时，原生控件被禁用，并且组件不触发任何已文档化事件，包括测试或非原生调用方直接调用 handler 的情形。`readonly` 会阻止本地值写回，但不会将可能出现的原生点击或确认观察变成业务动作。`UInput` 不创建 `change` 抽象、自动聚焦、防抖、节流、最大长度策略、密码/支付模式、多行模式或原生表单能力代理。
+有效 `disabled` 会抑制全部事件，即使 handler 被直接调用。有效 `readonly` 阻止值事件，但仍可报告实际发生的 focus、blur、click 与合法 confirm 观察；它不是操作授权。组件不引入 timer、防抖、trim、掩码、maxlength 策略、自动聚焦或表单提交。
 
-## Theme and customization / 主题与定制
+The root namespace is `u-input` and consumes `--u-comp-input-*`. Provide a meaningful visible label, normally through `UFormItem` or `UField`; placeholder alone is insufficient. WCAG 2.2 AA remains the controllable visual target, while native label linkage, keyboard, screen-reader, accessibility tree, IME, DevTools, and device behavior require platform verification.
 
-The root namespace is `u-input`. The planned implementation consumes the following component-token family and does not expose raw colors, arbitrary inline styles, deep-selector customization, or an upstream `type` compatibility layer.
-
-根命名空间为 `u-input`。计划实现消费下列组件 token 族，不暴露原始颜色、任意内联样式、深层选择器定制或上游 `type` 兼容层。
-
-| Token family / Token 族 | Purpose / 用途 |
-| --- | --- |
-| `--u-comp-input-surface`, `--u-comp-input-foreground`, `--u-comp-input-placeholder-foreground` | Visible text-input surface and text hierarchy. / 可见文本输入表面与文字层级。 |
-| `--u-comp-input-border`, `--u-comp-input-disabled-border` | Resting and disabled boundary treatment. / 静止与禁用边界样式。 |
-| `--u-comp-input-disabled-foreground`, `--u-comp-input-disabled-opacity` | Non-color disabled differentiation. / 非颜色的禁用区分。 |
-| `--u-comp-input-min-height`, `--u-comp-input-inline-padding`, `--u-comp-input-block-padding`, `--u-comp-input-radius`, `--u-comp-input-font-size` | Density and readable touch/typing geometry. / 密度以及可读的触控/输入几何。 |
-| `--u-comp-input-focus-ring` | Future focus treatment only where the platform exposes a verifiable focus state. / 仅在平台暴露可验证焦点状态时使用的后续焦点样式。 |
-
-## Accessibility and platform disclosure / 无障碍与平台披露
-
-The caller must provide a visible label, normally by composing `UInput` inside `UField`; placeholder text alone is not an accessible label. Disabled treatment must remain distinguishable without color alone. WCAG 2.2 AA is the acceptance target for controllable visual behavior, not a device or mini-program conformance certification.
-
-调用方必须提供可见标签，通常通过将 `UInput` 组合在 `UField` 内实现；placeholder 文字本身不是无障碍标签。禁用样式必须不只依靠颜色仍可区分。WCAG 2.2 AA 是可控视觉行为的验收目标，不是设备或小程序符合性认证。
-
-The initial `mp-weixin` evidence will cover component compilation and Vue runtime behavior only. Keyboard focus, screen-reader semantics, accessibility-tree linkage, native IME behavior, WeChat DevTools, physical devices, App, H5, and other mini-program targets are not independently verified and are not promised by this contract.
-
-初始 `mp-weixin` 证据只覆盖组件编译和 Vue runtime 行为。键盘焦点、读屏语义、无障碍树关联、原生输入法行为、微信开发者工具、真机、App、H5 和其他小程序目标尚未独立验证，本文不作相关承诺。
-
-## Required fixtures / 实现必需 fixture
-
-Before release, fixtures must expand to cover a caller-controlled initial value, a next-value event pair in documented order, disabled zero events, focus/blur intent, an empty and a long Chinese/English placeholder, and composition with a visible `UField` label. Static checks must confirm that the component contains no validator, submit, request, storage, route, native `open-type`, or value-logging behavior.
-
-发布前，fixture 必须扩展覆盖调用方受控的初始值、按文档顺序触发的下一值事件对、禁用时零事件、聚焦/失焦意图、空及较长的中英文 placeholder，以及与可见 `UField` 标签的组合。静态检查必须确认组件不包含 validator、submit、请求、存储、路由、原生 `open-type` 或值日志行为。
+根命名空间为 `u-input`，消费 `--u-comp-input-*`。应通过 `UFormItem` 或 `UField` 等提供有意义的可见标签；仅有 placeholder 并不足够。WCAG 2.2 AA 仍是可控视觉目标，而原生标签关联、键盘、读屏、无障碍树、输入法、开发者工具与真机行为需要平台验证。
