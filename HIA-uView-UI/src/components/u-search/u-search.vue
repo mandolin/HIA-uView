@@ -9,20 +9,22 @@
       class="u-search__input"
       :value="modelValue"
       :placeholder="placeholder"
-      :disabled="disabled"
+      :disabled="effectiveDisabled"
+      :readonly="effectiveReadonly"
       :focus="focus"
       @input="handleInput"
       @focus="handleFocus"
       @blur="handleBlur"
       @confirm="handleConfirm"
     />
-    <button v-if="showClear && modelValue.length > 0" class="u-search__clear" :disabled="disabled" type="button" @click="clear">{{ clearText }}</button>
-    <button v-if="showAction && actionText.length > 0" class="u-search__action" :disabled="disabled" type="button" @click="search">{{ actionText }}</button>
+    <button v-if="showClear && modelValue.length > 0" class="u-search__clear" :disabled="effectiveDisabled || effectiveReadonly" type="button" @click.stop="clear">{{ clearText }}</button>
+    <button v-if="showAction && actionText.length > 0" class="u-search__action" :disabled="effectiveDisabled" type="button" @click.stop="search">{{ actionText }}</button>
   </view>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, inject, nextTick } from 'vue';
+import { U_FORM_ITEM_CONTEXT } from '../u-form/form-runtime.mjs';
 
 // <lang><zh-CN>稳定的 `u-search` 名称保持上游迁移熟悉度，但本实现不复用上游图标或请求服务。</zh-CN><en>The stable `u-search` name keeps upstream migration familiar while this implementation reuses no upstream icon or request service.</en></lang>
 defineOptions({ name: 'u-search' });
@@ -42,14 +44,26 @@ const props = defineProps({
 // <lang><zh-CN>事件只报告文本、焦点和 action intent；不对 query 进行任何业务处理。</zh-CN><en>Events report text, focus, and action intent only; query receives no business processing here.</en></lang>
 const emit = defineEmits(['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click', 'search', 'clear']);
 
-// <lang><zh-CN>根类提供禁用视觉状态，保持 input 和按钮使用同一 guard。</zh-CN><en>The root provides disabled visual state while input and buttons share the same guard.</en></lang>
-const rootClasses = computed(() => ['u-search', { 'u-search--disabled': props.disabled }]);
+// <lang><zh-CN>最近 form-item context 可为空，使独立搜索框不依赖表单 owner。</zh-CN><en>The nearest form-item context may be absent so a standalone search field does not depend on a form owner.</en></lang>
+const formItemContext = inject(U_FORM_ITEM_CONTEXT, null);
+
+// <lang><zh-CN>局部与父级 disabled 合并后统一保护输入、清除、action 与根点击。</zh-CN><en>Merged local and parent disabled state uniformly guards input, clear, action, and root click.</en></lang>
+const effectiveDisabled = computed(() => props.disabled || Boolean(formItemContext?.disabled.value));
+
+// <lang><zh-CN>搜索没有公开 readonly prop，但可继承最近表单项 readonly 并阻止输入/clear 值变化。</zh-CN><en>Search exposes no readonly prop but may inherit nearest-form-item readonly and block input/clear value changes.</en></lang>
+const effectiveReadonly = computed(() => Boolean(formItemContext?.readonly.value));
+
+// <lang><zh-CN>根类同时披露有效 disabled/readonly，使呈现与 handler guard 对齐。</zh-CN><en>The root class discloses effective disabled/readonly together so presentation aligns with handler guards.</en></lang>
+const rootClasses = computed(() => ['u-search', {
+  'u-search--disabled': effectiveDisabled.value,
+  'u-search--readonly': effectiveReadonly.value
+}]);
 
 /**
- * @lang zh-CN 从两种已记录事件形状取得字符串；未知形状返回空值。
- * @lang en Reads a string from two documented event shapes; unknown shapes return empty.
+ * @lang zh-CN 从两种已记录事件形状取得字符串；未知形状返回 null，使其保持零事件。
+ * @lang en Reads a string from two documented event shapes; unknown shapes return null so they retain zero events.
  * @param {unknown} event <lang><zh-CN>平台或测试输入事件。</zh-CN><en>Platform or test input event.</en></param>
- * @returns {string} <lang><zh-CN>未经修改的候选 query。</zh-CN><en>Unmodified candidate query.</en></lang>
+ * @returns {string | null} <lang><zh-CN>未经修改的候选 query 或无安全候选。</zh-CN><en>Unmodified candidate query or no safe candidate.</en></lang>
  */
 function extractValue(event) {
   // <lang><zh-CN>小程序 detail.value 是首发平台的优先事件形状。</zh-CN><en>Mini-program detail.value is the first-priority event shape for the launch platform.</en></lang>
@@ -60,27 +74,34 @@ function extractValue(event) {
 
   // <lang><zh-CN>Vue/jsdom target.value 只服务本地行为测试，不把输入转换成请求。</zh-CN><en>Vue/jsdom target.value serves local behavior tests only and is not converted into a request.</en></lang>
   const targetValue = event?.target?.value;
-  return typeof targetValue === 'string' ? targetValue : '';
+  return typeof targetValue === 'string' ? targetValue : null;
 }
 
 /**
  * @lang zh-CN 报告文本变化意图；disabled 时保持零事件。
  * @lang en Reports text-change intent; disabled state retains zero events.
  * @param {unknown} event <lang><zh-CN>原生输入事件。</zh-CN><en>Native input event.</en></param>
- * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ * @returns {Promise<void>} <lang><zh-CN>值事件同步发出后等待 Vue 写回，再通知 change 规则。</zh-CN><en>After synchronous value events, waits for Vue writeback and then notifies change rules.</en></lang>
  */
-function handleInput(event) {
+async function handleInput(event) {
   // <lang><zh-CN>禁用 guard 防止非原生调用绕过原生属性。</zh-CN><en>The disabled guard prevents non-native calls from bypassing the native attribute.</en></lang>
-  if (props.disabled) {
+  if (effectiveDisabled.value || effectiveReadonly.value) {
     return;
   }
 
   // <lang><zh-CN>页面收到原始字符串后决定是否写回、筛选或触发异步流程。</zh-CN><en>The page receives the raw string and decides whether to write back, filter, or trigger asynchronous flow.</en></lang>
   const nextValue = extractValue(event);
+  // <lang><zh-CN>未知 payload 不伪造空 query 或 clear。</zh-CN><en>An unknown payload fabricates neither an empty query nor a clear operation.</en></lang>
+  if (nextValue === null) {
+    return;
+  }
   emit('update:modelValue', nextValue);
   emit('input', nextValue);
   // <lang><zh-CN>change 使用相同未修改字符串报告输入变化，不等待或假定查询动作。</zh-CN><en>Change reports the same unmodified string for input change and neither waits for nor assumes a query action.</en></lang>
   emit('change', nextValue);
+  // <lang><zh-CN>等待宿主写回后通知最近表单项；不防抖、不使用固定 timer。</zh-CN><en>Waits for host writeback before notifying the nearest form item; no debounce or fixed timer is used.</en></lang>
+  await nextTick();
+  formItemContext?.notifyChange();
 }
 
 /**
@@ -90,7 +111,7 @@ function handleInput(event) {
  * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
  */
 function handleFocus(event) {
-  if (props.disabled) {
+  if (effectiveDisabled.value) {
     return;
   }
   emit('focus', event);
@@ -100,13 +121,16 @@ function handleFocus(event) {
  * @lang zh-CN 转发失焦意图，不启动校验或搜索。
  * @lang en Forwards blur intent without starting validation or search.
  * @param {unknown} event <lang><zh-CN>原生失焦事件。</zh-CN><en>Native blur event.</en></param>
- * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ * @returns {Promise<void>} <lang><zh-CN>先 emit blur，等待 Vue 更新后通知 blur 规则。</zh-CN><en>Emits blur first, waits for a Vue update, and then notifies blur rules.</en></lang>
  */
-function handleBlur(event) {
-  if (props.disabled) {
+async function handleBlur(event) {
+  if (effectiveDisabled.value) {
     return;
   }
   emit('blur', event);
+  // <lang><zh-CN>blur 通知只运行显式 blur 规则，不触发 search 或请求。</zh-CN><en>The blur notification runs only explicit blur rules and starts neither search nor request.</en></lang>
+  await nextTick();
+  formItemContext?.notifyBlur();
 }
 
 /**
@@ -116,7 +140,7 @@ function handleBlur(event) {
  * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
  */
 function handleConfirm(event) {
-  if (props.disabled) {
+  if (effectiveDisabled.value) {
     return;
   }
   emit('confirm', event);
@@ -130,7 +154,7 @@ function handleConfirm(event) {
  */
 function handleClick(event) {
   // <lang><zh-CN>禁用区域不得报告点击，避免嵌套原生控件的事件冒泡绕过调用方状态。</zh-CN><en>A disabled region must not report clicks, avoiding nested native-control bubbling bypassing caller state.</en></lang>
-  if (props.disabled) {
+  if (effectiveDisabled.value) {
     return;
   }
 
@@ -141,14 +165,20 @@ function handleClick(event) {
 /**
  * @lang zh-CN 清除由调用方拥有的文本并回传 clear 意图；不清除历史、缓存或结果。
  * @lang en Clears caller-owned text and reports clear intent; it clears no history, cache, or result.
- * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ * @returns {Promise<void>} <lang><zh-CN>按稳定顺序 emit 后等待宿主写回并通知 change 规则。</zh-CN><en>After stable ordered emissions, waits for host writeback and notifies change rules.</en></lang>
  */
-function clear() {
-  if (props.disabled) {
+async function clear() {
+  if (effectiveDisabled.value || effectiveReadonly.value) {
     return;
   }
+  // <lang><zh-CN>clear 与普通输入共享 value/update/input/change 协议，最后单独报告 clear 意图。</zh-CN><en>Clear shares the value/update/input/change protocol with ordinary input and reports the clear intent last.</en></lang>
   emit('update:modelValue', '');
+  emit('input', '');
+  emit('change', '');
   emit('clear');
+  // <lang><zh-CN>宿主清空 model 后再运行 change 规则，确保校验读取新值。</zh-CN><en>Runs change rules after the host clears the model so validation reads the new value.</en></lang>
+  await nextTick();
+  formItemContext?.notifyChange();
 }
 
 /**
@@ -157,7 +187,7 @@ function clear() {
  * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
  */
 function search() {
-  if (props.disabled) {
+  if (effectiveDisabled.value) {
     return;
   }
   emit('search', props.modelValue);

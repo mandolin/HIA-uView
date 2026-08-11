@@ -9,8 +9,8 @@
       class="u-textarea__field"
       :value="modelValue"
       :placeholder="placeholder"
-      :disabled="disabled"
-      :readonly="readonly"
+      :disabled="effectiveDisabled"
+      :readonly="effectiveReadonly"
       :maxlength="maxlength"
       :auto-height="autoHeight"
       :focus="focus"
@@ -24,7 +24,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, inject, nextTick } from 'vue';
+import { U_FORM_ITEM_CONTEXT } from '../u-form/form-runtime.mjs';
 
 // <lang><zh-CN>声明稳定模板名，使显式 registry、manifest 和模板迁移保持同一 `u-*` 名称。</zh-CN><en>Declares the stable template name so explicit registry, manifest, and template migration retain one `u-*` name.</en></lang>
 defineOptions({ name: 'u-textarea' });
@@ -52,17 +53,26 @@ const props = defineProps({
 // <lang><zh-CN>事件只报告受控更新、原始输入和焦点意图；应用拥有写回、校验和后续流程。</zh-CN><en>Events report controlled update, raw input, and focus intent only; the application owns writeback, validation, and follow-up flow.</en></lang>
 const emit = defineEmits(['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click']);
 
-// <lang><zh-CN>根类由调用方状态派生，保证视觉状态与事件 guard 使用同一事实。</zh-CN><en>Root classes derive from caller state so visual state and event guards use one fact.</en></lang>
+// <lang><zh-CN>最近 form-item context 可为空，使独立多行输入不依赖表单 owner。</zh-CN><en>The nearest form-item context may be absent so a standalone textarea does not depend on a form owner.</en></lang>
+const formItemContext = inject(U_FORM_ITEM_CONTEXT, null);
+
+// <lang><zh-CN>局部与父级 disabled 合并后同时驱动原生属性、样式和全部事件 guard。</zh-CN><en>Merged local and parent disabled state drives the native attribute, styles, and every event guard together.</en></lang>
+const effectiveDisabled = computed(() => props.disabled || Boolean(formItemContext?.disabled.value));
+
+// <lang><zh-CN>局部与父级 readonly 合并后只阻止值事件，不阻止实际收到的观察事件。</zh-CN><en>Merged local and parent readonly state blocks only value events, not observation events that actually arrive.</en></lang>
+const effectiveReadonly = computed(() => props.readonly || Boolean(formItemContext?.readonly.value));
+
+// <lang><zh-CN>根类由有效状态派生，保证视觉状态与 handler guard 使用同一事实。</zh-CN><en>Root classes derive from effective state so visual state and handler guards use one fact.</en></lang>
 const rootClasses = computed(() => [
   'u-textarea',
-  { 'u-textarea--disabled': props.disabled, 'u-textarea--readonly': props.readonly }
+  { 'u-textarea--disabled': effectiveDisabled.value, 'u-textarea--readonly': effectiveReadonly.value }
 ]);
 
 /**
- * @lang zh-CN 从已记录的 UniApp/Vue 事件形状取得字符串；未知形状返回空值而不猜测或转换。
- * @lang en Reads a string from documented UniApp/Vue event shapes; unknown shapes return empty without guessing or transforming.
+ * @lang zh-CN 从已记录的 UniApp/Vue 事件形状取得字符串；未知形状返回 null，使其产生零事件而非清空模型。
+ * @lang en Reads a string from documented UniApp/Vue event shapes; unknown shapes return null so they emit nothing instead of clearing the model.
  * @param {unknown} event <lang><zh-CN>平台或测试输入事件。</zh-CN><en>Platform or test input event.</en></lang>
- * @returns {string} <lang><zh-CN>未经修改的候选字符串。</zh-CN><en>Unmodified candidate string.</en></lang>
+ * @returns {string | null} <lang><zh-CN>未经修改的候选字符串或无安全候选。</zh-CN><en>Unmodified candidate string or no safe candidate.</en></lang>
  */
 function extractValue(event) {
   // <lang><zh-CN>小程序输入事件优先从 detail.value 读取，以保持首发平台契约。</zh-CN><en>Reads detail.value first for the mini-program-first contract.</en></lang>
@@ -73,27 +83,35 @@ function extractValue(event) {
 
   // <lang><zh-CN>Vue/jsdom 原生事件从 target.value 读取，仍不执行 trim 或格式化。</zh-CN><en>Reads target.value from Vue/jsdom native events without trimming or formatting.</en></lang>
   const targetValue = event?.target?.value;
-  return typeof targetValue === 'string' ? targetValue : '';
+  return typeof targetValue === 'string' ? targetValue : null;
 }
 
 /**
  * @lang zh-CN 报告受控多行输入意图；disabled/readonly 时保持零事件。
  * @lang en Reports controlled multiline-input intent and emits nothing while disabled or readonly.
  * @param {unknown} event <lang><zh-CN>原生输入事件。</zh-CN><en>Native input event.</en></lang>
- * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ * @returns {Promise<void>} <lang><zh-CN>同步 emit 后等待一次 Vue 更新并通知 change 规则。</zh-CN><en>After synchronous emissions, waits for one Vue update and notifies change rules.</en></lang>
  */
-function handleInput(event) {
+async function handleInput(event) {
   // <lang><zh-CN>guard 先于读取执行，使直接 handler 调用也不会绕过受控状态限制。</zh-CN><en>The guard runs before reading so direct handler calls cannot bypass controlled-state limits.</en></lang>
-  if (props.disabled || props.readonly) {
+  if (effectiveDisabled.value || effectiveReadonly.value) {
     return;
   }
 
   // <lang><zh-CN>候选值保持原样交还调用方；组件不保存副本。</zh-CN><en>Returns the candidate unchanged to the caller; the component stores no copy.</en></lang>
   const nextValue = extractValue(event);
+  // <lang><zh-CN>未知 payload 不产生空字符串兜底或任一值事件。</zh-CN><en>An unknown payload produces neither an empty-string fallback nor any value event.</en></lang>
+  if (nextValue === null) {
+    return;
+  }
   emit('update:modelValue', nextValue);
   emit('input', nextValue);
   // <lang><zh-CN>change 与 input 使用同一候选字符串；它不表示原生失焦、校验或提交完成。</zh-CN><en>Change uses the same candidate string as input; it represents no native blur, validation, or submission completion.</en></lang>
   emit('change', nextValue);
+
+  // <lang><zh-CN>宿主写回完成后才通知表单项，使规则读取调用方最新 model；不使用 timer。</zh-CN><en>Notifies the form item only after host writeback completes so rules read the caller's latest model; no timer is used.</en></lang>
+  await nextTick();
+  formItemContext?.notifyChange();
 }
 
 /**
@@ -104,7 +122,7 @@ function handleInput(event) {
  */
 function handleFocus(event) {
   // <lang><zh-CN>禁用控件不报告焦点，保持与单行输入的受控事件规则一致。</zh-CN><en>Disabled controls report no focus, matching the controlled event rule of single-line input.</en></lang>
-  if (props.disabled) {
+  if (effectiveDisabled.value) {
     return;
   }
   emit('focus', event);
@@ -114,14 +132,17 @@ function handleFocus(event) {
  * @lang zh-CN 转发启用状态的失焦意图，不触发校验或提交。
  * @lang en Forwards blur intent while enabled without triggering validation or submission.
  * @param {unknown} event <lang><zh-CN>原生失焦事件。</zh-CN><en>Native blur event.</en></param>
- * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
+ * @returns {Promise<void>} <lang><zh-CN>先 emit blur，等待 Vue 更新后通知 blur 规则。</zh-CN><en>Emits blur first, waits for a Vue update, and then notifies blur rules.</en></lang>
  */
-function handleBlur(event) {
+async function handleBlur(event) {
   // <lang><zh-CN>统一 disabled guard，防止不同事件路径产生不一致的禁用语义。</zh-CN><en>Uses the same disabled guard so event paths cannot produce inconsistent disabled semantics.</en></lang>
-  if (props.disabled) {
+  if (effectiveDisabled.value) {
     return;
   }
   emit('blur', event);
+  // <lang><zh-CN>blur 通知发生在调用方观察之后，不把失焦解释为提交。</zh-CN><en>Blur notification occurs after caller observation and does not interpret loss of focus as submission.</en></lang>
+  await nextTick();
+  formItemContext?.notifyBlur();
 }
 
 /**
@@ -131,27 +152,26 @@ function handleBlur(event) {
  * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
  */
 function handleConfirm(event) {
-  // <lang><zh-CN>禁用或只读状态不产生确认意图，避免调用方误将它当作可编辑完成。</zh-CN><en>Disabled or readonly state produces no confirm intent, avoiding a false editable-completion interpretation.</en></lang>
-  if (props.disabled || props.readonly) {
+  // <lang><zh-CN>disabled 不产生确认；readonly 仍可报告平台实际送达的确认观察，但不产生值写回。</zh-CN><en>Disabled produces no confirmation; readonly may still report a confirmation observation actually delivered by the platform but produces no value writeback.</en></lang>
+  if (effectiveDisabled.value) {
     return;
   }
   emit('confirm', event);
 }
 
 /**
- * @lang zh-CN 转发启用多行区域的原始点击意图；组件不把点击解释为打开、选择、导航或编辑完成。
- * @lang en Forwards original click intent from an enabled multiline region; the component never interprets it as opening, selection, navigation, or editing completion.
- * @param {unknown} event <lang><zh-CN>多行区域收到的原生点击事件。</zh-CN><en>Native click event received by the multiline region.</en></lang>
+ * @lang zh-CN 以无参数形式转发启用多行区域的点击意图；组件不把点击解释为打开、选择、导航或编辑完成。
+ * @lang en Forwards click intent from an enabled multiline region without parameters; the component never interprets it as opening, selection, navigation, or editing completion.
  * @returns {void} <lang><zh-CN>无返回值；符合条件时 emit `click`。</zh-CN><en>No return value; when eligible, emits `click`.</en></lang>
  */
-function handleClick(event) {
+function handleClick() {
   // <lang><zh-CN>禁用区域不得报告点击；readonly 是可见状态而非 disabled，仍可由调用方观察本地点击。</zh-CN><en>A disabled region must not report clicks; readonly is visible state rather than disabled, so the caller may still observe a local click.</en></lang>
-  if (props.disabled) {
+  if (effectiveDisabled.value) {
     return;
   }
 
-  // <lang><zh-CN>保留原始平台事件，避免组件缓存或解释平台输入细节。</zh-CN><en>Preserves the original platform event, avoiding component caching or interpretation of platform-input details.</en></lang>
-  emit('click', event);
+  // <lang><zh-CN>无参数 payload 避免将平台事件对象扩散到跨端调用方。</zh-CN><en>The no-parameter payload avoids spreading a platform event object to cross-platform callers.</en></lang>
+  emit('click');
 }
 </script>
 
