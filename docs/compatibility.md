@@ -14,6 +14,10 @@ HIA-uView is being designed first for **UniApp Vue 3** applications targeting th
 
 The repository's declarative `HIA-uView-UI/hia-uview.compatibility.json` records compiler-fixture, local-DevTools-fixture, and jsdom-runtime evidence, together with explicitly unverified environments. `hia-uview-tool inspect compatibility` only reports that declaration; it neither executes the named target nor upgrades local DevTools fixture evidence into device, accessibility, cross-platform, review, or release evidence. API-shape and migration results belong to the separate [API compatibility inventory](api-compatibility.md) and `inspect api-compatibility`; neither inventory can substitute for platform evidence. See the [Tool contract](tool.md).
 
+The current controlled choice, picker/date/select, dropdown, numeric, and upload-adapter behavior tests run under jsdom. Separate H5, `mp-weixin`, and installed-package consumer fixtures prove bounded composition and compilation only. These facts do not expand the platform profile or replace current WeChat DevTools, physical-device, focus, touch, or assistive-technology verification.
+
+当前受控 choice、picker/date/select、dropdown、numeric 与 upload-adapter 行为测试运行于 jsdom。独立的 H5、`mp-weixin` 与安装包 consumer fixture 只证明受限组合与编译。这些事实不会扩大平台 profile，也不能替代当前微信开发者工具、真机、焦点、触摸或辅助技术验证。
+
 ## Platform rules
 
 - A component must not silently access device or platform APIs. Platform access needs an explicit adapter, feature detection, and a documented fallback or unsupported result.

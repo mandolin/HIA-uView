@@ -1,25 +1,26 @@
 # USwitch component contract / USwitch 组件契约
 
-> Status / 状态：Private pre-release contract for `mp-weixin`; the caller owns the boolean state and all business consequences.
-> 状态：`mp-weixin` 私有预发布契约；布尔状态及全部业务后果由调用方拥有。
+`USwitch` wraps a native switch while preserving caller-configured active and inactive values. It does not persist, authorize, call a service, or infer a business setting.
 
-`USwitch` wraps a native switch and emits a controlled boolean choice. It does not persist, authorize, call a service, or infer a business setting.
+`USwitch` 包装原生 switch，同时保留调用方配置的 active 与 inactive 值。它不持久化、授权、调用服务，也不推断业务设置。
 
-`USwitch` 包装原生 switch 并回传受控布尔选择。它不持久化、授权、调用服务，也不推断业务设置。
-
-## Public API / 公开 API
-
-| Prop / 属性 | Type / 类型 | Default / 默认值 | Contract / 约定 |
+| Prop / 属性 | Type / 类型 | Default / 默认值 | Contract / 契约 |
 | --- | --- | --- | --- |
-| `modelValue` | `boolean` | `false` | Controlled checked state. / 受控 checked 状态。 |
-| `disabled` | `boolean` | `false` | Native disabled state and zero `change` emissions. / 原生禁用状态及零 `change` 事件。 |
-| `loading` | `boolean` | `false` | Caller-owned busy guard; it blocks local interaction and exposes busy semantics, but starts no request or service. / 调用方拥有的忙碌 guard；它阻止本地交互并暴露 busy 语义，但不启动请求或 service。 |
+| `modelValue` | `boolean \| string \| number` | `false` | Caller-owned controlled value. / 调用方拥有的受控值。 |
+| `activeValue` | `boolean \| string \| number` | `true` | Value emitted for native checked `true`. / 原生 checked 为 `true` 时 emit 的值。 |
+| `inactiveValue` | `boolean \| string \| number` | `false` | Value emitted for native checked `false`. / 原生 checked 为 `false` 时 emit 的值。 |
+| `disabled` | `boolean` | `false` | Native disabled state and interaction guard. / 原生 disabled 状态及交互 guard。 |
+| `loading` | `boolean` | `false` | Caller-owned local busy guard; it starts no request or service. / 调用方拥有的本地 busy guard；不启动请求或 service。 |
 | `label` | `string` | `''` | Optional caller-owned adjacent copy. / 可选的调用方拥有的相邻文字。 |
 
-`update:modelValue` and `change` both carry the confirmed boolean value. `disabled` or `loading` keeps both events at zero. The caller decides whether to write it back or begin any workflow.
+Checked presentation uses `Object.is(modelValue, activeValue)`. A valid native event must contain a real boolean `detail.value`; `true` maps to `activeValue` and `false` maps to `inactiveValue` without changing its type. The component then emits `update:modelValue(mappedValue)` followed by `change(mappedValue)`.
 
-`update:modelValue` 与 `change` 均携带确认后的布尔值。`disabled` 或 `loading` 时两个事件都保持零次。是否写回或开始任何流程由调用方决定。
+checked 呈现使用 `Object.is(modelValue, activeValue)`。有效原生事件必须在 `detail.value` 中携带真正的 boolean；`true` 映射到 `activeValue`，`false` 映射到 `inactiveValue`，且不改变其类型。组件随后依次 emit `update:modelValue(mappedValue)` 与 `change(mappedValue)`。
 
-The root namespace is `u-switch` and consumes `--u-comp-switch-*` tokens. The acceptance target is WCAG 2.2 AA visual distinction without color alone; platform and assistive-technology behavior remains unverified.
+Disabled/loading interaction, a missing payload, or a string such as `"true"` emits nothing. The caller decides whether to write a value back or begin any workflow.
 
-根命名空间为 `u-switch`，消费 `--u-comp-switch-*` token。验收目标是不能只依赖颜色的 WCAG 2.2 AA 视觉区分；平台和辅助技术行为仍未验证。
+disabled/loading 交互、缺失 payload，或 `"true"` 这类字符串均不 emit 事件。是否写回值或开始任何流程由调用方决定。
+
+The root namespace is `u-switch` and consumes `--u-comp-switch-*` tokens. WCAG 2.2 AA visual distinction is the target; platform and assistive-technology behavior remains unverified.
+
+根命名空间为 `u-switch`，消费 `--u-comp-switch-*` token。WCAG 2.2 AA 视觉区分是目标；平台和辅助技术行为仍未验证。

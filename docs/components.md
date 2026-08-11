@@ -10,7 +10,7 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-action-sheet` | `UActionSheet` | [UActionSheet](action-sheet.md) | Caller-declared local action list / 调用方声明的局部操作列表 |
 | `u-action-sheet-item` | `UActionSheetItem` | [UActionSheetItem](action-sheet-item.md) | Caller-owned action-sheet item intent / 调用方拥有的 action-sheet 项目意图 |
 | `u-alert-tips` | `UAlertTips` | [UAlertTips](alert-tips.md) | Finite local feedback strip / 有限局部提示条 |
-| `u-calendar` | `UCalendar` | [UCalendar](calendar.md) | Controlled local date selection / 受控本地日期选择 |
+| `u-calendar` | `UCalendar` | [UCalendar](calendar.md) | Strict local Gregorian date projection and selection / 严格本地 Gregorian 日期投影与选择 |
 | `u-card` | `UCard` | [UCard](card.md) | Neutral surface and slots / 中性表面与插槽 |
 | `u-cell` | `UCell` | [UCell](cell.md) | Text row and click intent / 文字行与 click 意图 |
 | `u-car-keyboard` | `UCarKeyboard` | [UCarKeyboard](car-keyboard.md) | Caller-owned finite key rows / 调用方拥有的有限键行 |
@@ -18,15 +18,15 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-circle-progress` | `UCircleProgress` | [UCircleProgress](circle-progress.md) | Caller-controlled circular numeric projection / 调用方受控圆形数值投影 |
 | `u-cell-group` | `UCellGroup` | [UCellGroup](cell-group.md) | Information-row group / 信息行分组 |
 | `u-checkbox` | `UCheckbox` | [UCheckbox](checkbox.md) | Controlled boolean/membership intent / 受控布尔或成员选择意图 |
-| `u-checkbox-group` | `UCheckboxGroup` | [UCheckboxGroup](checkbox-group.md) | Controlled string-set coordination / 受控字符串集合协调 |
+| `u-checkbox-group` | `UCheckboxGroup` | [UCheckboxGroup](checkbox-group.md) | Controlled string/number membership with finite max / 具有有限 max 的受控字符串/数字成员关系 |
 | `u-col` | `UCol` | [UCol](col.md) | Bounded 24-grid column / 受限 24 栅格列 |
 | `u-collapse` | `UCollapse` | [UCollapse](collapse.md) | Controlled local disclosure context / 受控局部折叠 context |
 | `u-collapse-item` | `UCollapseItem` | [UCollapseItem](collapse-item.md) | Controlled disclosure item / 受控折叠子项 |
 | `u-column-notice` | `UColumnNotice` | [UColumnNotice](column-notice.md) | Controlled current vertical notice / 受控当前纵向 notice |
 | `u-count-to` | `UCountTo` | [UCountTo](count-to.md) | Synchronous formatted number / 同步格式化数字 |
 | `u-count-down` | `UCountDown` | [UCountDown](count-down.md) | Static caller remaining-time projection / 静态调用方剩余时间投影 |
-| `u-dropdown` | `UDropdown` | [UDropdown](dropdown.md) | Local controlled selection context / 局部受控选择 context |
-| `u-dropdown-item` | `UDropdownItem` | [UDropdownItem](dropdown-item.md) | Finite dropdown option / 有限下拉选项 |
+| `u-dropdown` | `UDropdown` | [UDropdown](dropdown.md) | Legacy selection and instance-local named registry / legacy 选择与实例局部 named registry |
+| `u-dropdown-item` | `UDropdownItem` | [UDropdownItem](dropdown-item.md) | Legacy item or caller-owned options panel / legacy item 或调用方拥有的 options panel |
 | `u-divider` | `UDivider` | [UDivider](divider.md) | Local line and slot separation / 局部线条与 slot 分隔 |
 | `u-empty` | `UEmpty` | [UEmpty](empty.md) | Caller-owned empty projection / 调用方拥有的空态投影 |
 | `u-field` | `UField` | [UField](field.md) | Built-in controlled input or caller-owned slot field / 内建受控输入或调用方自有 slot 字段 |
@@ -56,23 +56,23 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-message-input` | `UMessageInput` | [UMessageInput](message-input.md) | Controlled fixed-length input projection / 受控固定长度输入投影 |
 | `u-nav-bar` | `UNavBar` | [UNavBar](nav-bar.md) | Title and navigation/action intent / 标题与导航或操作意图 |
 | `u-notice` | `UNotice` | [UNotice](notice.md) | Local feedback presentation / 本地反馈呈现 |
-| `u-number-box` | `UNumberBox` | [UNumberBox](number-box.md) | Bounded local numeric intent / 受边界保护的本地数值意图 |
+| `u-number-box` | `UNumberBox` | [UNumberBox](number-box.md) | Decimal-safe bounded numeric intent / 十进制安全的受边界数值意图 |
 | `u-number-keyboard` | `UNumberKeyboard` | [UNumberKeyboard](number-keyboard.md) | Caller-owned finite key intent / 调用方拥有的有限键意图 |
 | `u-pagination` | `UPagination` | [UPagination](pagination.md) | Controlled finite page selection / 受控有限页码选择 |
-| `u-picker` | `UPicker` | [UPicker](picker.md) | Controlled finite option selection / 受控有限选项选择 |
+| `u-picker` | `UPicker` | [UPicker](picker.md) | Controlled finite single-/multi-column draft and confirmation / 受控有限单列/多列草稿与确认 |
 | `u-popup` | `UPopup` | [UPopup](popup.md) | Controlled local overlay / 受控局部浮层 |
 | `u-read-more` | `UReadMore` | [UReadMore](read-more.md) | Controlled expand/collapse projection / 受控展开收起投影 |
 | `u-radio` | `URadio` | [URadio](radio.md) | Controlled single-choice intent / 受控单选意图 |
 | `u-radio-group` | `URadioGroup` | [URadioGroup](radio-group.md) | Controlled single-choice coordination / 受控单选协调 |
-| `u-rate` | `URate` | [URate](rate.md) | Text-symbol integer selection / 文字符号整数选择 |
+| `u-rate` | `URate` | [URate](rate.md) | Caller-controlled integer symbol level with current alias / 具有 current alias 的调用方受控整数符号级别 |
 | `u-row` | `URow` | [URow](row.md) | Flex-row layout primitive / flex 行布局原语 |
 | `u-row-notice` | `URowNotice` | [URowNotice](row-notice.md) | Controlled current horizontal notice / 受控当前横向 notice |
 | `u-section` | `USection` | [USection](section.md) | Section heading and action / 区块标题与 action |
 | `u-search` | `USearch` | [USearch](search.md) | Controlled query, clear/search intent, and form notification / 受控查询、clear/search 意图与表单通知 |
 | `u-scroll-list` | `UScrollList` | [UScrollList](scroll-list.md) | CSS overflow horizontal list / CSS overflow 横向列表 |
-| `u-select` | `USelect` | [USelect](select.md) | Finite option selection / 有限选项选择 |
+| `u-select` | `USelect` | [USelect](select.md) | Finite inline immediate/confirm selection / 有限 inline 即时/确认选择 |
 | `u-skeleton` | `USkeleton` | [USkeleton](skeleton.md) | Static placeholder projection / 静态占位投影 |
-| `u-slider` | `USlider` | [USlider](slider.md) | Bounded numeric input / 受边界保护数值输入 |
+| `u-slider` | `USlider` | [USlider](slider.md) | Min-relative stepped native numeric intent / 相对 min 的 stepped 原生数值意图 |
 | `u-stack` | `UStack` | [UStack](stack.md) | Slot layout primitive / 插槽布局原语 |
 | `u-steps` | `USteps` | [USteps](steps.md) | Declarative finite step sequence / 声明式有限步骤序列 |
 | `u-step` | `UStep` | [UStep](step.md) | Declarative single-step projection / 声明式单步骤投影 |
@@ -80,7 +80,7 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-subsection` | `USubsection` | [USubsection](subsection.md) | Controlled finite segment selection / 受控有限区段选择 |
 | `u-swipe-action` | `USwipeAction` | [USwipeAction](swipe-action.md) | Explicit local action slot / 显式局部操作槽 |
 | `u-swiper` | `USwiper` | [USwiper](swiper.md) | Static slide deck / 静态 slide deck |
-| `u-switch` | `USwitch` | [USwitch](switch.md) | Controlled boolean choice / 受控布尔选择 |
+| `u-switch` | `USwitch` | [USwitch](switch.md) | Controlled active/inactive value mapping / 受控 active/inactive 值映射 |
 | `u-tabs` | `UTabs` | [UTabs](tabs.md) | Controlled tab strip / 受控标签栏 |
 | `u-tabs-swiper` | `UTabsSwiper` | [UTabsSwiper](tabs-swiper.md) | Controlled static tab-panel projection / 受控静态 tab-panel 投影 |
 | `u-tabbar` | `UTabbar` | [UTabbar](tabbar.md) | Local bottom tab selection / 局部底部标签选择 |
@@ -108,7 +108,7 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-top-tips` | `UTopTips` | [UTopTips](top-tips.md) | Caller-controlled top feedback / 调用方受控的顶部反馈 |
 | `u-transition` | `UTransition` | [UTransition](transition.md) | Finite CSS transition wrapper / 有限 CSS transition 包装器 |
 | `u-tr` | `UTr` | [UTr](tr.md) | View-based row with optional local intent / 带可选本地意图的 view 行 |
-| `u-upload` | `UUpload` | [UUpload](upload.md) | Caller-owned file-state intent list / 调用方拥有的文件状态意图列表 |
+| `u-upload` | `UUpload` | [UUpload](upload.md) | Caller-owned file-state intents with optional injected adapter / 调用方拥有的文件状态意图与可选 injected adapter |
 | `u-verification-code` | `UVerificationCode` | [UVerificationCode](verification-code.md) | Caller-owned request-state projection / 调用方拥有的请求状态投影 |
 | `u-waterfall` | `UWaterfall` | [UWaterfall](waterfall.md) | Deterministic finite-column projection / 确定性有限列投影 |
 | `u-config-provider` | `UConfigProvider` | [UConfigProvider](config-provider.md) | Finite theme-density subtree scope / 有限主题密度子树范围 |

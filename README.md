@@ -7,7 +7,7 @@ HIA-uView is a UniApp UI framework focused first on robust mini-program developm
 | `HIA-uView-UI/` | UI framework, components, composables and platform adapters | 107 controlled component contracts, theme tokens, locale resolver, manifest, and bounded compiler/runtime fixtures; private and not published |
 | `HIA-uView-Tool/` | Development and verification tools that support HIA-uView-UI | Read-only `doctor`, `check contract`, `check adoption`, `inspect components`, `inspect compatibility`, and `inspect api-compatibility` CLI; private and not published |
 
-The component index includes the controlled-choice surfaces `URadio`, `URadioGroup`, `UCheckbox`, and `UCheckboxGroup`, alongside navigation, form, feedback, data-display, overlay, and layout families. All remain private pre-release contracts.
+The component index includes precise caller-controlled contracts for `UCheckbox`, `UCheckboxGroup`, `URadio`, `URadioGroup`, `USwitch`, `UPicker`, `UCalendar`, `USelect`, `UDropdown`, `UDropdownItem`, `UNumberBox`, `URate`, `USlider`, and `UUpload`, alongside navigation, form, feedback, data-display, overlay, and layout families. These contracts cover transparent choice values, finite selection/date drafts, an instance-local dropdown registry, decimal-safe numeric intent, and optional caller-injected upload-adapter orchestration. All remain private and pre-release; application state and business consequences remain caller-owned.
 
 ## Development
 

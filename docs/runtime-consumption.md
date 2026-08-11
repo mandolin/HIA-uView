@@ -32,12 +32,46 @@ Named imports and `app.use(UView)` remain runtime APIs for repository H5 and jsd
 命名导入和 `app.use(UView)` 仍是仓内 H5 与 jsdom 契约使用的 runtime API。它们不是当前 `mp-weixin` 的消费机制，不能替代上面的静态 `easycom` 映射；公共 barrel 可能向小程序 compiler 隐藏叶级 SFC 依赖。
 
 ```js
-import { UButton, UCheckbox, UCheckboxGroup, URadio, URadioGroup } from '@hia-uview/ui';
+import {
+  UCalendar,
+  UCheckbox,
+  UCheckboxGroup,
+  UDropdown,
+  UDropdownItem,
+  UNumberBox,
+  UPicker,
+  URadio,
+  URadioGroup,
+  URate,
+  USelect,
+  USlider,
+  USwitch,
+  UUpload
+} from '@hia-uview/ui';
 
 // H5/jsdom repository runtime usage only.
 // 仅限仓内 H5/jsdom runtime 使用。
-void [UButton, UCheckbox, UCheckboxGroup, URadio, URadioGroup];
+void [
+  UCalendar,
+  UCheckbox,
+  UCheckboxGroup,
+  UDropdown,
+  UDropdownItem,
+  UNumberBox,
+  UPicker,
+  URadio,
+  URadioGroup,
+  URate,
+  USelect,
+  USlider,
+  USwitch,
+  UUpload
+];
 ```
+
+The repository H5 fixture, the repository `mp-weixin` fixture, and the disposable installed-package trial each compose these fourteen components with caller-owned local models, finite options, and an injected local upload adapter. Those are bounded consumption and compilation facts: named imports remain H5/jsdom-only, while both Mini Program consumers still resolve leaf SFCs through explicit Easycom configuration. None of the three consumers establishes device, accessibility, publication, or complete upstream-equivalence evidence.
+
+仓内 H5 fixture、仓内 `mp-weixin` fixture 与一次性安装包试验均使用调用方拥有的本地 model、有限 options 和 injected 本地 upload adapter 组合这十四个组件。这些只是受限消费与编译事实：named import 仍只用于 H5/jsdom，而两个小程序 consumer 仍通过显式 Easycom 配置解析 leaf SFC。三类 consumer 均不构成真机、无障碍、发布或完整上游等价证据。
 
 ## Explicit style entry / 显式样式入口
 
