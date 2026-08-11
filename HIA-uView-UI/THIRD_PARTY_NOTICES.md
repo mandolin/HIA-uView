@@ -98,3 +98,14 @@ The following 11 files changed only through 20 explicit child-component import a
 This carry-forward review does not retroactively attribute the 24 HIA targets to `0.6.15`, authorize automatic reuse of future upstream changes, or incorporate the added dependency edges. Every future copied or materially derived file still requires a separate per-file review and additive notice.
 
 本顺延审阅不会把 24 个 HIA 目标追溯改写为来源于 `0.6.15`，不会授权自动复用未来上游变更，也不会引入新增依赖边。今后每个复制或实质衍生文件仍须单独完成逐文件审计并追加声明。
+
+## Additional reviewed `uview-pro@0.6.15` bounded derivations / 新增已审阅 `uview-pro@0.6.15` 有界实质衍生
+
+The entries below use `anyup/uView-Pro`, package `uview-pro@0.6.15`, immutable commit `bec4b39cd3195354d65c1fc8722745d72052bd8c`, repository tree `ee561c6c12e40922d137b24fb0adb6e7f7a18c1e`, package tree `8c356eb79adb16c63c2b1b44e87c6aaf27a37810`, components tree `27e58b2924e42ebd761cdf5a245c61f7f8984d6f`, and MIT license blob `837f9643580783834339d1b40e58772413895e39`. Adoption is limited to the exact SFC blobs listed here. Upstream TypeScript types and dependency closures are semantic references only and are not incorporated.
+
+下列条目使用 `anyup/uView-Pro`、package `uview-pro@0.6.15`、不可变 commit `bec4b39cd3195354d65c1fc8722745d72052bd8c`、仓库 tree `ee561c6c12e40922d137b24fb0adb6e7f7a18c1e`、package tree `8c356eb79adb16c63c2b1b44e87c6aaf27a37810`、components tree `27e58b2924e42ebd761cdf5a245c61f7f8984d6f` 与 MIT license blob `837f9643580783834339d1b40e58772413895e39`。采用范围仅限表内精确 SFC blob；上游 TypeScript types 与依赖闭包只作语义参考，未被纳入。
+
+| Upstream source path / 上游来源路径 | Source blob / 来源 blob | HIA target / HIA 目标 | Adoption form / 采用形式 |
+| --- | --- | --- | --- |
+| `src/uni_modules/uview-pro/components/u-form/u-form.vue` | `6ace7cc46414c28572f62272fd9fef6300572ab9` | `src/components/u-form/u-form.vue` | 有界实质衍生、按 HIA 边界重写的局部字段 registry 与 validate/reset 编排；不包含上游 `$u`、toast、关系 hook 或 validator。 / Bounded material derivation, rewritten within HIA boundaries for the local field registry and validate/reset orchestration; excludes upstream `$u`, toast, relation hooks, and validator. |
+| `src/uni_modules/uview-pro/components/u-form-item/u-form-item.vue` | `fc60f477b688d24033cdf26b2e3b85377f4389da` | `src/components/u-form-item/u-form-item.vue` | 有界实质衍生、按 HIA 边界重写的字段路径、初值/reset 与校验状态编排；不包含上游 `async-validator`、`$u`、图标、关系 hook 或主题样式。 / Bounded material derivation, rewritten within HIA boundaries for field paths, initial-value/reset, and validation-state orchestration; excludes upstream `async-validator`, `$u`, icons, relation hooks, and theme styles. |
