@@ -104,6 +104,42 @@ describe('UField runtime behavior', () => {
     expect(field.find('.u-validation-message').classes()).toContain('u-validation-message--error');
     expect(field.emitted()).toEqual({});
   });
+
+  /**
+   * @lang zh-CN 验证无 default slot 时只组合一个 UInput，并精确转交四项受控迁移事件。
+   * @lang en Verifies that an absent default slot composes exactly one UInput and precisely forwards four controlled migration events.
+   * @returns {Promise<void>} <lang><zh-CN>输入、确认与点击事件完成后解决。</zh-CN><en>Resolves after input, confirmation, and click events complete.</en></lang>
+   */
+  it('provides a guarded built-in input only when no custom control is supplied', async () => {
+    // <lang><zh-CN>内建模式由数字初值启动，证明可见 prop 范围与编辑字符串 payload 被明确区分。</zh-CN><en>Built-in mode starts from a numeric value, proving visible prop range and edited string payload are explicitly distinct.</en></lang>
+    const field = mount(UField, { props: { modelValue: 7, placeholder: 'Local field' } });
+    // <lang><zh-CN>通过组件身份取得唯一 UInput，避免把任意后代原生 input 误认成组合边界。</zh-CN><en>Gets the sole UInput by component identity, avoiding confusion with an arbitrary descendant native input.</en></lang>
+    const builtInInput = field.getComponent(UInput);
+
+    expect(field.findAllComponents(UInput)).toHaveLength(1);
+    expect(builtInInput.get('input').element.value).toBe('7');
+
+    // <lang><zh-CN>值事件按 UInput 受控流进入 UField，字段本身不写回 modelValue。</zh-CN><en>Value events enter UField through the UInput controlled flow, and the field itself does not write back modelValue.</en></lang>
+    await builtInInput.get('input').trigger('input', { detail: { value: 'next' } });
+    expect(field.emitted('update:modelValue')).toEqual([['next']]);
+    expect(field.emitted('input')).toEqual([['next']]);
+    expect(field.props('modelValue')).toBe(7);
+
+    // <lang><zh-CN>确认统一为字符串，点击统一为无参数；二者都不表示校验或提交成功。</zh-CN><en>Confirmation is normalized to a string and click to no parameters; neither represents successful validation or submission.</en></lang>
+    await builtInInput.get('input').trigger('confirm', { detail: { value: 'confirmed' } });
+    await builtInInput.get('input').trigger('click');
+    expect(field.emitted('confirm')).toEqual([['confirmed']]);
+    expect(field.emitted('click')).toEqual([[]]);
+
+    // <lang><zh-CN>disabled 从字段传到内建输入并使直接测试事件保持零新增。</zh-CN><en>Disabled propagates from the field to the built-in input and keeps directly triggered test events from adding emissions.</en></lang>
+    await field.setProps({ disabled: true });
+    await builtInInput.get('input').trigger('input', { detail: { value: 'blocked' } });
+    await builtInInput.get('input').trigger('confirm', { detail: { value: 'blocked' } });
+    await builtInInput.get('input').trigger('click');
+    expect(field.emitted('update:modelValue')).toHaveLength(1);
+    expect(field.emitted('confirm')).toHaveLength(1);
+    expect(field.emitted('click')).toHaveLength(1);
+  });
 });
 
 /**
