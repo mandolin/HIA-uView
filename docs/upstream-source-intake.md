@@ -8,10 +8,12 @@ HIA-uView may selectively reuse compatible MIT-licensed source code from its rev
 | --- | --- | --- | --- |
 | `umicro/uView` | `uview-ui@1.8.8` | `1c73d473e15d6a66291aacb88ecdcedf22b2f7cb` | `uview-ui/` |
 | `umicro/uView2.0` | `uview-ui@2.0.38` | `e5649b708bb56f40c64c2f48e1b790dc51ce8e8d` | `uni_modules/uview-ui/` |
-| `anyup/uView-Pro` | `uview-pro@0.6.13` | `3bc1948d8f7c5d2bcb1ba3434cede1e709391a62` | `src/uni_modules/uview-pro/` |
+| `anyup/uView-Pro` | `uview-pro@0.6.15` | `bec4b39cd3195354d65c1fc8722745d72052bd8c` | `src/uni_modules/uview-pro/` |
 | `ijry/uview-plus` | `uview-plus@3.8.89` | `b73a5dcb1898c7f577785309152167d8343ce69b` | `src/uni_modules/uview-plus/` |
 
 These are reference locks, not floating dependencies. A later upstream release is never adopted implicitly: update the intended source version and commit in a dedicated review before studying or copying its changes.
+
+This active lock governs future reviews only. The existing 24 per-file provenance records remain historical `uview-pro@0.6.13` attributions unless a future exact file is separately adopted through the per-item process; changing the lock is not retroactive.
 
 ## Per-item adoption record
 

@@ -1,7 +1,7 @@
 /**
  * @module verify-uview-pro-source-intake-contract
- * @lang zh-CN 锁定 uView-Pro 历史逐文件来源、0.6.15 顺延关系、canonical MIT 文本与 UI package 分发边界。测试只读取仓内固定文件，不访问网络、不读取上游 checkout、不执行 package lifecycle，也不修改任何源码或成品。
- * @lang en Locks historical per-file uView-Pro provenance, the 0.6.15 carry-forward relationship, canonical MIT text, and the UI-package distribution boundary. The test reads only fixed repository files; it does not access the network, read an upstream checkout, execute package lifecycle scripts, or modify source or artifacts.
+ * @lang zh-CN 锁定 uView-Pro 当前 `0.6.15` 未来审阅基线、历史逐文件来源、限定新增衍生、顺延关系、canonical MIT 文本与 UI package 分发边界。测试只读取仓内固定文件，不访问网络、不读取上游 checkout、不执行 package lifecycle，也不修改任何源码或成品。
+ * @lang en Locks the active uView-Pro `0.6.15` baseline for future reviews, historical per-file provenance, bounded additional derivations, the carry-forward relationship, canonical MIT text, and the UI-package distribution boundary. The test reads only fixed repository files; it does not access the network, read an upstream checkout, execute package lifecycle scripts, or modify source or artifacts.
  */
 
 import assert from 'node:assert/strict';
@@ -103,9 +103,42 @@ const importOnlyRecords = Object.freeze([
   Object.freeze({ name: 'u-upload', blob: '0df99d644dc17adbeea3607aed6b48e1f71841c0', addedEdges: Object.freeze(['uIcon', 'uLineProgress']) })
 ]);
 
-// <lang><zh-CN>并行读取固定 metadata、总账、包内声明和 canonical license；不会通过目录扫描扩大输入面。</zh-CN><en>Reads fixed metadata, root ledger, package-local notice, and canonical license in parallel without expanding the input surface through directory scanning.</en></lang>
-const [packageSource, rootNoticeSource, packageNoticeSource, licenseBytes] = await Promise.all([
+/**
+ * @lang zh-CN 已按 `0.6.15` 精确 SFC blob 形成追加 NOTICE 的三个有界衍生记录；该集合不得被语义审阅组件扩张。
+ * @lang en Three bounded derivation records with additive NOTICE entries for exact `0.6.15` SFC blobs; semantic-review components must not expand this set.
+ * @type {ReadonlyArray<Readonly<{name: string, blob: string}>>}
+ */
+const additionalReviewedSourceRecords = Object.freeze([
+  Object.freeze({ name: 'u-form', blob: '6ace7cc46414c28572f62272fd9fef6300572ab9' }),
+  Object.freeze({ name: 'u-form-item', blob: 'fc60f477b688d24033cdf26b2e3b85377f4389da' }),
+  Object.freeze({ name: 'u-field', blob: '861330f3d119622ccf7689b22c75f454fb5b2eff' })
+]);
+
+/**
+ * @lang zh-CN 仅做 `0.6.15` 语义对照、未复制或实质衍生上游源码的 13 个组件；它们不得进入追加 source NOTICE 表。
+ * @lang en Thirteen components reviewed only for `0.6.15` semantics without copied or materially derived upstream source; they must not enter the additional source-NOTICE tables.
+ * @type {ReadonlyArray<string>}
+ */
+const semanticOnlyComponentNames = Object.freeze([
+  'u-checkbox',
+  'u-checkbox-group',
+  'u-radio',
+  'u-radio-group',
+  'u-switch',
+  'u-picker',
+  'u-calendar',
+  'u-select',
+  'u-dropdown',
+  'u-dropdown-item',
+  'u-number-box',
+  'u-rate',
+  'u-slider'
+]);
+
+// <lang><zh-CN>并行读取固定 metadata、吸收政策、总账、包内声明和 canonical license；不会通过目录扫描扩大输入面。</zh-CN><en>Reads fixed metadata, intake policy, root ledger, package-local notice, and canonical license in parallel without expanding the input surface through directory scanning.</en></lang>
+const [packageSource, sourceIntakeSource, rootNoticeSource, packageNoticeSource, licenseBytes] = await Promise.all([
   readFile('HIA-uView-UI/package.json', 'utf8'),
+  readFile('docs/upstream-source-intake.md', 'utf8'),
   readFile('THIRD_PARTY_NOTICES.md', 'utf8'),
   readFile('HIA-uView-UI/THIRD_PARTY_NOTICES.md', 'utf8'),
   readFile('HIA-uView-UI/LICENSES/uView-Pro-MIT.txt')
@@ -164,6 +197,45 @@ function markdownEdges(edges) {
   return edges.map((edge) => `\`${edge}\``).join(', ');
 }
 
+/**
+ * @lang zh-CN 从固定 Markdown 中取得一个二级标题及其正文，供门禁将计数限制在指定政策区段。
+ * @lang en Extracts one level-two heading and its body from fixed Markdown so the gate limits counts to the intended policy section.
+ * @param {string} source <lang><zh-CN>仓内固定 Markdown 文本。</zh-CN><en>Fixed repository-local Markdown source.</en></lang>
+ * @param {string} heading <lang><zh-CN>包含 `## ` 前缀的精确标题。</zh-CN><en>Exact heading including the `## ` prefix.</en></lang>
+ * @returns {string} <lang><zh-CN>从目标标题起、到下一二级标题前的文本。</zh-CN><en>Text from the target heading up to the next level-two heading.</en></lang>
+ */
+function markdownSection(source, heading) {
+  // <lang><zh-CN>要求标题唯一存在，避免拼写漂移时静默审计空字符串。</zh-CN><en>Requires the heading to exist so spelling drift cannot silently audit an empty string.</en></lang>
+  const headingOffset = source.indexOf(heading);
+  assert.notEqual(headingOffset, -1, `Missing Markdown section: ${heading}`);
+
+  // <lang><zh-CN>只在目标标题之后搜索下一二级标题，避免命中当前标题。</zh-CN><en>Searches for the next level-two heading only after the target heading, avoiding the current heading.</en></lang>
+  const remainingSource = source.slice(headingOffset + heading.length);
+  const nextHeadingOffset = remainingSource.search(/\n## /u);
+
+  // <lang><zh-CN>末尾 section 没有后继标题时返回余下全文；否则在下一标题前精确截断。</zh-CN><en>Returns the remaining source for a terminal section; otherwise cuts exactly before the next heading.</en></lang>
+  return nextHeadingOffset === -1
+    ? source.slice(headingOffset)
+    : source.slice(headingOffset, headingOffset + heading.length + nextHeadingOffset);
+}
+
+test('locks the active uView-Pro baseline to exact 0.6.15 provenance without rewriting history', () => {
+  // <lang><zh-CN>只检查 locked-baseline section，防止历史 NOTICE 或示例文字干扰 active-row 计数。</zh-CN><en>Checks only the locked-baseline section so historical NOTICE language or examples cannot affect the active-row count.</en></lang>
+  const lockedBaselineSection = markdownSection(sourceIntakeSource, '## Locked reference baselines');
+  const activeRow = '| `anyup/uView-Pro` | `uview-pro@0.6.15` | `bec4b39cd3195354d65c1fc8722745d72052bd8c` | `src/uni_modules/uview-pro/` |';
+  const uViewProRows = lockedBaselineSection.match(/^\| `anyup\/uView-Pro` \|/gmu) ?? [];
+
+  // <lang><zh-CN>active lock 必须恰有一行并精确绑定 package、commit 与 eligible boundary。</zh-CN><en>The active lock must have exactly one row and bind the package, commit, and eligible boundary exactly.</en></lang>
+  assert.equal(uViewProRows.length, 1);
+  assert.ok(lockedBaselineSection.includes(activeRow));
+  assert.doesNotMatch(lockedBaselineSection, /\| `anyup\/uView-Pro` \| `uview-pro@0\.6\.13` \|/u);
+
+  // <lang><zh-CN>政策必须明示 lock 只约束未来审阅，24 条历史记录不会因表格升级而被追溯改写。</zh-CN><en>The policy must say the lock governs future reviews only and that upgrading the table does not retroactively rewrite the 24 historical records.</en></lang>
+  assert.match(lockedBaselineSection, /active lock governs future reviews only/iu);
+  assert.match(lockedBaselineSection, /existing 24 per-file provenance records remain historical `uview-pro@0\.6\.13` attributions/iu);
+  assert.match(lockedBaselineSection, /changing the lock is not retroactive/iu);
+});
+
 test('preserves the canonical upstream MIT bytes and identities', () => {
   // <lang><zh-CN>byte length、强摘要与 Git identity 必须同时匹配，避免只凭可读文字或文件名接受漂移。</zh-CN><en>Byte length, strong digest, and Git identity must all match so readable text or a filename alone cannot conceal drift.</en></lang>
   assert.equal(licenseBytes.length, expectedLicenseBytes);
@@ -206,6 +278,65 @@ test('retains exactly 24 historical 0.6.13 paths, blobs, and existing HIA target
   assert.match(packageNoticeSource, /5cf847b08c85c3481d0b9fa288b7841677df662a/u);
   assert.match(packageNoticeSource, /direct child/u);
   assert.match(packageNoticeSource, /直接子提交/u);
+});
+
+test('keeps the additional 0.6.15 derivation ledger exact and excludes semantic-only reviews', () => {
+  // <lang><zh-CN>分别隔离根总账与随包声明的追加区段，避免把历史 24 行或 carry-forward 表误计为新增衍生。</zh-CN><en>Separately isolates the root-ledger and package-local additional sections so the 24 historical rows and carry-forward tables cannot be miscounted as new derivations.</en></lang>
+  const additionalHeading = '## Additional reviewed `uview-pro@0.6.15` bounded derivations / 新增已审阅 `uview-pro@0.6.15` 有界实质衍生';
+  const rootAdditionalSection = markdownSection(rootNoticeSource, additionalHeading);
+  const packageAdditionalSection = markdownSection(packageNoticeSource, additionalHeading);
+
+  // <lang><zh-CN>只解析具有 source、blob、target 三列的追加数据行，并分别约束根路径与 package-relative 路径。</zh-CN><en>Parses only additional data rows with source, blob, and target columns, constraining root and package-relative target paths separately.</en></lang>
+  const rootAdditionalRows = [...rootAdditionalSection.matchAll(/^\| `src\/uni_modules\/uview-pro\/components\/(?<name>u-[^/]+)\/u-[^/]+\.vue` \| `(?<blob>[0-9a-f]{40})` \| `HIA-uView-UI\/src\/components\/(?<targetName>u-[^/]+)\/u-[^/]+\.vue` \|/gmu)];
+  const packageAdditionalRows = [...packageAdditionalSection.matchAll(/^\| `src\/uni_modules\/uview-pro\/components\/(?<name>u-[^/]+)\/u-[^/]+\.vue` \| `(?<blob>[0-9a-f]{40})` \| `src\/components\/(?<targetName>u-[^/]+)\/u-[^/]+\.vue` \|/gmu)];
+
+  // <lang><zh-CN>两个追加表都必须恰好保留 form、form-item、field 三行，任何多余 source row 都会失败。</zh-CN><en>Both additional tables must retain exactly the form, form-item, and field rows; any extra source row fails the gate.</en></lang>
+  assert.equal(rootAdditionalRows.length, additionalReviewedSourceRecords.length);
+  assert.equal(packageAdditionalRows.length, additionalReviewedSourceRecords.length);
+  assert.deepEqual(new Set(rootAdditionalRows.map((row) => row.groups.name)), new Set(additionalReviewedSourceRecords.map((record) => record.name)));
+  assert.deepEqual(new Set(packageAdditionalRows.map((row) => row.groups.name)), new Set(additionalReviewedSourceRecords.map((record) => record.name)));
+
+  for (const record of additionalReviewedSourceRecords) {
+    // <lang><zh-CN>每项都必须在两个声明中保留 exact source blob 与各自正确的 target boundary。</zh-CN><en>Each entry must retain its exact source blob and the correct target boundary in both notices.</en></lang>
+    const sourcePath = upstreamSourcePath(record.name);
+    const rootTargetPath = hiaTargetPath(record.name);
+    const packageTargetPath = rootTargetPath.replace(/^HIA-uView-UI\//u, '');
+    assert.ok(rootAdditionalSection.includes(`| \`${sourcePath}\` | \`${record.blob}\` | \`${rootTargetPath}\` |`));
+    assert.ok(packageAdditionalSection.includes(`| \`${sourcePath}\` | \`${record.blob}\` | \`${packageTargetPath}\` |`));
+  }
+
+  for (const componentName of semanticOnlyComponentNames) {
+    // <lang><zh-CN>语义对照不构成复制或实质衍生，因此不得在任一追加 source NOTICE 中出现对应来源路径。</zh-CN><en>Semantic comparison is neither copying nor material derivation, so its source path must appear in neither additional source NOTICE.</en></lang>
+    const semanticSourcePath = upstreamSourcePath(componentName);
+    assert.ok(!rootAdditionalSection.includes(semanticSourcePath));
+    assert.ok(!packageAdditionalSection.includes(semanticSourcePath));
+  }
+
+  // <lang><zh-CN>upload 继续只保留历史来源与 import-only 顺延记录，不得被 adapter 编排误升级为新的 `0.6.15` source derivation。</zh-CN><en>Upload remains only a historical source and import-only carry-forward record; adapter orchestration must not promote it to a new `0.6.15` source derivation.</en></lang>
+  const uploadSourcePath = upstreamSourcePath('u-upload');
+  assert.ok(!rootAdditionalSection.includes(uploadSourcePath));
+  assert.ok(!packageAdditionalSection.includes(uploadSourcePath));
+});
+
+test('preserves upload provenance while recording independently designed adapter orchestration', () => {
+  // <lang><zh-CN>历史 package row 必须继续绑定旧 source blob，并以精确表述区分衍生 file-state intent 与后来独立设计的 adapter 编排。</zh-CN><en>The historical package row must remain bound to the old source blob and precisely distinguish the derived file-state intent from later independently designed adapter orchestration.</en></lang>
+  const uploadSourcePath = upstreamSourcePath('u-upload');
+  const uploadTargetPath = hiaTargetPath('u-upload');
+  const historicalUploadBlob = historicalRecordByName.get('u-upload')?.blob;
+  const adapterBoundaryText = 'later independently designed caller-injected adapter orchestration adds no built-in chooser, file-byte access, upload/delete/preview implementation, transport, network, cache, or platform integration.';
+  assert.equal(historicalUploadBlob, '3d47f49855d94c33a8f1485e16094150d8219654');
+  assert.ok(packageNoticeSource.includes(`| \`${uploadSourcePath}\` | \`${uploadTargetPath}\` | \`${historicalUploadBlob}\` |`));
+  assert.ok(packageNoticeSource.includes(adapterBoundaryText));
+  assert.match(packageNoticeSource, /后续独立设计的 caller-injected adapter orchestration 不增加内建 chooser、file-byte access、upload\/delete\/preview implementation、transport、network、cache 或 platform integration。/u);
+
+  // <lang><zh-CN>根总账必须给出相同英文边界，且不能把 adapter 自身描述成上游衍生。</zh-CN><en>The root ledger must give the same English boundary and must not describe the adapter itself as an upstream derivation.</en></lang>
+  assert.ok(rootNoticeSource.includes(`| \`${uploadSourcePath}\` | \`${uploadTargetPath}\` | Materially derived, independently rewritten caller file-state intent list; ${adapterBoundaryText} |`));
+
+  // <lang><zh-CN>顺延表仍须精确保留旧、新 blob 及 `uIcon`、`uLineProgress` 两条仅上游 import edge。</zh-CN><en>The carry-forward table must still retain the exact old and new blobs plus the upstream-only `uIcon` and `uLineProgress` import edges.</en></lang>
+  const importOnlyUploadRecord = importOnlyRecords.find((record) => record.name === 'u-upload');
+  assert.ok(importOnlyUploadRecord);
+  assert.equal(importOnlyUploadRecord.blob, '0df99d644dc17adbeea3607aed6b48e1f71841c0');
+  assert.ok(packageNoticeSource.includes(`| \`${uploadSourcePath}\` | \`${historicalUploadBlob}\` | \`${importOnlyUploadRecord.blob}\` | \`uIcon\`, \`uLineProgress\` |`));
 });
 
 test('keeps the 0.6.15 carry-forward split exact and non-retroactive', () => {
