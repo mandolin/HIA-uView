@@ -7,7 +7,7 @@
   <label :class="rootClasses" :aria-busy="loading">
     <switch
       class="u-switch__control"
-      :checked="modelValue"
+      :checked="isActive"
       :disabled="isInteractionDisabled"
       @change="handleChange"
     />
@@ -23,10 +23,17 @@ defineOptions({ name: 'u-switch' });
 
 // <lang><zh-CN>受控布尔值、禁用、loading 与显示文字全部由调用方拥有；组件没有业务 key 或远程参数。</zh-CN><en>Controlled boolean, disabled state, loading, and visible copy are caller-owned; the component has no business key or remote parameter.</en></lang>
 const props = defineProps({
-  modelValue: { type: Boolean, default: false },
+  // <lang><zh-CN>modelValue 保留调用方的布尔、字符串或数字原值；组件仅与 activeValue 严格比较。</zh-CN><en>ModelValue preserves the caller's boolean, string, or number value; the component compares it strictly with activeValue only.</en></lang>
+  modelValue: { type: [Boolean, String, Number], default: false },
+  // <lang><zh-CN>activeValue 是原生 true 的透明 caller 值；不执行字符串/数字 coercion。</zh-CN><en>ActiveValue is the transparent caller value mapped from native true; no string/number coercion is performed.</en></lang>
+  activeValue: { type: [Boolean, String, Number], default: true },
+  // <lang><zh-CN>inactiveValue 是原生 false 的透明 caller 值；不承载业务关闭或持久化语义。</zh-CN><en>InactiveValue is the transparent caller value mapped from native false; it carries no business shutdown or persistence meaning.</en></lang>
+  inactiveValue: { type: [Boolean, String, Number], default: false },
+  // <lang><zh-CN>disabled 是调用方声明的本地不可操作边界。</zh-CN><en>Disabled is the caller-declared local inactivity boundary.</en></lang>
   disabled: { type: Boolean, default: false },
   // <lang><zh-CN>loading 只把控件置于本地不可交互状态并提供 busy 语义；它不启动请求、计时器或全局 feedback service。</zh-CN><en>Loading only places the control in a locally non-interactive state and provides busy semantics; it starts no request, timer, or global feedback service.</en></lang>
   loading: { type: Boolean, default: false },
+  // <lang><zh-CN>label 只提供调用方可见文字，组件不生成默认业务文案。</zh-CN><en>Label provides caller-visible copy only; the component generates no default business copy.</en></lang>
   label: { type: String, default: '' }
 });
 
@@ -35,6 +42,9 @@ const emit = defineEmits(['update:modelValue', 'change']);
 
 // <lang><zh-CN>交互禁用聚合显式 disabled 与 caller-controlled loading，使原生 switch、视觉状态和 handler guard 一致。</zh-CN><en>Interaction-disabled aggregates explicit disabled and caller-controlled loading so native switch, visual state, and handler guard stay consistent.</en></lang>
 const isInteractionDisabled = computed(() => props.disabled || props.loading);
+
+// <lang><zh-CN>原生 checked 仅由 modelValue 与 activeValue 的 Object.is 比较得出，因此不会混淆数字、字符串或特殊数值。</zh-CN><en>Native checked derives only from Object.is between modelValue and activeValue, so numbers, strings, and special numeric values are not conflated.</en></lang>
+const isActive = computed(() => Object.is(props.modelValue, props.activeValue));
 
 // <lang><zh-CN>根类把 loading 呈现为同一不可操作边界，不用颜色或额外业务文案伪造完成状态。</zh-CN><en>Root classes present loading as the same inactive boundary without using color or extra business copy to fabricate completion.</en></lang>
 const rootClasses = computed(() => ['u-switch', { 'u-switch--disabled': isInteractionDisabled.value, 'u-switch--loading': props.loading }]);
@@ -69,8 +79,12 @@ function handleChange(event) {
     return;
   }
 
-  emit('update:modelValue', nextValue);
-  emit('change', nextValue);
+  // <lang><zh-CN>将确认的原生布尔值映射回调用方显式 active/inactive 值，原样保留类型。</zh-CN><en>Maps the confirmed native boolean back to the caller's explicit active/inactive value while preserving its type unchanged.</en></lang>
+  const mappedValue = nextValue ? props.activeValue : props.inactiveValue;
+
+  // <lang><zh-CN>先报告标准 v-model 意图，再报告 change；两者共享同一个透明值且均不写 prop。</zh-CN><en>Reports the standard v-model intent before change; both share the same transparent value and neither writes the prop.</en></lang>
+  emit('update:modelValue', mappedValue);
+  emit('change', mappedValue);
 }
 </script>
 

@@ -34,6 +34,11 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  // <lang><zh-CN>labelDisabled 仅投影给当前子树的 label 点击路径，不禁用 marker/control 或整个 group。</zh-CN><en>LabelDisabled is projected only to label-click paths in the current subtree and disables neither marker/control nor the whole group.</en></lang>
+  labelDisabled: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -45,6 +50,9 @@ const selectedValue = computed(() => props.modelValue);
 
 // <lang><zh-CN>将 group disabled 同样投影为只读值，供 child 原生属性和 handler guard 共用。</zh-CN><en>Projects group disabled as the same read-only value for child native attributes and handler guards.</en></lang>
 const isGroupDisabled = computed(() => props.disabled);
+
+// <lang><zh-CN>将 group labelDisabled 作为只读边界传递给 child，使 label 与 marker/control 的可用性保持分离。</zh-CN><en>Projects group labelDisabled to children as a read-only boundary, keeping label and marker/control availability separate.</en></lang>
+const isGroupLabelDisabled = computed(() => props.labelDisabled);
 
 /**
  * @lang zh-CN 接收子项未修改的 value，并在 group 启用且 value 尚未选中时 emit 两个调用方处理的选择意图。
@@ -67,6 +75,7 @@ function selectValue(value) {
 provide(RADIO_GROUP_CONTEXT, Object.freeze({
   selectedValue,
   isGroupDisabled,
+  isGroupLabelDisabled,
   selectValue
 }));
 </script>

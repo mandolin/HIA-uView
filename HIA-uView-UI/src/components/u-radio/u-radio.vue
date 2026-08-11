@@ -11,13 +11,13 @@
   -->
   <button :class="radioClasses" :disabled="isDisabled" @click="handleSelect">
     <text class="u-radio__mark">{{ isSelected ? '●' : '○' }}</text>
-    <!-- @lang zh-CN 默认 slot 仅替代调用方 label；它不接收选择数据、scoped value 或业务上下文。 @lang en The default slot replaces only caller label content; it receives no choice data, scoped value, or business context. <lang><zh-CN>slot 不取得选择状态或业务 authority。</zh-CN><en>The slot acquires neither choice state nor business authority.</en></lang> -->
-    <slot><text>{{ label }}</text></slot>
+    <!-- @lang zh-CN 默认 slot 仅替代调用方 label；独立 label 节点使 labelDisabled 可以阻止文字点击，而 marker/control 仍可遵循其他 guard。 @lang en The default slot replaces only caller label content; the separate label node lets labelDisabled block copy clicks while the marker/control continues to follow the other guards. <lang><zh-CN>slot 不接收选择数据、scoped value 或业务上下文。</zh-CN><en>The slot receives no choice data, scoped value, or business context.</en></lang> -->
+    <view class="u-radio__label" @click.stop="handleLabelSelect"><slot><text>{{ label }}</text></slot></view>
   </button>
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
+import { computed, getCurrentInstance, inject } from 'vue';
 import { RADIO_GROUP_CONTEXT } from '../selection-context.mjs';
 
 // <lang><zh-CN>声明稳定的 kebab-case 名称，使模板、manifest 与显式 plugin registry 使用同一运行时键。</zh-CN><en>Declares the stable kebab-case name so templates, the manifest, and the explicit plugin registry use the same runtime key.</en></lang>
@@ -29,6 +29,11 @@ defineOptions({
 const props = defineProps({
   // <lang><zh-CN>value 是独立 emit 或 group 比较所用的透明本地键；保留字符串/数字原值，不转换或持久化。</zh-CN><en>Value is the transparent local key used for independent emit or group comparison; it preserves string/number values without conversion or persistence.</en></lang>
   value: {
+    type: [String, Number],
+    default: ''
+  },
+  // <lang><zh-CN>name 是上游熟悉的透明键 alias；仅在调用方缺省 value 时回退使用，不转换字符串或数字。</zh-CN><en>Name is the upstream-familiar transparent-key alias; it is used only when the caller omits value, without converting strings or numbers.</en></lang>
+  name: {
     type: [String, Number],
     default: ''
   },
@@ -46,6 +51,11 @@ const props = defineProps({
   disabled: {
     type: [String, Boolean],
     default: ''
+  },
+  // <lang><zh-CN>labelDisabled 只阻止 label 节点的选择意图；它不把整个 radio control 置为 disabled。</zh-CN><en>LabelDisabled blocks selection intent from the label node only; it does not disable the whole radio control.</en></lang>
+  labelDisabled: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -55,9 +65,26 @@ const emit = defineEmits(['select', 'change']);
 // <lang><zh-CN>缺失 group 时保持 null，保留独立受控模式而不建立隐式全局关联。</zh-CN><en>Missing group remains null, retaining independent controlled mode without creating an implicit global association.</en></lang>
 const groupContext = inject(RADIO_GROUP_CONTEXT, null);
 
+// <lang><zh-CN>当前 Vue 实例仅用于区分缺省 value 与显式 value；不读取页面、全局 registry 或 DOM。</zh-CN><en>The current Vue instance is used only to distinguish an omitted value from an explicit value; it reads no page, global registry, or DOM.</en></lang>
+const componentInstance = getCurrentInstance();
+
+/**
+ * @lang zh-CN 判断当前 vnode 是否显式声明指定 prop，保留显式空字符串 value 的优先级。
+ * @lang en Determines whether the current vnode explicitly declares a prop, preserving priority for an explicit empty-string value.
+ * @param {string} propName <lang><zh-CN>需要检查的声明式 prop 名称。</zh-CN><en>Declared prop name to inspect.</en></lang>
+ * @returns {boolean} <lang><zh-CN>调用方显式传入时为 true。</zh-CN><en>`true` when the caller supplied the prop explicitly.</en></lang>
+ */
+function hasExplicitProp(propName) {
+  // <lang><zh-CN>vnode props 可能为 null；使用 Object.prototype 避免依赖任意输入对象的原型方法。</zh-CN><en>Vnode props may be null; Object.prototype avoids depending on a prototype method from an arbitrary input object.</en></lang>
+  return Object.prototype.hasOwnProperty.call(componentInstance?.vnode?.props ?? {}, propName);
+}
+
+// <lang><zh-CN>透明键严格按显式 value 优先、缺省时 name 回退解析，不互换数字与字符串。</zh-CN><en>The transparent key resolves by explicit value first and name only when value is omitted, without interchanging numbers and strings.</en></lang>
+const resolvedValue = computed(() => (hasExplicitProp('value') ? props.value : props.name));
+
 // <lang><zh-CN>有 group 时只读比较 group 当前值；没有 group 时严格采用调用方 checked，不创建内部选择状态。</zh-CN><en>With a group it read-only compares the current group value; without a group it strictly uses caller checked and creates no internal selection state.</en></lang>
 const isSelected = computed(() => (
-  groupContext ? groupContext.selectedValue.value === props.value : props.checked
+  groupContext ? groupContext.selectedValue.value === resolvedValue.value : props.checked
 ));
 
 /**
@@ -74,6 +101,11 @@ function isDisabledInput(disabled) {
 // <lang><zh-CN>disabled 组合局部与 group 边界，使原生按钮属性和 handler guard 表达同一可用性结论。</zh-CN><en>Disabled combines local and group boundaries so the native-button attribute and handler guard express the same availability conclusion.</en></lang>
 const isDisabled = computed(() => (
   isDisabledInput(props.disabled) || Boolean(groupContext?.isGroupDisabled.value)
+));
+
+// <lang><zh-CN>label guard 合并 child/group 声明；它只限制 label 点击，不改变 marker/control 可用性。</zh-CN><en>The label guard combines child and group declarations; it limits label clicks only and does not change marker/control availability.</en></lang>
+const isLabelInteractionDisabled = computed(() => (
+  props.labelDisabled || Boolean(groupContext?.isGroupLabelDisabled.value)
 ));
 
 // <lang><zh-CN>根类只映射受控 selected/disabled 呈现，不引入任意样式或业务状态。</zh-CN><en>Root classes map only controlled selected/disabled presentation and introduce neither arbitrary styling nor business state.</en></lang>
@@ -98,12 +130,30 @@ function handleSelect() {
 
   // <lang><zh-CN>group 集中决定 v-model/change emit；独立模式同时报告既有 select 与迁移 change，但都只交还未经修改的调用方 value。</zh-CN><en>The group centrally decides v-model/change emits; independent mode reports both existing select and migration change, but both return only the unchanged caller value.</en></lang>
   if (groupContext) {
-    groupContext.selectValue(props.value);
+    groupContext.selectValue(resolvedValue.value);
     return;
   }
 
-  emit('select', props.value);
-  emit('change', props.value);
+  // <lang><zh-CN>既有 select 先交付已解析的透明键，保持历史事件顺序。</zh-CN><en>The existing select event first delivers the resolved transparent key, preserving historical event order.</en></lang>
+  emit('select', resolvedValue.value);
+
+  // <lang><zh-CN>迁移 change 随后交付同一已解析键；显式 value 优先和 name 回退不在事件分支中重复实现。</zh-CN><en>The migration change event then delivers the same resolved key; explicit-value priority and name fallback are not reimplemented in event branches.</en></lang>
+  emit('change', resolvedValue.value);
+}
+
+/**
+ * @lang zh-CN 处理 label 区域点击；child/group labelDisabled 任一生效时保持零事件，否则复用标准 radio 选择路径。
+ * @lang en Handles label-area clicks; child or group labelDisabled retains zero events, otherwise the standard radio-selection path is reused.
+ * @returns {void} <lang><zh-CN>无返回值；符合 guard 时委托 handleSelect。</zh-CN><en>No return value; delegates to handleSelect when guards pass.</en></lang>
+ */
+function handleLabelSelect() {
+  // <lang><zh-CN>labelDisabled 必须在复用选择 handler 前判断，避免直接调用越过文字区域边界。</zh-CN><en>LabelDisabled is checked before reusing the selection handler so direct calls cannot bypass the copy-area boundary.</en></lang>
+  if (isLabelInteractionDisabled.value) {
+    return;
+  }
+
+  // <lang><zh-CN>启用 label 与 marker/control 使用相同的不可取消、group 委托和事件顺序。</zh-CN><en>An enabled label uses the same non-cancellable, group-delegation, and event-order rules as the marker/control.</en></lang>
+  handleSelect();
 }
 </script>
 

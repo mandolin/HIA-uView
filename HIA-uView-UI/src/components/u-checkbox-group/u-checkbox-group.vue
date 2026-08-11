@@ -34,6 +34,16 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  // <lang><zh-CN>labelDisabled 仅传递给当前子树的 label 点击路径，不把 marker/control 或 group 整体置为 disabled。</zh-CN><en>LabelDisabled is projected only to label-click paths in the current subtree and does not disable marker/control or the whole group.</en></lang>
+  labelDisabled: {
+    type: Boolean,
+    default: false
+  },
+  // <lang><zh-CN>max 只是本地成员数上限；正整数限制新增，其他值表示不限制，且永远不阻止移除。</zh-CN><en>Max is only a local membership limit; a positive integer limits additions, every other value is unlimited, and removal is never blocked.</en></lang>
+  max: {
+    type: [Number, String],
+    default: 0
   }
 });
 
@@ -46,6 +56,20 @@ const selectedValues = computed(() => props.modelValue);
 // <lang><zh-CN>同样把 disabled 投影为只读值，供 child 原生属性和 guard 一致使用。</zh-CN><en>Likewise projects disabled as read-only for consistent child native attributes and guards.</en></lang>
 const isGroupDisabled = computed(() => props.disabled);
 
+// <lang><zh-CN>把 group labelDisabled 投影为只读值，供 child label handler 使用，不影响 marker/control。</zh-CN><en>Projects group labelDisabled as a read-only value for child label handlers without affecting marker/control.</en></lang>
+const isGroupLabelDisabled = computed(() => props.labelDisabled);
+
+// <lang><zh-CN>仅有可解析的正整数 max 形成上限；空字符串、小数、非有限值和非正值均回退为无限制。</zh-CN><en>Only a parseable positive-integer max forms a limit; empty strings, fractions, non-finite values, and nonpositive values all fall back to unlimited.</en></lang>
+const safeMax = computed(() => {
+  // <lang><zh-CN>字符串先去除周边空白，避免空字符串被 Number 误解为零上限。</zh-CN><en>String input is trimmed first so Number cannot misinterpret an empty string as a zero limit.</en></lang>
+  const candidate = typeof props.max === 'string' && props.max.trim().length === 0
+    ? Number.NaN
+    : Number(props.max);
+
+  // <lang><zh-CN>null 是内部“无限制”标记，不对外 emit，也不写回 caller prop。</zh-CN><en>Null is the internal unlimited marker; it is neither emitted nor written back to caller props.</en></lang>
+  return Number.isInteger(candidate) && candidate > 0 ? candidate : null;
+});
+
 /**
  * @lang zh-CN 根据子项 value 与下一 checked 构造去重的新数组；不修改调用方 prop，也不解释 value 的业务含义。
  * @lang en Builds a deduplicated new array from child value and next checked; it does not mutate caller prop or interpret the business meaning of value.
@@ -56,6 +80,11 @@ const isGroupDisabled = computed(() => props.disabled);
 function changeValue(value, checked) {
   // <lang><zh-CN>禁用 group 保持零事件，任何 child 都不能通过直接调用绕过集合可用性边界。</zh-CN><en>A disabled group retains zero events, and no child can bypass collection availability through direct calls.</en></lang>
   if (isGroupDisabled.value) {
+    return;
+  }
+
+  // <lang><zh-CN>正整数上限只阻止超额新增；已达上限时的移除必须继续，以免集合被锁死。</zh-CN><en>A positive-integer limit blocks only over-limit additions; removal must continue at the limit so the collection cannot become locked.</en></lang>
+  if (checked && safeMax.value !== null && new Set(selectedValues.value).size >= safeMax.value) {
     return;
   }
 
@@ -74,6 +103,7 @@ function changeValue(value, checked) {
 provide(CHECKBOX_GROUP_CONTEXT, Object.freeze({
   selectedValues,
   isGroupDisabled,
+  isGroupLabelDisabled,
   changeValue
 }));
 </script>

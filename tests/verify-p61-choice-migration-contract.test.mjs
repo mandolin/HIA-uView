@@ -71,8 +71,11 @@ test('keeps choice migration inputs caller-controlled and local', () => {
 
   // <lang><zh-CN>radio/group 必须保留数值 key 和既有 select，同时提供受限的 migration change；不得接入 form registry 或任意 option source。</zh-CN><en>The radio/group must retain numeric keys and existing select while providing bounded migration change; they must not acquire a form registry or arbitrary option source.</en></lang>
   assert.match(radioSource, /value:\s*\{\s*type: \[String, Number\],\s*default: ''\s*\}/su);
+  assert.match(radioSource, /name:\s*\{\s*type: \[String, Number\],\s*default: ''\s*\}/su);
+  assert.match(radioSource, /const resolvedValue = computed\(\(\) => \(hasExplicitProp\('value'\) \? props\.value : props\.name\)\);/u);
   assert.match(radioSource, /defineEmits\(\['select', 'change'\]\)/u);
-  assert.match(radioSource, /emit\('change', props\.value\);/u);
+  assert.match(radioSource, /emit\('select', resolvedValue\.value\);/u);
+  assert.match(radioSource, /emit\('change', resolvedValue\.value\);/u);
   assert.match(radioSource, /<slot><text>\{\{ label \}\}<\/text><\/slot>/u);
   assert.match(radioGroupSource, /modelValue:\s*\{\s*type: \[String, Number\],\s*default: ''\s*\}/su);
   assert.match(checkboxGroupSource, /string\/number membership/u);
