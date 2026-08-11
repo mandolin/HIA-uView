@@ -6,9 +6,9 @@
 
 ## Current packet / 当前动作包
 
-The current packet covers all 127 P0 API items across the 30 comparison components that actually contribute P0: 45 `compatible`, 71 `mapped`, and 11 `unsupported`. It retains the initial 38 actions for checkbox, checkbox group, radio, radio group, switch, single-column picker, local tabbar, and notice bar. Coverage is complete only for the declared P0 scope; it does not imply P1/P2 coverage, complete component equivalence, or runtime delivery of an unsupported item.
+The current packet covers all 127 P0 API items across the 30 comparison components that actually contribute P0: 43 `compatible`, 82 `mapped`, and 2 `unsupported`. It retains the initial 38 actions for checkbox, checkbox group, radio, radio group, switch, single-column picker, local tabbar, and notice bar. Coverage is complete only for the declared P0 scope; it does not imply P1/P2 coverage, complete component equivalence, or runtime delivery of an unsupported item.
 
-当前动作包覆盖 30 个实际贡献 P0 的 comparison component 中全部 127 个 P0 API item：45 个 `compatible`、71 个 `mapped`、11 个 `unsupported`。它继续保留 checkbox、checkbox group、radio、radio group、switch、single-column picker、local tabbar 与 notice bar 的首批 38 个 action。覆盖结论只对声明的 P0 scope 完整；它不意味着 P1/P2 覆盖、完整组件等价，也不意味着 unsupported item 已完成 runtime 交付。
+当前动作包覆盖 30 个实际贡献 P0 的 comparison component 中全部 127 个 P0 API item：43 个 `compatible`、82 个 `mapped`、2 个 `unsupported`。它继续保留 checkbox、checkbox group、radio、radio group、switch、single-column picker、local tabbar 与 notice bar 的首批 38 个 action。覆盖结论只对声明的 P0 scope 完整；它不意味着 P1/P2 覆盖、完整组件等价，也不意味着 unsupported item 已完成 runtime 交付。
 
 The packet is generated deterministically as migration-action manifest v2 from API compatibility matrix v2. Every P0 item must first have a complete, source-bound semantic review. Each action carries a SHA-256 `sourceFingerprint` over its component/item identity, priority, current migration target/disposition/reason, and complete semantics. Existing human-reviewed bilingual copy is retained only when that fingerprint still matches exactly; target, disposition, reason, or semantic drift regenerates conservative copy instead of silently preserving stale guidance. The Tool independently recomputes every v2 fingerprint, while continuing to accept a historical v1 packet without fingerprints for read-only compatibility.
 
