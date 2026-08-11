@@ -127,6 +127,58 @@
         </u-form-item>
       </u-form>
 
+      <!--
+      @lang zh-CN 本段使用独立中性模型真实组合 P66 六个表单/输入组件，并通过组件 ref 提供 validate/clear/reset 的本地可见观察；它不复用目录 query 或任何业务字段。
+      @lang en This section uses an independent neutral model to compose all six P66 form/input components and provides local visible validate/clear/reset observation through a component ref; it reuses neither the catalog query nor any business field.
+      <lang><zh-CN>UField 采用无 default slot 的内建 UInput 模式，另一个 UFormItem 直接组合 UInput，以同时证明两条消费路径。</zh-CN><en>UField uses its built-in UInput mode without a default slot, while another UFormItem composes UInput directly, proving both consumption paths.</en></lang>
+      -->
+      <view class="fixture-p66-form" data-smoke="p66-form-composition">
+        <text class="fixture-p66-form__title">本地表单组合 / Local form composition</text>
+        <u-form ref="fixtureP66FormReference" :model="fixtureP66FormModel" :rules="fixtureP66FormRules" label-position="top">
+          <u-form-item prop="fieldText" help-text="UField 使用内建 UInput / UField uses its built-in UInput">
+            <u-field
+              :model-value="fixtureP66FormModel.fieldText"
+              label="字段文字 / Field text"
+              :required="true"
+              placeholder="输入字段文字 / Enter field text"
+              @update:model-value="updateFixtureP66FieldText"
+            />
+          </u-form-item>
+          <u-form-item prop="inputText" label="直接输入 / Direct input">
+            <u-input
+              :model-value="fixtureP66FormModel.inputText"
+              placeholder="输入直接文字 / Enter direct text"
+              @update:model-value="updateFixtureP66InputText"
+            />
+          </u-form-item>
+          <u-form-item prop="longText" label="多行文字 / Long text">
+            <u-textarea
+              :model-value="fixtureP66FormModel.longText"
+              placeholder="输入多行文字 / Enter long text"
+              :show-count="true"
+              @update:model-value="updateFixtureP66LongText"
+            />
+          </u-form-item>
+          <u-form-item prop="searchText" label="查询文字 / Search text">
+            <u-search
+              :model-value="fixtureP66FormModel.searchText"
+              placeholder="输入本地查询 / Enter local query"
+              :show-action="true"
+              action-text="观察 / Observe"
+              @update:model-value="updateFixtureP66SearchText"
+              @search="recordFixtureP66SearchIntent"
+            />
+          </u-form-item>
+        </u-form>
+        <!-- <lang><zh-CN>三个操作只调用当前 UForm ref，并把结果写入下方 data-smoke marker；没有 submit、请求、持久化或远端 validator。</zh-CN><en>The three actions call only the current UForm ref and write results into the data-smoke marker below; there is no submit, request, persistence, or remote validator.</en></lang> -->
+        <u-stack class="fixture-p66-form__actions" direction="horizontal" gap="sm" wrap>
+          <u-button label="本地校验 / Validate locally" @click="validateFixtureP66Form" />
+          <u-button variant="secondary" label="清除校验 / Clear validation" @click="clearFixtureP66Validation" />
+          <u-button variant="secondary" label="重置字段 / Reset fields" @click="resetFixtureP66Fields" />
+        </u-stack>
+        <text class="fixture-p66-form__result" data-smoke="p66-form-result">{{ fixtureP66FormResult }}</text>
+      </view>
+
       <!-- @lang zh-CN 展示批次只组合本地文字符号、调用方图片来源、迁移文字、initials、有限标签、徽标、分隔、数字和静态进度；不产生资产、请求、导航或任务服务。 @lang en The display batch composes local text symbol, caller image source, migration copy, initials, finite tag, badge, divider, number, and static progress only; it creates no asset, request, routing, or task service. <lang><zh-CN>所有值与 click 观察均由页面 refs 拥有。</zh-CN><en>All values and click observations are owned by page refs.</en></lang> -->
       <u-stack class="fixture-display" gap="sm">
         <u-icon name="•" :label="0" @click="recordFixturePresentationIntent('icon')" />
@@ -277,7 +329,7 @@
 
 <script setup>
 // <lang><zh-CN>导入 Vue 的局部 ref/computed 与固定本地目录 helper；页面不导入全局 store、Tool、平台 API 或外部数据访问库。</zh-CN><en>Imports Vue local ref/computed and fixed local catalog helpers; the page imports no global store, Tool, platform API, or external data-access library.</en></lang>
-import { computed, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 // <lang><zh-CN>页面的 u-* 标签由输入根 pages.json 的受限 easycom 表静态解析到同仓 SFC；这避免经公共 barrel 转发导致小程序编译器遗漏组件 JS/WXML/WXSS。</zh-CN><en>The page's u-* tags are statically resolved to in-repository SFCs by the bounded easycom table in the input-root pages.json; this avoids Mini Program compiler omissions of component JS/WXML/WXSS caused by public-barrel forwarding.</en></lang>
 // <lang><zh-CN>导入固定匿名 mock 集合与纯同步 helper；它们位于 fixture 内而非 UI runtime 或 Biz package。</zh-CN><en>Imports the fixed anonymous mock collection and pure synchronous helpers; they reside inside the fixture rather than UI runtime or a Biz package.</en></lang>
 import { LOCAL_CATALOG_RECORDS, filterLocalCatalogRecords, findLocalCatalogRecord } from './local-catalog.mjs';
@@ -368,6 +420,121 @@ const fixtureTagVisible = ref(true);
 const fixtureBadgeValue = ref(3);
 const fixtureCountValue = ref(42);
 const fixtureProgressValue = ref(65);
+
+// <lang><zh-CN>P66 form ref 只服务本页面三个显式观察操作；空初值不会触发自动校验或组件查找。</zh-CN><en>The P66 form ref serves only three explicit observation actions on this page; its empty initial value triggers neither automatic validation nor component lookup.</en></lang>
+const fixtureP66FormReference = ref(null);
+
+// <lang><zh-CN>四个中性字段只区分输入表面，并与目录 mock、选择记录、身份和业务状态完全隔离。</zh-CN><en>The four neutral fields distinguish input surfaces only and remain completely isolated from catalog mocks, selected records, identity, and business state.</en></lang>
+const fixtureP66FormModel = reactive({
+  fieldText: '本地字段 / Local field',
+  inputText: '本地输入 / Local input',
+  longText: '本地多行文字 / Local long text',
+  searchText: '本地查询 / Local query'
+});
+
+/**
+ * @lang zh-CN 声明页面源码直接提供的有限同步规则；规则不读取网络、storage、平台 API、locale service 或业务配置。
+ * @lang en Declares finite synchronous rules supplied directly by page source; the rules read no network, storage, platform API, locale service, or business configuration.
+ */
+const fixtureP66FormRules = Object.freeze({
+  fieldText: Object.freeze([Object.freeze({ required: true, trigger: Object.freeze(['change', 'blur']), message: '字段文字为必填 / Field text is required' })]),
+  inputText: Object.freeze([Object.freeze({ min: 2, trigger: 'blur', message: '至少输入两个字符 / Use at least two characters' })]),
+  longText: Object.freeze([Object.freeze({ max: 80, trigger: 'change', message: '最多输入八十个字符 / Use at most eighty characters' })]),
+  searchText: Object.freeze([Object.freeze({ min: 2, trigger: 'change', message: '查询至少输入两个字符 / Use at least two query characters' })])
+});
+
+// <lang><zh-CN>可见结果 marker 只记录 fixture 内观察状态，不表示提交、保存、请求或业务有效性。</zh-CN><en>The visible result marker records only fixture-local observation state and represents no submission, save, request, or business validity.</en></lang>
+const fixtureP66FormResult = ref('idle');
+
+/**
+ * @lang zh-CN 由页面写回 UField 内建输入报告的字符串，保持中性模型所有权在 fixture。
+ * @lang en Writes back the string reported by UField's built-in input from the page, retaining neutral-model ownership in the fixture.
+ * @param {string} value <lang><zh-CN>未经修改的本地候选值。</zh-CN><en>Unmodified local candidate value.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写本页面模型。</zh-CN><en>No return value; writes only this page model.</en></lang>
+ */
+function updateFixtureP66FieldText(value) {
+  fixtureP66FormModel.fieldText = value;
+}
+
+/**
+ * @lang zh-CN 由页面写回直接 UInput 报告的字符串。
+ * @lang en Writes back the string reported by the direct UInput from the page.
+ * @param {string} value <lang><zh-CN>未经修改的本地候选值。</zh-CN><en>Unmodified local candidate value.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写本页面模型。</zh-CN><en>No return value; writes only this page model.</en></lang>
+ */
+function updateFixtureP66InputText(value) {
+  fixtureP66FormModel.inputText = value;
+}
+
+/**
+ * @lang zh-CN 由页面写回 UTextarea 报告的多行字符串。
+ * @lang en Writes back the multiline string reported by UTextarea from the page.
+ * @param {string} value <lang><zh-CN>未经修改的本地候选值。</zh-CN><en>Unmodified local candidate value.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写本页面模型。</zh-CN><en>No return value; writes only this page model.</en></lang>
+ */
+function updateFixtureP66LongText(value) {
+  fixtureP66FormModel.longText = value;
+}
+
+/**
+ * @lang zh-CN 由页面写回 USearch 报告的查询文字；函数不生成结果、过滤目录或发起请求。
+ * @lang en Writes back query copy reported by USearch from the page; the function generates no result, filters no catalog, and starts no request.
+ * @param {string} value <lang><zh-CN>未经修改的本地查询候选。</zh-CN><en>Unmodified local query candidate.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写本页面模型。</zh-CN><en>No return value; writes only this page model.</en></lang>
+ */
+function updateFixtureP66SearchText(value) {
+  fixtureP66FormModel.searchText = value;
+}
+
+/**
+ * @lang zh-CN 显式校验当前注册字段，并把 boolean 转换为稳定中性 marker。
+ * @lang en Explicitly validates currently registered fields and converts the boolean into a stable neutral marker.
+ * @returns {Promise<void>} <lang><zh-CN>校验完成并更新 marker 后解决。</zh-CN><en>Resolves after validation completes and the marker is updated.</en></lang>
+ */
+async function validateFixtureP66Form() {
+  // <lang><zh-CN>挂载前 ref 为空时只披露 unavailable，不全局查询组件或启动重试。</zh-CN><en>When the ref is empty before mount, only unavailable is disclosed; no global component lookup or retry starts.</en></lang>
+  const form = fixtureP66FormReference.value;
+  if (form === null) {
+    fixtureP66FormResult.value = 'unavailable';
+    return;
+  }
+
+  // <lang><zh-CN>调用方只消费 UForm 的稳定 boolean，不解释错误为业务状态。</zh-CN><en>The caller consumes only UForm's stable boolean and does not interpret an error as business state.</en></lang>
+  const valid = await form.validate();
+  fixtureP66FormResult.value = valid ? 'valid' : 'invalid';
+}
+
+/**
+ * @lang zh-CN 清除全部内部校验投影但保留页面模型值。
+ * @lang en Clears every internal validation projection while retaining page-model values.
+ * @returns {void} <lang><zh-CN>无返回值；只更新局部 UI 与 marker。</zh-CN><en>No return value; updates only local UI and the marker.</en></lang>
+ */
+function clearFixtureP66Validation() {
+  // <lang><zh-CN>实例 guard 只保护挂载边界，不创建替代 form。</zh-CN><en>The instance guard protects only the mount boundary and creates no substitute form.</en></lang>
+  fixtureP66FormReference.value?.clearValidate();
+  fixtureP66FormResult.value = 'cleared';
+}
+
+/**
+ * @lang zh-CN 显式恢复字段挂载快照；这是该中性组合唯一允许表单组件写 model 的入口。
+ * @lang en Explicitly restores field mount snapshots; this is the neutral composition's only entry that permits the form component to write the model.
+ * @returns {void} <lang><zh-CN>无返回值；更新字段和 marker。</zh-CN><en>No return value; updates fields and the marker.</en></lang>
+ */
+function resetFixtureP66Fields() {
+  // <lang><zh-CN>未挂载时保持模型不变；marker 仅记录页面发出的本地 reset 请求。</zh-CN><en>Before mount, the model remains unchanged; the marker only records the page's local reset request.</en></lang>
+  fixtureP66FormReference.value?.resetFields();
+  fixtureP66FormResult.value = 'reset';
+}
+
+/**
+ * @lang zh-CN 记录 USearch search intent；有无文字只选择中性 marker，不连接 catalog 或 API。
+ * @lang en Records a USearch search intent; presence of copy selects only a neutral marker and connects to neither catalog nor API.
+ * @param {string} value <lang><zh-CN>当前页面拥有的查询文字。</zh-CN><en>Current page-owned query copy.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写观察 marker。</zh-CN><en>No return value; writes only the observation marker.</en></lang>
+ */
+function recordFixtureP66SearchIntent(value) {
+  fixtureP66FormResult.value = value.length > 0 ? 'search-intent' : 'search-empty-intent';
+}
 
 // <lang><zh-CN>P43 items 与状态都是页面内声明的中性 fixture 数据，不进入 UI runtime、路由或业务模型。</zh-CN><en>P43 items and state are page-declared neutral fixture data and enter no UI runtime, router, or business model.</en></lang>
 const fixtureTabItems = Object.freeze([

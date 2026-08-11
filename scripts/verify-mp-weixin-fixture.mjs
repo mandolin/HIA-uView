@@ -19,6 +19,29 @@ const uiPackageDirectory = resolve(repositoryDirectory, 'HIA-uView-UI');
 const compilerEntry = resolve(repositoryDirectory, 'node_modules/@dcloudio/vite-plugin-uni/bin/uni.js');
 
 /**
+ * @lang zh-CN P66 仓内 fixture 必须真实组合并输出的六个稳定 `u-*` 组件名；列表只用于生成产物断言，不扩大 UI API。
+ * @lang en Six stable `u-*` component names that the in-repository P66 fixture must actually compose and emit; the list serves generated-artifact assertions only and does not broaden the UI API.
+ */
+const P66_FORM_COMPONENT_NAMES = Object.freeze([
+  'u-form',
+  'u-form-item',
+  'u-field',
+  'u-input',
+  'u-textarea',
+  'u-search'
+]);
+
+/**
+ * @lang zh-CN P66 fixture 必须保留的三个显式表单动作名；列表仅用于源码漂移断言，不调用页面函数。
+ * @lang en Three explicit form-action names that the P66 fixture must retain; the list serves source-drift assertions only and does not call page functions.
+ */
+const P66_FORM_ACTION_NAMES = Object.freeze([
+  'validateFixtureP66Form',
+  'clearFixtureP66Validation',
+  'resetFixtureP66Fields'
+]);
+
+/**
  * @lang zh-CN 从临时微信小程序产物读取并解析一个 JSON 配置文件；读取范围仅限本函数创建的输出目录。
  * @lang en Reads and parses one JSON configuration file from the temporary WeChat Mini Program output; read scope is limited to the output directory created by this function.
  * @param {string} outputDirectory <lang><zh-CN>本次校验创建的绝对临时输出目录。</zh-CN><en>Absolute temporary output directory created by this validation run.</en></lang>
@@ -37,6 +60,22 @@ async function readGeneratedJson(outputDirectory, fileName) {
  * @returns {Promise<void>} <lang><zh-CN>无返回值；缺少预期产物或配置不符时抛出错误。</zh-CN><en>Resolves without a value and throws when expected output or configuration is missing.</en></lang>
  */
 async function verifyMpWeixinFixture() {
+  // <lang><zh-CN>先读取仓内 fixture 首页源码，证明编译输入本身声明了中性 marker、真实六组件组合、调用方 model/rules 与三个显式动作。</zh-CN><en>First reads the in-repository fixture home-page source, proving that compiler input itself declares neutral markers, actual six-component composition, caller-owned model/rules, and three explicit actions.</en></lang>
+  const fixturePageSource = await readFile(resolve(fixtureDirectory, 'src/pages/index/index.vue'), 'utf8');
+  assert.match(fixturePageSource, /data-smoke="p66-form-composition"/u, 'The fixture source must retain the neutral P66 form-composition marker.');
+  assert.match(fixturePageSource, /data-smoke="p66-form-result"/u, 'The fixture source must retain the visible P66 form-result marker.');
+  assert.match(fixturePageSource, /<u-form\s+ref="fixtureP66FormReference"\s+:model="fixtureP66FormModel"\s+:rules="fixtureP66FormRules"/u, 'The fixture source must bind UForm to its page-local ref, model, and rules.');
+
+  // <lang><zh-CN>六个源码标签必须全部存在，避免生成验证退化为只检查过期产物或闲置 Easycom 注册。</zh-CN><en>All six source tags must exist, preventing generated-output verification from degrading into checks of stale artifacts or idle Easycom registrations.</en></lang>
+  for (const componentName of P66_FORM_COMPONENT_NAMES) {
+    assert.match(fixturePageSource, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `The fixture source must compose ${componentName}.`);
+  }
+
+  // <lang><zh-CN>三个函数声明分别证明 validate、clear 与 reset 由 fixture 调用方显式观察，而非只在组件内部不可达。</zh-CN><en>The three function declarations separately prove that validate, clear, and reset are explicitly observable by the fixture caller rather than remaining unreachable inside components.</en></lang>
+  for (const actionName of P66_FORM_ACTION_NAMES) {
+    assert.match(fixturePageSource, new RegExp(`function ${actionName}\\(`, 'u'), `The fixture source must retain ${actionName}.`);
+  }
+
   // <lang><zh-CN>用固定前缀创建唯一系统临时目录；该目录不位于仓库内，且只由本次验证拥有。</zh-CN><en>Creates a unique system temporary directory with a fixed prefix; it is outside the repository and owned only by this validation run.</en></lang>
   const outputDirectory = await mkdtemp(join(tmpdir(), 'hia-uview-mp-weixin-'));
 
@@ -82,6 +121,20 @@ async function verifyMpWeixinFixture() {
     assert.equal(typeof usingComponents, 'object', 'The fixture page must declare static Mini Program components.');
     assert.equal(usingComponents?.['u-button'], '../../../../../src/components/u-button/u-button', 'The fixture page must statically resolve UButton to its leaf SFC output.');
 
+    // <lang><zh-CN>六组件必须各自从仓内 UI 输入树解析到 leaf SFC；这防止页面仅保留未知标签或经 runtime barrel 偶然可见。</zh-CN><en>Each of the six components must resolve from the in-repository UI input tree to its leaf SFC, preventing the page from retaining only unknown tags or becoming incidentally visible through a runtime barrel.</en></lang>
+    for (const componentName of P66_FORM_COMPONENT_NAMES) {
+      const expectedComponentPath = `../../../../../src/components/${componentName}/${componentName}`;
+      assert.equal(usingComponents?.[componentName], expectedComponentPath, `The fixture page must statically resolve ${componentName} to its leaf SFC output.`);
+    }
+
+    // <lang><zh-CN>首页 WXML 中的中性 data marker 与六个标签证明目标组件真实位于页面组合，而不仅是 page JSON 的闲置映射。</zh-CN><en>The neutral data marker and six tags in home-page WXML prove the target components are actually in page composition rather than idle mappings in page JSON.</en></lang>
+    const fixtureHomeMarkup = await readFile(resolve(outputDirectory, `${fixtureHomePage}.wxml`), 'utf8');
+    assert.match(fixtureHomeMarkup, /data-smoke="p66-form-composition"/, 'The generated fixture page must retain the neutral P66 form-composition marker.');
+    assert.match(fixtureHomeMarkup, /data-smoke="p66-form-result"/, 'The generated fixture page must retain the visible P66 form-result marker.');
+    for (const componentName of P66_FORM_COMPONENT_NAMES) {
+      assert.match(fixtureHomeMarkup, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `The generated fixture page must compose ${componentName}.`);
+    }
+
     // <lang><zh-CN>对一个代表性组件同时检查 JS、JSON、WXML 与 WXSS；这样可防止将来重新出现只输出模板而丢失执行或样式文件的退化。</zh-CN><en>Checks JavaScript, JSON, WXML, and WXSS for one representative component; this prevents a regression where only a template is emitted while execution or style files are lost.</en></lang>
     await Promise.all([
       access(resolve(outputDirectory, 'src/components/u-button/u-button.js')),
@@ -89,6 +142,27 @@ async function verifyMpWeixinFixture() {
       access(resolve(outputDirectory, 'src/components/u-button/u-button.wxml')),
       access(resolve(outputDirectory, 'src/components/u-button/u-button.wxss'))
     ]);
+
+    // <lang><zh-CN>六组件均须输出执行、映射、模板与样式四类 leaf 产物；缺失任一文件都不能称为可导入的真实组合。</zh-CN><en>All six components must emit executable, mapping, template, and style leaf artifacts; a composition missing any one file cannot be treated as genuinely importable.</en></lang>
+    const p66ArtifactChecks = [];
+    for (const componentName of P66_FORM_COMPONENT_NAMES) {
+      // <lang><zh-CN>每个扩展名均来自固定集合，目标始终位于本轮临时 outputDirectory 内。</zh-CN><en>Every extension comes from a fixed collection, and each target remains inside this run's temporary outputDirectory.</en></lang>
+      for (const extension of ['js', 'json', 'wxml', 'wxss']) {
+        p66ArtifactChecks.push(access(resolve(
+          outputDirectory,
+          `src/components/${componentName}/${componentName}.${extension}`
+        )));
+      }
+    }
+    await Promise.all(p66ArtifactChecks);
+
+    // <lang><zh-CN>读取两个内部组合根的生成 JSON，确认 UField 的内建 UInput 和 UFormItem 的校验消息不是只存在于源码注释。</zh-CN><en>Reads generated JSON for the two internal composition roots, confirming that UField's built-in UInput and UFormItem's validation message do not exist only in source comments.</en></lang>
+    const [fieldConfiguration, formItemConfiguration] = await Promise.all([
+      readGeneratedJson(outputDirectory, 'src/components/u-field/u-field.json'),
+      readGeneratedJson(outputDirectory, 'src/components/u-form-item/u-form-item.json')
+    ]);
+    assert.equal(fieldConfiguration.usingComponents?.['u-input'], '../u-input/u-input', 'Generated UField must statically compose its built-in UInput.');
+    assert.equal(formItemConfiguration.usingComponents?.['u-validation-message'], '../u-validation-message/u-validation-message', 'Generated UFormItem must statically compose UValidationMessage.');
 
     // <lang><zh-CN>组件局部 WXSS 必须含由 MP-WEIXIN 条件编译得到的默认浅色字面值规则；它们覆盖小程序组件作用域缺失的 token，而 H5 不编译这些规则并保留动态主题语义。</zh-CN><en>Component-local WXSS must contain default-light literal rules produced by MP-WEIXIN conditional compilation; they cover tokens missing in Mini Program component scope while H5 does not compile these rules and retains dynamic-theme semantics.</en></lang>
     const [buttonStyles, tagStyles] = await Promise.all([
@@ -103,6 +177,10 @@ async function verifyMpWeixinFixture() {
     assert.match(applicationStyles, /\.u-button\{/, 'The generated app WXSS must include UButton rules from the explicit style entry.');
     assert.match(applicationStyles, /\.u-card\{/, 'The generated app WXSS must include UCard rules from the explicit style entry.');
     assert.match(applicationStyles, /\.u-image\{/, 'The generated app WXSS must include UImage rules from the explicit style entry.');
+    // <lang><zh-CN>应用级样式入口必须包含六组件根规则；结合 page mapping 与 leaf 产物可证明样式不会仅在 H5 存在。</zh-CN><en>The application-level style entry must include root rules for all six components; together with page mappings and leaf artifacts this proves styles do not exist only on H5.</en></lang>
+    for (const componentName of P66_FORM_COMPONENT_NAMES) {
+      assert.match(applicationStyles, new RegExp(`\\.${componentName}\\{`, 'u'), `The generated app WXSS must include ${componentName} rules from the explicit style entry.`);
+    }
   } finally {
     // <lang><zh-CN>无论编译或断言成功与否，都删除本函数刚创建的唯一临时目录；不遍历或删除仓库、用户目录或外部路径。</zh-CN><en>Deletes the unique temporary directory created by this function whether compilation or assertions succeed; never traverses or deletes repository, user, or external paths.</en></lang>
     await rm(outputDirectory, { recursive: true, force: true, maxRetries: 2 });

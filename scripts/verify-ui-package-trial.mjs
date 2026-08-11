@@ -23,6 +23,49 @@ const npmCliEntry = resolve(dirname(process.execPath), 'node_modules', 'npm', 'b
 const linkedDevelopmentModules = Object.freeze(['@dcloudio', '@vue', 'typescript', 'vite', 'vue']);
 
 /**
+ * @lang zh-CN 离线 tarball consumer 必须真实组合并编译的六个稳定表单/输入组件名。
+ * @lang en Six stable form/input component names that the offline tarball consumer must actually compose and compile.
+ */
+const P66_FORM_COMPONENT_NAMES = Object.freeze([
+  'u-form',
+  'u-form-item',
+  'u-field',
+  'u-input',
+  'u-textarea',
+  'u-search'
+]);
+
+/**
+ * @lang zh-CN 临时 tarball consumer 必须保留的三个显式表单动作名；列表只用于验证生成源码，不执行页面逻辑。
+ * @lang en Three explicit form-action names that the temporary tarball consumer must retain; the list verifies generated source only and executes no page logic.
+ */
+const P66_FORM_ACTION_NAMES = Object.freeze([
+  'validateP66Form',
+  'clearP66Validation',
+  'resetP66Fields'
+]);
+
+/**
+ * @lang zh-CN tarball 必须显式携带的 P66 leaf 源码、样式与无框架 runtime；清单防止相对 import 在安装后缺失。
+ * @lang en P66 leaf sources, styles, and framework-free runtime that the tarball must explicitly carry; the inventory prevents relative imports from disappearing after installation.
+ */
+const P66_REQUIRED_PACKAGE_PATHS = Object.freeze([
+  'src/components/u-form/form-runtime.mjs',
+  'src/components/u-form/u-form.vue',
+  'src/components/u-form/u-form.css',
+  'src/components/u-form-item/u-form-item.vue',
+  'src/components/u-form-item/u-form-item.css',
+  'src/components/u-field/u-field.vue',
+  'src/components/u-field/u-field.css',
+  'src/components/u-input/u-input.vue',
+  'src/components/u-input/u-input.css',
+  'src/components/u-textarea/u-textarea.vue',
+  'src/components/u-textarea/u-textarea.css',
+  'src/components/u-search/u-search.vue',
+  'src/components/u-search/u-search.css'
+]);
+
+/**
  * @lang zh-CN 以固定参数执行一个本地进程并收集 stdout/stderr。该 helper 不允许 shell、网络命令或调用方插入的可执行文件。
  * @lang en Runs one local process with fixed arguments and collects stdout/stderr. This helper permits neither a shell nor network commands or caller-injected executables.
  * @param {string} command <lang><zh-CN>受控可执行文件或 Node binary。</zh-CN><en>Controlled executable or Node binary.</en></lang>
@@ -133,6 +176,36 @@ async function listOutputFiles(directory, prefix = '') {
 }
 
 /**
+ * @lang zh-CN 在受控 compiler 相对文件清单中查找稳定后缀，避免验证逻辑绑定临时 node-modules 前缀或 hash 路径。
+ * @lang en Finds a stable suffix in a controlled compiler-relative file inventory, avoiding validation logic bound to a temporary node-modules prefix or hashed path.
+ * @param {string[]} outputFiles <lang><zh-CN>由 `listOutputFiles` 返回的已排序相对路径。</zh-CN><en>Sorted relative paths returned by `listOutputFiles`.</en></lang>
+ * @param {string} suffix <lang><zh-CN>由本脚本固定构造的 leaf 后缀。</zh-CN><en>Leaf suffix constructed by this script.</en></lang>
+ * @returns {string | undefined} <lang><zh-CN>首个精确后缀匹配，或不存在时 undefined。</zh-CN><en>First exact suffix match, or undefined when absent.</en></lang>
+ */
+function findOutputFileBySuffix(outputFiles, suffix) {
+  // <lang><zh-CN>清单已经稳定排序，因此首个匹配在不同文件系统枚举顺序下仍确定。</zh-CN><en>The inventory is already stably sorted, so the first match remains deterministic across filesystem enumeration orders.</en></lang>
+  for (const filePath of outputFiles) {
+    if (filePath.endsWith(suffix)) {
+      return filePath;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * @lang zh-CN 从本轮临时 compiler 输出读取并解析一个已定位 JSON 文件；函数不接受仓库或外部绝对路径。
+ * @lang en Reads and parses one located JSON file from this run's temporary compiler output; the function accepts no repository or external absolute path.
+ * @param {string} outputDirectory <lang><zh-CN>本轮受控 compiler 输出根。</zh-CN><en>Controlled compiler-output root for this run.</en></lang>
+ * @param {string} relativeFilePath <lang><zh-CN>由输出清单取得的相对 JSON 路径。</zh-CN><en>Relative JSON path obtained from the output inventory.</en></lang>
+ * @returns {Promise<Record<string, unknown>>} <lang><zh-CN>解析后的生成配置。</zh-CN><en>Parsed generated configuration.</en></lang>
+ */
+async function readTrialOutputJson(outputDirectory, relativeFilePath) {
+  // <lang><zh-CN>路径只由受控根和已枚举相对项组成，读取文本后直接采用严格 JSON 解析。</zh-CN><en>The path consists only of the controlled root and an enumerated relative entry; its text is parsed as strict JSON directly.</en></lang>
+  const content = await readFile(join(outputDirectory, relativeFilePath), 'utf8');
+  return JSON.parse(content);
+}
+
+/**
  * @lang zh-CN 写入一次性 consumer 的最小 UniApp 输入；全部文字固定、无业务数据、无网络 URL，且仅可写到本函数的已验证临时根内。
  * @lang en Writes the minimal UniApp input for the one-use consumer. All text is fixed, has no business data or network URL, and may write only inside this function's verified temporary root.
  * @param {string} consumerDirectory <lang><zh-CN>已验证的临时 consumer 根。</zh-CN><en>Verified temporary consumer root.</en></lang>
@@ -184,10 +257,233 @@ async function writeConsumerFixture(consumerDirectory, tarballPath, easycomFragm
   const indexHtml = "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /><title>Private UI package trial</title></head><body><div id=\"app\"></div><script type=\"module\" src=\"/main.js\"></script></body></html>\n";
   // <lang><zh-CN>根 App 只提供页面 slot 与显式包 style import；它不注册 runtime global components，证明 Easycom 是编译期解析。</zh-CN><en>The root App provides only a page slot and explicit package-style import; it registers no runtime global components, proving Easycom is compile-time resolution.</en></lang>
   const appSource = "<script>export default { onLaunch() {} };</script>\n<style>@import '@hia-uview/ui/style.css';</style>\n";
-  // <lang><zh-CN>页面只引用四个审计组件和固定 local props，避免把 business data、remote option、平台 lifecycle 或动态代码带入 package trial。</zh-CN><en>The page references only four audited components with fixed local props, avoiding business data, remote options, platform lifecycle, or dynamic code in the package trial.</en></lang>
-  const pageSource = "<template><view class=\"package-trial\"><u-checkbox v-model=\"checked\" value=\"trial\" label=\"Local choice\" /><u-radio-group v-model=\"radio\"><u-radio value=\"one\" label=\"One\" /></u-radio-group><u-picker v-model=\"selected\" :columns=\"pickerOptions\" title=\"Local picker\" /><u-notice-bar :show=\"true\" text=\"Local package trial\" /><u-tabbar v-model=\"tab\" :items=\"tabItems\" /></view></template>\n<script setup>import { ref } from 'vue'; const checked = ref(false); const radio = ref('one'); const selected = ref('one'); const pickerOptions = [{ label: 'One', value: 'one' }]; const tab = ref(0); const tabItems = [{ label: 'Home', value: 0 }];</script>\n<style>.package-trial { padding: 12px; }</style>\n";
-  // <lang><zh-CN>TypeScript consumer 显式导入 types/global，证明 tarball 的 export resolver 而非仓内 paths 映射提供 declaration。</zh-CN><en>The TypeScript consumer explicitly imports types/global, proving the tarball export resolver rather than an in-repository paths mapping supplies declarations.</en></lang>
-  const typeConsumerSource = "import UView, { UCheckbox, UPicker, type UCheckboxProps } from '@hia-uview/ui';\nimport '@hia-uview/ui/global';\nimport type { GlobalComponents, Plugin } from 'vue';\nconst props: UCheckboxProps = { value: 'trial', modelValue: false };\nconst plugin: Plugin = UView;\nconst globalCheckbox: GlobalComponents['UCheckbox'] = UCheckbox;\nvoid [props, plugin, globalCheckbox, UPicker];\n";
+  // <lang><zh-CN>临时页面保留既有代表组件，并新增独立中性 P66 表单组合；全部状态与规则位于页面内，不携带 business data、remote option、平台 lifecycle 或动态代码。</zh-CN><en>The temporary page retains existing representative components and adds an independent neutral P66 form composition; all state and rules stay in the page and carry no business data, remote option, platform lifecycle, or dynamic code.</en></lang>
+  const pageSource = `<!--
+@component PrivatePackageTrialPage
+@lang zh-CN 通过已安装 tarball 的 Easycom 组合代表组件与 P66 六组件表单；页面只使用中性本地状态，不连接网络、业务、storage、router 或身份。
+@lang en Composes representative components and the P66 six-component form through Easycom from the installed tarball; the page uses only neutral local state and connects to no network, business, storage, router, or identity.
+-->
+<template>
+  <view class="package-trial">
+    <u-checkbox v-model="checked" value="trial" label="Local choice" />
+    <u-radio-group v-model="radio"><u-radio value="one" label="One" /></u-radio-group>
+    <u-picker v-model="selected" :columns="pickerOptions" title="Local picker" />
+    <u-notice-bar :show="true" text="Local package trial" />
+    <u-tabbar v-model="tab" :items="tabItems" />
+
+    <!--
+    @lang zh-CN 中性表单模型只验证 tarball 安装后的 registry、受控输入与 imperative API 可被 compiler 组合；不表示任何领域实体或提交。
+    @lang en The neutral form model only verifies that registry, controlled inputs, and imperative APIs can be composed by the compiler after tarball installation; it represents no domain entity or submission.
+    -->
+    <view class="package-trial__p66-form" data-smoke="p66-form-composition">
+      <u-form ref="p66FormReference" :model="p66FormModel" :rules="p66FormRules" label-position="top">
+        <u-form-item prop="fieldText" help-text="UField built-in UInput">
+          <u-field v-model="p66FormModel.fieldText" label="Field text" :required="true" placeholder="Enter field text" />
+        </u-form-item>
+        <u-form-item prop="inputText" label="Direct input">
+          <u-input v-model="p66FormModel.inputText" placeholder="Enter direct text" />
+        </u-form-item>
+        <u-form-item prop="longText" label="Long text">
+          <u-textarea v-model="p66FormModel.longText" placeholder="Enter long text" :show-count="true" />
+        </u-form-item>
+        <u-form-item prop="searchText" label="Search text">
+          <u-search v-model="p66FormModel.searchText" placeholder="Enter local query" :show-action="true" action-text="Observe" @search="recordP66SearchIntent" />
+        </u-form-item>
+      </u-form>
+      <!-- <lang><zh-CN>原生按钮仅调用当前 form ref 并更新可见 marker；compiler trial 不执行这些点击，也不据此声明平台 runtime 通过。</zh-CN><en>Native buttons only call the current form ref and update a visible marker; the compiler trial does not execute these clicks or claim platform runtime success from them.</en></lang> -->
+      <button @click="validateP66Form">Validate locally</button>
+      <button @click="clearP66Validation">Clear validation</button>
+      <button @click="resetP66Fields">Reset fields</button>
+      <text class="package-trial__p66-result" data-smoke="p66-form-result">{{ p66FormResult }}</text>
+    </view>
+  </view>
+</template>
+
+<script setup>
+import { reactive, ref } from 'vue';
+
+// <lang><zh-CN>既有代表组件继续使用页面本地受控值；它们不与 P66 表单模型共享语义。</zh-CN><en>Existing representative components continue to use page-local controlled values and share no semantics with the P66 form model.</en></lang>
+const checked = ref(false);
+const radio = ref('one');
+const selected = ref('one');
+const pickerOptions = Object.freeze([Object.freeze({ label: 'One', value: 'one' })]);
+const tab = ref(0);
+const tabItems = Object.freeze([Object.freeze({ label: 'Home', value: 0 })]);
+
+// <lang><zh-CN>form ref 只服务三个显式本地观察方法；空初值不会自动运行规则。</zh-CN><en>The form ref serves only three explicit local observation methods; its empty initial value runs no rule automatically.</en></lang>
+const p66FormReference = ref(null);
+
+// <lang><zh-CN>四字段只区分组件输入形态，不表示用户、订单、搜索服务或任何业务记录。</zh-CN><en>The four fields distinguish component input shapes only and represent no user, order, search service, or business record.</en></lang>
+const p66FormModel = reactive({
+  fieldText: 'Local field',
+  inputText: 'Local input',
+  longText: 'Local long text',
+  searchText: 'Local query'
+});
+
+/**
+ * @lang zh-CN 声明临时 consumer 源码直接提供的同步规则；没有远端 validator、脚本字符串或默认业务文案。
+ * @lang en Declares synchronous rules supplied directly by temporary-consumer source; there is no remote validator, script string, or default business copy.
+ */
+const p66FormRules = Object.freeze({
+  fieldText: Object.freeze([Object.freeze({ required: true, trigger: Object.freeze(['change', 'blur']), message: 'Field text is required' })]),
+  inputText: Object.freeze([Object.freeze({ min: 2, trigger: 'blur', message: 'Use at least two characters' })]),
+  longText: Object.freeze([Object.freeze({ max: 80, trigger: 'change', message: 'Use at most eighty characters' })]),
+  searchText: Object.freeze([Object.freeze({ min: 2, trigger: 'change', message: 'Use at least two query characters' })])
+});
+
+// <lang><zh-CN>结果文字只用于编译后可见 marker，不表示提交、保存或后端成功。</zh-CN><en>Result copy serves only as a visible post-compile marker and represents no submission, save, or backend success.</en></lang>
+const p66FormResult = ref('idle');
+
+/**
+ * @lang zh-CN 显式运行当前注册字段校验，并将 boolean 映射为中性 marker。
+ * @lang en Explicitly validates currently registered fields and maps the boolean to a neutral marker.
+ * @returns {Promise<void>} <lang><zh-CN>校验完成并更新 marker 后解决。</zh-CN><en>Resolves after validation and marker update complete.</en></lang>
+ */
+async function validateP66Form() {
+  // <lang><zh-CN>挂载前没有组件实例时保持受控失败披露，不进行全局组件查找。</zh-CN><en>Before mount, absence of a component instance retains a controlled failure disclosure and performs no global component lookup.</en></lang>
+  const form = p66FormReference.value;
+  if (form === null) {
+    p66FormResult.value = 'unavailable';
+    return;
+  }
+
+  // <lang><zh-CN>页面只消费稳定 boolean，不把错误解释为业务状态。</zh-CN><en>The page consumes only the stable boolean and does not interpret errors as business state.</en></lang>
+  const valid = await form.validate();
+  p66FormResult.value = valid ? 'valid' : 'invalid';
+}
+
+/**
+ * @lang zh-CN 清除内部校验投影并保留调用方模型值。
+ * @lang en Clears internal validation projections while retaining caller-model values.
+ * @returns {void} <lang><zh-CN>无返回值；只更新本地 UI 与 marker。</zh-CN><en>No return value; updates only local UI and the marker.</en></lang>
+ */
+function clearP66Validation() {
+  // <lang><zh-CN>可选实例 guard 只保护挂载边界，不创建替代表单。</zh-CN><en>The optional-instance guard protects only the mount boundary and creates no substitute form.</en></lang>
+  p66FormReference.value?.clearValidate();
+  p66FormResult.value = 'cleared';
+}
+
+/**
+ * @lang zh-CN 显式恢复挂载快照；这是临时页面唯一允许 form 写 model 的入口。
+ * @lang en Explicitly restores mount snapshots; this is the temporary page's only entry that permits the form to write the model.
+ * @returns {void} <lang><zh-CN>无返回值；更新字段和 marker。</zh-CN><en>No return value; updates fields and the marker.</en></lang>
+ */
+function resetP66Fields() {
+  // <lang><zh-CN>未挂载时模型保持不变，marker 仍记录调用方的本地 reset 请求。</zh-CN><en>Before mount, the model remains unchanged while the marker still records the caller's local reset request.</en></lang>
+  p66FormReference.value?.resetFields();
+  p66FormResult.value = 'reset';
+}
+
+/**
+ * @lang zh-CN 记录搜索 intent；文字是否为空只改变中性 marker，不发起查询。
+ * @lang en Records search intent; whether copy is empty changes only a neutral marker and starts no query.
+ * @param {string} value <lang><zh-CN>页面拥有的当前查询文字。</zh-CN><en>Current page-owned query copy.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写本地 marker。</zh-CN><en>No return value; writes only the local marker.</en></lang>
+ */
+function recordP66SearchIntent(value) {
+  p66FormResult.value = value.length > 0 ? 'search-intent' : 'search-empty-intent';
+}
+</script>
+
+<style>
+.package-trial { padding: 12px; }
+.package-trial__p66-form { margin-block-start: 12px; }
+</style>
+`;
+  // <lang><zh-CN>写入临时目录前先验证生成页源码，确保 trial 输入本身包含中性 marker、六组件、调用方 model/rules 和三个显式 form API。</zh-CN><en>Before writing the temporary directory, validates generated page source so the trial input itself contains neutral markers, all six components, caller-owned model/rules, and three explicit form APIs.</en></lang>
+  assert.match(pageSource, /data-smoke="p66-form-composition"/u, 'Installed-package trial source must retain the neutral P66 composition marker.');
+  assert.match(pageSource, /data-smoke="p66-form-result"/u, 'Installed-package trial source must retain the visible P66 result marker.');
+  assert.match(pageSource, /<u-form\s+ref="p66FormReference"\s+:model="p66FormModel"\s+:rules="p66FormRules"/u, 'Installed-package trial source must bind UForm to its local ref, model, and rules.');
+
+  // <lang><zh-CN>逐标签断言真实组合，避免仅凭 tarball 文件清单误判临时 consumer 已消费组件。</zh-CN><en>Asserts actual composition tag by tag, avoiding a false conclusion from the tarball inventory alone that the temporary consumer uses the components.</en></lang>
+  for (const componentName of P66_FORM_COMPONENT_NAMES) {
+    assert.match(pageSource, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `Installed-package trial source must compose ${componentName}.`);
+  }
+
+  // <lang><zh-CN>三个源码函数必须分别提供 validate、clear 与 reset 入口；compiler trial 只验证它们可编译，不宣称已执行点击。</zh-CN><en>Three source functions must separately provide validate, clear, and reset entries; the compiler trial verifies only that they compile and does not claim clicks were executed.</en></lang>
+  for (const actionName of P66_FORM_ACTION_NAMES) {
+    assert.match(pageSource, new RegExp(`function ${actionName}\\(`, 'u'), `Installed-package trial source must retain ${actionName}.`);
+  }
+
+  // <lang><zh-CN>TypeScript consumer 显式导入六组件精确类型与 global 映射，证明 tarball export resolver 而非仓内 paths 映射提供 declaration。</zh-CN><en>The TypeScript consumer explicitly imports precise six-component types and global mappings, proving the tarball export resolver rather than in-repository path mappings supplies declarations.</en></lang>
+  const typeConsumerSource = `/**
+ * @module private-package-type-trial
+ * @lang zh-CN 从一次性安装的 tarball 验证组件、props、规则、实例和 global declaration；文件只被 TypeScript 静态检查，不运行 UI。
+ * @lang en Verifies components, props, rules, instances, and global declarations from the one-use installed tarball; the file is only type-checked by TypeScript and runs no UI.
+ */
+import UView, {
+  UCheckbox,
+  UField,
+  UForm,
+  UFormItem,
+  UInput,
+  UPicker,
+  USearch,
+  UTextarea,
+  type UCheckboxProps,
+  type UFieldProps,
+  type UFormInstance,
+  type UFormItemProps,
+  type UFormProps,
+  type UFormRules,
+  type UInputProps,
+  type USearchProps,
+  type UTextareaProps
+} from '@hia-uview/ui';
+import '@hia-uview/ui/global';
+import type { GlobalComponents, Plugin } from 'vue';
+
+// <lang><zh-CN>既有 checkbox 类型继续证明普通包导出没有因 P66 组合退化。</zh-CN><en>The existing checkbox type continues to prove ordinary package exports do not regress because of the P66 composition.</en></lang>
+const checkboxProps: UCheckboxProps = { value: 'trial', modelValue: false };
+
+// <lang><zh-CN>规则根只包含当前 runtime 支持的同步 required/change 形状。</zh-CN><en>The rules root contains only the synchronous required/change shape supported by the current runtime.</en></lang>
+const formRules: UFormRules = {
+  fieldText: [{ required: true, trigger: ['change', 'blur'], message: 'Field text is required' }]
+};
+
+// <lang><zh-CN>六组件 props 分别检查模型、字段路径、受控值与有限显示开关。</zh-CN><en>Props for the six components separately check model, field path, controlled values, and finite display switches.</en></lang>
+const formProps: UFormProps = { model: { fieldText: 'Local field' }, rules: formRules, labelPosition: 'top' };
+const formItemProps: UFormItemProps = { prop: 'fieldText', required: true };
+const fieldProps: UFieldProps = { modelValue: 'Local field', label: 'Field text', required: true };
+const inputProps: UInputProps = { modelValue: 'Local input', readonly: false };
+const textareaProps: UTextareaProps = { modelValue: 'Local long text', showCount: true };
+const searchProps: USearchProps = { modelValue: 'Local query', showAction: true, actionText: 'Observe' };
+
+// <lang><zh-CN>instance 方法类型证明 defineExpose 表面从安装包 declaration 可解析；变量没有运行时值。</zh-CN><en>The instance-method type proves the defineExpose surface resolves from installed-package declarations; the variable has no runtime value.</en></lang>
+type FormValidationMethod = UFormInstance['validateField'];
+const formValidationMethod: FormValidationMethod | undefined = undefined;
+
+// <lang><zh-CN>plugin 与六个 global 映射只做静态赋值，不注册 Vue 应用。</zh-CN><en>The plugin and six global mappings perform static assignment only and register no Vue application.</en></lang>
+const plugin: Plugin = UView;
+const globalForm: GlobalComponents['UForm'] = UForm;
+const globalFormItem: GlobalComponents['UFormItem'] = UFormItem;
+const globalField: GlobalComponents['UField'] = UField;
+const globalInput: GlobalComponents['UInput'] = UInput;
+const globalTextarea: GlobalComponents['UTextarea'] = UTextarea;
+const globalSearch: GlobalComponents['USearch'] = USearch;
+
+// <lang><zh-CN>收集静态引用，避免 TypeScript 将本 trial 退化为只解析 import 的空文件。</zh-CN><en>Collects static references so TypeScript cannot reduce this trial to an empty file that only resolves imports.</en></lang>
+void [
+  checkboxProps,
+  fieldProps,
+  formItemProps,
+  formProps,
+  formValidationMethod,
+  globalField,
+  globalForm,
+  globalFormItem,
+  globalInput,
+  globalSearch,
+  globalTextarea,
+  inputProps,
+  plugin,
+  searchProps,
+  textareaProps,
+  UCheckbox,
+  UPicker
+];
+`;
   // <lang><zh-CN>临时 tsconfig 使用 package resolver，不声明 paths；这样类型通过只能来自已安装 tarball 的 package metadata。</zh-CN><en>The temporary tsconfig uses the package resolver and declares no paths, so a type pass can come only from installed-tarball package metadata.</en></lang>
   const typeConfig = {
     compilerOptions: {
@@ -280,7 +576,8 @@ try {
     'types/index.d.ts',
     'types/global-components.d.ts',
     'types/global-components.mjs',
-    'easycom/mp-weixin.json'
+    'easycom/mp-weixin.json',
+    ...P66_REQUIRED_PACKAGE_PATHS
   ]) {
     assert.ok(packedPaths.has(requiredPath), `Package tarball must contain ${requiredPath}.`);
   }
@@ -347,13 +644,60 @@ try {
     }
   );
 
-  // <lang><zh-CN>只检查 compiler 输出中的 app/page 和代表性 Easycom component 构件存在，不将静态产物误称为 DevTools、设备或跨端运行证据。</zh-CN><en>Checks only app/page and representative Easycom-component artifacts in compiler output, without presenting static artifacts as DevTools, device, or cross-platform runtime evidence.</en></lang>
+  // <lang><zh-CN>只检查 compiler 输出中的 app/page、页面真实组合和 Easycom component 构件，不将静态产物误称为 DevTools、设备或跨端运行证据。</zh-CN><en>Checks only app/page output, actual page composition, and Easycom-component artifacts without presenting static artifacts as DevTools, device, or cross-platform runtime evidence.</en></lang>
   const compilerOutputDirectory = join(consumerDirectory, 'dist', 'build', 'mp-weixin');
   const compilerOutputFiles = await listOutputFiles(compilerOutputDirectory);
   assert.ok(compilerOutputFiles.includes('app.json'), `mp-weixin compiler must emit app.json. Observed temporary output: ${compilerOutputFiles.join(', ')}`);
-  assert.ok(compilerOutputFiles.some((filePath) => filePath.endsWith(join('pages', 'index', 'index.wxml'))), 'mp-weixin compiler must emit the trial page WXML.');
+
+  // <lang><zh-CN>取得本轮唯一试验页的 WXML/JSON 相对路径；路径来自受控 compiler 输出枚举，不接受外部输入。</zh-CN><en>Gets WXML/JSON relative paths for this run's sole trial page; paths come from controlled compiler-output enumeration and accept no external input.</en></lang>
+  const trialPageMarkupPath = findOutputFileBySuffix(compilerOutputFiles, join('pages', 'index', 'index.wxml'));
+  const trialPageConfigurationPath = findOutputFileBySuffix(compilerOutputFiles, join('pages', 'index', 'index.json'));
+  assert.ok(trialPageMarkupPath, 'mp-weixin compiler must emit the trial page WXML.');
+  assert.ok(trialPageConfigurationPath, 'mp-weixin compiler must emit the trial page JSON.');
   assert.ok(compilerOutputFiles.some((filePath) => filePath.endsWith(join('u-checkbox', 'u-checkbox.wxml'))), 'mp-weixin compiler must emit UCheckbox through static Easycom.');
   assert.ok(compilerOutputFiles.some((filePath) => filePath.endsWith(join('u-tabbar', 'u-tabbar.wxml'))), 'mp-weixin compiler must emit UTabbar through static Easycom.');
+
+  // <lang><zh-CN>页面 WXML 必须同时保留中性 marker 与六个标签，排除“包里有组件但临时 consumer 未真实使用”的假阳性。</zh-CN><en>Page WXML must retain both neutral markers and all six tags, excluding a false positive where components exist in the package but the temporary consumer never actually uses them.</en></lang>
+  const trialPageMarkup = await readFile(join(compilerOutputDirectory, trialPageMarkupPath), 'utf8');
+  assert.match(trialPageMarkup, /data-smoke="p66-form-composition"/, 'Installed-package trial page must retain the neutral P66 composition marker.');
+  assert.match(trialPageMarkup, /data-smoke="p66-form-result"/, 'Installed-package trial page must retain the visible P66 result marker.');
+  for (const componentName of P66_FORM_COMPONENT_NAMES) {
+    assert.match(trialPageMarkup, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `Installed-package trial page must compose ${componentName}.`);
+  }
+
+  // <lang><zh-CN>页面 JSON 的六个 mapping 必须指向已安装 package 的对应 leaf 名；不固定 node-modules 前缀，以免依赖 compiler 的内部输出布局。</zh-CN><en>All six mappings in page JSON must point to the matching leaf name in the installed package; the node-modules prefix remains unfixed to avoid depending on compiler-internal output layout.</en></lang>
+  const trialPageConfiguration = await readTrialOutputJson(compilerOutputDirectory, trialPageConfigurationPath);
+  for (const componentName of P66_FORM_COMPONENT_NAMES) {
+    // <lang><zh-CN>统一路径分隔符后只检查稳定 leaf 后缀；安装根仍由本试验的临时 consumer 决定。</zh-CN><en>After normalizing path separators, checks only the stable leaf suffix; the temporary consumer still determines the installation root.</en></lang>
+    const componentMapping = trialPageConfiguration.usingComponents?.[componentName];
+    assert.equal(typeof componentMapping, 'string', `Installed-package trial page must map ${componentName}.`);
+    assert.ok(componentMapping.replaceAll('\\', '/').endsWith(`/src/components/${componentName}/${componentName}`), `Installed-package trial mapping for ${componentName} must end at its package leaf SFC.`);
+  }
+
+  // <lang><zh-CN>每个目标组件必须从 tarball 经 Easycom 编译出 JS/JSON/WXML/WXSS；只出现 page tag 或单个模板文件均不足。</zh-CN><en>Each target component must compile from the tarball through Easycom into JS/JSON/WXML/WXSS; a page tag or one template file alone is insufficient.</en></lang>
+  for (const componentName of P66_FORM_COMPONENT_NAMES) {
+    for (const extension of ['js', 'json', 'wxml', 'wxss']) {
+      // <lang><zh-CN>后缀断言允许 compiler 选择内部 node-modules 前缀，同时仍要求精确 leaf 文件名。</zh-CN><en>The suffix assertion permits a compiler-selected internal node-modules prefix while still requiring the exact leaf filename.</en></lang>
+      const expectedSuffix = join(componentName, `${componentName}.${extension}`);
+      assert.ok(findOutputFileBySuffix(compilerOutputFiles, expectedSuffix), `Installed-package compiler must emit ${componentName}.${extension}.`);
+    }
+  }
+
+  // <lang><zh-CN>两个内部组合 JSON 进一步证明 UField 实际携带 UInput、UFormItem 实际携带校验消息组件，而非仅靠页面直接标签通过。</zh-CN><en>Two internal-composition JSON files further prove UField actually carries UInput and UFormItem carries the validation-message component rather than passing only through direct page tags.</en></lang>
+  const fieldConfigurationPath = findOutputFileBySuffix(compilerOutputFiles, join('u-field', 'u-field.json'));
+  const formItemConfigurationPath = findOutputFileBySuffix(compilerOutputFiles, join('u-form-item', 'u-form-item.json'));
+  assert.ok(fieldConfigurationPath, 'Installed-package compiler must emit UField JSON.');
+  assert.ok(formItemConfigurationPath, 'Installed-package compiler must emit UFormItem JSON.');
+  const [fieldConfiguration, formItemConfiguration] = await Promise.all([
+    readTrialOutputJson(compilerOutputDirectory, fieldConfigurationPath),
+    readTrialOutputJson(compilerOutputDirectory, formItemConfigurationPath)
+  ]);
+  const fieldInputMapping = fieldConfiguration.usingComponents?.['u-input'];
+  const formItemMessageMapping = formItemConfiguration.usingComponents?.['u-validation-message'];
+  assert.equal(typeof fieldInputMapping, 'string', 'Installed-package UField must map its built-in UInput.');
+  assert.equal(typeof formItemMessageMapping, 'string', 'Installed-package UFormItem must map UValidationMessage.');
+  assert.ok(fieldInputMapping.replaceAll('\\', '/').endsWith('/u-input/u-input'), 'Installed-package UField mapping must end at UInput.');
+  assert.ok(formItemMessageMapping.replaceAll('\\', '/').endsWith('/u-validation-message/u-validation-message'), 'Installed-package UFormItem mapping must end at UValidationMessage.');
 
   console.log('Private UI package tarball trial passed (offline install, typecheck, static mp-weixin Easycom compile, temporary cleanup pending).');
 } finally {
