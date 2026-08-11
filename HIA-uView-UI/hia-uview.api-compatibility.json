@@ -142,7 +142,7 @@
   },
   "semanticReview": {
     "path": "HIA-uView-UI/hia-uview.api-semantic-review.json",
-    "digest": "sha256:c611100b1173c19dff05cf45d14641cb7b5ee921d767019240501ab9c12faad5",
+    "digest": "sha256:7436a28df1dc368bdca75cf565370ddf1909cccfceeba07db8f68dcce957b2da",
     "itemCount": 127,
     "serviceCount": 2
   },
@@ -20659,20 +20659,40 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "disabled",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "disabled"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-field/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-field/u-field.vue",
-                "local:HIA-uView-UI/src/components/u-field/u-field.vue"
+                "local:HIA-uView-UI/src/components/u-field/u-field.vue",
+                "test:tests/runtime/hia-uview-input.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -20704,7 +20724,32 @@
                 "parentChild": "none"
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "prop",
+                "valueDomain": {
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                },
+                "ownership": "caller",
+                "control": "built-in-control-interaction-guard",
+                "coercion": "vue-runtime-prop",
+                "validation": "none-declared",
+                "sideEffects": [
+                  "blocks-built-in-control-interaction"
+                ],
+                "parentChild": "nearest-form-item-guard-in-built-in-mode"
               }
             }
           },
@@ -21183,20 +21228,42 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "modelValue",
+                  "typeKinds": [
+                    "Number",
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String",
+                    "Number"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "modelValue"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-field/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-field/u-field.vue",
-                "local:HIA-uView-UI/src/components/u-field/u-field.vue"
+                "local:HIA-uView-UI/src/components/u-field/u-field.vue",
+                "test:tests/runtime/hia-uview-input.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -21229,7 +21296,34 @@
                 "parentChild": "none"
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "prop",
+                "valueDomain": {
+                  "typeKinds": [
+                    "Number",
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String",
+                    "Number"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                },
+                "ownership": "caller",
+                "control": "built-in-control-two-way-model",
+                "coercion": "vue-runtime-prop",
+                "validation": "none-declared",
+                "sideEffects": [
+                  "controls-built-in-field-value"
+                ],
+                "parentChild": "caller-owned-slot-is-not-controlled"
               }
             }
           },
@@ -21281,12 +21375,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "placeholder",
+                  "typeKinds": [
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "placeholder"
             }
           },
           {
@@ -21337,20 +21450,40 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "readonly",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "readonly"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-field/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-field/u-field.vue",
-                "local:HIA-uView-UI/src/components/u-field/u-field.vue"
+                "local:HIA-uView-UI/src/components/u-field/u-field.vue",
+                "test:tests/runtime/hia-uview-input.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -21382,7 +21515,32 @@
                 "parentChild": "none"
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "prop",
+                "valueDomain": {
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                },
+                "ownership": "caller",
+                "control": "built-in-control-editing-guard",
+                "coercion": "vue-runtime-prop",
+                "validation": "none-declared",
+                "sideEffects": [
+                  "blocks-built-in-value-editing"
+                ],
+                "parentChild": "nearest-form-item-guard-in-built-in-mode"
               }
             }
           },
@@ -21611,25 +21769,31 @@
               "name": "click"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "click"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "click"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-field/u-field.vue",
-                "local:HIA-uView-UI/src/components/u-field/u-field.vue"
+                "local:HIA-uView-UI/src/components/u-field/u-field.vue",
+                "test:tests/runtime/hia-uview-input.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
-                "trigger": "user-activation",
+                "trigger": "readonly-overlay-or-right-icon-activation",
                 "parameters": [],
                 "delivery": "synchronous-emit",
                 "cancellable": false,
@@ -21639,7 +21803,16 @@
                 ]
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "event",
+                "trigger": "built-in-input-activation",
+                "parameters": [],
+                "delivery": "synchronous-emit",
+                "cancellable": false,
+                "modelRelation": "none",
+                "sideEffects": [
+                  "notifies-click"
+                ]
               }
             }
           },
@@ -21649,19 +21822,25 @@
               "name": "confirm"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "confirm"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "confirm"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-field/u-field.vue",
-                "local:HIA-uView-UI/src/components/u-field/u-field.vue"
+                "local:HIA-uView-UI/src/components/u-field/u-field.vue",
+                "test:tests/runtime/hia-uview-input.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -21682,7 +21861,21 @@
                 ]
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "event",
+                "trigger": "built-in-input-confirmation",
+                "parameters": [
+                  {
+                    "name": "value",
+                    "shape": "string"
+                  }
+                ],
+                "delivery": "synchronous-emit",
+                "cancellable": false,
+                "modelRelation": "none",
+                "sideEffects": [
+                  "notifies-confirm"
+                ]
               }
             }
           },
@@ -21706,19 +21899,25 @@
               "name": "input"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "input"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "input"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-field/u-field.vue",
-                "local:HIA-uView-UI/src/components/u-field/u-field.vue"
+                "local:HIA-uView-UI/src/components/u-field/u-field.vue",
+                "test:tests/runtime/hia-uview-input.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -21739,7 +21938,21 @@
                 ]
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "event",
+                "trigger": "built-in-native-input",
+                "parameters": [
+                  {
+                    "name": "value",
+                    "shape": "string"
+                  }
+                ],
+                "delivery": "synchronous-emit",
+                "cancellable": false,
+                "modelRelation": "none",
+                "sideEffects": [
+                  "notifies-input"
+                ]
               }
             }
           },
@@ -21763,19 +21976,25 @@
               "name": "update:modelValue"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "update:modelValue"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "update:modelValue"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-field/u-field.vue",
-                "local:HIA-uView-UI/src/components/u-field/u-field.vue"
+                "local:HIA-uView-UI/src/components/u-field/u-field.vue",
+                "test:tests/runtime/hia-uview-input.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -21796,7 +22015,21 @@
                 ]
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "event",
+                "trigger": "built-in-native-input",
+                "parameters": [
+                  {
+                    "name": "value",
+                    "shape": "string"
+                  }
+                ],
+                "delivery": "synchronous-emit",
+                "cancellable": false,
+                "modelRelation": "updates:modelValue",
+                "sideEffects": [
+                  "requests-caller-state-update"
+                ]
               }
             }
           }
@@ -21923,8 +22156,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 2,
-          "mapped": 0,
-          "unsupported": 39,
+          "mapped": 8,
+          "unsupported": 31,
           "unresolved": 0
         }
       },
@@ -22220,12 +22453,30 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "model",
+                  "typeKinds": [
+                    "Object"
+                  ],
+                  "typeOrder": [
+                    "Object"
+                  ],
+                  "default": {
+                    "kind": "factory-object"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "model"
             }
           },
           {
@@ -22247,12 +22498,30 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "rules",
+                  "typeKinds": [
+                    "Object"
+                  ],
+                  "typeOrder": [
+                    "Object"
+                  ],
+                  "default": {
+                    "kind": "factory-object"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "rules"
             }
           },
           {
@@ -22316,14 +22585,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-form/u-form.vue",
-                "local:HIA-uView-UI/src/components/u-form/u-form.vue"
+                "local:HIA-uView-UI/src/components/u-form/u-form.vue",
+                "test:tests/runtime/hia-uview-form.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -22425,19 +22693,29 @@
               "name": "resetFields"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "resetFields"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "resetFields"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
+                "comparison:src/uni_modules/uview-pro/components/u-form-item/u-form-item.vue",
                 "comparison:src/uni_modules/uview-pro/components/u-form/u-form.vue",
-                "local:HIA-uView-UI/src/components/u-form/u-form.vue"
+                "local:HIA-uView-UI/src/components/u-form-item/u-form-item.vue",
+                "local:HIA-uView-UI/src/components/u-form/form-runtime.mjs",
+                "local:HIA-uView-UI/src/components/u-form/u-form.vue",
+                "test:tests/runtime/hia-uview-form-runtime.test.mjs",
+                "test:tests/runtime/hia-uview-form.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -22447,15 +22725,29 @@
                 "parameters": [],
                 "returns": "void",
                 "effects": [
-                  "resets-registered-form-fields"
+                  "restores-registered-field-values",
+                  "clears-field-validation-after-fixed-delay"
                 ],
                 "lifecycle": "mounted-instance",
                 "scope": "component-instance",
-                "concurrency": "synchronous",
+                "concurrency": "synchronous-field-dispatch-with-50ms-validation-clear",
                 "failure": "no-declared-error-channel"
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "imperativeApi",
+                "entry": "component-ref",
+                "parameters": [],
+                "returns": "void",
+                "effects": [
+                  "restores-cloned-registration-snapshots",
+                  "clears-field-validation-immediately",
+                  "invalidates-in-flight-validation"
+                ],
+                "lifecycle": "mounted-instance",
+                "scope": "component-instance",
+                "concurrency": "synchronous-registry-order",
+                "failure": "missing-or-unsafe-field-path-is-a-no-op"
               }
             }
           },
@@ -22479,12 +22771,17 @@
               "name": "setRules"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "setRules"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "setRules"
             }
           },
           {
@@ -22493,12 +22790,17 @@
               "name": "validate"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "validate"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "validate"
             }
           }
         ],
@@ -22583,8 +22885,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 2,
-          "unsupported": 19,
+          "mapped": 7,
+          "unsupported": 14,
           "unresolved": 0
         }
       },
@@ -22877,7 +23179,7 @@
                   ],
                   "default": {
                     "kind": "literal",
-                    "value": "top"
+                    "value": ""
                   },
                   "required": false,
                   "validator": {
@@ -22889,7 +23191,7 @@
             "priority": "P1",
             "migration": {
               "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
               "target": "labelPosition"
             }
           },
@@ -23053,12 +23355,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "prop",
+                  "typeKinds": [
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "prop"
             }
           },
           {
@@ -23319,14 +23640,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-form-item/u-form-item.vue",
-                "local:HIA-uView-UI/src/components/u-form-item/u-form-item.vue"
+                "local:HIA-uView-UI/src/components/u-form-item/u-form-item.vue",
+                "test:tests/runtime/hia-uview-form.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -23442,19 +23762,27 @@
               "name": "resetField"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "resetField"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "resetField"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-form-item/u-form-item.vue",
-                "local:HIA-uView-UI/src/components/u-form-item/u-form-item.vue"
+                "local:HIA-uView-UI/src/components/u-form-item/u-form-item.vue",
+                "local:HIA-uView-UI/src/components/u-form/form-runtime.mjs",
+                "test:tests/runtime/hia-uview-form-runtime.test.mjs",
+                "test:tests/runtime/hia-uview-form.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -23465,15 +23793,28 @@
                 "returns": "void",
                 "effects": [
                   "restores-initial-field-value",
-                  "clears-field-validation"
+                  "clears-field-validation-after-fixed-delay"
+                ],
+                "lifecycle": "mounted-instance",
+                "scope": "component-instance",
+                "concurrency": "synchronous-model-write-with-50ms-validation-clear",
+                "failure": "no-declared-error-channel"
+              },
+              "hia": {
+                "status": "delivered",
+                "kind": "imperativeApi",
+                "entry": "component-ref",
+                "parameters": [],
+                "returns": "void",
+                "effects": [
+                  "restores-cloned-registration-snapshot",
+                  "clears-field-validation-immediately",
+                  "invalidates-in-flight-validation"
                 ],
                 "lifecycle": "mounted-instance",
                 "scope": "component-instance",
                 "concurrency": "synchronous",
-                "failure": "no-declared-error-channel"
-              },
-              "hia": {
-                "status": "not-delivered"
+                "failure": "missing-or-unsafe-field-path-is-a-no-op"
               }
             }
           },
@@ -23573,8 +23914,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 2,
-          "mapped": 2,
-          "unsupported": 22,
+          "mapped": 4,
+          "unsupported": 20,
           "unresolved": 0
         }
       },
@@ -29014,14 +29355,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-input/u-input.vue",
-                "local:HIA-uView-UI/src/components/u-input/u-input.vue"
+                "local:HIA-uView-UI/src/components/u-input/u-input.vue",
+                "test:tests/runtime/hia-uview-input.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -29038,12 +29378,7 @@
                 "status": "delivered",
                 "kind": "event",
                 "trigger": "user-activation",
-                "parameters": [
-                  {
-                    "name": "event",
-                    "shape": "platform-event"
-                  }
-                ],
+                "parameters": [],
                 "delivery": "synchronous-emit",
                 "cancellable": false,
                 "modelRelation": "none",
@@ -29073,14 +29408,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-input/u-input.vue",
-                "local:HIA-uView-UI/src/components/u-input/u-input.vue"
+                "local:HIA-uView-UI/src/components/u-input/u-input.vue",
+                "test:tests/runtime/hia-uview-input.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -29104,8 +29438,8 @@
                 "trigger": "user-confirmation",
                 "parameters": [
                   {
-                    "name": "event",
-                    "shape": "platform-event"
+                    "name": "value",
+                    "shape": "string"
                   }
                 ],
                 "delivery": "synchronous-emit",
@@ -29156,14 +29490,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-input/u-input.vue",
-                "local:HIA-uView-UI/src/components/u-input/u-input.vue"
+                "local:HIA-uView-UI/src/components/u-input/u-input.vue",
+                "test:tests/runtime/hia-uview-input.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -29220,14 +29553,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-input/u-input.vue",
-                "local:HIA-uView-UI/src/components/u-input/u-input.vue"
+                "local:HIA-uView-UI/src/components/u-input/u-input.vue",
+                "test:tests/runtime/hia-uview-input.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -46470,8 +46802,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "compatible",
-              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
               "target": "disabled"
             },
             "semantics": {
@@ -46481,7 +46813,7 @@
                 "comparison:src/uni_modules/uview-pro/components/u-search/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-search/u-search.vue",
                 "local:HIA-uView-UI/src/components/u-search/u-search.vue",
-                "test:tests/runtime/hia-uview-ui.runtime.test.mjs"
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -46504,11 +46836,12 @@
                   }
                 },
                 "ownership": "caller",
-                "control": "interaction-guard",
+                "control": "input-editing-guard-with-disabled-click-intent",
                 "coercion": "vue-runtime-prop",
                 "validation": "none-declared",
                 "sideEffects": [
-                  "blocks-user-interaction"
+                  "blocks-input-editing",
+                  "enables-disabled-click-intent"
                 ],
                 "parentChild": "none"
               },
@@ -46532,7 +46865,7 @@
                   }
                 },
                 "ownership": "caller",
-                "control": "interaction-guard",
+                "control": "complete-interaction-guard",
                 "coercion": "vue-runtime-prop",
                 "validation": "none-declared",
                 "sideEffects": [
@@ -46774,8 +47107,8 @@
             },
             "priority": "P0",
             "migration": {
-              "disposition": "compatible",
-              "reasonCode": "EXPLICIT_SEMANTIC_RULE",
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
               "target": "modelValue"
             },
             "semantics": {
@@ -46785,7 +47118,7 @@
                 "comparison:src/uni_modules/uview-pro/components/u-search/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-search/u-search.vue",
                 "local:HIA-uView-UI/src/components/u-search/u-search.vue",
-                "test:tests/runtime/hia-uview-ui.runtime.test.mjs"
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -46808,11 +47141,12 @@
                   }
                 },
                 "ownership": "caller",
-                "control": "two-way-model",
+                "control": "mirrored-two-way-model",
                 "coercion": "vue-runtime-prop",
                 "validation": "none-declared",
                 "sideEffects": [
-                  "controls-search-text"
+                  "controls-search-text",
+                  "re-emits-mirrored-keyword-changes"
                 ],
                 "parentChild": "none"
               },
@@ -46836,7 +47170,7 @@
                   }
                 },
                 "ownership": "caller",
-                "control": "two-way-model",
+                "control": "caller-controlled-model",
                 "coercion": "vue-runtime-prop",
                 "validation": "none-declared",
                 "sideEffects": [
@@ -47098,25 +47432,24 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-search/u-search.vue",
-                "local:HIA-uView-UI/src/components/u-search/u-search.vue"
+                "local:HIA-uView-UI/src/components/u-search/u-search.vue",
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
-                "trigger": "accepted-value-change",
+                "trigger": "mirrored-keyword-change",
                 "parameters": [
                   {
                     "name": "value",
                     "shape": "string"
                   }
                 ],
-                "delivery": "synchronous-emit",
+                "delivery": "vue-watch-emit",
                 "cancellable": false,
                 "modelRelation": "none",
                 "sideEffects": [
@@ -47126,7 +47459,7 @@
               "hia": {
                 "status": "delivered",
                 "kind": "event",
-                "trigger": "accepted-value-change",
+                "trigger": "accepted-native-input-or-clear-intent",
                 "parameters": [
                   {
                     "name": "value",
@@ -47181,18 +47514,17 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-search/u-search.vue",
-                "local:HIA-uView-UI/src/components/u-search/u-search.vue"
+                "local:HIA-uView-UI/src/components/u-search/u-search.vue",
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
-                "trigger": "user-activation",
+                "trigger": "disabled-surface-activation",
                 "parameters": [],
                 "delivery": "synchronous-emit",
                 "cancellable": false,
@@ -47204,7 +47536,7 @@
               "hia": {
                 "status": "delivered",
                 "kind": "event",
-                "trigger": "user-activation",
+                "trigger": "enabled-surface-activation",
                 "parameters": [
                   {
                     "name": "event",
@@ -47273,25 +47605,24 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-search/u-search.vue",
-                "local:HIA-uView-UI/src/components/u-search/u-search.vue"
+                "local:HIA-uView-UI/src/components/u-search/u-search.vue",
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
-                "trigger": "native-input",
+                "trigger": "mirrored-keyword-change",
                 "parameters": [
                   {
                     "name": "value",
                     "shape": "string"
                   }
                 ],
-                "delivery": "synchronous-emit",
+                "delivery": "vue-watch-emit",
                 "cancellable": false,
                 "modelRelation": "none",
                 "sideEffects": [
@@ -47301,7 +47632,7 @@
               "hia": {
                 "status": "delivered",
                 "kind": "event",
-                "trigger": "native-input",
+                "trigger": "accepted-native-input-or-clear-intent",
                 "parameters": [
                   {
                     "name": "value",
@@ -47356,25 +47687,24 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-search/u-search.vue",
-                "local:HIA-uView-UI/src/components/u-search/u-search.vue"
+                "local:HIA-uView-UI/src/components/u-search/u-search.vue",
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
-                "trigger": "controlled-state-change",
+                "trigger": "mirrored-keyword-change",
                 "parameters": [
                   {
                     "name": "value",
                     "shape": "string"
                   }
                 ],
-                "delivery": "synchronous-emit",
+                "delivery": "vue-watch-emit",
                 "cancellable": false,
                 "modelRelation": "updates:modelValue",
                 "sideEffects": [
@@ -47384,7 +47714,7 @@
               "hia": {
                 "status": "delivered",
                 "kind": "event",
-                "trigger": "controlled-state-change",
+                "trigger": "accepted-native-input-or-clear-intent",
                 "parameters": [
                   {
                     "name": "value",
@@ -47493,8 +47823,8 @@
         "disposition": "unsupported",
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
-          "compatible": 2,
-          "mapped": 12,
+          "compatible": 0,
+          "mapped": 14,
           "unsupported": 19,
           "unresolved": 0
         }
@@ -61164,15 +61494,14 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-textarea/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-textarea/u-textarea.vue",
-                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue"
+                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue",
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "prop",
@@ -61519,15 +61848,14 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-textarea/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-textarea/u-textarea.vue",
-                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue"
+                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue",
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "prop",
@@ -61997,14 +62325,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-textarea/u-textarea.vue",
-                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue"
+                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue",
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -62015,7 +62342,7 @@
                     "shape": "string"
                   }
                 ],
-                "delivery": "synchronous-emit",
+                "delivery": "vue-next-tick-emit",
                 "cancellable": false,
                 "modelRelation": "none",
                 "sideEffects": [
@@ -62061,18 +62388,17 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-textarea/u-textarea.vue",
-                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue"
+                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue",
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
-                "trigger": "user-activation",
+                "trigger": "readonly-overlay-activation",
                 "parameters": [],
                 "delivery": "synchronous-emit",
                 "cancellable": false,
@@ -62084,13 +62410,8 @@
               "hia": {
                 "status": "delivered",
                 "kind": "event",
-                "trigger": "user-activation",
-                "parameters": [
-                  {
-                    "name": "event",
-                    "shape": "platform-event"
-                  }
-                ],
+                "trigger": "enabled-region-activation",
+                "parameters": [],
                 "delivery": "synchronous-emit",
                 "cancellable": false,
                 "modelRelation": "none",
@@ -62120,14 +62441,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-textarea/u-textarea.vue",
-                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue"
+                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue",
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -62203,14 +62523,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-textarea/u-textarea.vue",
-                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue"
+                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue",
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -62221,7 +62540,7 @@
                     "shape": "string"
                   }
                 ],
-                "delivery": "synchronous-emit",
+                "delivery": "vue-next-tick-emit",
                 "cancellable": false,
                 "modelRelation": "none",
                 "sideEffects": [
@@ -62295,14 +62614,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-textarea/u-textarea.vue",
-                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue"
+                "local:HIA-uView-UI/src/components/u-textarea/u-textarea.vue",
+                "test:tests/runtime/hia-uview-textarea-search.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -62313,7 +62631,7 @@
                     "shape": "string"
                   }
                 ],
-                "delivery": "synchronous-emit",
+                "delivery": "vue-next-tick-emit",
                 "cancellable": false,
                 "modelRelation": "updates:modelValue",
                 "sideEffects": [

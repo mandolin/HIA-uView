@@ -230,8 +230,6 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-radio|props|value',
   'u-radio-group|props|disabled',
   'u-radio-group|props|modelValue',
-  'u-search|props|disabled',
-  'u-search|props|modelValue',
   'u-text|props|show',
   'u-text|props|text',
   'u-textarea|props|readonly',
@@ -3081,14 +3079,17 @@ function validateSemanticEnvelope(value, expected, context) {
   }
 
   const remainingEvidence = requireSemanticStrings(semantics.remainingEvidence, `${context}.remainingEvidence`, true);
-  // <lang><zh-CN>mapped 项保留 runtime parity 待办；其他 disposition 当前要求空列表。</zh-CN><en>Mapped items retain the runtime-parity task, while other dispositions currently require an empty list.</en></lang>
-  const expectedRemaining = expected.disposition === 'mapped' ? ['runtime-parity'] : [];
+  // <lang><zh-CN>证据 profile 同时绑定 disposition、证据等级与剩余工作：mapped 可处于待运行时复核或已运行时验证两种显式状态。</zh-CN><en>The evidence profile binds disposition, evidence level, and remaining work together: mapped may explicitly be either pending runtime review or already runtime tested.</en></lang>
+  const evidenceProfileIsValid = expected.disposition === 'compatible'
+    ? semantics.evidenceLevel === 'runtime-tested' && remainingEvidence.length === 0
+    : expected.disposition === 'mapped'
+      ? (semantics.evidenceLevel === 'source-reviewed' && JSON.stringify(remainingEvidence) === JSON.stringify(['runtime-parity']))
+        || (semantics.evidenceLevel === 'runtime-tested' && remainingEvidence.length === 0)
+      : semantics.evidenceLevel === 'source-reviewed' && remainingEvidence.length === 0;
 
-  // <lang><zh-CN>剩余证据必须与迁移结论精确一致，不能额外隐藏未完成工作。</zh-CN><en>Remaining evidence must match the migration conclusion exactly and cannot hide extra unfinished work.</en></lang>
-  if (JSON.stringify(remainingEvidence) !== JSON.stringify(expectedRemaining)) throw new Error(`${context}.remainingEvidence does not match the migration disposition.`);
-  // <lang><zh-CN>只有 compatible 可使用 runtime-tested；其他结论保持 source-reviewed。</zh-CN><en>Only compatible may use runtime-tested; other conclusions remain source-reviewed.</en></lang>
-  if ((expected.disposition === 'compatible') !== (semantics.evidenceLevel === 'runtime-tested')) {
-    throw new Error(`${context}.evidenceLevel does not match the explicit compatibility evidence.`);
+  // <lang><zh-CN>拒绝混合 profile，防止已完成 runtime 证据仍携带待办，或仅源码审阅的 mapped 项静默清空待办。</zh-CN><en>Rejects mixed profiles so completed runtime evidence cannot retain a pending task and a source-only mapped item cannot silently clear it.</en></lang>
+  if (!evidenceProfileIsValid) {
+    throw new Error(`${context}.evidenceLevel or remainingEvidence does not match the migration disposition.`);
   }
 
   // <lang><zh-CN>上游始终是已交付审计对象，并与当前 kind/prop 结构事实交叉核对。</zh-CN><en>The upstream is always the delivered review subject and is cross-checked with the current kind and prop structural fact.</en></lang>

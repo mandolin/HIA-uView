@@ -151,7 +151,7 @@ test('inspects scope-complete P0 migration actions without source discovery or r
   });
   // <lang><zh-CN>JSON formatter 复用相同已验证 report，避免单独的 JSON 代码路径掩盖字段漂移。</zh-CN><en>The JSON formatter reuses the same validated report, avoiding a separate JSON path that could hide field drift.</en></lang>
   const jsonOutput = formatReport(first, 'json');
-  // <lang><zh-CN>唯一动作包的公开摘要来自当前全部 P0：45 项可直接使用、71 项需调用方适配、11 项需保留或组合。</zh-CN><en>The sole packet's public summary comes from all current P0 items: 45 usable as-is, 71 requiring caller adaptation, and 11 requiring retention or composition.</en></lang>
+  // <lang><zh-CN>唯一动作包的公开摘要来自当前全部 P0：43 项可直接使用、82 项需调用方适配、2 项需保留或组合。</zh-CN><en>The sole packet's public summary comes from all current P0 items: 43 usable as-is, 82 requiring caller adaptation, and 2 requiring retention or composition.</en></lang>
   const packet = first.details.manifests[0];
   // <lang><zh-CN>从扩展后 report 现场筛出首批八组件，证明完整覆盖没有删除原 38 项。</zh-CN><en>Filters the initial eight components live from the expanded report, proving complete coverage did not delete the original 38 items.</en></lang>
   const initialActions = packet.actions.filter((action) => initialActionComponents.has(action.component));
@@ -163,7 +163,7 @@ test('inspects scope-complete P0 migration actions without source discovery or r
   assert.equal(first.details.manifests.length, 1);
   assert.equal(packet.path, actionPath);
   assert.equal(packet.apiCompatibilityManifest, matrixPath);
-  assert.deepEqual(packet.summary, { actionCount: 127, dispositions: { compatible: 45, mapped: 71, unsupported: 11 } });
+  assert.deepEqual(packet.summary, { actionCount: 127, dispositions: { compatible: 43, mapped: 82, unsupported: 2 } });
   assert.equal(packet.actions[0].id, 'u-button/event:click');
   assert.equal(packet.actions.at(-1).id, 'u-toast/prop:loading');
   assert.equal(initialActions.length, 38);
@@ -172,7 +172,7 @@ test('inspects scope-complete P0 migration actions without source discovery or r
     { compatible: 15, mapped: 23, unsupported: 0 }
   );
   assert.match(textOutput, /inspect: passed/);
-  assert.match(textOutput, /127 actions; 45\/71\/11 compatible\/mapped\/unsupported/);
+  assert.match(textOutput, /127 actions; 43\/82\/2 compatible\/mapped\/unsupported/);
   assert.match(jsonOutput, /"kind": "migration-actions"/);
   assert.doesNotMatch(`${textOutput}\n${jsonOutput}`, new RegExp(escapeRegularExpression(process.cwd())));
   assert.doesNotMatch(`${textOutput}\n${jsonOutput}`, /<template|defineProps|readFile\(|git\s+|npm\s+(?:install|exec)/i);

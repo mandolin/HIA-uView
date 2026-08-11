@@ -44,8 +44,8 @@ function firstP0Entry(matrix) {
 }
 
 /**
- * @lang zh-CN 验证真实生成结果与提交文件逐字段一致，并锁定 30/127 与 45/71/11。
- * @lang en Verifies that real generation matches the committed file field for field and locks 30/127 plus 45/71/11.
+ * @lang zh-CN 验证真实生成结果与提交文件逐字段一致，并锁定 30/127 与 43/82/2。
+ * @lang en Verifies that real generation matches the committed file field for field and locks 30/127 plus 43/82/2.
  */
 test('generates one deterministic action for every reviewed P0 semantic item', () => {
   // <lang><zh-CN>纯 builder 两次使用独立输入，结果必须相同且等于提交 manifest。</zh-CN><en>The pure builder uses independent inputs twice; both results must match each other and the committed manifest.</en></lang>
@@ -63,7 +63,7 @@ test('generates one deterministic action for every reviewed P0 semantic item', (
   assert.equal(first.scope.components.length, 30);
   assert.deepEqual(first.scope.priorities, ['P0']);
   assert.equal(first.actions.length, 127);
-  assert.deepEqual(dispositions, { compatible: 45, mapped: 71, unsupported: 11 });
+  assert.deepEqual(dispositions, { compatible: 43, mapped: 82, unsupported: 2 });
   assert.ok(first.actions.every((action) => /^sha256:[0-9a-f]{64}$/u.test(action.sourceFingerprint)));
   assert.ok(first.actions.every((action) => !('apply' in action) && !('script' in action)));
 });

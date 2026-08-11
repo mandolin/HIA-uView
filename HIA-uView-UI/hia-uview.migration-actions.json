@@ -578,16 +578,16 @@
       "component": "u-field",
       "itemId": "event:click",
       "priority": "P0",
-      "sourceFingerprint": "sha256:add85bce3c4b5115b1d238fed53641f8be12c9e8d034737cdbd435f3b1489f15",
-      "disposition": "unsupported",
-      "operation": "keep-existing-or-compose",
+      "sourceFingerprint": "sha256:2c0f2aa1621b9b2376e157b1d7e85250f3674d6184307cdd67fd7710f5840781",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep or explicitly compose the caller-side behavior for upstream u-field event:click; HIA currently exposes no reviewed target.",
-        "zh-Hans": "为上游 u-field event:click 保留或显式组合调用方行为；HIA 当前没有已审计目标。"
+        "en": "Handle click as activation of HIA's built-in input; explicitly recreate any upstream readonly-overlay or right-icon click intent that the caller relied on.",
+        "zh-Hans": "把 click 按 HIA 内置输入控件的激活事件处理；如果调用方依赖上游的只读遮罩或右侧图标点击意图，请显式重建。"
       },
       "limitations": {
-        "en": "This records a current delivery gap only; it adds no runtime behavior, service, patch, script, or automatic migration.",
-        "zh-Hans": "这只记录当前交付缺口；不会增加 runtime 行为、service、patch、script 或自动迁移。"
+        "en": "The trigger surface differs, and a caller-provided default-slot control receives no synthetic field event.",
+        "zh-Hans": "触发表面不同，并且调用方通过默认插槽提供的控件不会收到合成 field 事件。"
       },
       "docs": [
         "docs/field.md",
@@ -599,16 +599,16 @@
       "component": "u-field",
       "itemId": "event:confirm",
       "priority": "P0",
-      "sourceFingerprint": "sha256:8918a9f295e4ade3613dbc351172ef81ee3856f7332813e55b1575e7b2faa104",
-      "disposition": "unsupported",
-      "operation": "keep-existing-or-compose",
+      "sourceFingerprint": "sha256:efe6750da2068cc112204550f92eba5386581afe2da49d7c6ff2b235fe16d86e",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep or explicitly compose the caller-side behavior for upstream u-field event:confirm; HIA currently exposes no reviewed target.",
-        "zh-Hans": "为上游 u-field event:confirm 保留或显式组合调用方行为；HIA 当前没有已审计目标。"
+        "en": "Keep the string-valued confirm handler for HIA's built-in input branch and wire confirmation from a caller-provided slot explicitly.",
+        "zh-Hans": "在 HIA 内置输入控件分支保留接收字符串的 confirm handler；调用方提供的插槽控件需要显式接入确认事件。"
       },
       "limitations": {
-        "en": "This records a current delivery gap only; it adds no runtime behavior, service, patch, script, or automatic migration.",
-        "zh-Hans": "这只记录当前交付缺口；不会增加 runtime 行为、service、patch、script 或自动迁移。"
+        "en": "The reviewed mapping covers only the built-in input; HIA does not proxy confirm from arbitrary slot content.",
+        "zh-Hans": "已审阅映射只覆盖内置输入控件；HIA 不会代理任意插槽内容的 confirm。"
       },
       "docs": [
         "docs/field.md",
@@ -620,16 +620,16 @@
       "component": "u-field",
       "itemId": "event:input",
       "priority": "P0",
-      "sourceFingerprint": "sha256:83df3d6eed5e5d0a4dc8748364139936ba55803bb7254ad82c0bbb0651eec991",
-      "disposition": "unsupported",
-      "operation": "keep-existing-or-compose",
+      "sourceFingerprint": "sha256:e352b332b39f5a8d02b24592e37a3112d33fe5446d9494c04ca5415416897367",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep or explicitly compose the caller-side behavior for upstream u-field event:input; HIA currently exposes no reviewed target.",
-        "zh-Hans": "为上游 u-field event:input 保留或显式组合调用方行为；HIA 当前没有已审计目标。"
+        "en": "Treat HIA input as the built-in control's raw string event and perform any upstream-style normalization explicitly in caller code.",
+        "zh-Hans": "把 HIA input 作为内置控件发出的原始字符串事件处理；如需上游式标准化，请在调用方显式完成。"
       },
       "limitations": {
-        "en": "This records a current delivery gap only; it adds no runtime behavior, service, patch, script, or automatic migration.",
-        "zh-Hans": "这只记录当前交付缺口；不会增加 runtime 行为、service、patch、script 或自动迁移。"
+        "en": "The payload is not upstream-normalized, and default-slot controls remain caller-owned.",
+        "zh-Hans": "payload 不会按上游规则标准化，默认插槽控件仍由调用方拥有。"
       },
       "docs": [
         "docs/field.md",
@@ -641,16 +641,16 @@
       "component": "u-field",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:2d55758cea2d0fed22c0e2fd24c97abf38b786cc3f6f5ed63946cbb022a6cfed",
-      "disposition": "unsupported",
-      "operation": "keep-existing-or-compose",
+      "sourceFingerprint": "sha256:d41c0b173f668ffce5c6beaa9d0d07eaa835445a1d7870704872bf08875b3bb4",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep or explicitly compose the caller-side behavior for upstream u-field event:update:modelValue; HIA currently exposes no reviewed target.",
-        "zh-Hans": "为上游 u-field event:update:modelValue 保留或显式组合调用方行为；HIA 当前没有已审计目标。"
+        "en": "Accept the built-in input's raw string in update:modelValue and apply any required normalization before updating caller state.",
+        "zh-Hans": "在 update:modelValue 中接收内置输入控件的原始字符串，并在更新调用方状态前完成所需标准化。"
       },
       "limitations": {
-        "en": "This records a current delivery gap only; it adds no runtime behavior, service, patch, script, or automatic migration.",
-        "zh-Hans": "这只记录当前交付缺口；不会增加 runtime 行为、service、patch、script 或自动迁移。"
+        "en": "Only the built-in branch requests model updates; a slotted control must own its model channel.",
+        "zh-Hans": "只有内置分支会请求模型更新；插槽控件必须自行维护模型通道。"
       },
       "docs": [
         "docs/field.md",
@@ -662,16 +662,16 @@
       "component": "u-field",
       "itemId": "prop:disabled",
       "priority": "P0",
-      "sourceFingerprint": "sha256:fd7cc838e238cd81eed567c53f542246382b0a7af2df9d7621c7f06c45430d69",
-      "disposition": "unsupported",
-      "operation": "keep-existing-or-compose",
+      "sourceFingerprint": "sha256:aa450f63fece91201edd4d5455231bc08771a823fcdbd3d8acf22bfc39c19097",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep or explicitly compose the caller-side behavior for upstream u-field prop:disabled; HIA currently exposes no reviewed target.",
-        "zh-Hans": "为上游 u-field prop:disabled 保留或显式组合调用方行为；HIA 当前没有已审计目标。"
+        "en": "Apply disabled to HIA's built-in control branch; when u-field renders a caller-provided default slot, keep that slot's disabled handling in caller code.",
+        "zh-Hans": "把 disabled 应用于 HIA 内置控件分支；当 u-field 渲染调用方提供的默认插槽时，请在调用方代码中维护该插槽的禁用逻辑。"
       },
       "limitations": {
-        "en": "This records a current delivery gap only; it adds no runtime behavior, service, patch, script, or automatic migration.",
-        "zh-Hans": "这只记录当前交付缺口；不会增加 runtime 行为、service、patch、script 或自动迁移。"
+        "en": "HIA guards the nearest form-item interaction only in built-in mode and does not synthesize a guard for slotted controls.",
+        "zh-Hans": "HIA 只在内置模式下保护最近 form-item 的交互，不会为插槽控件合成禁用保护。"
       },
       "docs": [
         "docs/field.md",
@@ -703,16 +703,16 @@
       "component": "u-field",
       "itemId": "prop:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:b7e92a72ef90550b338c978fcafb64509527c78e3ba1f7f16329e539d60146b2",
-      "disposition": "unsupported",
-      "operation": "keep-existing-or-compose",
+      "sourceFingerprint": "sha256:980decf4ac6569af097c97847d812a7c71197113f1754cd7292dcb545fc9a417",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep or explicitly compose the caller-side behavior for upstream u-field prop:modelValue; HIA currently exposes no reviewed target.",
-        "zh-Hans": "为上游 u-field prop:modelValue 保留或显式组合调用方行为；HIA 当前没有已审计目标。"
+        "en": "Bind modelValue to HIA's built-in control and account for its empty-string default and String-first union; wire a slotted control's value separately.",
+        "zh-Hans": "把 modelValue 绑定到 HIA 内置控件，并考虑其空字符串默认值与 String 优先联合类型；插槽控件的值需要单独接线。"
       },
       "limitations": {
-        "en": "This records a current delivery gap only; it adds no runtime behavior, service, patch, script, or automatic migration.",
-        "zh-Hans": "这只记录当前交付缺口；不会增加 runtime 行为、service、patch、script 或自动迁移。"
+        "en": "Unlike upstream's always-owned input, HIA does not control caller-provided default-slot content.",
+        "zh-Hans": "不同于上游始终拥有的输入控件，HIA 不会控制调用方提供的默认插槽内容。"
       },
       "docs": [
         "docs/field.md",
@@ -724,16 +724,16 @@
       "component": "u-field",
       "itemId": "prop:readonly",
       "priority": "P0",
-      "sourceFingerprint": "sha256:32923613bb71c478dde3a3c896440138ffd11f4ed8f70bdfe5f24b8f6346919b",
-      "disposition": "unsupported",
-      "operation": "keep-existing-or-compose",
+      "sourceFingerprint": "sha256:df93b7df02dc01eacda9912ec4c30fbe5bef06ff6b795d0c633452ac77b67f4b",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep or explicitly compose the caller-side behavior for upstream u-field prop:readonly; HIA currently exposes no reviewed target.",
-        "zh-Hans": "为上游 u-field prop:readonly 保留或显式组合调用方行为；HIA 当前没有已审计目标。"
+        "en": "Apply readonly to HIA's built-in control and explicitly reproduce readonly behavior for any caller-provided default-slot control.",
+        "zh-Hans": "把 readonly 应用于 HIA 内置控件；调用方提供的默认插槽控件需要显式复现只读行为。"
       },
       "limitations": {
-        "en": "This records a current delivery gap only; it adds no runtime behavior, service, patch, script, or automatic migration.",
-        "zh-Hans": "这只记录当前交付缺口；不会增加 runtime 行为、service、patch、script 或自动迁移。"
+        "en": "Readonly guarding and nearest-form-item integration are limited to built-in mode.",
+        "zh-Hans": "只读保护与最近 form-item 集成只适用于内置模式。"
       },
       "docs": [
         "docs/field.md",
@@ -765,16 +765,16 @@
       "component": "u-form",
       "itemId": "imperative:resetFields",
       "priority": "P0",
-      "sourceFingerprint": "sha256:cbb116bb10d71a444a03ab1234571ef00ea2aa7eeb17c66b3d7ecea440f08826",
-      "disposition": "unsupported",
-      "operation": "keep-existing-or-compose",
+      "sourceFingerprint": "sha256:7f06964e07b5a8636299db5098b0096b965aa6deab7698d1c5011c2cacb7aa96",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep or explicitly compose the caller-side behavior for upstream u-form imperative:resetFields; HIA currently exposes no reviewed target.",
-        "zh-Hans": "为上游 u-form imperative:resetFields 保留或显式组合调用方行为；HIA 当前没有已审计目标。"
+        "en": "Adapt reset timing: HIA restores cloned registration snapshots, clears validation immediately, and invalidates in-flight validation instead of using upstream's fixed 50 ms validation-clear timer.",
+        "zh-Hans": "适配重置时序：HIA 会恢复注册时克隆快照、立即清除校验并使进行中的校验失效，而不是使用上游固定 50 ms 的校验清除定时器。"
       },
       "limitations": {
-        "en": "This records a current delivery gap only; it adds no runtime behavior, service, patch, script, or automatic migration.",
-        "zh-Hans": "这只记录当前交付缺口；不会增加 runtime 行为、service、patch、script 或自动迁移。"
+        "en": "Do not depend on upstream's transient 50 ms validation state; await an explicit nextTick only when the caller needs DOM settlement.",
+        "zh-Hans": "不要依赖上游持续 50 ms 的临时校验状态；只有调用方需要等待 DOM 稳定时才显式等待 nextTick。"
       },
       "docs": [
         "docs/form.md",
@@ -786,7 +786,7 @@
       "component": "u-form",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:6891265b735b20959a2c1f17ff47eb8da87b5122baa0d8526a0ee240e6c55203",
+      "sourceFingerprint": "sha256:39732862e2c9364b5710457ca2a3134fa04d45c7ac27846ad5d8bb09a24a18d2",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -807,16 +807,16 @@
       "component": "u-form-item",
       "itemId": "imperative:resetField",
       "priority": "P0",
-      "sourceFingerprint": "sha256:79502a46da91b5049f665b30962f16a25bba31b079c13c7faa7f7fad43ef3418",
-      "disposition": "unsupported",
-      "operation": "keep-existing-or-compose",
+      "sourceFingerprint": "sha256:df3a40d41011b66f4fce4ebacfa2a533a5d810e04232d34f82ac6c84ac9223b3",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep or explicitly compose the caller-side behavior for upstream u-form-item imperative:resetField; HIA currently exposes no reviewed target.",
-        "zh-Hans": "为上游 u-form-item imperative:resetField 保留或显式组合调用方行为；HIA 当前没有已审计目标。"
+        "en": "Adapt field-reset timing: HIA restores the cloned registration snapshot, clears validation immediately, and invalidates in-flight validation instead of delaying validation clear by 50 ms.",
+        "zh-Hans": "适配字段重置时序：HIA 会恢复注册时克隆快照、立即清除校验并使进行中的校验失效，而不是延迟 50 ms 清除校验。"
       },
       "limitations": {
-        "en": "This records a current delivery gap only; it adds no runtime behavior, service, patch, script, or automatic migration.",
-        "zh-Hans": "这只记录当前交付缺口；不会增加 runtime 行为、service、patch、script 或自动迁移。"
+        "en": "Missing or unsafe field paths are no-ops in HIA, and callers must not depend on upstream's 50 ms intermediate state.",
+        "zh-Hans": "HIA 会把缺失或不安全字段路径视为无操作，调用方也不得依赖上游 50 ms 的中间状态。"
       },
       "docs": [
         "docs/form-item.md",
@@ -868,7 +868,7 @@
       "component": "u-form-item",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:9cf5d91606fa8ca67957d22e2f7ea002e688389e672339dacddf9b963a84575e",
+      "sourceFingerprint": "sha256:2f0e9b9a05afa5e9c3b1992bb26b4db40fffa01d78e9d6d847a7594c4c09f0a0",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -971,7 +971,7 @@
       "component": "u-input",
       "itemId": "event:click",
       "priority": "P0",
-      "sourceFingerprint": "sha256:b02e02367d031edb4faec208753992aec42c01427589f418b3d5de48f5d4d6ba",
+      "sourceFingerprint": "sha256:7d67c1c9dbc28453ce28a5226a0ff750bae8045d5f100627bd2b7851db70cbaf",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -992,7 +992,7 @@
       "component": "u-input",
       "itemId": "event:confirm",
       "priority": "P0",
-      "sourceFingerprint": "sha256:7702354030a5378a6050cd88da24d183ba2bebfcea02ffba53309a4f1d536ff7",
+      "sourceFingerprint": "sha256:2d5970b6129b4bf2dd39e951ab03965e18b64d0e7bcc06cf9c1fdc3d4559c28a",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1013,16 +1013,16 @@
       "component": "u-input",
       "itemId": "event:input",
       "priority": "P0",
-      "sourceFingerprint": "sha256:45df58cc5a7de704c810f0d20cf6cdb9e085c8322b9e395ae78db8ee52398da1",
+      "sourceFingerprint": "sha256:b38a8c83cd86bc9e7cf4cc4b94253d708ea3894a5232ac911f4de230da85b797",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-input event:input to HIA target input, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-input event:input 适配到 HIA 目标 input，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Treat HIA input as a raw string event and perform any upstream-style normalization explicitly in caller code.",
+        "zh-Hans": "把 HIA input 作为原始字符串事件处理；如需上游式标准化，请在调用方代码中显式完成。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "The HIA payload is the unmodified string rather than the upstream normalized value.",
+        "zh-Hans": "HIA payload 是未经修改的字符串，而不是上游标准化后的值。"
       },
       "docs": [
         "docs/input.md",
@@ -1034,16 +1034,16 @@
       "component": "u-input",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:3e3b570676cd4863331edf476c9b47ae4625f57e0e7fc3a34e722659ccdcf32f",
+      "sourceFingerprint": "sha256:b7c13ff9c91e8539f11fe9b456467ccd3ba6b8dcb89230b2a20e052ac412b428",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-input event:update:modelValue to HIA target update:modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-input event:update:modelValue 适配到 HIA 目标 update:modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Accept HIA's raw string in update:modelValue and normalize it explicitly before committing caller state when upstream normalization mattered.",
+        "zh-Hans": "在 update:modelValue 中接收 HIA 原始字符串；如果上游标准化行为很重要，请在提交调用方状态前显式处理。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "The model-update payload is not upstream-normalized.",
+        "zh-Hans": "模型更新 payload 不会按上游规则标准化。"
       },
       "docs": [
         "docs/input.md",
@@ -1839,16 +1839,16 @@
       "component": "u-search",
       "itemId": "event:change",
       "priority": "P0",
-      "sourceFingerprint": "sha256:94ddd2e238354e52822c3e47448662a8223fec598bf81eef8e5e7a7aa30bd1f6",
+      "sourceFingerprint": "sha256:d6d794c203c3f274373277aac493eed8361d6f421e86e867e80ad90b7909654e",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-search event:change to HIA target change, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-search event:change 适配到 HIA 目标 change，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Handle change only for accepted native input or clear intent; move effects that depended on upstream mirrored-keyword watcher replay into explicit caller logic.",
+        "zh-Hans": "仅在接受原生输入或清除意图时处理 change；把依赖上游镜像 keyword watcher 回放的副作用迁移到显式调用方逻辑。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "External prop updates do not emit HIA change, and accepted user changes emit synchronously rather than through a Vue watcher.",
+        "zh-Hans": "外部 prop 更新不会触发 HIA change，已接受的用户变更会同步发出，而不是通过 Vue watcher 发出。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1860,16 +1860,16 @@
       "component": "u-search",
       "itemId": "event:click",
       "priority": "P0",
-      "sourceFingerprint": "sha256:5305cea2ad2735c3df855c87ffd8753a619efa14054578a385a4aa20899dda41",
+      "sourceFingerprint": "sha256:dbf1f730b19dd21d3c4069cf46f5e1d2efde6baaf6268167b9c5d97ab09f169c",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-search event:click to HIA target click, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-search event:click 适配到 HIA 目标 click，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Adapt the click handler: upstream emits no payload only from a disabled surface, while HIA emits the platform event only from an enabled surface.",
+        "zh-Hans": "适配 click handler：上游只从禁用表面无参发出事件，而 HIA 只从启用表面发出平台事件。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "The trigger polarity and payload differ; the upstream handler cannot be wired unchanged.",
+        "zh-Hans": "触发状态与 payload 均不同；上游 handler 不能原样接入。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1881,16 +1881,16 @@
       "component": "u-search",
       "itemId": "event:input",
       "priority": "P0",
-      "sourceFingerprint": "sha256:4f39e7ab262279f9e89e5ddd826644bc758da504afb8a5dd4337bfa7203bdd02",
+      "sourceFingerprint": "sha256:895fce77a47ce5cccfa8522f3ab5bf35ef8b06248208f84ebb28884f10e13884",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-search event:input to HIA target input, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-search event:input 适配到 HIA 目标 input，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Handle input only for accepted native input or clear intent; move effects that depended on upstream mirrored-keyword watcher replay into explicit caller logic.",
+        "zh-Hans": "仅在接受原生输入或清除意图时处理 input；把依赖上游镜像 keyword watcher 回放的副作用迁移到显式调用方逻辑。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "External prop updates do not emit HIA input, and accepted user input emits synchronously rather than through a Vue watcher.",
+        "zh-Hans": "外部 prop 更新不会触发 HIA input，已接受的用户输入会同步发出，而不是通过 Vue watcher 发出。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1902,16 +1902,16 @@
       "component": "u-search",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:51bc385a96c9b1589712cbddb5cbd9a8fd65ce5f24db800760994d885dbdf1b2",
+      "sourceFingerprint": "sha256:c930e90c21514cccf5ffb6033a7c1f5dc603b1da4186d2d7cbafafd25d5e8f0b",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-search event:update:modelValue to HIA target update:modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-search event:update:modelValue 适配到 HIA 目标 update:modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Update caller state only from HIA's accepted native-input or clear intent; do not expect an external modelValue update to be replayed through update:modelValue.",
+        "zh-Hans": "只根据 HIA 已接受的原生输入或清除意图更新调用方状态；不要期待外部 modelValue 更新通过 update:modelValue 回放。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "HIA intentionally avoids the upstream mirrored-keyword watcher feedback loop.",
+        "zh-Hans": "HIA 有意避免上游镜像 keyword watcher 的反馈回路。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1923,18 +1923,19 @@
       "component": "u-search",
       "itemId": "prop:disabled",
       "priority": "P0",
-      "sourceFingerprint": "sha256:3bf2767e989c1f6c85a41233cc161dab7b58594b9248f15f76134e43ba6aba64",
-      "disposition": "compatible",
-      "operation": "use-as-is",
+      "sourceFingerprint": "sha256:3326cbb74ea9ffbc382f39b9f9afcb2e7413243578881a6f7f391180be561c0f",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Use u-search prop:disabled through the reviewed HIA target disabled; keep caller values within its P0 semantic contract.",
-        "zh-Hans": "通过已审计的 HIA 目标 disabled 使用 u-search prop:disabled，并让调用方取值保持在其 P0 语义契约内。"
+        "en": "Adapt disabled-state callers: upstream uses a disabled search surface as a navigation click intent, while HIA blocks all disabled interaction and emits click only while enabled.",
+        "zh-Hans": "适配 disabled 状态调用方：上游把禁用搜索面作为导航点击意图，而 HIA 会阻止全部禁用交互，并且只在启用时发出 click。"
       },
       "limitations": {
-        "en": "Compatibility is limited to the recorded P0 contract and does not adopt upstream internal state, services, networking, identity, or business rules.",
-        "zh-Hans": "兼容结论只覆盖已记录的 P0 契约，不吸收上游内部状态、service、网络、身份或业务规则。"
+        "en": "Do not rely on clicking a disabled HIA search; compose an explicit enabled trigger or navigation control.",
+        "zh-Hans": "不要依赖点击已禁用的 HIA 搜索框；请显式组合启用态触发器或导航控件。"
       },
       "docs": [
+        "docs/migration-from-uview.md",
         "docs/search.md"
       ]
     },
@@ -1943,18 +1944,19 @@
       "component": "u-search",
       "itemId": "prop:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:bf213bbf84125fb26ada5a296792fe822139a3c70c31b602e3964506ce6ea70b",
-      "disposition": "compatible",
-      "operation": "use-as-is",
+      "sourceFingerprint": "sha256:2751ae7cd17d2db124e2799d703feb5d9b60a53cb44c7ab79b5478acebc0f69a",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Use u-search prop:modelValue through the reviewed HIA target modelValue; keep caller values within its P0 semantic contract.",
-        "zh-Hans": "通过已审计的 HIA 目标 modelValue 使用 u-search prop:modelValue，并让调用方取值保持在其 P0 语义契约内。"
+        "en": "Keep modelValue caller-controlled; unlike upstream keyword mirroring, an external HIA prop update does not replay update:modelValue, input, or change.",
+        "zh-Hans": "保持 modelValue 由调用方控制；不同于上游 keyword 镜像，HIA 的外部 prop 更新不会回放 update:modelValue、input 或 change。"
       },
       "limitations": {
-        "en": "Compatibility is limited to the recorded P0 contract and does not adopt upstream internal state, services, networking, identity, or business rules.",
-        "zh-Hans": "兼容结论只覆盖已记录的 P0 契约，不吸收上游内部状态、service、网络、身份或业务规则。"
+        "en": "Move any effect that depended on upstream watcher replay into explicit caller logic.",
+        "zh-Hans": "把依赖上游 watcher 回放的副作用迁移到显式调用方逻辑。"
       },
       "docs": [
+        "docs/migration-from-uview.md",
         "docs/search.md"
       ]
     },
@@ -2439,16 +2441,16 @@
       "component": "u-textarea",
       "itemId": "event:change",
       "priority": "P0",
-      "sourceFingerprint": "sha256:0945de9aa732211a095103a1b373b122637e84b3b7e8e336078072144518b77a",
+      "sourceFingerprint": "sha256:0de90389fac66219e2fb8d3ac0303e68a26bb1d7b343e7cba08df40dfe0d51d7",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-textarea event:change to HIA target change, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-textarea event:change 适配到 HIA 目标 change，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Handle HIA change synchronously; explicitly defer caller work when it relied on upstream's next-tick delivery order.",
+        "zh-Hans": "同步处理 HIA change；如果调用方依赖上游的 nextTick 交付顺序，请显式延后相关工作。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "Payload shape is unchanged, but event timing differs from upstream.",
+        "zh-Hans": "payload 形状不变，但事件时序与上游不同。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -2460,16 +2462,16 @@
       "component": "u-textarea",
       "itemId": "event:click",
       "priority": "P0",
-      "sourceFingerprint": "sha256:12f686f58b8153992e63f9af76355108156d97d3f5c9637a33fc7d658e7581d3",
+      "sourceFingerprint": "sha256:1045fc7f31dfd44e9909f12e7c2ea7c5881b52bb5484a10b63f949ab863cbcaa",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-textarea event:click to HIA target click, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-textarea event:click 适配到 HIA 目标 click，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Adapt the click intent: upstream emits from a readonly overlay, while HIA emits from the enabled textarea region.",
+        "zh-Hans": "适配 click 意图：上游从只读遮罩发出事件，而 HIA 从启用的 textarea 区域发出事件。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "The trigger polarity differs even though both events have no payload.",
+        "zh-Hans": "虽然两个事件都没有 payload，但触发状态相反。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -2481,7 +2483,7 @@
       "component": "u-textarea",
       "itemId": "event:confirm",
       "priority": "P0",
-      "sourceFingerprint": "sha256:ef0e866e6230a3f230ae70d61004740f4642fe634fbca9fd31338a17c66bca06",
+      "sourceFingerprint": "sha256:3ed0b9d3a63069397f794c62474ed9cb570adeee558d9f295123f4b9e8d42aa9",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -2502,16 +2504,16 @@
       "component": "u-textarea",
       "itemId": "event:input",
       "priority": "P0",
-      "sourceFingerprint": "sha256:1236de77f9aa7b5b8ae7427fd9b585e76313281a0f2b26b1c253228a0d9ca2fe",
+      "sourceFingerprint": "sha256:ec16ebcfedc36c0c44d0597dd9c16c517b56cd4b0f34419821a82538917918ed",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-textarea event:input to HIA target input, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-textarea event:input 适配到 HIA 目标 input，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Handle HIA input synchronously; explicitly defer caller work when it relied on upstream's next-tick delivery order.",
+        "zh-Hans": "同步处理 HIA input；如果调用方依赖上游的 nextTick 交付顺序，请显式延后相关工作。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "Payload shape is unchanged, but event timing differs from upstream.",
+        "zh-Hans": "payload 形状不变，但事件时序与上游不同。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -2523,16 +2525,16 @@
       "component": "u-textarea",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:20c7d513ce03c3c449c3d4155858ac41437b64ebf40c05e5e3fa818dbc54bb50",
+      "sourceFingerprint": "sha256:4f8e47afaef7b6afcddc3c6c71dd7d1d58c2fc58e49d660b0d32286c0e6999aa",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-textarea event:update:modelValue to HIA target update:modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-textarea event:update:modelValue 适配到 HIA 目标 update:modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Apply HIA's model update synchronously; explicitly defer state-dependent work when it relied on upstream's next-tick emission.",
+        "zh-Hans": "同步应用 HIA 模型更新；如果状态相关工作依赖上游的 nextTick 发出时序，请显式延后。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "The string payload is stable, but model-update ordering differs from upstream.",
+        "zh-Hans": "字符串 payload 保持一致，但模型更新顺序与上游不同。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -2544,16 +2546,16 @@
       "component": "u-textarea",
       "itemId": "prop:disabled",
       "priority": "P0",
-      "sourceFingerprint": "sha256:5f7af3df97d9fe0ab14cba963c3dcda6696f323505e22d8fc31490040c106815",
+      "sourceFingerprint": "sha256:52846fae8525fff7353ad2de9ebc965c30a8a3df40b69d08c3b0475fb638dea5",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-textarea prop:disabled to HIA target disabled, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-textarea prop:disabled 适配到 HIA 目标 disabled，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Set disabled explicitly when migrating; HIA uses a literal false default rather than upstream's expression-derived default.",
+        "zh-Hans": "迁移时请显式设置 disabled；HIA 使用字面量 false 默认值，而不是上游由表达式派生的默认值。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "Interaction blocking is aligned only after the caller resolves the default-value difference.",
+        "zh-Hans": "只有调用方处理默认值差异后，交互阻断语义才一致。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -2565,16 +2567,16 @@
       "component": "u-textarea",
       "itemId": "prop:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:c44ef7fc649aa9cc5be47b7a7d2c3d536e0ceaa37fe77eb338a0212871260e98",
+      "sourceFingerprint": "sha256:9b11d5673642dc9972872e53c852530fc37639f52a5288df19d58e7bbca3e6a5",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Adapt the caller from upstream u-textarea prop:modelValue to HIA target modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
-        "zh-Hans": "把调用方从上游 u-textarea prop:modelValue 适配到 HIA 目标 modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
+        "en": "Convert numeric upstream values to strings before binding modelValue and use an explicit empty string when the upstream expression default was implicit.",
+        "zh-Hans": "绑定 modelValue 前把上游数字值转换为字符串，并在上游表达式默认值原本隐式生效时显式使用空字符串。"
       },
       "limitations": {
-        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
-        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
+        "en": "HIA accepts String only, while upstream declares String or Number and uses a different default source.",
+        "zh-Hans": "HIA 只接受 String，而上游声明 String 或 Number，且默认值来源不同。"
       },
       "docs": [
         "docs/migration-from-uview.md",

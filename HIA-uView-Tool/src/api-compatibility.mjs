@@ -1205,12 +1205,16 @@ function validateItemSemantics(semantics, expected, context, diagnostics) {
 
   // <lang><zh-CN>剩余证据允许空数组，但成员仍需通过非占位与唯一性门禁。</zh-CN><en>Remaining evidence may be empty, but every member still passes non-placeholder and uniqueness gates.</en></lang>
   const remainingEvidence = validateSemanticTextArray(semantics.remainingEvidence, `${context}.remainingEvidence`, true, diagnostics);
-  // <lang><zh-CN>mapped 项固定保留 runtime-parity；compatible/unsupported 当前不得携带该待办。</zh-CN><en>Mapped items retain exactly runtime-parity, while compatible and unsupported items currently carry no such remaining work.</en></lang>
-  const expectedRemaining = expected.disposition === 'mapped' ? ['runtime-parity'] : [];
+  // <lang><zh-CN>证据 profile 同时绑定 disposition、证据等级与剩余工作；mapped 可明确表示待 runtime parity，或表示已有测试且无剩余证据。</zh-CN><en>The evidence profile binds disposition, evidence level, and remaining work; mapped may explicitly mean pending runtime parity or tested with no evidence remaining.</en></lang>
+  const evidenceProfileIsValid = expected.disposition === 'compatible'
+    ? semantics.evidenceLevel === 'runtime-tested' && remainingEvidence.length === 0
+    : expected.disposition === 'mapped'
+      ? (semantics.evidenceLevel === 'source-reviewed' && JSON.stringify(remainingEvidence) === JSON.stringify(['runtime-parity']))
+        || (semantics.evidenceLevel === 'runtime-tested' && remainingEvidence.length === 0)
+      : semantics.evidenceLevel === 'source-reviewed' && remainingEvidence.length === 0;
 
-  // <lang><zh-CN>disposition、evidenceLevel 与 remainingEvidence 必须互相一致，防止 source review 冒充兼容。</zh-CN><en>Disposition, evidence level, and remaining evidence must agree so source review cannot masquerade as compatibility.</en></lang>
-  if (JSON.stringify(remainingEvidence) !== JSON.stringify(expectedRemaining)
-    || ((expected.disposition === 'compatible') !== (semantics.evidenceLevel === 'runtime-tested'))) {
+  // <lang><zh-CN>任何混合 profile 都是矛盾事实，包括 runtime-tested 仍有待办，或 source-reviewed mapped 没有待办。</zh-CN><en>Any mixed profile is contradictory, including runtime-tested with a remaining task or source-reviewed mapped without one.</en></lang>
+  if (!evidenceProfileIsValid) {
     addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context} evidence level or remaining evidence contradicts migration disposition.`);
   }
 

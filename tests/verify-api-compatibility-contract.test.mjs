@@ -348,7 +348,7 @@ test('locks immutable provenance, declared-scope API counts, and local component
   assert.equal(manifest.issues.length, 4);
   assert.deepEqual(manifest.semanticReview, {
     path: 'HIA-uView-UI/hia-uview.api-semantic-review.json',
-    digest: 'sha256:c611100b1173c19dff05cf45d14641cb7b5ee921d767019240501ab9c12faad5',
+    digest: 'sha256:7436a28df1dc368bdca75cf565370ddf1909cccfceeba07db8f68dcce957b2da',
     itemCount: 127,
     serviceCount: 2
   });
@@ -359,9 +359,9 @@ test('locks immutable provenance, declared-scope API counts, and local component
   // <lang><zh-CN>证据层级和待补 runtime parity 分别计算，以锁定“已审计”不等于“已运行时等价”。</zh-CN><en>Count evidence levels and pending runtime parity separately, locking that “reviewed” does not mean “runtime equivalent.”</en></lang>
   assert.equal(p0Items.length, 127);
   assert.equal(p0Items.filter((item) => item.semantics.reviewState === 'complete').length, 127);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 45);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 82);
-  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 71);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 71);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 56);
+  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 54);
 
   // <lang><zh-CN>service 从 imperative API 中独立汇集；只有 useModal/useToast 两个已确认公开入口且均明确未由 HIA 交付。</zh-CN><en>Collect services separately from imperative APIs; only the confirmed public useModal/useToast entries exist and both are explicitly undelivered by HIA.</en></lang>
   const services = manifest.components.flatMap((component) => component.services.items
@@ -443,8 +443,8 @@ test('inspects the real matrix deterministically without host paths or source bo
     componentCount: 99,
     itemCount: 1740,
     priorities: { P0: 30, P1: 42, P2: 27 },
-    dispositions: { compatible: 49, mapped: 258, unsupported: 1433 },
-    p0Semantics: { itemCount: 127, reviewed: 127, sourceReviewed: 82, runtimeTested: 45, runtimeParityRemaining: 71 },
+    dispositions: { compatible: 47, mapped: 275, unsupported: 1418 },
+    p0Semantics: { itemCount: 127, reviewed: 127, sourceReviewed: 56, runtimeTested: 71, runtimeParityRemaining: 54 },
     services: { componentCount: 2, itemCount: 2, unsupported: 2 },
     unresolvedInventories: 0,
     issueCount: 4
@@ -471,7 +471,7 @@ test('inspects the real matrix deterministically without host paths or source bo
   assert.equal(secondTextOutput, firstTextOutput);
   assert.match(firstTextOutput, /uview-pro@0\.6\.15; bec4b39cd3195354d65c1fc8722745d72052bd8c/u);
   assert.match(firstTextOutput, /99 components; 1740 API items/u);
-  assert.match(firstTextOutput, /P0 semantics: 127\/127 reviewed; 45 runtime-tested; 82 source-reviewed; 71 require runtime parity/u);
+  assert.match(firstTextOutput, /P0 semantics: 127\/127 reviewed; 71 runtime-tested; 56 source-reviewed; 54 require runtime parity/u);
   assert.match(firstTextOutput, /services: 2 items across 2 components; 2 unsupported/u);
 
   // <lang><zh-CN>JSON 由同一已校验 report 格式化两次，防止 serializer 注入非确定字段。</zh-CN><en>Format JSON twice from the same validated report so the serializer cannot inject nondeterministic fields.</en></lang>
@@ -704,6 +704,28 @@ test('rejects malformed matrix facts through stable diagnostics', () => {
     // <lang><zh-CN>只改变 HIA control 事实并保持合法非占位文本，证明 validator 检查等价而不只是字段形状。</zh-CN><en>Change only the HIA control fact to another valid non-placeholder string, proving the validator checks equivalence rather than field shape alone.</en></lang>
     const disabledProp = requireComponent(manifest, 'u-button').props.items.find((item) => item.id === 'prop:disabled');
     disabledProp.semantics.hia.control = 'different-interaction-guard';
+  }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
+
+  // <lang><zh-CN>已运行时验证的 mapped 项必须清空 runtime-parity 待办，避免同一证据状态同时表示“已完成”和“待验证”。</zh-CN><en>A runtime-tested mapped item must clear the runtime-parity remainder so one evidence state cannot mean both “completed” and “pending validation.”</en></lang>
+  assertMutationRejected('runtime-tested mapped item retains runtime parity', (manifest) => {
+    // <lang><zh-CN>u-search.disabled 是已完成运行时验证的 mapped 稳定哨兵；只恢复旧待办即可隔离证据组合门禁。</zh-CN><en>u-search.disabled is a stable mapped sentinel with completed runtime evidence; restoring only the old remainder isolates the evidence-profile gate.</en></lang>
+    const disabledProp = requireComponent(manifest, 'u-search').props.items.find((item) => item.id === 'prop:disabled');
+    disabledProp.semantics.remainingEvidence = ['runtime-parity'];
+  }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
+
+  // <lang><zh-CN>仅源码审阅的 mapped 项必须保留 runtime-parity 待办，不能靠删除数组伪装成已通过运行时验证。</zh-CN><en>A source-reviewed mapped item must retain the runtime-parity remainder and cannot masquerade as runtime-verified by deleting the array entry.</en></lang>
+  assertMutationRejected('source-reviewed mapped item omits runtime parity', (manifest) => {
+    // <lang><zh-CN>u-button.click 保持既有 source-reviewed mapped 状态；仅清空待办以验证反向组合。</zh-CN><en>u-button.click retains its existing source-reviewed mapped state; clearing only the remainder verifies the inverse combination.</en></lang>
+    const clickEvent = requireComponent(manifest, 'u-button').events.items.find((item) => item.id === 'event:click');
+    clickEvent.semantics.remainingEvidence = [];
+  }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
+
+  // <lang><zh-CN>unsupported 项只能保持 source-reviewed 且无 runtime-parity 待办；不存在的本地实现不能被 test 引用伪造为已运行时验证。</zh-CN><en>An unsupported item must remain source-reviewed with no runtime-parity remainder; a missing local implementation cannot be disguised as runtime-tested through a test reference.</en></lang>
+  assertMutationRejected('unsupported item claims runtime-tested evidence', (manifest) => {
+    // <lang><zh-CN>u-toast.show 是仍未交付的 P0 imperative sentinel；同时替换层级与引用以确认 disposition 约束优先成立。</zh-CN><en>u-toast.show is the still-undelivered P0 imperative sentinel; replace both level and reference so the disposition constraint is proven independently of the test-reference requirement.</en></lang>
+    const showApi = requireComponent(manifest, 'u-toast').imperativeApis.items.find((item) => item.id === 'imperative:show');
+    showApi.semantics.evidenceLevel = 'runtime-tested';
+    showApi.semantics.evidenceRefs = [...showApi.semantics.evidenceRefs, 'test:tests/runtime/hia-uview-input.runtime.test.mjs'];
   }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
 
   // <lang><zh-CN>语义证据引用只能使用安全 comparison/local/test 前缀，不得以父目录片段逃逸。</zh-CN><en>Semantic evidence references must use safe comparison/local/test prefixes and may not escape through parent-directory segments.</en></lang>
