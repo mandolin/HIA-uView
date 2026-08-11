@@ -66,6 +66,70 @@ const P66_REQUIRED_PACKAGE_PATHS = Object.freeze([
 ]);
 
 /**
+ * @lang zh-CN 临时 tarball 页面必须在统一 marker 下真实组合的十四个 P67 稳定组件名。
+ * @lang en Fourteen stable P67 component names that the temporary tarball page must actually compose under one unified marker.
+ */
+const P67_CONTROL_COMPONENT_NAMES = Object.freeze([
+  'u-checkbox',
+  'u-checkbox-group',
+  'u-radio',
+  'u-radio-group',
+  'u-switch',
+  'u-picker',
+  'u-calendar',
+  'u-select',
+  'u-dropdown',
+  'u-dropdown-item',
+  'u-number-box',
+  'u-rate',
+  'u-slider',
+  'u-upload'
+]);
+
+/**
+ * @lang zh-CN P67 十四组件的精确 tarball 闭包：二十八个 leaf SFC/CSS 加 selection、dropdown 与 locale 三个直接 runtime 依赖，共且仅共三十一路。
+ * @lang en Exact tarball closure for the fourteen P67 components: twenty-eight leaf SFC/CSS files plus the three direct selection, dropdown, and locale runtime dependencies, totaling exactly thirty-one paths.
+ */
+const P67_REQUIRED_PACKAGE_PATHS = Object.freeze([
+  'src/components/u-checkbox/u-checkbox.vue',
+  'src/components/u-checkbox/u-checkbox.css',
+  'src/components/u-checkbox-group/u-checkbox-group.vue',
+  'src/components/u-checkbox-group/u-checkbox-group.css',
+  'src/components/u-radio/u-radio.vue',
+  'src/components/u-radio/u-radio.css',
+  'src/components/u-radio-group/u-radio-group.vue',
+  'src/components/u-radio-group/u-radio-group.css',
+  'src/components/u-switch/u-switch.vue',
+  'src/components/u-switch/u-switch.css',
+  'src/components/u-picker/u-picker.vue',
+  'src/components/u-picker/u-picker.css',
+  'src/components/u-calendar/u-calendar.vue',
+  'src/components/u-calendar/u-calendar.css',
+  'src/components/u-select/u-select.vue',
+  'src/components/u-select/u-select.css',
+  'src/components/u-dropdown/u-dropdown.vue',
+  'src/components/u-dropdown/u-dropdown.css',
+  'src/components/u-dropdown-item/u-dropdown-item.vue',
+  'src/components/u-dropdown-item/u-dropdown-item.css',
+  'src/components/u-number-box/u-number-box.vue',
+  'src/components/u-number-box/u-number-box.css',
+  'src/components/u-rate/u-rate.vue',
+  'src/components/u-rate/u-rate.css',
+  'src/components/u-slider/u-slider.vue',
+  'src/components/u-slider/u-slider.css',
+  'src/components/u-upload/u-upload.vue',
+  'src/components/u-upload/u-upload.css',
+  'src/components/selection-context.mjs',
+  'src/components/dropdown-context.mjs',
+  'src/config-locale.mjs'
+]);
+
+// <lang><zh-CN>闭包大小必须精确为 31；增删直接依赖时必须显式审阅并更新清单，而不能静默放宽为整目录存在。</zh-CN><en>Closure size must be exactly 31; adding or removing a direct dependency requires explicit review and inventory update rather than silently loosening the check to directory presence.</en></lang>
+assert.equal(P67_REQUIRED_PACKAGE_PATHS.length, 31, 'P67 tarball closure must contain exactly 31 paths.');
+// <lang><zh-CN>每个路径必须唯一，避免重复条目掩盖一个漏打包依赖。</zh-CN><en>Every path must be unique so a duplicate entry cannot conceal a missing packaged dependency.</en></lang>
+assert.equal(new Set(P67_REQUIRED_PACKAGE_PATHS).size, 31, 'P67 tarball closure paths must be unique.');
+
+/**
  * @lang zh-CN 以固定参数执行一个本地进程并收集 stdout/stderr。该 helper 不允许 shell、网络命令或调用方插入的可执行文件。
  * @lang en Runs one local process with fixed arguments and collects stdout/stderr. This helper permits neither a shell nor network commands or caller-injected executables.
  * @param {string} command <lang><zh-CN>受控可执行文件或 Node binary。</zh-CN><en>Controlled executable or Node binary.</en></lang>
@@ -257,17 +321,45 @@ async function writeConsumerFixture(consumerDirectory, tarballPath, easycomFragm
   const indexHtml = "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /><title>Private UI package trial</title></head><body><div id=\"app\"></div><script type=\"module\" src=\"/main.js\"></script></body></html>\n";
   // <lang><zh-CN>根 App 只提供页面 slot 与显式包 style import；它不注册 runtime global components，证明 Easycom 是编译期解析。</zh-CN><en>The root App provides only a page slot and explicit package-style import; it registers no runtime global components, proving Easycom is compile-time resolution.</en></lang>
   const appSource = "<script>export default { onLaunch() {} };</script>\n<style>@import '@hia-uview/ui/style.css';</style>\n";
-  // <lang><zh-CN>临时页面保留既有代表组件，并新增独立中性 P66 表单组合；全部状态与规则位于页面内，不携带 business data、remote option、平台 lifecycle 或动态代码。</zh-CN><en>The temporary page retains existing representative components and adds an independent neutral P66 form composition; all state and rules stay in the page and carry no business data, remote option, platform lifecycle, or dynamic code.</en></lang>
+  // <lang><zh-CN>临时页面新增独立中性 P66 表单组合与统一 P67 十四组件组合；全部状态、options、规则和 adapter 位于页面内，不携带 business data、remote option、平台 lifecycle、chooser 或动态代码。</zh-CN><en>The temporary page adds an independent neutral P66 form composition and a unified P67 fourteen-component composition; all state, options, rules, and adapters stay in the page and carry no business data, remote option, platform lifecycle, chooser, or dynamic code.</en></lang>
   const pageSource = `<!--
-@component PrivatePackageTrialPage
-@lang zh-CN 通过已安装 tarball 的 Easycom 组合代表组件与 P66 六组件表单；页面只使用中性本地状态，不连接网络、业务、storage、router 或身份。
-@lang en Composes representative components and the P66 six-component form through Easycom from the installed tarball; the page uses only neutral local state and connects to no network, business, storage, router, or identity.
--->
-<template>
-  <view class="package-trial">
-    <u-checkbox v-model="checked" value="trial" label="Local choice" />
-    <u-radio-group v-model="radio"><u-radio value="one" label="One" /></u-radio-group>
-    <u-picker v-model="selected" :columns="pickerOptions" title="Local picker" />
+ @component PrivatePackageTrialPage
+ @lang zh-CN 通过已安装 tarball 的 Easycom 组合 P66 表单与 P67 十四组件；页面只使用中性本地状态，不连接网络、业务、storage、router、身份或文件 chooser。
+ @lang en Composes the P66 form and P67 fourteen-component family through Easycom from the installed tarball; the page uses only neutral local state and connects to no network, business, storage, router, identity, or file chooser.
+ -->
+ <template>
+   <view class="package-trial">
+    <!--
+    @lang zh-CN 统一 marker 内的十四个组件全部由临时页面持有 model、有限 options 与 upload adapter；它们只形成安装包编译证据。
+    @lang en All fourteen components inside the unified marker receive their models, finite options, and upload adapter from the temporary page; they form installed-package compilation evidence only.
+    <lang><zh-CN>dropdown 使用显式 name/options 模式，upload adapter 仅追加匿名本地记录，不打开 chooser、不读取文件、不访问网络或持久化。</zh-CN><en>Dropdown uses explicit name/options mode, while the upload adapter only appends an anonymous local record and opens no chooser, reads no file, accesses no network, and persists nothing.</en></lang>
+    -->
+    <view class="package-trial__p67-controls" data-smoke="p67-controlled-composition">
+      <u-checkbox-group v-model="p67CheckboxValues" :max="2"><u-checkbox value="alpha" label="Alpha" /><u-checkbox :value="2" label="Two" /></u-checkbox-group>
+      <u-radio-group v-model="p67RadioValue"><u-radio value="alpha" label="Alpha" /><u-radio :value="2" label="Two" /></u-radio-group>
+      <u-switch v-model="p67SwitchValue" label="Local state" />
+      <u-picker v-model="p67PickerValue" :columns="p67PickerColumns" title="Local picker" />
+      <u-calendar v-model="p67CalendarValue" view-date="2026-08-01" today="2026-08-11" />
+      <u-select v-model="p67SelectValue" :options="p67SelectOptions" :confirm-mode="true" placeholder="Select locally" />
+      <u-dropdown v-model="p67DropdownOpenName"><u-dropdown-item v-model="p67DropdownValue" name="scope" label="Scope" :options="p67DropdownOptions" /></u-dropdown>
+      <u-number-box v-model="p67NumberValue" :min="0" :max="10" :step="0.5" />
+      <u-rate v-model="p67RateValue" :count="5" />
+      <u-slider v-model="p67SliderValue" :min="0" :max="10" :step="2" :show-value="true" />
+      <u-upload
+        :visible="true"
+        :model-value="p67UploadFiles"
+        :adapter="p67UploadAdapter"
+        label="Local files"
+        select-text="Add local record"
+        preview-text="Observe"
+        remove-text="Remove"
+        retry-text="Retry"
+        :max="3"
+        @update:model-value="updateP67UploadFiles"
+        @adapter-state="recordP67UploadAdapterState"
+      />
+      <text data-smoke="p67-adapter-state">{{ p67UploadAdapterState }}</text>
+    </view>
     <u-notice-bar :show="true" text="Local package trial" />
     <u-tabbar v-model="tab" :items="tabItems" />
 
@@ -302,11 +394,84 @@ async function writeConsumerFixture(consumerDirectory, tarballPath, easycomFragm
 <script setup>
 import { reactive, ref } from 'vue';
 
-// <lang><zh-CN>既有代表组件继续使用页面本地受控值；它们不与 P66 表单模型共享语义。</zh-CN><en>Existing representative components continue to use page-local controlled values and share no semantics with the P66 form model.</en></lang>
-const checked = ref(false);
-const radio = ref('one');
-const selected = ref('one');
-const pickerOptions = Object.freeze([Object.freeze({ label: 'One', value: 'one' })]);
+// <lang><zh-CN>checkbox group 的透明键数组由临时页面拥有，子项不能直接修改数组。</zh-CN><en>The temporary page owns the checkbox group's transparent-key array, and children cannot directly mutate it.</en></lang>
+const p67CheckboxValues = ref(['alpha']);
+// <lang><zh-CN>radio group 的单值键与其他选择组件状态完全分离。</zh-CN><en>The radio group's scalar key is completely separate from the state of other choice components.</en></lang>
+const p67RadioValue = ref('alpha');
+// <lang><zh-CN>switch 布尔值只表示中性 trial 状态，不表示权限或业务功能。</zh-CN><en>The switch Boolean represents neutral trial state only, not authorization or a business feature.</en></lang>
+const p67SwitchValue = ref(false);
+// <lang><zh-CN>picker 的页面值保留字符串与数字透明键。</zh-CN><en>The page-owned picker value preserves transparent string and number keys.</en></lang>
+const p67PickerValue = ref(['alpha', 1]);
+// <lang><zh-CN>picker 两列是冻结的中性本地 options，不表示远端数据或行业字段。</zh-CN><en>The two picker columns are frozen neutral local options and represent no remote data or industry field.</en></lang>
+const p67PickerColumns = Object.freeze([
+  Object.freeze([Object.freeze({ label: 'Alpha', value: 'alpha' }), Object.freeze({ label: 'Beta', value: 'beta' })]),
+  Object.freeze([Object.freeze({ label: 'One', value: 1 }), Object.freeze({ label: 'Two', value: 2 })])
+]);
+// <lang><zh-CN>固定 calendar 日期使 trial 不依赖执行机器的系统日期或时区。</zh-CN><en>The fixed calendar date keeps the trial independent of the executing machine's system date or time zone.</en></lang>
+const p67CalendarValue = ref('2026-08-11');
+// <lang><zh-CN>select 值只从当前有限 options 取值。</zh-CN><en>The select value comes only from the current finite options.</en></lang>
+const p67SelectValue = ref('public');
+// <lang><zh-CN>select options 是冻结的中性本地集合，不执行请求或动态脚本。</zh-CN><en>Select options are a frozen neutral local collection and execute no request or dynamic script.</en></lang>
+const p67SelectOptions = Object.freeze([Object.freeze({ label: 'Public', value: 'public' }), Object.freeze({ label: 'Private', value: 'private' })]);
+// <lang><zh-CN>dropdown parent active name 与 item model 分离，避免把 panel 状态当作选择值。</zh-CN><en>The dropdown parent's active name is separate from the item model, preventing panel state from being treated as the selected value.</en></lang>
+const p67DropdownOpenName = ref('');
+// <lang><zh-CN>dropdown item 值由临时页面显式拥有。</zh-CN><en>The temporary page explicitly owns the dropdown-item value.</en></lang>
+const p67DropdownValue = ref('public');
+// <lang><zh-CN>dropdown options 独立冻结，不共享 select 的容器 identity。</zh-CN><en>Dropdown options are independently frozen and do not share the select collection's container identity.</en></lang>
+const p67DropdownOptions = Object.freeze([Object.freeze({ label: 'Public', value: 'public' }), Object.freeze({ label: 'Private', value: 'private' })]);
+// <lang><zh-CN>number-box 值落在半步网格上，只验证中性数值规整。</zh-CN><en>The number-box value lies on the half-step grid and verifies neutral numeric normalization only.</en></lang>
+const p67NumberValue = ref(2.5);
+// <lang><zh-CN>rate 值只是有限本地刻度，不表示评价提交。</zh-CN><en>The rate value is a finite local scale only and represents no review submission.</en></lang>
+const p67RateValue = ref(3);
+// <lang><zh-CN>slider 值对齐相对 min 的固定步长。</zh-CN><en>The slider value aligns to a fixed step relative to min.</en></lang>
+const p67SliderValue = ref(4);
+// <lang><zh-CN>upload 记录是页面可读投影，不含路径、URL、bytes、凭据或平台文件对象。</zh-CN><en>Upload records are page-readable projections containing no path, URL, bytes, credential, or platform-file object.</en></lang>
+const p67UploadFiles = ref([Object.freeze({ label: 'Local ready record', status: 'ready', statusText: 'Ready' })]);
+// <lang><zh-CN>select adapter 可追加的唯一常量是匿名 trial 记录，不是 chooser 结果。</zh-CN><en>The sole constant appendable by the select adapter is an anonymous trial record, not a chooser result.</en></lang>
+const P67_ADDED_UPLOAD_RECORD = Object.freeze({ label: 'Local added record', status: 'ready', statusText: 'Added locally' });
+// <lang><zh-CN>adapter marker 只保留公开 status discriminant，不保存 context、request 或失败 cause。</zh-CN><en>The adapter marker retains only the public status discriminant and stores no context, request, or failure cause.</en></lang>
+const p67UploadAdapterState = ref('idle');
+
+/**
+ * @lang zh-CN 为 select adapter 返回新的本地记录数组；不打开 chooser、不读取文件且不修改 context。
+ * @lang en Returns a new local-record array for the select adapter without opening a chooser, reading a file, or mutating context.
+ * @param {{files: ReadonlyArray<object>}} context <lang><zh-CN>UUpload 提供的冻结浅层记录快照。</zh-CN><en>Frozen shallow record snapshot supplied by UUpload.</en></lang>
+ * @returns {ReadonlyArray<object>} <lang><zh-CN>新的冻结候选数组。</zh-CN><en>New frozen candidate array.</en></lang>
+ */
+function addP67LocalUploadRecord(context) {
+  // <lang><zh-CN>spread 只复制槽位并追加匿名常量，不解释记录内容。</zh-CN><en>Spread only copies slots and appends the anonymous constant without interpreting record content.</en></lang>
+  return Object.freeze([...context.files, P67_ADDED_UPLOAD_RECORD]);
+}
+
+// <lang><zh-CN>临时 adapter 只暴露 select；其他按钮保持既有本地 intent，不存在 transport 或隐式 fallback。</zh-CN><en>The temporary adapter exposes select only; other buttons retain their existing local intents, with no transport or implicit fallback.</en></lang>
+const p67UploadAdapter = Object.freeze({ select: addP67LocalUploadRecord });
+
+/**
+ * @lang zh-CN 接受 UUpload 返回的新数组并替换页面容器；无效输入保持旧状态。
+ * @lang en Accepts a new array returned by UUpload and replaces the page container; invalid input retains prior state.
+ * @param {unknown} value <lang><zh-CN>候选记录数组。</zh-CN><en>Candidate record array.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；有效时只写页面 ref。</zh-CN><en>No return value; on validity writes only the page ref.</en></lang>
+ */
+function updateP67UploadFiles(value) {
+  // <lang><zh-CN>数组 guard 防止任意 event 被解释为文件状态。</zh-CN><en>The array guard prevents an arbitrary event from being interpreted as file state.</en></lang>
+  if (!Array.isArray(value)) return;
+  // <lang><zh-CN>复制外层数组保持调用方拥有最终 container identity。</zh-CN><en>Copies the outer array so the caller owns the final container identity.</en></lang>
+  p67UploadFiles.value = [...value];
+}
+
+/**
+ * @lang zh-CN 将 adapter 公开 status 投影为稳定 marker，不保存文件、event 或 cause。
+ * @lang en Projects the adapter's public status into a stable marker without storing file, event, or cause.
+ * @param {unknown} state <lang><zh-CN>候选 adapter 状态。</zh-CN><en>Candidate adapter state.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写本地 marker。</zh-CN><en>No return value; writes only the local marker.</en></lang>
+ */
+function recordP67UploadAdapterState(state) {
+  // <lang><zh-CN>只读取非 null 对象的字符串 status；其他输入收束为 unknown。</zh-CN><en>Reads a string status only from a non-null object; every other input converges to unknown.</en></lang>
+  const status = typeof state === 'object' && state !== null && typeof state.status === 'string' ? state.status : 'unknown';
+  p67UploadAdapterState.value = status;
+}
+
+// <lang><zh-CN>tabbar 继续使用页面本地状态，与 P66/P67 模型无共享语义。</zh-CN><en>The tabbar continues to use page-local state and shares no semantics with P66/P67 models.</en></lang>
 const tab = ref(0);
 const tabItems = Object.freeze([Object.freeze({ label: 'Home', value: 0 })]);
 
@@ -406,6 +571,16 @@ function recordP66SearchIntent(value) {
     assert.match(pageSource, new RegExp(`function ${actionName}\\(`, 'u'), `Installed-package trial source must retain ${actionName}.`);
   }
 
+  // <lang><zh-CN>统一 P67 marker 与十四个源码标签证明临时 consumer 真正使用目标组件，而非只依赖 tarball 文件存在。</zh-CN><en>The unified P67 marker and fourteen source tags prove the temporary consumer actually uses target components rather than relying only on tarball-file presence.</en></lang>
+  assert.match(pageSource, /data-smoke="p67-controlled-composition"/u, 'Installed-package trial source must retain the unified P67 composition marker.');
+  for (const componentName of P67_CONTROL_COMPONENT_NAMES) {
+    assert.match(pageSource, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `Installed-package trial source must compose ${componentName}.`);
+  }
+
+  // <lang><zh-CN>精确绑定锁定 dropdown options mode 与调用方 upload adapter；字符串位于外层 template literal 时不得因转义退化或被截断。</zh-CN><en>Exact bindings lock dropdown options mode and the caller-owned upload adapter; while embedded in the outer template literal, these strings must neither degrade through escaping nor be truncated.</en></lang>
+  assert.match(pageSource, /<u-dropdown-item\s+v-model="p67DropdownValue"\s+name="scope"[^>]+:options="p67DropdownOptions"/u, 'Installed-package trial source must use UDropdownItem options mode.');
+  assert.match(pageSource, /<u-upload[\s\S]+:adapter="p67UploadAdapter"[\s\S]+@adapter-state="recordP67UploadAdapterState"/u, 'Installed-package trial source must inject and observe its page-local UUpload adapter.');
+
   // <lang><zh-CN>TypeScript consumer 显式导入六组件精确类型与 global 映射，证明 tarball export resolver 而非仓内 paths 映射提供 declaration。</zh-CN><en>The TypeScript consumer explicitly imports precise six-component types and global mappings, proving the tarball export resolver rather than in-repository path mappings supplies declarations.</en></lang>
   const typeConsumerSource = `/**
  * @module private-package-type-trial
@@ -413,29 +588,89 @@ function recordP66SearchIntent(value) {
  * @lang en Verifies components, props, rules, instances, and global declarations from the one-use installed tarball; the file is only type-checked by TypeScript and runs no UI.
  */
 import UView, {
+  UCalendar,
   UCheckbox,
+  UCheckboxGroup,
+  UDropdown,
+  UDropdownItem,
   UField,
   UForm,
   UFormItem,
   UInput,
+  UNumberBox,
   UPicker,
+  URadio,
+  URadioGroup,
+  URate,
   USearch,
+  USelect,
+  USlider,
+  USwitch,
   UTextarea,
+  UUpload,
+  type UCalendarProps,
+  type UCheckboxGroupProps,
   type UCheckboxProps,
+  type UDropdownItemProps,
+  type UDropdownProps,
   type UFieldProps,
   type UFormInstance,
   type UFormItemProps,
   type UFormProps,
   type UFormRules,
   type UInputProps,
+  type UNumberBoxProps,
+  type UPickerProps,
+  type URadioGroupProps,
+  type URadioProps,
+  type URateProps,
   type USearchProps,
-  type UTextareaProps
+  type USelectProps,
+  type USliderProps,
+  type USwitchProps,
+  type UTextareaProps,
+  type UUploadAdapter,
+  type UUploadAdapterState,
+  type UUploadFile,
+  type UUploadProps
 } from '@hia-uview/ui';
 import '@hia-uview/ui/global';
 import type { GlobalComponents, Plugin } from 'vue';
 
-// <lang><zh-CN>既有 checkbox 类型继续证明普通包导出没有因 P66 组合退化。</zh-CN><en>The existing checkbox type continues to prove ordinary package exports do not regress because of the P66 composition.</en></lang>
+// <lang><zh-CN>checkbox leaf 类型证明透明键与受控布尔 model 从 tarball declaration 解析。</zh-CN><en>The checkbox leaf type proves transparent keys and the controlled Boolean model resolve from tarball declarations.</en></lang>
 const checkboxProps: UCheckboxProps = { value: 'trial', modelValue: false };
+// <lang><zh-CN>checkbox group 类型保留字符串/数字数组与有限 max。</zh-CN><en>The checkbox-group type retains a string/number array and finite max.</en></lang>
+const checkboxGroupProps: UCheckboxGroupProps = { modelValue: ['alpha', 2], max: 2 };
+// <lang><zh-CN>radio leaf 检查透明数值键。</zh-CN><en>The radio leaf checks a transparent numeric key.</en></lang>
+const radioProps: URadioProps = { value: 2, label: 'Two' };
+// <lang><zh-CN>radio group 检查受控单值 model。</zh-CN><en>The radio group checks a controlled scalar model.</en></lang>
+const radioGroupProps: URadioGroupProps = { modelValue: 2 };
+// <lang><zh-CN>switch 类型检查 caller-owned active/inactive 值域。</zh-CN><en>The switch type checks the caller-owned active/inactive value domain.</en></lang>
+const switchProps: USwitchProps = { modelValue: 'enabled', activeValue: 'enabled', inactiveValue: 0 };
+// <lang><zh-CN>picker props 证明多列透明键类型已随 tarball 交付。</zh-CN><en>Picker props prove multi-column transparent-key types ship with the tarball.</en></lang>
+const pickerProps: UPickerProps = { modelValue: ['alpha', 1], columns: [[{ label: 'Alpha', value: 'alpha' }], [{ label: 'One', value: 1 }]] };
+// <lang><zh-CN>calendar props 证明固定日期与 view anchor 类型可解析。</zh-CN><en>Calendar props prove fixed-date and view-anchor types resolve.</en></lang>
+const calendarProps: UCalendarProps = { modelValue: '2026-08-11', viewDate: '2026-08-01', today: '2026-08-11' };
+// <lang><zh-CN>select props 证明 confirm-mode option 类型可解析。</zh-CN><en>Select props prove confirm-mode option types resolve.</en></lang>
+const selectProps: USelectProps = { modelValue: 'public', options: [{ label: 'Public', value: 'public' }], confirmMode: true };
+// <lang><zh-CN>dropdown parent props 只携带 active name。</zh-CN><en>Dropdown parent props carry only the active name.</en></lang>
+const dropdownProps: UDropdownProps = { modelValue: 'scope' };
+// <lang><zh-CN>dropdown-item props 独立携带 options mode 与选择值。</zh-CN><en>Dropdown-item props independently carry options mode and the selected value.</en></lang>
+const dropdownItemProps: UDropdownItemProps = { name: 'scope', modelValue: 'public', options: [{ label: 'Public', value: 'public' }] };
+// <lang><zh-CN>number-box props 检查有限 min/max/step 与 model 类型。</zh-CN><en>Number-box props check finite min/max/step and model types.</en></lang>
+const numberBoxProps: UNumberBoxProps = { modelValue: 2.5, min: 0, max: 10, step: 0.5 };
+// <lang><zh-CN>rate props 检查有限 count 与数值 model。</zh-CN><en>Rate props check finite count and a numeric model.</en></lang>
+const rateProps: URateProps = { modelValue: 3, count: 5 };
+// <lang><zh-CN>slider props 检查有限步长与可见值开关。</zh-CN><en>Slider props check a finite step and the visible-value switch.</en></lang>
+const sliderProps: USliderProps = { modelValue: 4, min: 0, max: 10, step: 2, showValue: true };
+// <lang><zh-CN>upload file 验证公开记录类型可从安装包解析。</zh-CN><en>The upload file verifies the public record type resolves from the installed package.</en></lang>
+const uploadFile: UUploadFile = { label: 'Local ready record', status: 'ready' };
+// <lang><zh-CN>空 adapter 验证所有 action 均为显式可选注入点。</zh-CN><en>The empty adapter verifies every action is an explicitly optional injection point.</en></lang>
+const uploadAdapter: UUploadAdapter = Object.freeze({});
+// <lang><zh-CN>成功状态验证 discriminated union 要求 updated 字段。</zh-CN><en>The succeeded state verifies the discriminated union requires the updated field.</en></lang>
+const uploadState: UUploadAdapterState = { action: 'select', requestId: 1, status: 'succeeded', updated: false };
+// <lang><zh-CN>upload props 将 caller model 与 adapter 组合为受控边界。</zh-CN><en>Upload props compose the caller model and adapter into a controlled boundary.</en></lang>
+const uploadProps: UUploadProps = { modelValue: [uploadFile], adapter: uploadAdapter, visible: true, max: 3 };
 
 // <lang><zh-CN>规则根只包含当前 runtime 支持的同步 required/change 形状。</zh-CN><en>The rules root contains only the synchronous required/change shape supported by the current runtime.</en></lang>
 const formRules: UFormRules = {
@@ -454,7 +689,7 @@ const searchProps: USearchProps = { modelValue: 'Local query', showAction: true,
 type FormValidationMethod = UFormInstance['validateField'];
 const formValidationMethod: FormValidationMethod | undefined = undefined;
 
-// <lang><zh-CN>plugin 与六个 global 映射只做静态赋值，不注册 Vue 应用。</zh-CN><en>The plugin and six global mappings perform static assignment only and register no Vue application.</en></lang>
+// <lang><zh-CN>plugin、P66 六组件及 P67 十四组件 global 映射只做静态赋值，不注册 Vue 应用。</zh-CN><en>The plugin plus P66 six-component and P67 fourteen-component global mappings perform static assignment only and register no Vue application.</en></lang>
 const plugin: Plugin = UView;
 const globalForm: GlobalComponents['UForm'] = UForm;
 const globalFormItem: GlobalComponents['UFormItem'] = UFormItem;
@@ -462,10 +697,42 @@ const globalField: GlobalComponents['UField'] = UField;
 const globalInput: GlobalComponents['UInput'] = UInput;
 const globalTextarea: GlobalComponents['UTextarea'] = UTextarea;
 const globalSearch: GlobalComponents['USearch'] = USearch;
+// <lang><zh-CN>calendar global 映射验证可选 augmentation 与具名导出一致。</zh-CN><en>The calendar global mapping verifies optional augmentation matches the named export.</en></lang>
+const globalCalendar: GlobalComponents['UCalendar'] = UCalendar;
+// <lang><zh-CN>checkbox global 映射验证 leaf 组件类型可解析。</zh-CN><en>The checkbox global mapping verifies the leaf component type resolves.</en></lang>
+const globalCheckbox: GlobalComponents['UCheckbox'] = UCheckbox;
+// <lang><zh-CN>checkbox-group global 映射验证组合组件没有漏项。</zh-CN><en>The checkbox-group global mapping verifies the composition component is not omitted.</en></lang>
+const globalCheckboxGroup: GlobalComponents['UCheckboxGroup'] = UCheckboxGroup;
+// <lang><zh-CN>dropdown global 映射验证 parent 类型可解析。</zh-CN><en>The dropdown global mapping verifies the parent type resolves.</en></lang>
+const globalDropdown: GlobalComponents['UDropdown'] = UDropdown;
+// <lang><zh-CN>dropdown-item global 映射验证 options-mode child 类型可解析。</zh-CN><en>The dropdown-item global mapping verifies the options-mode child type resolves.</en></lang>
+const globalDropdownItem: GlobalComponents['UDropdownItem'] = UDropdownItem;
+// <lang><zh-CN>number-box global 映射验证数值 leaf 类型可解析。</zh-CN><en>The number-box global mapping verifies the numeric leaf type resolves.</en></lang>
+const globalNumberBox: GlobalComponents['UNumberBox'] = UNumberBox;
+// <lang><zh-CN>picker global 映射验证多列组件类型可解析。</zh-CN><en>The picker global mapping verifies the multi-column component type resolves.</en></lang>
+const globalPicker: GlobalComponents['UPicker'] = UPicker;
+// <lang><zh-CN>radio global 映射验证 leaf 类型可解析。</zh-CN><en>The radio global mapping verifies the leaf type resolves.</en></lang>
+const globalRadio: GlobalComponents['URadio'] = URadio;
+// <lang><zh-CN>radio-group global 映射验证组合类型可解析。</zh-CN><en>The radio-group global mapping verifies the composition type resolves.</en></lang>
+const globalRadioGroup: GlobalComponents['URadioGroup'] = URadioGroup;
+// <lang><zh-CN>rate global 映射验证有限评分组件类型可解析。</zh-CN><en>The rate global mapping verifies the finite-rating component type resolves.</en></lang>
+const globalRate: GlobalComponents['URate'] = URate;
+// <lang><zh-CN>select global 映射验证确认式选择组件类型可解析。</zh-CN><en>The select global mapping verifies the confirm-mode selection component type resolves.</en></lang>
+const globalSelect: GlobalComponents['USelect'] = USelect;
+// <lang><zh-CN>slider global 映射验证步长组件类型可解析。</zh-CN><en>The slider global mapping verifies the stepped-control component type resolves.</en></lang>
+const globalSlider: GlobalComponents['USlider'] = USlider;
+// <lang><zh-CN>switch global 映射验证布尔/透明值组件类型可解析。</zh-CN><en>The switch global mapping verifies the Boolean/transparent-value component type resolves.</en></lang>
+const globalSwitch: GlobalComponents['USwitch'] = USwitch;
+// <lang><zh-CN>upload global 映射验证 adapter 组件类型可解析。</zh-CN><en>The upload global mapping verifies the adapter component type resolves.</en></lang>
+const globalUpload: GlobalComponents['UUpload'] = UUpload;
 
 // <lang><zh-CN>收集静态引用，避免 TypeScript 将本 trial 退化为只解析 import 的空文件。</zh-CN><en>Collects static references so TypeScript cannot reduce this trial to an empty file that only resolves imports.</en></lang>
 void [
   checkboxProps,
+  checkboxGroupProps,
+  calendarProps,
+  dropdownItemProps,
+  dropdownProps,
   fieldProps,
   formItemProps,
   formProps,
@@ -474,14 +741,52 @@ void [
   globalForm,
   globalFormItem,
   globalInput,
+  globalCalendar,
+  globalCheckbox,
+  globalCheckboxGroup,
+  globalDropdown,
+  globalDropdownItem,
+  globalNumberBox,
+  globalPicker,
+  globalRadio,
+  globalRadioGroup,
+  globalRate,
   globalSearch,
+  globalSelect,
+  globalSlider,
+  globalSwitch,
   globalTextarea,
+  globalUpload,
   inputProps,
+  numberBoxProps,
+  pickerProps,
   plugin,
+  radioGroupProps,
+  radioProps,
+  rateProps,
   searchProps,
+  selectProps,
+  sliderProps,
+  switchProps,
   textareaProps,
+  uploadAdapter,
+  uploadFile,
+  uploadProps,
+  uploadState,
+  UCalendar,
   UCheckbox,
-  UPicker
+  UCheckboxGroup,
+  UDropdown,
+  UDropdownItem,
+  UNumberBox,
+  UPicker,
+  URadio,
+  URadioGroup,
+  URate,
+  USelect,
+  USlider,
+  USwitch,
+  UUpload
 ];
 `;
   // <lang><zh-CN>临时 tsconfig 使用 package resolver，不声明 paths；这样类型通过只能来自已安装 tarball 的 package metadata。</zh-CN><en>The temporary tsconfig uses the package resolver and declares no paths, so a type pass can come only from installed-tarball package metadata.</en></lang>
@@ -577,7 +882,8 @@ try {
     'types/global-components.d.ts',
     'types/global-components.mjs',
     'easycom/mp-weixin.json',
-    ...P66_REQUIRED_PACKAGE_PATHS
+    ...P66_REQUIRED_PACKAGE_PATHS,
+    ...P67_REQUIRED_PACKAGE_PATHS
   ]) {
     assert.ok(packedPaths.has(requiredPath), `Package tarball must contain ${requiredPath}.`);
   }
@@ -665,6 +971,13 @@ try {
     assert.match(trialPageMarkup, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `Installed-package trial page must compose ${componentName}.`);
   }
 
+  // <lang><zh-CN>生成 WXML 必须保留统一 P67 marker、adapter marker 与十四个组件标签，排除“已打包但未消费”的假阳性。</zh-CN><en>Generated WXML must retain the unified P67 marker, adapter marker, and all fourteen component tags, excluding a false positive where components are packaged but unused.</en></lang>
+  assert.match(trialPageMarkup, /data-smoke="p67-controlled-composition"/, 'Installed-package trial page must retain the unified P67 composition marker.');
+  assert.match(trialPageMarkup, /data-smoke="p67-adapter-state"/, 'Installed-package trial page must retain the visible P67 adapter-state marker.');
+  for (const componentName of P67_CONTROL_COMPONENT_NAMES) {
+    assert.match(trialPageMarkup, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `Installed-package trial page must compose ${componentName}.`);
+  }
+
   // <lang><zh-CN>页面 JSON 的六个 mapping 必须指向已安装 package 的对应 leaf 名；不固定 node-modules 前缀，以免依赖 compiler 的内部输出布局。</zh-CN><en>All six mappings in page JSON must point to the matching leaf name in the installed package; the node-modules prefix remains unfixed to avoid depending on compiler-internal output layout.</en></lang>
   const trialPageConfiguration = await readTrialOutputJson(compilerOutputDirectory, trialPageConfigurationPath);
   for (const componentName of P66_FORM_COMPONENT_NAMES) {
@@ -674,10 +987,29 @@ try {
     assert.ok(componentMapping.replaceAll('\\', '/').endsWith(`/src/components/${componentName}/${componentName}`), `Installed-package trial mapping for ${componentName} must end at its package leaf SFC.`);
   }
 
+
+  // <lang><zh-CN>十四个 P67 mapping 必须各自终止于安装包内对应 leaf SFC；路径前缀仍由临时 compiler 决定。</zh-CN><en>Each of the fourteen P67 mappings must terminate at its matching leaf SFC inside the installed package; the temporary compiler still determines the path prefix.</en></lang>
+  for (const componentName of P67_CONTROL_COMPONENT_NAMES) {
+    // <lang><zh-CN>只规范化 Windows 分隔符并验证稳定 leaf 后缀，不把临时绝对路径写入诊断或仓库。</zh-CN><en>Normalizes only Windows separators and verifies the stable leaf suffix without writing a temporary absolute path into diagnostics or the repository.</en></lang>
+    const componentMapping = trialPageConfiguration.usingComponents?.[componentName];
+    assert.equal(typeof componentMapping, 'string', `Installed-package trial page must map ${componentName}.`);
+    assert.ok(componentMapping.replaceAll('\\', '/').endsWith(`/src/components/${componentName}/${componentName}`), `Installed-package trial mapping for ${componentName} must end at its package leaf SFC.`);
+  }
+
   // <lang><zh-CN>每个目标组件必须从 tarball 经 Easycom 编译出 JS/JSON/WXML/WXSS；只出现 page tag 或单个模板文件均不足。</zh-CN><en>Each target component must compile from the tarball through Easycom into JS/JSON/WXML/WXSS; a page tag or one template file alone is insufficient.</en></lang>
   for (const componentName of P66_FORM_COMPONENT_NAMES) {
     for (const extension of ['js', 'json', 'wxml', 'wxss']) {
       // <lang><zh-CN>后缀断言允许 compiler 选择内部 node-modules 前缀，同时仍要求精确 leaf 文件名。</zh-CN><en>The suffix assertion permits a compiler-selected internal node-modules prefix while still requiring the exact leaf filename.</en></lang>
+      const expectedSuffix = join(componentName, `${componentName}.${extension}`);
+      assert.ok(findOutputFileBySuffix(compilerOutputFiles, expectedSuffix), `Installed-package compiler must emit ${componentName}.${extension}.`);
+    }
+  }
+
+
+  // <lang><zh-CN>十四个 P67 组件必须从 tarball 经 Easycom 输出 JS/JSON/WXML/WXSS 四件套；页面标签或单个模板文件均不足。</zh-CN><en>All fourteen P67 components must emit the JS/JSON/WXML/WXSS quartet from the tarball through Easycom; a page tag or one template file is insufficient.</en></lang>
+  for (const componentName of P67_CONTROL_COMPONENT_NAMES) {
+    for (const extension of ['js', 'json', 'wxml', 'wxss']) {
+      // <lang><zh-CN>稳定后缀允许 compiler 自选 node-modules 前缀，但仍要求精确 leaf 文件名。</zh-CN><en>The stable suffix lets the compiler choose its node-modules prefix while still requiring the exact leaf filename.</en></lang>
       const expectedSuffix = join(componentName, `${componentName}.${extension}`);
       assert.ok(findOutputFileBySuffix(compilerOutputFiles, expectedSuffix), `Installed-package compiler must emit ${componentName}.${extension}.`);
     }

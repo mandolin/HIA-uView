@@ -1,6 +1,6 @@
 <!--
-@lang zh-CN 在仅编译期的 `mp-weixin` fixture 中组合现有 HIA-uView 组件，演示固定匿名 mock 的目录、受控同步查询、详情投影、空态 reset 与调用方控制的确认/反馈状态。页面不执行网络、路由、身份、持久化、异步数据、分页、计时器或平台系统操作。
-@lang en Composes existing HIA-uView components in the compile-only `mp-weixin` fixture to demonstrate a fixed anonymous mock directory, controlled synchronous query, detail projection, empty-state reset, and caller-controlled confirmation/feedback state. The page performs no network, routing, identity, persistence, asynchronous data, paging, timer, or platform-system operation.
+@lang zh-CN 在仅编译期的 `mp-weixin` fixture 中组合现有 HIA-uView 组件，演示固定匿名 mock 目录及十四组件受控选择/日期/数值/上传组合。页面不执行网络、路由、身份、持久化、异步数据、分页、计时器、文件 chooser 或平台系统操作。
+@lang en Composes existing HIA-uView components in the compile-only `mp-weixin` fixture to demonstrate a fixed anonymous mock directory and a fourteen-component controlled choice/date/numeric/upload composition. The page performs no network, routing, identity, persistence, asynchronous data, paging, timer, file chooser, or platform-system operation.
 -->
 <template>
   <!-- <lang><zh-CN>页面级 stack 只提供局部纵向布局，目录/查询/详情的状态与流程仍归当前调用方页面所有。</zh-CN><en>The page-level stack provides local vertical layout only; state and flow for directory, query, and detail remain owned by the current caller page.</en></lang> -->
@@ -38,8 +38,7 @@
     <u-car-keyboard :visible="true" :rows="fixtureCarRows" label="本地行键 / Local row keys" phase="primary" next-phase="secondary" switch-text="下一组 / Next" backspace-label="删除 / Remove" confirm-text="确认 / Confirm" />
     <u-keyboard :visible="false" mode="number" :number-keys="fixtureNumberKeys" label="本地组合键 / Local composed keys" backspace-label="删除 / Remove" confirm-text="确认 / Confirm" />
 
-    <!-- <lang><zh-CN>文件状态、裁剪选择和验证码状态均为页面本地声明，以验证小程序编译器可解析受控意图面；它们不选择文件、不读图片字节、不裁剪像素、不发送验证码或计时。</zh-CN><en>File state, crop selection, and verification state are all page-local declarations to verify that the Mini Program compiler resolves controlled intent surfaces; they choose no file, read no image bytes, crop no pixel, send no code, and run no timer.</en></lang> -->
-    <u-upload :visible="true" :files="fixtureFiles" label="本地文件 / Local files" select-text="选择 / Select" preview-text="预览 / Preview" remove-text="删除 / Remove" retry-text="重试 / Retry" :max="3" />
+    <!-- <lang><zh-CN>裁剪选择和验证码状态均为页面本地声明，以验证小程序编译器可解析受控意图面；它们不选择文件、不读图片字节、不裁剪像素、不发送验证码或计时。</zh-CN><en>Crop selection and verification state are page-local declarations that verify the Mini Program compiler resolves controlled intent surfaces; they choose no file, read no image bytes, crop no pixel, send no code, and run no timer.</en></lang> -->
     <u-avatar-cropper :visible="true" select-text="选择来源 / Select source" />
     <u-verification-code :visible="true" label="本地请求状态 / Local request state" status-text="调用方状态 / Caller state" remaining-text="无本地计时器 / No local timer" :remaining-seconds="30" request-text="请求 / Request" :request-enabled="true" />
 
@@ -104,15 +103,6 @@
             @change="recordFixturePresentationIntent('textarea-change')"
             @click="recordFixturePresentationIntent('textarea-click')"
           />
-        </u-form-item>
-        <u-form-item label="本地开关 / Local switch">
-          <u-switch :model-value="fixtureSwitchValue" :loading="fixtureSwitchBusy" label="启用样例 / Enable sample" @update:model-value="updateFixtureSwitchValue" />
-        </u-form-item>
-        <u-form-item label="数量 / Quantity">
-          <u-number-box :model-value="fixtureNumberValue" :min="0" :max="9" @update:model-value="updateFixtureNumberValue" />
-        </u-form-item>
-        <u-form-item label="分级 / Rate">
-          <u-rate :model-value="fixtureRateValue" @update:model-value="updateFixtureRateValue" />
         </u-form-item>
         <u-form-item label="受控查询 / Controlled search">
           <u-search
@@ -237,20 +227,79 @@
         </u-sticky>
       </u-stack>
 
-      <!-- @lang zh-CN P16 选择组只使用页面自有字符串与字符串数组，验证 group emit/writeback 而不引入 option 数据源或业务筛选。 @lang en The P16 choice groups use page-owned string and string array only, verifying group emit/writeback without introducing option data source or business filtering. <lang><zh-CN>这些控件不改变目录 query。</zh-CN><en>These controls do not change directory query.</en></lang> -->
-      <u-radio-group :model-value="fixtureRadioValue" @update:model-value="updateFixtureRadioValue">
-        <u-radio value="local-a" label="本地单选 A / Local radio A" />
-        <u-radio value="local-b" label="本地单选 B / Local radio B" />
-      </u-radio-group>
-      <u-checkbox-group :model-value="fixtureCheckboxValues" @update:model-value="updateFixtureCheckboxValues">
-        <u-checkbox value="local-one" label="本地多选 One / Local checkbox One" />
-        <u-checkbox value="local-two" label="本地多选 Two / Local checkbox Two" />
-      </u-checkbox-group>
-      <!-- @lang zh-CN 独立选择示例只验证标准 modelValue、数值 value 与 default slot 的静态编译组合；页面仍拥有所有写回。 @lang en The independent choice example verifies only static compiler composition for standard modelValue, numeric value, and a default slot; the page still owns every writeback. <lang><zh-CN>它不连接表单、数据源、导航或业务规则。</zh-CN><en>It connects no form, data source, navigation, or business rule.</en></lang> -->
-      <u-checkbox :model-value="fixtureIndependentCheckboxValue" :value="7" @update:model-value="updateFixtureIndependentCheckboxValue">
-        <text>独立多选 / Independent checkbox</text>
-      </u-checkbox>
-      <u-radio :value="8" label="独立单选 / Independent radio" @change="recordFixtureIndependentRadioValue" />
+      <!--
+      @lang zh-CN 本段在统一 marker 下复用既有选择/数值实例并补齐十四个受控组件；全部 model、有限 options 与 adapter 均由当前页面拥有。
+      @lang en This section reuses existing choice and numeric instances and completes all fourteen controlled components under one unified marker; the current page owns every model, finite option collection, and adapter.
+      <lang><zh-CN>dropdown 使用显式 name/options 模式；upload adapter 只创建或移除本地记录，不调用 chooser、网络、文件读取、凭据、timer 或持久化。</zh-CN><en>Dropdown uses explicit name/options mode; the upload adapter only creates or removes local records and invokes no chooser, network, file read, credential, timer, or persistence.</en></lang>
+      -->
+      <view class="fixture-p67-controls" data-smoke="p67-controlled-composition">
+        <u-radio-group :model-value="fixtureRadioValue" @update:model-value="updateFixtureRadioValue">
+          <u-radio value="local-a" label="本地单选 A / Local radio A" />
+          <u-radio :value="2" label="本地单选 Two / Local radio Two" />
+        </u-radio-group>
+        <u-checkbox-group :model-value="fixtureCheckboxValues" :max="2" @update:model-value="updateFixtureCheckboxValues">
+          <u-checkbox value="local-one" label="本地多选 One / Local checkbox One" />
+          <u-checkbox :value="2" label="本地多选 Two / Local checkbox Two" />
+        </u-checkbox-group>
+        <!-- @lang zh-CN 独立选择示例继续验证标准 modelValue、数值 value 与 default slot 的静态编译组合；页面仍拥有所有写回。 @lang en The independent choice example continues to verify static compiler composition for standard modelValue, numeric value, and a default slot; the page still owns every writeback. <lang><zh-CN>它不连接表单、数据源、导航或业务规则。</zh-CN><en>It connects no form, data source, navigation, or business rule.</en></lang> -->
+        <u-checkbox :model-value="fixtureIndependentCheckboxValue" :value="7" @update:model-value="updateFixtureIndependentCheckboxValue">
+          <text>独立多选 / Independent checkbox</text>
+        </u-checkbox>
+        <u-radio :value="8" label="独立单选 / Independent radio" @change="recordFixtureIndependentRadioValue" />
+        <u-switch :model-value="fixtureSwitchValue" :loading="fixtureSwitchBusy" label="启用样例 / Enable sample" @update:model-value="updateFixtureSwitchValue" />
+        <u-picker
+          :model-value="fixturePickerValue"
+          :columns="fixturePickerColumns"
+          title="本地选择器 / Local picker"
+          @update:model-value="updateFixturePickerValue"
+          @confirm="recordFixtureP67Intent('picker-confirm')"
+          @cancel="recordFixtureP67Intent('picker-cancel')"
+        />
+        <u-calendar
+          :model-value="fixtureCalendarValue"
+          :view-date="fixtureCalendarViewDate"
+          today="2026-08-11"
+          @update:model-value="updateFixtureCalendarValue"
+          @update:view-date="updateFixtureCalendarViewDate"
+          @change="recordFixtureP67Intent('calendar-change')"
+        />
+        <u-select
+          :model-value="fixtureSelectValue"
+          :options="fixtureSelectOptions"
+          :confirm-mode="true"
+          placeholder="本地选择 / Select locally"
+          @update:model-value="updateFixtureSelectValue"
+          @confirm="recordFixtureP67Intent('select-confirm')"
+          @cancel="recordFixtureP67Intent('select-cancel')"
+        />
+        <u-dropdown :model-value="fixtureDropdownOpenName" @update:model-value="updateFixtureDropdownOpenName" @close="recordFixtureP67Intent('dropdown-close')">
+          <u-dropdown-item
+            name="scope"
+            :model-value="fixtureDropdownValue"
+            label="范围 / Scope"
+            :options="fixtureDropdownOptions"
+            @update:model-value="updateFixtureDropdownValue"
+          />
+        </u-dropdown>
+        <u-number-box :model-value="fixtureNumberValue" :min="0" :max="9" :step="0.5" @update:model-value="updateFixtureNumberValue" />
+        <u-rate :model-value="fixtureRateValue" :count="5" @update:model-value="updateFixtureRateValue" />
+        <u-slider :model-value="fixtureSliderValue" :min="0" :max="10" :step="2" :show-value="true" @update:model-value="updateFixtureSliderValue" />
+        <u-upload
+          :visible="true"
+          :model-value="fixtureUploadFiles"
+          :adapter="fixtureUploadAdapter"
+          label="本地文件 / Local files"
+          select-text="添加本地记录 / Add local record"
+          preview-text="观察 / Observe"
+          remove-text="删除 / Remove"
+          retry-text="重试 / Retry"
+          :max="3"
+          @update:model-value="updateFixtureUploadFiles"
+          @adapter-state="recordFixtureUploadAdapterState"
+        />
+        <text data-smoke="p67-adapter-state">{{ fixtureUploadAdapterState }}</text>
+        <text data-smoke="p67-intent">{{ fixtureP67Intent }}</text>
+      </view>
 
       <!-- <lang><zh-CN>独立消息仅在页面明确声明无本地匹配时呈现；它不把无结果解释为后端错误、权限结论或真实校验结果。</zh-CN><en>The independent message presents only when the page explicitly declares no local match; it does not interpret no result as a backend error, permission conclusion, or real validation result.</en></lang> -->
       <u-validation-message
@@ -363,6 +412,34 @@ const fixtureIndependentCheckboxValue = ref(false);
 // <lang><zh-CN>独立 radio 的最后本地数值只用于观察透明 event payload；它不驱动路由、查询或领域选择。</zh-CN><en>The independent radio's last local number only observes a transparent event payload; it drives neither routing, query, nor domain selection.</en></lang>
 const fixtureIndependentRadioValue = ref(0);
 
+// <lang><zh-CN>picker 的页面值保留字符串与数字透明键，不与 city-select 既有列共享状态。</zh-CN><en>The page-owned picker value preserves transparent string and number keys and shares no state with the existing city-select columns.</en></lang>
+const fixturePickerValue = ref(['alpha', 1]);
+// <lang><zh-CN>固定 picker 列只用于编译及本地交互观察，不表示城市、产品或远端 option。</zh-CN><en>Fixed picker columns serve only compilation and local interaction observation and represent no city, product, or remote option.</en></lang>
+const fixturePickerColumns = Object.freeze([
+  Object.freeze([Object.freeze({ label: '甲 / Alpha', value: 'alpha' }), Object.freeze({ label: '乙 / Beta', value: 'beta' })]),
+  Object.freeze([Object.freeze({ label: '一 / One', value: 1 }), Object.freeze({ label: '二 / Two', value: 2 })])
+]);
+// <lang><zh-CN>calendar model 使用固定合法日期，使 compiler evidence 不依赖机器当前日期。</zh-CN><en>The calendar model uses a fixed valid date so compiler evidence does not depend on the machine's current date.</en></lang>
+const fixtureCalendarValue = ref('2026-08-11');
+// <lang><zh-CN>calendar 视图锚点由页面独立拥有，月份导航只能请求显式写回。</zh-CN><en>The page independently owns the calendar view anchor, and month navigation can only request explicit writeback.</en></lang>
+const fixtureCalendarViewDate = ref('2026-08-01');
+// <lang><zh-CN>select 的受控值只从当前页面有限 options 取值。</zh-CN><en>The controlled select value comes only from the current page's finite options.</en></lang>
+const fixtureSelectValue = ref('public');
+// <lang><zh-CN>select options 是冻结的中性本地集合，不执行 getter、请求或动态脚本。</zh-CN><en>Select options are a frozen neutral local collection and execute no getter, request, or dynamic script.</en></lang>
+const fixtureSelectOptions = Object.freeze([
+  Object.freeze({ label: '公共 / Public', value: 'public' }),
+  Object.freeze({ label: '私有 / Private', value: 'private' })
+]);
+// <lang><zh-CN>dropdown parent active name 与 item model 分离，避免把面板可见性解释为选项值。</zh-CN><en>The dropdown parent's active name is separate from the item model, avoiding interpretation of panel visibility as an option value.</en></lang>
+const fixtureDropdownOpenName = ref('');
+// <lang><zh-CN>dropdown item 的受控选项值由本页显式写回。</zh-CN><en>The current page explicitly writes back the dropdown item's controlled option value.</en></lang>
+const fixtureDropdownValue = ref('public');
+// <lang><zh-CN>dropdown options 独立于 select 集合，以避免共享可变容器或隐式业务关系。</zh-CN><en>Dropdown options are separate from the select collection to avoid a shared mutable container or implicit business relation.</en></lang>
+const fixtureDropdownOptions = Object.freeze([
+  Object.freeze({ label: '公共 / Public', value: 'public' }),
+  Object.freeze({ label: '私有 / Private', value: 'private' })
+]);
+
 // <lang><zh-CN>这组有限静态列和值只用于小程序编译组合；它们不表达城市、地点、地址或业务领域数据。</zh-CN><en>These finite static columns and values serve Mini Program compile composition only; they express no city, place, address, or business-domain data.</en></lang>
 const fixtureSelectorColumns = Object.freeze([
   Object.freeze([Object.freeze({ label: '第一 / First', value: 'first' }), Object.freeze({ label: '第二 / Second', value: 'second' })]),
@@ -398,11 +475,14 @@ const fixtureWaterfallItems = Object.freeze([
   Object.freeze({ label: '列项 C / Column item C', value: 'c' })
 ]);
 
-// <lang><zh-CN>文件记录是页面内可读状态投影，不代表文件路径、bytes、上传任务或缓存。</zh-CN><en>File records are in-page readable state projections and represent no file path, bytes, upload task, or cache.</en></lang>
-const fixtureFiles = Object.freeze([
+// <lang><zh-CN>文件记录是页面拥有的可读状态投影，不含文件路径、URL、bytes、上传任务、凭据或缓存。</zh-CN><en>File records are page-owned readable state projections containing no file path, URL, bytes, upload task, credential, or cache.</en></lang>
+const fixtureUploadFiles = ref([
   Object.freeze({ label: '本地就绪记录 / Local ready record', status: 'ready', statusText: '就绪 / Ready' }),
   Object.freeze({ label: '本地重试记录 / Local retry record', status: 'error', statusText: '本地审阅 / Review locally' })
 ]);
+
+// <lang><zh-CN>adapter select 可追加的唯一常量是匿名本地记录，不是 chooser 或文件系统结果。</zh-CN><en>The sole constant appendable by adapter select is an anonymous local record, not a chooser or filesystem result.</en></lang>
+const FIXTURE_ADDED_UPLOAD_RECORD = Object.freeze({ label: '本地新增记录 / Local added record', status: 'ready', statusText: '本地新增 / Added locally' });
 
 // <lang><zh-CN>新增高频控件均使用页面内局部 refs；它们不进入目录 mock、共享 store 或外部数据源。</zh-CN><en>New high-frequency controls use page-local refs only; they enter no catalog mock, shared store, or external data source.</en></lang>
 const fixtureTextareaValue = ref('');
@@ -410,11 +490,20 @@ const fixtureTextareaValue = ref('');
 // <lang><zh-CN>基础呈现组件的本地 click 观察只记录有限名称，供 compile fixture 保留调用方事件所有权；它不触发导航、预览、请求或持久化。</zh-CN><en>The local click observation for foundational presentation components records only a finite name so the compile fixture retains caller event ownership; it triggers no routing, preview, request, or persistence.</en></lang>
 const fixturePresentationIntent = ref('none');
 
+// <lang><zh-CN>switch 布尔值只表示中性 fixture 状态，不表示权限或业务功能开关。</zh-CN><en>The switch Boolean represents neutral fixture state only, not authorization or a business-feature toggle.</en></lang>
 const fixtureSwitchValue = ref(false);
 // <lang><zh-CN>busy flag 只让 compiler 组合 switch loading 输入；默认 false 不会阻塞本 fixture 的本地 switch 写回。</zh-CN><en>The busy flag only lets the compiler compose the switch loading input; its false default does not block this fixture's local switch writeback.</en></lang>
 const fixtureSwitchBusy = ref(false);
+// <lang><zh-CN>number-box 初值落在半步网格上，只验证数值规整。</zh-CN><en>The number-box initial value lies on the half-step grid and verifies numeric normalization only.</en></lang>
 const fixtureNumberValue = ref(1);
+// <lang><zh-CN>rate 数值是有限本地刻度，不表示评价提交或业务评分。</zh-CN><en>The rate value is a finite local scale and represents no review submission or business score.</en></lang>
 const fixtureRateValue = ref(0);
+// <lang><zh-CN>slider 值对齐相对 min 的固定步长，只供本地受控写回。</zh-CN><en>The slider value aligns to a fixed step relative to min and serves local controlled writeback only.</en></lang>
+const fixtureSliderValue = ref(4);
+// <lang><zh-CN>P67 intent marker 只记录有限交互名称，不携带 option、日期、文件或平台 event。</zh-CN><en>The P67 intent marker records only finite interaction names and carries no option, date, file, or platform event.</en></lang>
+const fixtureP67Intent = ref('idle');
+// <lang><zh-CN>upload marker 只保留 adapter status discriminant，不保存失败 cause 或 caller context。</zh-CN><en>The upload marker retains only the adapter status discriminant and stores no failure cause or caller context.</en></lang>
+const fixtureUploadAdapterState = ref('idle');
 const fixtureImageSource = ref('');
 const fixtureTagVisible = ref(true);
 const fixtureBadgeValue = ref(3);
@@ -811,6 +900,171 @@ function updateFixtureTextareaValue(value) {
 function recordFixturePresentationIntent(intent) {
   // <lang><zh-CN>来源字符串只来自模板中的四个固定字面量；函数不接受自由文本、不会调用平台 API，也不保留事件对象。</zh-CN><en>The source string comes only from four fixed template literals; the function accepts no free text, calls no platform API, and retains no event object.</en></lang>
   fixturePresentationIntent.value = intent;
+}
+
+/**
+ * @lang zh-CN 接受 picker 多列确认产生的透明数组并替换页面 model；其他形状保持旧值。
+ * @lang en Accepts the transparent array produced by a multi-column picker confirmation and replaces the page model; other shapes retain the old value.
+ * @param {unknown} value <lang><zh-CN>picker 报告的候选 model。</zh-CN><en>Candidate model reported by the picker.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；有效时只写页面局部 ref。</zh-CN><en>No return value; on validity writes only the page-local ref.</en></lang>
+ */
+function updateFixturePickerValue(value) {
+  // <lang><zh-CN>数组 guard 与当前两列配置一致，避免把任意事件对象当成选择值。</zh-CN><en>The array guard matches the current two-column configuration and prevents treating an arbitrary event object as a selection value.</en></lang>
+  if (!Array.isArray(value)) return;
+  // <lang><zh-CN>复制外层容器保持页面拥有写回 identity，不解析透明键。</zh-CN><en>Copies the outer container to retain page ownership of writeback identity without interpreting transparent keys.</en></lang>
+  fixturePickerValue.value = [...value];
+}
+
+/**
+ * @lang zh-CN 写回 calendar 报告的合法日期字符串；fixture 不执行时区转换或业务日期规则。
+ * @lang en Writes back the valid date string reported by the calendar; the fixture performs no time-zone conversion or business date rule.
+ * @param {unknown} value <lang><zh-CN>候选日期值。</zh-CN><en>Candidate date value.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；字符串输入只写当前页面 ref。</zh-CN><en>No return value; a string input writes only the current-page ref.</en></lang>
+ */
+function updateFixtureCalendarValue(value) {
+  // <lang><zh-CN>组件契约输出字符串；额外 guard 防止直接 handler 调用污染本地 model。</zh-CN><en>The component contract outputs a string; the extra guard prevents a direct handler call from contaminating the local model.</en></lang>
+  if (typeof value !== 'string') return;
+  fixtureCalendarValue.value = value;
+}
+
+/**
+ * @lang zh-CN 写回 calendar 月份导航请求的视图锚点，不改变已选日期。
+ * @lang en Writes back the view anchor requested by calendar month navigation without changing the selected date.
+ * @param {unknown} value <lang><zh-CN>候选月份锚点。</zh-CN><en>Candidate month anchor.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；字符串输入只写页面视图 ref。</zh-CN><en>No return value; a string input writes only the page-view ref.</en></lang>
+ */
+function updateFixtureCalendarViewDate(value) {
+  // <lang><zh-CN>非字符串请求保持零副作用，不尝试构造回退日期。</zh-CN><en>A nonstring request has zero side effect and creates no fallback date.</en></lang>
+  if (typeof value !== 'string') return;
+  fixtureCalendarViewDate.value = value;
+}
+
+/**
+ * @lang zh-CN 写回 select 的页面自有透明字符串值；不触发目录查询或远端 option 加载。
+ * @lang en Writes back the select's page-owned transparent string value without triggering catalog query or remote-option loading.
+ * @param {unknown} value <lang><zh-CN>select 报告的候选值。</zh-CN><en>Candidate value reported by the select.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；有效时只写页面 ref。</zh-CN><en>No return value; on validity writes only the page ref.</en></lang>
+ */
+function updateFixtureSelectValue(value) {
+  // <lang><zh-CN>当前有限 options 只含字符串键，其他类型不被猜测或转换。</zh-CN><en>The current finite options contain only string keys, and other types are neither guessed nor converted.</en></lang>
+  if (typeof value !== 'string') return;
+  fixtureSelectValue.value = value;
+}
+
+/**
+ * @lang zh-CN 写回 dropdown parent 的 active item name；该状态只控制局部 panel 可见性。
+ * @lang en Writes back the dropdown parent's active item name; this state controls only local panel visibility.
+ * @param {unknown} value <lang><zh-CN>dropdown 报告的透明 name。</zh-CN><en>Transparent name reported by the dropdown.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；有限标量只写 parent ref。</zh-CN><en>No return value; a finite scalar writes only the parent ref.</en></lang>
+ */
+function updateFixtureDropdownOpenName(value) {
+  // <lang><zh-CN>有效 name 只允许字符串或有限数值，避免对象成为 registry identity。</zh-CN><en>A valid name allows only a string or finite number, preventing an object from becoming registry identity.</en></lang>
+  if (typeof value !== 'string' && (typeof value !== 'number' || !Number.isFinite(value))) return;
+  fixtureDropdownOpenName.value = value;
+}
+
+/**
+ * @lang zh-CN 写回 dropdown-item options 模式的选择值，与 parent active name 保持分离。
+ * @lang en Writes back the dropdown-item options-mode selection while keeping it separate from the parent active name.
+ * @param {unknown} value <lang><zh-CN>item 报告的透明 option 值。</zh-CN><en>Transparent option value reported by the item.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；有效标量只写 item model ref。</zh-CN><en>No return value; a valid scalar writes only the item-model ref.</en></lang>
+ */
+function updateFixtureDropdownValue(value) {
+  // <lang><zh-CN>当前 options 只用字符串键；数值或对象不会被隐式字符串化。</zh-CN><en>The current options use only string keys; numbers and objects are not implicitly stringified.</en></lang>
+  if (typeof value !== 'string') return;
+  fixtureDropdownValue.value = value;
+}
+
+/**
+ * @lang zh-CN 写回 slider 报告的有限数值，不添加单位、库存或进度语义。
+ * @lang en Writes back the finite number reported by the slider without adding unit, inventory, or progress semantics.
+ * @param {unknown} value <lang><zh-CN>slider 候选数值。</zh-CN><en>Candidate slider number.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；有限数值只写页面 ref。</zh-CN><en>No return value; a finite number writes only the page ref.</en></lang>
+ */
+function updateFixtureSliderValue(value) {
+  // <lang><zh-CN>有限数值 guard 防止 NaN、Infinity 或事件对象进入受控状态。</zh-CN><en>The finite-number guard prevents NaN, Infinity, or an event object from entering controlled state.</en></lang>
+  if (typeof value !== 'number' || !Number.isFinite(value)) return;
+  fixtureSliderValue.value = value;
+}
+
+/**
+ * @lang zh-CN 记录模板中固定的 P67 confirm/cancel/change/close 名称；不保留 payload 或派生业务状态。
+ * @lang en Records fixed P67 confirm/cancel/change/close names from the template without retaining payloads or deriving business state.
+ * @param {string} intent <lang><zh-CN>模板提供的有限观察名称。</zh-CN><en>Finite observation name supplied by the template.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写可见 marker。</zh-CN><en>No return value; writes only the visible marker.</en></lang>
+ */
+function recordFixtureP67Intent(intent) {
+  fixtureP67Intent.value = intent;
+}
+
+/**
+ * @lang zh-CN 为 upload select adapter 创建新的本地记录数组；不打开 chooser、不读取文件且不修改 context。
+ * @lang en Creates a new local-record array for the upload select adapter without opening a chooser, reading a file, or mutating context.
+ * @param {{files: ReadonlyArray<object>}} context <lang><zh-CN>UUpload 提供的冻结浅层记录快照。</zh-CN><en>Frozen shallow record snapshot supplied by UUpload.</en></lang>
+ * @returns {ReadonlyArray<object>} <lang><zh-CN>新的冻结候选数组。</zh-CN><en>New frozen candidate array.</en></lang>
+ */
+function addFixtureLocalUploadRecord(context) {
+  // <lang><zh-CN>只复制数组槽位并追加匿名常量；不解释或克隆记录对象。</zh-CN><en>Copies array slots and appends the anonymous constant only; record objects are neither interpreted nor cloned.</en></lang>
+  return Object.freeze([...context.files, FIXTURE_ADDED_UPLOAD_RECORD]);
+}
+
+/**
+ * @lang zh-CN 为 upload remove adapter 返回不含目标索引的新数组；原记录及 source 数组保持不变。
+ * @lang en Returns a new array without the target index for the upload remove adapter; original records and source array remain unchanged.
+ * @param {{files: ReadonlyArray<object>, index: number}} context <lang><zh-CN>冻结记录快照与有限目标索引。</zh-CN><en>Frozen record snapshot and bounded target index.</en></lang>
+ * @returns {ReadonlyArray<object>} <lang><zh-CN>新的冻结候选数组。</zh-CN><en>New frozen candidate array.</en></lang>
+ */
+function removeFixtureLocalUploadRecord(context) {
+  // <lang><zh-CN>局部容器只用于构造候选结果，不能泄漏到共享状态。</zh-CN><en>The local container only constructs the candidate result and cannot leak into shared state.</en></lang>
+  const nextFiles = [];
+  for (let index = 0; index < context.files.length; index += 1) {
+    // <lang><zh-CN>跳过目标索引，其余记录按原顺序复制且保持 identity。</zh-CN><en>Skips the target index while copying all other records in original order with identity preserved.</en></lang>
+    if (index !== context.index) nextFiles.push(context.files[index]);
+  }
+  return Object.freeze(nextFiles);
+}
+
+/**
+ * @lang zh-CN 完成 preview/retry 的本地 adapter 观察但不产生 model 候选。
+ * @lang en Completes local adapter observation for preview/retry without producing a model candidate.
+ * @returns {undefined} <lang><zh-CN>明确不请求文件列表写回。</zh-CN><en>Explicitly requests no file-list writeback.</en></lang>
+ */
+function observeFixtureUploadIntent() {
+  // <lang><zh-CN>undefined 是受支持的成功结果，不触发 chooser、网络或替代实现。</zh-CN><en>Undefined is a supported successful result and triggers no chooser, network, or fallback implementation.</en></lang>
+  return undefined;
+}
+
+// <lang><zh-CN>页面注入的 adapter 仅暴露四个受限 action，不携带 transport、URL、凭据、timer 或全局队列。</zh-CN><en>The page-injected adapter exposes only four bounded actions and carries no transport, URL, credential, timer, or global queue.</en></lang>
+const fixtureUploadAdapter = Object.freeze({
+  select: addFixtureLocalUploadRecord,
+  preview: observeFixtureUploadIntent,
+  remove: removeFixtureLocalUploadRecord,
+  retry: observeFixtureUploadIntent
+});
+
+/**
+ * @lang zh-CN 接受 UUpload 产生的新数组并替换页面记录容器；无效输入保持原状态。
+ * @lang en Accepts a new array produced by UUpload and replaces the page record container; invalid input retains prior state.
+ * @param {unknown} value <lang><zh-CN>候选记录数组。</zh-CN><en>Candidate record array.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；有效时只写页面 ref。</zh-CN><en>No return value; on validity writes only the page ref.</en></lang>
+ */
+function updateFixtureUploadFiles(value) {
+  // <lang><zh-CN>数组 guard 防止任意事件 payload 被解释为文件状态。</zh-CN><en>The array guard prevents an arbitrary event payload from being interpreted as file state.</en></lang>
+  if (!Array.isArray(value)) return;
+  // <lang><zh-CN>复制外层数组保持调用方拥有最终容器 identity。</zh-CN><en>Copies the outer array so the caller owns the final container identity.</en></lang>
+  fixtureUploadFiles.value = [...value];
+}
+
+/**
+ * @lang zh-CN 将 upload adapter 的公开 status 投影为 smoke marker，不保存文件、event、requestId 或失败 cause。
+ * @lang en Projects the public upload-adapter status into a smoke marker without storing file, event, requestId, or failure cause.
+ * @param {unknown} state <lang><zh-CN>候选 adapter 状态。</zh-CN><en>Candidate adapter state.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写稳定文字 marker。</zh-CN><en>No return value; writes only the stable text marker.</en></lang>
+ */
+function recordFixtureUploadAdapterState(state) {
+  // <lang><zh-CN>只读取非 null 对象的字符串 status；其他输入统一收束为 unknown。</zh-CN><en>Reads a string status only from a non-null object; every other input converges to unknown.</en></lang>
+  const status = typeof state === 'object' && state !== null && typeof state.status === 'string' ? state.status : 'unknown';
+  fixtureUploadAdapterState.value = status;
 }
 
 /**

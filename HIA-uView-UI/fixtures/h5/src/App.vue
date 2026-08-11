@@ -1,20 +1,54 @@
 <!--
 @component H5FixtureApp
-@lang zh-CN 以本地声明数据展示现有 HIA-uView 组件，并提供六组件表单/输入族的 H5 组合证据；fixture 不连接 API、router、storage、业务 store 或外部脚本。
-@lang en Displays current HIA-uView components with local declarative data and provides H5 composition evidence for the six-component form/input family; the fixture connects to no API, router, storage, business store, or external script.
+@lang zh-CN 以本地声明数据展示现有 HIA-uView 组件，并提供表单/输入族与十四组件受控选择族的 H5 组合证据；fixture 不连接 API、router、storage、业务 store、平台 chooser 或外部脚本。
+@lang en Displays current HIA-uView components with local declarative data and provides H5 composition evidence for the form/input family and the fourteen-component controlled-selection family; the fixture connects to no API, router, storage, business store, platform chooser, or external script.
 -->
 <template>
   <main class="fixture-page">
     <h1>HIA-uView H5 fixture / H5 验证 fixture</h1>
     <USection title="Local availability / 本地可用性" sub-title="H5 build and smoke evidence / H5 构建与 smoke 证据" />
     <UText text="u- naming remains available on H5 / H5 仍保持 u- 代码命名" type="secondary" />
-    <USelect v-model="selected" :options="options" placeholder="Select / 请选择" />
-    <USlider v-model="level" :show-value="true" :min="0" :max="10" />
-    <UDropdown v-model="selected">
-      <UDropdownItem value="public" label="Public / 公共" />
-      <UDropdownItem value="private" label="Private / 私有" />
-    </UDropdown>
     <UButton label="Local action / 本地操作" />
+    <!--
+    @lang zh-CN 本段在一个稳定 marker 下真实组合十四个受控选择、日期、数值与上传组件；每个 model、有限 option 和 adapter 均由当前页面拥有。
+    @lang en This section actually composes all fourteen controlled choice, date, numeric, and upload components under one stable marker; the current page owns every model, finite option collection, and adapter.
+    <lang><zh-CN>dropdown 使用显式 name/options 模式；upload adapter 只变换本地记录数组，不打开 chooser、不读取文件、不访问网络或持久化。</zh-CN><en>Dropdown uses explicit name/options mode; the upload adapter only transforms local record arrays and opens no chooser, reads no file, accesses no network, and persists nothing.</en></lang>
+    -->
+    <section class="fixture-p67-controls" data-smoke="p67-controlled-composition">
+      <h2>Controlled local inputs / 受控本地输入</h2>
+      <UCheckboxGroup v-model="p67CheckboxValues" :max="2">
+        <UCheckbox value="alpha" label="Alpha / 甲" />
+        <UCheckbox :value="2" label="Two / 二" />
+      </UCheckboxGroup>
+      <URadioGroup v-model="p67RadioValue">
+        <URadio value="alpha" label="Alpha / 甲" />
+        <URadio :value="2" label="Two / 二" />
+      </URadioGroup>
+      <USwitch v-model="p67SwitchValue" label="Local state / 本地状态" />
+      <UPicker v-model="p67PickerValue" :columns="p67PickerColumns" title="Local picker / 本地选择器" />
+      <UCalendar v-model="p67CalendarValue" view-date="2026-08-01" today="2026-08-11" />
+      <USelect v-model="p67SelectValue" :options="p67SelectOptions" :confirm-mode="true" placeholder="Select locally / 本地选择" />
+      <UDropdown v-model="p67DropdownOpenName">
+        <UDropdownItem v-model="p67DropdownValue" name="scope" label="Scope / 范围" :options="p67DropdownOptions" />
+      </UDropdown>
+      <UNumberBox v-model="p67NumberValue" :min="0" :max="10" :step="0.5" />
+      <URate v-model="p67RateValue" :count="5" />
+      <USlider v-model="p67SliderValue" :show-value="true" :min="0" :max="10" :step="2" />
+      <UUpload
+        :visible="true"
+        :model-value="p67UploadFiles"
+        :adapter="p67UploadAdapter"
+        label="Local files / 本地文件"
+        select-text="Add local record / 添加本地记录"
+        preview-text="Observe / 观察"
+        remove-text="Remove / 删除"
+        retry-text="Retry / 重试"
+        :max="3"
+        @update:model-value="updateP67UploadFiles"
+        @adapter-state="recordP67UploadAdapterState"
+      />
+      <p data-smoke="p67-adapter-state">{{ p67UploadAdapterState }}</p>
+    </section>
     <!--
     @lang zh-CN 本段以中性页面本地模型真实组合 UForm、UFormItem、UField、UInput、UTextarea 与 USearch，并提供显式 validate/clear/reset 观察入口。
     @lang en This section composes UForm, UFormItem, UField, UInput, UTextarea, and USearch over a neutral page-local model and provides explicit validate/clear/reset observation entries.
@@ -84,8 +118,7 @@
     <UNumberKeyboard :visible="true" :keys="fixtureNumberKeys" label="Local numeric keys / 本地数值键" backspace-label="Remove / 删除" confirm-text="Confirm / 确认" />
     <UCarKeyboard :visible="true" :rows="fixtureCarRows" label="Local row keys / 本地行键" phase="primary" next-phase="secondary" switch-text="Next / 下一组" backspace-label="Remove / 删除" confirm-text="Confirm / 确认" />
     <UKeyboard :visible="false" mode="number" :number-keys="fixtureNumberKeys" label="Local composed keys / 本地组合键" backspace-label="Remove / 删除" confirm-text="Confirm / 确认" />
-    <!-- <lang><zh-CN>文件状态、裁剪选择和验证码状态均来自 fixture 本地声明，验证受控意图面可在 H5 构建中解析；不选择文件、不加载图片、不裁剪像素、不发送验证码或计时。</zh-CN><en>File state, crop selection, and verification state all come from fixture local declarations to verify controlled intent surfaces resolve in the H5 build; they choose no file, load no image, crop no pixel, send no code, and run no timer.</en></lang> -->
-    <UUpload :visible="true" :files="fixtureFiles" label="Local files / 本地文件" select-text="Select / 选择" preview-text="Preview / 预览" remove-text="Remove / 删除" retry-text="Retry / 重试" :max="3" />
+    <!-- <lang><zh-CN>裁剪选择和验证码状态均来自 fixture 本地声明，验证受控意图面可在 H5 构建中解析；不选择文件、不加载图片、不裁剪像素、不发送验证码或计时。</zh-CN><en>Crop selection and verification state both come from fixture local declarations to verify controlled intent surfaces resolve in the H5 build; they choose no file, load no image, crop no pixel, send no code, and run no timer.</en></lang> -->
     <UAvatarCropper :visible="true" select-text="Select source / 选择来源" />
     <UVerificationCode :visible="true" label="Local request state / 本地请求状态" status-text="Caller state / 调用方状态" remaining-text="No local timer / 无本地计时器" :remaining-seconds="30" request-text="Request / 请求" :request-enabled="true" />
     <!-- <lang><zh-CN>本段用 fixture-owned 静态数据组合 P56.2 受控数值、notice、sheet、step 和 timeline；它们不开始 timer、原生全屏、自动轮播、流程或远程数据访问。</zh-CN><en>This section composes P56.2 controlled number, notice, sheet, step, and timeline surfaces with fixture-owned static data; they start no timer, native fullscreen, automatic rotation, workflow, or remote data access.</en></lang> -->
@@ -113,29 +146,144 @@
     <URootPortal :visible="true" :layer="1200"><UTransition :visible="true" mode="fade"><UTopTips :visible="true" message="Local overlay / 本地浮层" close-text="Close / 关闭" @close="recordP54Intent('tips')" /></UTransition></URootPortal>
     <UMask :visible="false" :clickable="true" @click="recordP54Intent('mask')" />
     <ULoadingPopup :visible="false" label="Local popup / 本地弹层" :mask-closable="true" @close="recordP54Intent('popup')" />
-    <p data-smoke="selected">{{ selected }}</p>
-    <p data-smoke="level">{{ level }}</p>
+    <p data-smoke="selected">{{ p67SelectValue }}</p>
+    <p data-smoke="level">{{ p67SliderValue }}</p>
     <p data-smoke="p54-intent">{{ p54Intent }}</p>
   </main>
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue';
-import { UActionSheetItem, UAvatarCropper, UBackTop, UButton, UCarKeyboard, UCellItem, UCitySelect, UConfigProvider, UDropdown, UDropdownItem, UFab, UKeyboard, ULoading, ULoadingPopup, UMask, UMessageInput, UNavbar, UNoNetwork, UNoticeBar, UNumberKeyboard, URootPortal, USafeBottom, USection, USelect, USlider, UStatusBar, UText, UTopTips, UTransition, UUpload, UVerificationCode } from '../../../src/index.mjs';
+import { UActionSheetItem, UAvatarCropper, UBackTop, UButton, UCarKeyboard, UCellItem, UCitySelect, UConfigProvider, UFab, UKeyboard, ULoading, ULoadingPopup, UMask, UMessageInput, UNavbar, UNoNetwork, UNoticeBar, UNumberKeyboard, URootPortal, USafeBottom, USection, UStatusBar, UText, UTopTips, UTransition, UVerificationCode } from '../../../src/index.mjs';
 // <lang><zh-CN>本批具名导入只把受控 P56.2 表面提供给 H5 fixture；导入本身不注册组件、启动 timer 或写入全局状态。</zh-CN><en>These named imports provide controlled P56.2 surfaces to the H5 fixture only; importing registers no component, starts no timer, and writes no global state.</en></lang>
 import { UCircleProgress, UColumnNotice, UCountDown, UFullScreen, UIndexAnchor, UIndexList, ULazyLoad, URowNotice, UStep, USubsection, UTable, UTabsSwiper, UTd, UTh, UTimeLine, UTimeLineItem, UTr, UWaterfall } from '../../../src/index.mjs';
 // <lang><zh-CN>六个表单/输入组件通过具名入口进入 H5 fixture；该导入不安装全局 plugin，也不创建业务模型或服务。</zh-CN><en>The six form/input components enter the H5 fixture through named exports; this import installs no global plugin and creates no business model or service.</en></lang>
 import { UField, UForm, UFormItem, UInput, USearch, UTextarea } from '../../../src/index.mjs';
+// <lang><zh-CN>十四个受控组件通过同一具名入口进入页面局部组合；该导入不注册全局组件、不提供 adapter，也不启动平台能力。</zh-CN><en>The fourteen controlled components enter the page-local composition through the same named entry; this import registers no global component, supplies no adapter, and starts no platform capability.</en></lang>
+import { UCalendar, UCheckbox, UCheckboxGroup, UDropdown, UDropdownItem, UNumberBox, UPicker, URadio, URadioGroup, URate, USelect, USlider, USwitch, UUpload } from '../../../src/index.mjs';
 
-// <lang><zh-CN>fixture 状态只来自本地 ref，便于 H5 smoke 对稳定文本进行检查。</zh-CN><en>Fixture state comes from local refs only, allowing H5 smoke to inspect stable text.</en></lang>
-const selected = ref('public');
-const level = ref(5);
-// <lang><zh-CN>本地观察文字只记录 P54 intent 名称，用于 H5 build/smoke，不触发路由、滚动、网络或存储。</zh-CN><en>Local observation copy records only a P54 intent name for H5 build/smoke and triggers no router, scrolling, network, or storage.</en></lang>
-const p54Intent = ref('none');
-const options = Object.freeze([
+// <lang><zh-CN>checkbox group 的透明键数组由当前页面拥有，子项不能直接修改数组。</zh-CN><en>The current page owns the checkbox group's transparent-key array, and children cannot directly mutate it.</en></lang>
+const p67CheckboxValues = ref(['alpha']);
+// <lang><zh-CN>radio group 的单值键由当前页面拥有，不与 dropdown 或 select 共用状态。</zh-CN><en>The current page owns the radio group's scalar key, sharing no state with dropdown or select.</en></lang>
+const p67RadioValue = ref('alpha');
+// <lang><zh-CN>switch 的布尔值只表示中性 fixture 状态，不表示权限或业务开关。</zh-CN><en>The switch Boolean represents neutral fixture state only, not authorization or a business switch.</en></lang>
+const p67SwitchValue = ref(false);
+// <lang><zh-CN>picker 的两列调用方值保持原始字符串/数字类型。</zh-CN><en>The picker's two caller values preserve their original string and number types.</en></lang>
+const p67PickerValue = ref(['alpha', 1]);
+// <lang><zh-CN>固定日期使构建证据不依赖执行机器的系统日期或时区。</zh-CN><en>The fixed date keeps build evidence independent of the executing machine's system date or time zone.</en></lang>
+const p67CalendarValue = ref('2026-08-11');
+// <lang><zh-CN>select 的受控值只从本页有限 options 取值。</zh-CN><en>The controlled select value comes only from this page's finite options.</en></lang>
+const p67SelectValue = ref('public');
+// <lang><zh-CN>dropdown parent 的 active name 与 item 选择值分离，避免把面板可见性当作选项值。</zh-CN><en>The dropdown parent's active name is separate from the item selection value, avoiding treatment of panel visibility as an option value.</en></lang>
+const p67DropdownOpenName = ref('');
+// <lang><zh-CN>dropdown item 的选项值由页面显式写回。</zh-CN><en>The page explicitly writes back the dropdown item's option value.</en></lang>
+const p67DropdownValue = ref('public');
+// <lang><zh-CN>number-box 初值对齐半步网格，只验证中性数值规整。</zh-CN><en>The number-box initial value aligns to the half-step grid and verifies neutral numeric normalization only.</en></lang>
+const p67NumberValue = ref(2.5);
+// <lang><zh-CN>rate 数值只是有限本地刻度，不表示评价提交。</zh-CN><en>The rate value is a finite local scale only and represents no review submission.</en></lang>
+const p67RateValue = ref(3);
+// <lang><zh-CN>slider 值对齐相对 min 的固定步长。</zh-CN><en>The slider value aligns to a fixed step relative to its minimum.</en></lang>
+const p67SliderValue = ref(4);
+// <lang><zh-CN>adapter marker 只保存公开 status discriminant，不保留文件、事件或失败对象。</zh-CN><en>The adapter marker stores only the public status discriminant and retains no file, event, or failure object.</en></lang>
+const p67UploadAdapterState = ref('idle');
+
+// <lang><zh-CN>picker 的两列是冻结的中性本地 options；它们不表示城市、产品、身份或远端枚举。</zh-CN><en>The two picker columns are frozen neutral local options; they represent no city, product, identity, or remote enumeration.</en></lang>
+const p67PickerColumns = Object.freeze([
+  Object.freeze([Object.freeze({ label: 'Alpha / 甲', value: 'alpha' }), Object.freeze({ label: 'Beta / 乙', value: 'beta' })]),
+  Object.freeze([Object.freeze({ label: 'One / 一', value: 1 }), Object.freeze({ label: 'Two / 二', value: 2 })])
+]);
+
+// <lang><zh-CN>select 拥有自己的有限 option 集合，不执行请求或动态脚本。</zh-CN><en>Select owns its finite option collection and executes no request or dynamic script.</en></lang>
+const p67SelectOptions = Object.freeze([
   Object.freeze({ label: 'Public / 公共', value: 'public' }),
   Object.freeze({ label: 'Private / 私有', value: 'private' })
 ]);
+// <lang><zh-CN>dropdown 使用独立冻结集合，避免与 select 共享可变数组或隐式业务关系。</zh-CN><en>Dropdown uses an independently frozen collection, avoiding a shared mutable array or implicit business relation with select.</en></lang>
+const p67DropdownOptions = Object.freeze([
+  Object.freeze({ label: 'Public / 公共', value: 'public' }),
+  Object.freeze({ label: 'Private / 私有', value: 'private' })
+]);
+
+// <lang><zh-CN>上传记录只是页面可读状态，不含路径、URL、字节、凭据、请求句柄或平台文件对象。</zh-CN><en>Upload records are page-readable state only and contain no path, URL, bytes, credential, request handle, or platform-file object.</en></lang>
+const p67UploadFiles = ref([
+  Object.freeze({ label: 'Local ready record / 本地就绪记录', status: 'ready', statusText: 'Ready / 就绪' }),
+  Object.freeze({ label: 'Local retry record / 本地重试记录', status: 'error', statusText: 'Review locally / 本地审阅' })
+]);
+
+// <lang><zh-CN>select adapter 可追加的唯一记录是冻结的 fixture 常量；它不是 chooser 结果或真实文件。</zh-CN><en>The sole record appendable by the select adapter is a frozen fixture constant; it is neither a chooser result nor a real file.</en></lang>
+const P67_ADDED_UPLOAD_RECORD = Object.freeze({ label: 'Local added record / 本地新增记录', status: 'ready', statusText: 'Added locally / 本地新增' });
+
+/**
+ * @lang zh-CN 为 select intent 返回新的本地记录数组；函数只复制 adapter context 的有限记录并追加 fixture 常量。
+ * @lang en Returns a new local-record array for a select intent; the function only copies finite records from adapter context and appends the fixture constant.
+ * @param {{files: ReadonlyArray<object>}} context <lang><zh-CN>UUpload 提供的冻结浅层记录快照。</zh-CN><en>Frozen shallow record snapshot supplied by UUpload.</en></lang>
+ * @returns {ReadonlyArray<object>} <lang><zh-CN>新的冻结候选数组。</zh-CN><en>New frozen candidate array.</en></lang>
+ */
+function addP67LocalUploadRecord(context) {
+  // <lang><zh-CN>spread 只复制数组槽位，不读取文件内容、打开 chooser 或修改 caller source。</zh-CN><en>Spread copies array slots only and neither reads file content, opens a chooser, nor mutates caller source.</en></lang>
+  return Object.freeze([...context.files, P67_ADDED_UPLOAD_RECORD]);
+}
+
+/**
+ * @lang zh-CN 为 remove intent 构造不含目标索引的新数组；记录对象保持调用方 identity。
+ * @lang en Builds a new array without the target index for a remove intent; record objects retain caller identity.
+ * @param {{files: ReadonlyArray<object>, index: number}} context <lang><zh-CN>UUpload 提供的冻结文件快照与有限索引。</zh-CN><en>Frozen file snapshot and bounded index supplied by UUpload.</en></lang>
+ * @returns {ReadonlyArray<object>} <lang><zh-CN>新的冻结候选数组。</zh-CN><en>New frozen candidate array.</en></lang>
+ */
+function removeP67LocalUploadRecord(context) {
+  // <lang><zh-CN>局部数组只收集非目标记录，永不修改 context.files。</zh-CN><en>The local array collects only nontarget records and never mutates context.files.</en></lang>
+  const nextFiles = [];
+  for (let index = 0; index < context.files.length; index += 1) {
+    // <lang><zh-CN>目标索引被明确跳过；其他槽位按原顺序复制。</zh-CN><en>The target index is explicitly skipped; all other slots are copied in original order.</en></lang>
+    if (index !== context.index) nextFiles.push(context.files[index]);
+  }
+  return Object.freeze(nextFiles);
+}
+
+/**
+ * @lang zh-CN 结束 preview/retry 的本地观察而不产生 model 候选；组件仍会报告成功 adapter 状态。
+ * @lang en Completes local preview/retry observation without producing a model candidate; the component still reports a successful adapter state.
+ * @returns {undefined} <lang><zh-CN>明确无文件列表更新。</zh-CN><en>Explicitly no file-list update.</en></lang>
+ */
+function observeP67UploadIntent() {
+  // <lang><zh-CN>undefined 是显式“成功但无 model 更新”结果，不触发任何替代行为。</zh-CN><en>Undefined explicitly means success without a model update and triggers no fallback behavior.</en></lang>
+  return undefined;
+}
+
+// <lang><zh-CN>adapter 只暴露四个受限 action；没有 transport、chooser、凭据、URL、timer 或共享队列。</zh-CN><en>The adapter exposes only four bounded actions and has no transport, chooser, credential, URL, timer, or shared queue.</en></lang>
+const p67UploadAdapter = Object.freeze({
+  select: addP67LocalUploadRecord,
+  preview: observeP67UploadIntent,
+  remove: removeP67LocalUploadRecord,
+  retry: observeP67UploadIntent
+});
+
+/**
+ * @lang zh-CN 接受 UUpload 唯一允许的数组候选并替换页面 ref；无效值保持原状态。
+ * @lang en Accepts the sole array candidate permitted from UUpload and replaces the page ref; invalid values retain prior state.
+ * @param {unknown} nextFiles <lang><zh-CN>组件报告的候选文件记录集合。</zh-CN><en>Candidate file-record collection reported by the component.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；有效时只写页面局部 ref。</zh-CN><en>No return value; on validity writes only the page-local ref.</en></lang>
+ */
+function updateP67UploadFiles(nextFiles) {
+  // <lang><zh-CN>数组 guard 防止 fixture 把任意事件值解释为文件状态。</zh-CN><en>The array guard prevents the fixture from interpreting an arbitrary event value as file state.</en></lang>
+  if (!Array.isArray(nextFiles)) return;
+  // <lang><zh-CN>新容器保持页面拥有写回 identity，记录对象不被解析或克隆。</zh-CN><en>A new container keeps writeback identity page-owned while record objects are neither interpreted nor cloned.</en></lang>
+  p67UploadFiles.value = [...nextFiles];
+}
+
+/**
+ * @lang zh-CN 把受限 adapter 状态的 status discriminant 投影为可见 smoke 文字；不保存 event、文件或失败 cause。
+ * @lang en Projects the status discriminant from a bounded adapter state into visible smoke text; stores no event, file, or failure cause.
+ * @param {unknown} state <lang><zh-CN>UUpload 报告的候选 adapter 状态。</zh-CN><en>Candidate adapter state reported by UUpload.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写稳定本地 marker。</zh-CN><en>No return value; writes only the stable local marker.</en></lang>
+ */
+function recordP67UploadAdapterState(state) {
+  // <lang><zh-CN>只读取非 null 对象的字符串 status；其他输入统一收束为 unknown。</zh-CN><en>Reads a string status only from a non-null object; every other input converges to unknown.</en></lang>
+  const status = typeof state === 'object' && state !== null && typeof state.status === 'string' ? state.status : 'unknown';
+  p67UploadAdapterState.value = status;
+}
+// <lang><zh-CN>本地观察文字只记录 P54 intent 名称，用于 H5 build/smoke，不触发路由、滚动、网络或存储。</zh-CN><en>Local observation copy records only a P54 intent name for H5 build/smoke and triggers no router, scrolling, network, or storage.</en></lang>
+const p54Intent = ref('none');
 // <lang><zh-CN>有限列和受控值只服务 H5 组合编译；它们是本地静态数据，不构成地点、城市或业务模型。</zh-CN><en>The finite columns and controlled values serve H5 composition compilation only; they are local static data and form no place, city, or business model.</en></lang>
 const fixtureSelectorColumns = Object.freeze([
   Object.freeze([Object.freeze({ label: 'First / 第一', value: 'first' }), Object.freeze({ label: 'Second / 第二', value: 'second' })]),
@@ -166,11 +314,6 @@ const fixtureWaterfallItems = Object.freeze([
   Object.freeze({ label: 'Column item A / 列项 A', value: 'a' }),
   Object.freeze({ label: 'Column item B / 列项 B', value: 'b' }),
   Object.freeze({ label: 'Column item C / 列项 C', value: 'c' })
-]);
-// <lang><zh-CN>文件记录只是可读本地状态投影，不是文件路径、二进制、上传任务或缓存。</zh-CN><en>File records are readable local-state projections only, not file paths, binary data, upload tasks, or cache.</en></lang>
-const fixtureFiles = Object.freeze([
-  Object.freeze({ label: 'Local ready record / 本地就绪记录', status: 'ready', statusText: 'Ready / 就绪' }),
-  Object.freeze({ label: 'Local retry record / 本地重试记录', status: 'error', statusText: 'Review locally / 本地审阅' })
 ]);
 
 // <lang><zh-CN>表单 ref 只用于三个显式本地观察动作；初始 null 不触发自动校验。</zh-CN><en>The form ref serves only three explicit local observation actions; its initial null starts no automatic validation.</en></lang>

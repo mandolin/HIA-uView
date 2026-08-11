@@ -452,6 +452,16 @@ uploadRef.select();
 // <lang><zh-CN>验证显式 runtime export、plugin、可选 global declaration 与 locale helper 的静态形状；没有产生 import-time 副作用。</zh-CN><en>Verifies the static shapes of explicit runtime exports, plugin, optional global declaration, and locale helper; no import-time side effect occurs.</en></lang>
 const plugin: Plugin = UView;
 const globalCheckbox: GlobalComponents['UCheckbox'] = UCheckbox;
+// <lang><zh-CN>checkbox group 的可选 global 映射必须解析到同一精确组件值。</zh-CN><en>The optional checkbox-group global mapping must resolve to the same precise component value.</en></lang>
+const globalCheckboxGroup: GlobalComponents['UCheckboxGroup'] = UCheckboxGroup;
+// <lang><zh-CN>radio leaf 的可选 global 映射只做静态赋值，不注册应用。</zh-CN><en>The optional radio-leaf global mapping performs static assignment only and registers no application.</en></lang>
+const globalRadio: GlobalComponents['URadio'] = URadio;
+// <lang><zh-CN>radio group 的可选 global 映射必须保留其精确受控实例类型。</zh-CN><en>The optional radio-group global mapping must retain its precise controlled-instance type.</en></lang>
+const globalRadioGroup: GlobalComponents['URadioGroup'] = URadioGroup;
+// <lang><zh-CN>switch 的可选 global 映射验证 package augmentation 没有遗漏该组件。</zh-CN><en>The optional switch global mapping verifies the package augmentation does not omit this component.</en></lang>
+const globalSwitch: GlobalComponents['USwitch'] = USwitch;
+// <lang><zh-CN>picker 的可选 global 映射与具名导出保持同一组件类型。</zh-CN><en>The optional picker global mapping retains the same component type as the named export.</en></lang>
+const globalPicker: GlobalComponents['UPicker'] = UPicker;
 // <lang><zh-CN>可选 global augmentation 中的展示与表单/输入组件只检查类型映射，不执行组件注册。</zh-CN><en>Display and form/input components in optional global augmentation check only type mappings and execute no component registration.</en></lang>
 const globalAlertTips: GlobalComponents['UAlertTips'] = UAlertTips;
 const globalCalendar: GlobalComponents['UCalendar'] = UCalendar;
@@ -488,6 +498,7 @@ void [
   globalAlertTips,
   globalCalendar,
   globalCheckbox,
+  globalCheckboxGroup,
   globalDropdown,
   globalDropdownItem,
   globalField,
@@ -495,10 +506,14 @@ void [
   globalFormItem,
   globalInput,
   globalNumberBox,
+  globalPicker,
+  globalRadio,
+  globalRadioGroup,
   globalRate,
   globalSearch,
   globalSelect,
   globalSlider,
+  globalSwitch,
   globalTag,
   globalTextarea,
   globalUpload,

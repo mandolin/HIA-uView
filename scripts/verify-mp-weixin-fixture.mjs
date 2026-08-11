@@ -42,6 +42,27 @@ const P66_FORM_ACTION_NAMES = Object.freeze([
 ]);
 
 /**
+ * @lang zh-CN P67 仓内 fixture 必须在统一 marker 下真实组合并输出的十四个稳定 `u-*` 组件名。
+ * @lang en Fourteen stable `u-*` component names that the in-repository P67 fixture must actually compose and emit under one unified marker.
+ */
+const P67_CONTROL_COMPONENT_NAMES = Object.freeze([
+  'u-checkbox',
+  'u-checkbox-group',
+  'u-radio',
+  'u-radio-group',
+  'u-switch',
+  'u-picker',
+  'u-calendar',
+  'u-select',
+  'u-dropdown',
+  'u-dropdown-item',
+  'u-number-box',
+  'u-rate',
+  'u-slider',
+  'u-upload'
+]);
+
+/**
  * @lang zh-CN 从临时微信小程序产物读取并解析一个 JSON 配置文件；读取范围仅限本函数创建的输出目录。
  * @lang en Reads and parses one JSON configuration file from the temporary WeChat Mini Program output; read scope is limited to the output directory created by this function.
  * @param {string} outputDirectory <lang><zh-CN>本次校验创建的绝对临时输出目录。</zh-CN><en>Absolute temporary output directory created by this validation run.</en></lang>
@@ -75,6 +96,16 @@ async function verifyMpWeixinFixture() {
   for (const actionName of P66_FORM_ACTION_NAMES) {
     assert.match(fixturePageSource, new RegExp(`function ${actionName}\\(`, 'u'), `The fixture source must retain ${actionName}.`);
   }
+
+  // <lang><zh-CN>统一 marker 与十四个源码标签证明 P67 组件属于同一页面组合，而非旧旁路标签、闲置 Easycom 或样式入口。</zh-CN><en>The unified marker and fourteen source tags prove P67 components belong to one page composition rather than legacy side tags, idle Easycom mappings, or a style entry.</en></lang>
+  assert.match(fixturePageSource, /data-smoke="p67-controlled-composition"/u, 'The fixture source must retain the unified P67 composition marker.');
+  for (const componentName of P67_CONTROL_COMPONENT_NAMES) {
+    assert.match(fixturePageSource, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `The fixture source must compose ${componentName}.`);
+  }
+
+  // <lang><zh-CN>精确绑定断言锁定 dropdown options mode 与页面注入 upload adapter；两者不得退化为 legacy 单值/纯 intent。</zh-CN><en>Exact binding assertions lock dropdown options mode and the page-injected upload adapter; neither may regress to a legacy scalar or pure intent.</en></lang>
+  assert.match(fixturePageSource, /<u-dropdown-item\s+name="scope"[\s\S]+:options="fixtureDropdownOptions"[\s\S]+@update:model-value="updateFixtureDropdownValue"/u, 'The fixture source must use UDropdownItem options mode.');
+  assert.match(fixturePageSource, /<u-upload[\s\S]+:adapter="fixtureUploadAdapter"[\s\S]+@adapter-state="recordFixtureUploadAdapterState"/u, 'The fixture source must inject and observe its page-local UUpload adapter.');
 
   // <lang><zh-CN>用固定前缀创建唯一系统临时目录；该目录不位于仓库内，且只由本次验证拥有。</zh-CN><en>Creates a unique system temporary directory with a fixed prefix; it is outside the repository and owned only by this validation run.</en></lang>
   const outputDirectory = await mkdtemp(join(tmpdir(), 'hia-uview-mp-weixin-'));
@@ -127,11 +158,26 @@ async function verifyMpWeixinFixture() {
       assert.equal(usingComponents?.[componentName], expectedComponentPath, `The fixture page must statically resolve ${componentName} to its leaf SFC output.`);
     }
 
+    // <lang><zh-CN>十四个 P67 组件必须各自从仓内 UI 输入树映射到 leaf SFC，排除未知标签或仅 runtime barrel 可见。</zh-CN><en>Each of the fourteen P67 components must map from the in-repository UI input tree to its leaf SFC, excluding unknown tags or visibility only through the runtime barrel.</en></lang>
+    for (const componentName of P67_CONTROL_COMPONENT_NAMES) {
+      // <lang><zh-CN>目标路径由固定组件名构造，始终留在本轮临时输出对应的仓内 source tree。</zh-CN><en>The target path is constructed from a fixed component name and remains in the in-repository source tree represented by this run's temporary output.</en></lang>
+      const expectedComponentPath = `../../../../../src/components/${componentName}/${componentName}`;
+      assert.equal(usingComponents?.[componentName], expectedComponentPath, `The fixture page must statically resolve ${componentName} to its leaf SFC output.`);
+    }
+
     // <lang><zh-CN>首页 WXML 中的中性 data marker 与六个标签证明目标组件真实位于页面组合，而不仅是 page JSON 的闲置映射。</zh-CN><en>The neutral data marker and six tags in home-page WXML prove the target components are actually in page composition rather than idle mappings in page JSON.</en></lang>
     const fixtureHomeMarkup = await readFile(resolve(outputDirectory, `${fixtureHomePage}.wxml`), 'utf8');
     assert.match(fixtureHomeMarkup, /data-smoke="p66-form-composition"/, 'The generated fixture page must retain the neutral P66 form-composition marker.');
     assert.match(fixtureHomeMarkup, /data-smoke="p66-form-result"/, 'The generated fixture page must retain the visible P66 form-result marker.');
     for (const componentName of P66_FORM_COMPONENT_NAMES) {
+      assert.match(fixtureHomeMarkup, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `The generated fixture page must compose ${componentName}.`);
+    }
+
+
+    // <lang><zh-CN>生成 WXML 必须保留统一 P67 marker、adapter 观察 marker 与十四个标签，防止 page JSON 的闲置映射冒充真实消费。</zh-CN><en>Generated WXML must retain the unified P67 marker, adapter-observation marker, and all fourteen tags so idle page-JSON mappings cannot masquerade as actual consumption.</en></lang>
+    assert.match(fixtureHomeMarkup, /data-smoke="p67-controlled-composition"/, 'The generated fixture page must retain the unified P67 composition marker.');
+    assert.match(fixtureHomeMarkup, /data-smoke="p67-adapter-state"/, 'The generated fixture page must retain the visible P67 adapter-state marker.');
+    for (const componentName of P67_CONTROL_COMPONENT_NAMES) {
       assert.match(fixtureHomeMarkup, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `The generated fixture page must compose ${componentName}.`);
     }
 
@@ -156,6 +202,19 @@ async function verifyMpWeixinFixture() {
     }
     await Promise.all(p66ArtifactChecks);
 
+    // <lang><zh-CN>十四个 P67 leaf 均须输出执行、映射、模板与样式四件套；只有页面标签或单个 WXML 文件不足以构成可导入证据。</zh-CN><en>Every P67 leaf must emit the executable, mapping, template, and style quartet; a page tag or one WXML file alone is insufficient import evidence.</en></lang>
+    const p67ArtifactChecks = [];
+    for (const componentName of P67_CONTROL_COMPONENT_NAMES) {
+      // <lang><zh-CN>扩展名来自固定四项集合，每个目标均位于本轮 outputDirectory 内。</zh-CN><en>Extensions come from a fixed four-item set, and every target remains inside this run's outputDirectory.</en></lang>
+      for (const extension of ['js', 'json', 'wxml', 'wxss']) {
+        p67ArtifactChecks.push(access(resolve(
+          outputDirectory,
+          `src/components/${componentName}/${componentName}.${extension}`
+        )));
+      }
+    }
+    await Promise.all(p67ArtifactChecks);
+
     // <lang><zh-CN>读取两个内部组合根的生成 JSON，确认 UField 的内建 UInput 和 UFormItem 的校验消息不是只存在于源码注释。</zh-CN><en>Reads generated JSON for the two internal composition roots, confirming that UField's built-in UInput and UFormItem's validation message do not exist only in source comments.</en></lang>
     const [fieldConfiguration, formItemConfiguration] = await Promise.all([
       readGeneratedJson(outputDirectory, 'src/components/u-field/u-field.json'),
@@ -179,6 +238,10 @@ async function verifyMpWeixinFixture() {
     assert.match(applicationStyles, /\.u-image\{/, 'The generated app WXSS must include UImage rules from the explicit style entry.');
     // <lang><zh-CN>应用级样式入口必须包含六组件根规则；结合 page mapping 与 leaf 产物可证明样式不会仅在 H5 存在。</zh-CN><en>The application-level style entry must include root rules for all six components; together with page mappings and leaf artifacts this proves styles do not exist only on H5.</en></lang>
     for (const componentName of P66_FORM_COMPONENT_NAMES) {
+      assert.match(applicationStyles, new RegExp(`\\.${componentName}\\{`, 'u'), `The generated app WXSS must include ${componentName} rules from the explicit style entry.`);
+    }
+    // <lang><zh-CN>应用级样式入口也必须包含十四组件根规则；结合 WXML、mapping 与 leaf 四件套可排除仅 H5 有样式。</zh-CN><en>The application-level style entry must also include root rules for all fourteen components; together with WXML, mappings, and leaf quartets this excludes H5-only styling.</en></lang>
+    for (const componentName of P67_CONTROL_COMPONENT_NAMES) {
       assert.match(applicationStyles, new RegExp(`\\.${componentName}\\{`, 'u'), `The generated app WXSS must include ${componentName} rules from the explicit style entry.`);
     }
   } finally {

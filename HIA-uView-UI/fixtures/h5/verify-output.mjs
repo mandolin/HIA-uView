@@ -1,7 +1,7 @@
 /**
  * @module h5-fixture-output
- * @lang zh-CN 验证 H5 fixture 源码与输出包含本地应用、P66 六组件真实组合、HIA-uView 样式和可复核 smoke 文本，不执行浏览器或网络。
- * @lang en Verifies that H5 fixture source and output contain the local app, actual P66 six-component composition, HIA-uView style, and inspectable smoke text without browser or network execution.
+ * @lang zh-CN 验证 H5 fixture 源码与输出包含本地应用、P66 表单组合、P67 十四组件真实组合、HIA-uView 样式和可复核 smoke 文本，不执行浏览器或网络。
+ * @lang en Verifies that H5 fixture source and output contain the local app, actual P66 form composition, actual P67 fourteen-component composition, HIA-uView style, and inspectable smoke text without browser or network execution.
  */
 
 import assert from 'node:assert/strict';
@@ -13,6 +13,48 @@ import { resolve } from 'node:path';
 const fixtureSourcePath = fileURLToPath(new URL('./src/App.vue', import.meta.url));
 const fixtureSource = await readFile(fixtureSourcePath, 'utf8');
 
+/**
+ * @lang zh-CN P67 H5 页面必须在统一 marker 下真实组合的十四个具名组件标签；列表不导入组件或扩大 runtime。
+ * @lang en Fourteen named component tags that the P67 H5 page must actually compose under one marker; the list imports no component and broadens no runtime.
+ */
+const P67_COMPONENT_TAGS = Object.freeze([
+  'UCheckbox',
+  'UCheckboxGroup',
+  'URadio',
+  'URadioGroup',
+  'USwitch',
+  'UPicker',
+  'UCalendar',
+  'USelect',
+  'UDropdown',
+  'UDropdownItem',
+  'UNumberBox',
+  'URate',
+  'USlider',
+  'UUpload'
+]);
+
+/**
+ * @lang zh-CN 每个字符串来自目标组件实际 render function 的稳定 class；验证仅在 JavaScript bundle 中执行，避免完整 CSS 入口制造假阳性。
+ * @lang en Every string comes from the target component's actual render function; verification runs only against JavaScript bundles so the complete CSS entry cannot create false positives.
+ */
+const P67_JAVASCRIPT_RUNTIME_MARKERS = Object.freeze([
+  'u-checkbox__mark',
+  'u-checkbox-group',
+  'u-radio__mark',
+  'u-radio-group',
+  'u-switch__control',
+  'u-picker__options',
+  'u-calendar__grid',
+  'u-select__options',
+  'u-dropdown--disabled',
+  'u-dropdown-item__controlled',
+  'u-number-box__input',
+  'u-rate__item',
+  'u-slider__control',
+  'u-upload__file'
+]);
+
 // <lang><zh-CN>源码必须保留中性组合/结果 marker、model/rules 绑定和三个显式 form API；这些静态断言只防止 fixture 漂移，行为仍由 runtime 测试证明。</zh-CN><en>Source must retain neutral composition/result markers, model/rules bindings, and three explicit form APIs; these static assertions only prevent fixture drift while runtime tests still prove behavior.</en></lang>
 assert.match(fixtureSource, /data-smoke="p66-form-composition"/);
 assert.match(fixtureSource, /data-smoke="p66-form-result"/);
@@ -23,6 +65,16 @@ for (const componentTag of ['UFormItem', 'UField', 'UInput', 'UTextarea', 'USear
 for (const actionName of ['validateP66Form', 'clearP66Validation', 'resetP66Fields']) {
   assert.match(fixtureSource, new RegExp(`function ${actionName}\\(`, 'u'), `H5 fixture source must retain ${actionName}.`);
 }
+
+// <lang><zh-CN>统一 marker 与逐标签断言证明 P67 组件属于页面真实组合，不是仅有 import、样式或孤立旧示例。</zh-CN><en>The unified marker and tag-by-tag assertions prove P67 components belong to actual page composition rather than only imports, styles, or isolated legacy examples.</en></lang>
+assert.match(fixtureSource, /data-smoke="p67-controlled-composition"/u, 'H5 fixture source must retain the unified P67 composition marker.');
+for (const componentTag of P67_COMPONENT_TAGS) {
+  assert.match(fixtureSource, new RegExp(`<${componentTag}(?:\\s|>)`, 'u'), `H5 fixture source must compose ${componentTag}.`);
+}
+
+// <lang><zh-CN>精确绑定断言锁定 dropdown options mode 与调用方 upload adapter；这两个能力不能退化为 legacy 单值按钮或纯上传 intent。</zh-CN><en>Exact binding assertions lock dropdown options mode and the caller-owned upload adapter; neither capability may regress to a legacy scalar button or pure upload intent.</en></lang>
+assert.match(fixtureSource, /<UDropdownItem\s+v-model="p67DropdownValue"\s+name="scope"[^>]+:options="p67DropdownOptions"/u, 'H5 fixture must use UDropdownItem options mode.');
+assert.match(fixtureSource, /<UUpload[\s\S]+:adapter="p67UploadAdapter"[\s\S]+@adapter-state="recordP67UploadAdapterState"/u, 'H5 fixture must inject and observe its page-local UUpload adapter.');
 
 // <lang><zh-CN>读取静态输出目录并筛选入口 HTML，避免将任意生成文件当作证据。</zh-CN><en>Reads the static output directory and selects entry HTML so arbitrary generated files are not treated as evidence.</en></lang>
 const outputDirectory = fileURLToPath(new URL('./dist/', import.meta.url));
@@ -50,6 +102,8 @@ const combinedJavaScript = javascriptText.join('\n');
 
 assert.match(combinedJavaScript, /p66-form-composition/, 'H5 JavaScript must retain the neutral P66 form-composition marker.');
 assert.match(combinedJavaScript, /p66-form-result/, 'H5 JavaScript must retain the visible P66 result marker.');
+assert.match(combinedJavaScript, /p67-controlled-composition/, 'H5 JavaScript must retain the unified P67 composition marker.');
+assert.match(combinedJavaScript, /p67-adapter-state/, 'H5 JavaScript must retain the visible P67 adapter-state marker.');
 
 // <lang><zh-CN>六个 class marker 分别来自实际渲染函数；它们与双 data marker 共同证明本地页面真实引入目标组件，而非仅加载其 CSS。</zh-CN><en>The six class markers each originate from an actual render function; together with the two data markers they prove the local page really imports the target components rather than loading only their CSS.</en></lang>
 for (const runtimeMarker of [
@@ -61,5 +115,10 @@ for (const runtimeMarker of [
   'u-search__input'
 ]) {
   assert.ok(combinedJavaScript.includes(runtimeMarker), `H5 JavaScript must contain the P66 runtime marker ${runtimeMarker}.`);
+}
+
+// <lang><zh-CN>十四个 class marker 只能从 JavaScript render 输出满足；未读取 CSS，因而静态全量 style.css 不能替代真实组件组合。</zh-CN><en>All fourteen class markers can be satisfied only by JavaScript render output; no CSS is read, so the static complete style.css cannot substitute for actual component composition.</en></lang>
+for (const runtimeMarker of P67_JAVASCRIPT_RUNTIME_MARKERS) {
+  assert.ok(combinedJavaScript.includes(runtimeMarker), `H5 JavaScript must contain the P67 runtime marker ${runtimeMarker}.`);
 }
 console.log('HIA-uView H5 fixture output contract passed.');
