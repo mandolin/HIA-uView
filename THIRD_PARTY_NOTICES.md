@@ -43,6 +43,10 @@ Third-party notices are additive: do not remove an existing notice merely becaus
 
 The following components are independently rewritten after reviewing the named files from `anyup/uView-Pro`, `uview-pro@0.6.13`, immutable commit `3bc1948d8f7c5d2bcb1ba3434cede1e709391a62`. The source files are covered by the repository MIT License. No upstream `$u` runtime, TypeScript props/types, assets, images, fonts, icons, brand material, networking, router, platform-system access, or generated output is incorporated. Each target is verified by the repository component contract tests, runtime tests where applicable, and H5/`mp-weixin` fixtures before release.
 
+The `0.6.13` provenance has been reconciled without rewriting these historical entries. The npm release and annotated tag resolve to commit `17d6b802194ea770fa602a96e3168e9ed116231c`, tree `806f7e0f98148778a29b92a0178f9a85dc4f5205`; review commit `3bc1948d8f7c5d2bcb1ba3434cede1e709391a62`, tree `5cf847b08c85c3481d0b9fa288b7841677df662a`, is its direct child and changes only three README files. All 24 source blobs below are identical at both commits. The exact upstream MIT text and `Copyright (c) 2025 uviewpro.cn` statement are preserved in [`HIA-uView-UI/LICENSES/uView-Pro-MIT.txt`](HIA-uView-UI/LICENSES/uView-Pro-MIT.txt) and travel with the UI package alongside its package-local [`THIRD_PARTY_NOTICES.md`](HIA-uView-UI/THIRD_PARTY_NOTICES.md).
+
+`0.6.13` 来源已经过追加式核对，且没有改写以下历史条目。npm release 与 annotated tag 指向 commit `17d6b802194ea770fa602a96e3168e9ed116231c`、tree `806f7e0f98148778a29b92a0178f9a85dc4f5205`；review commit `3bc1948d8f7c5d2bcb1ba3434cede1e709391a62`、tree `5cf847b08c85c3481d0b9fa288b7841677df662a` 是其直接子提交，并且只修改三个 README 文件。下列 24 个 source blob 在两个 commit 中逐项相同。上游 MIT 精确全文与 `Copyright (c) 2025 uviewpro.cn` 声明保存在 [`HIA-uView-UI/LICENSES/uView-Pro-MIT.txt`](HIA-uView-UI/LICENSES/uView-Pro-MIT.txt)，并与包内 [`THIRD_PARTY_NOTICES.md`](HIA-uView-UI/THIRD_PARTY_NOTICES.md) 一起随 UI package 分发。
+
 | Upstream source path | HIA target | Adoption form |
 | --- | --- | --- |
 | `src/uni_modules/uview-pro/components/u-navbar/u-navbar.vue` | `HIA-uView-UI/src/components/u-navbar/u-navbar.vue` | Materially derived, independently rewritten controlled title/side-intent surface. |
@@ -69,3 +73,7 @@ The following components are independently rewritten after reviewing the named f
 | `src/uni_modules/uview-pro/components/u-avatar-cropper/u-avatar-cropper.vue` | `HIA-uView-UI/src/components/u-avatar-cropper/u-avatar-cropper.vue` | Materially derived, independently rewritten crop-geometry intent surface without `weCropper`, Canvas, image chooser, pixel processing, or file output. |
 | `src/uni_modules/uview-pro/components/u-upload/u-upload.vue` | `HIA-uView-UI/src/components/u-upload/u-upload.vue` | Materially derived, independently rewritten caller file-state intent list without chooser, file bytes, upload, deletion, preview implementation, network, or cache. |
 | `src/uni_modules/uview-pro/components/u-verification-code/u-verification-code.vue` | `HIA-uView-UI/src/components/u-verification-code/u-verification-code.vue` | Materially derived, independently rewritten caller remaining/request-state projection without sending, timer, storage, network, identity, or platform state. |
+
+The package-local notice also records the non-retroactive `uview-pro@0.6.15` carry-forward review: 13 source blobs are unchanged, while 11 source files add only explicit child-component imports. That review does not reattribute these 24 targets to `0.6.15`, incorporate the added dependency edges, or authorize automatic reuse of later upstream changes.
+
+包内声明还记录了不追溯改写的 `uview-pro@0.6.15` 顺延审阅：13 个 source blob 未变化，11 个 source file 仅增加显式子组件 import。该审阅不会把这 24 个目标改写为来源于 `0.6.15`，不会引入新增依赖边，也不会授权自动复用后续上游变更。

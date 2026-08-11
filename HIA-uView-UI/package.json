@@ -13,7 +13,9 @@
     "types",
     "easycom",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "LICENSES"
   ],
   "peerDependencies": {
     "vue": ">=3.4.0 <4.0.0"
