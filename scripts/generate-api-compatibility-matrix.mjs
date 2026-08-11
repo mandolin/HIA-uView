@@ -77,7 +77,7 @@ const COMPARISON_CHANGED_PATHS = Object.freeze([
  * @lang en Stable matrix identity negotiated with consumers; the version increases only for incompatible field or semantic changes.
  */
 const MATRIX_IDENTITY = Object.freeze({
-  version: 1,
+  version: 2,
   kind: 'hia-uview-api-compatibility',
   profile: 'mp-weixin'
 });
@@ -87,6 +87,12 @@ const MATRIX_IDENTITY = Object.freeze({
  * @lang en Repository-relative path of the only artifact this generator may write. The input root cannot override this boundary.
  */
 const OUTPUT_RELATIVE_PATH = 'HIA-uView-UI/hia-uview.api-compatibility.json';
+
+/**
+ * @lang zh-CN P0 逐项语义审阅输入的唯一仓内路径。它是人工审计事实而非生成物，生成器只读并用不可变上下游摘要交叉验证。
+ * @lang en Sole repository-local path of the item-by-item P0 semantic-review input. It contains human-audited facts rather than generated output and is read-only with immutable upstream/local digest cross-checks.
+ */
+const SEMANTIC_REVIEW_RELATIVE_PATH = 'HIA-uView-UI/hia-uview.api-semantic-review.json';
 
 /**
  * @lang zh-CN P0 组件用于优先保障基础交互、表单、导航、反馈和当前小程序纵切；其余组件再由 P1/P2 白名单分类。
@@ -181,8 +187,8 @@ const P1_COMPONENTS = new Set([
 ]);
 
 /**
- * @lang zh-CN 已知拥有独立 service 文件的上游组件。SFC 静态抽取无法证明 service 方法、实例状态与组件公开面一致，因此必须显式保留 unresolved 问题。
- * @lang en Upstream components known to own separate service files. SFC static extraction cannot prove service methods and instance state match the component surface, so an explicit unresolved issue is mandatory.
+ * @lang zh-CN 已知拥有独立且经包根导出 hook 可公开到达的 service 组件。文件集合仍冻结为输入 canary，但 service 语义由独立 review inventory 管理，不再污染组件 ref imperative surface。
+ * @lang en Components known to own services publicly reachable through package-root hook exports. The file set remains frozen as an input canary, while service semantics live in a separate reviewed inventory and no longer contaminate the component-ref imperative surface.
  */
 const SERVICE_COMPONENTS = new Set(['u-modal', 'u-toast']);
 
@@ -198,7 +204,7 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-cell-item|props|label',
   'u-cell-item|props|required',
   'u-cell-item|props|value',
-  // <lang><zh-CN>选择组件的以下 props 已由 P61 独立实现、caller-controlled 行为测试和双目标 fixture 审计；事件/slot 仍按 names-only 规则保守映射。</zh-CN><en>The following choice-component props passed P61 independent implementation, caller-controlled behavior tests, and dual-target fixture audit; events/slots remain conservatively mapped under the names-only rule.</en></lang>
+  // <lang><zh-CN>选择组件的以下 props 已通过独立实现、caller-controlled 行为测试和双目标 fixture 审计；事件/slot 仍按 names-only 规则保守映射。</zh-CN><en>The following choice-component props passed independent implementation, caller-controlled behavior tests, and dual-target fixture audit; events/slots remain conservatively mapped under the names-only rule.</en></lang>
   'u-checkbox|props|disabled',
   'u-checkbox|props|label',
   'u-checkbox|props|modelValue',
@@ -214,7 +220,7 @@ const EXPLICIT_COMPATIBILITY_RULES = new Set([
   'u-input|props|readonly',
   'u-loading|props|show',
   'u-modal|props|modelValue',
-  // <lang><zh-CN>tabbar 的 show/modelValue 与 notice-bar 的 show 已在 P61 通过显式 alias/default 与 caller-controlled runtime 审计；点击事件仍是 names-only mapped。</zh-CN><en>Tabbar show/modelValue and notice-bar show passed P61 explicit alias/default and caller-controlled runtime audit; click events remain names-only mapped.</en></lang>
+  // <lang><zh-CN>tabbar 的 show/modelValue 与 notice-bar 的 show 已通过显式 alias/default 与 caller-controlled runtime 审计；点击事件仍是 names-only mapped。</zh-CN><en>Tabbar show/modelValue and notice-bar show passed explicit alias/default and caller-controlled runtime audit; click events remain names-only mapped.</en></lang>
   'u-notice-bar|props|show',
   'u-pagination|props|modelValue',
   'u-pagination|props|pageSize',
@@ -407,6 +413,12 @@ const REPOSITORY_ROOT = resolve(SCRIPT_DIRECTORY, '..');
  * @lang en Absolute matrix output path, composed solely from the repository root and fixed relative path.
  */
 const OUTPUT_PATH = resolve(REPOSITORY_ROOT, OUTPUT_RELATIVE_PATH);
+
+/**
+ * @lang zh-CN 语义审阅输入的绝对只读路径；调用方不能通过参数替换或扩展该边界。
+ * @lang en Absolute read-only path of the semantic-review input; callers cannot replace or expand this boundary through arguments.
+ */
+const SEMANTIC_REVIEW_PATH = resolve(REPOSITORY_ROOT, SEMANTIC_REVIEW_RELATIVE_PATH);
 
 /**
  * @lang zh-CN 将所有文本换行统一为 LF；这是文本 provenance 的跨平台边界，不作用于二进制字节。
@@ -2034,10 +2046,9 @@ function extractSlots(source, side) {
  * @lang en Extracts static public member names from a `defineExpose({})` object, supporting shorthand and explicit static keys without copying method implementations.
  * @param {string} source <lang><zh-CN>完整 Vue SFC 文本。</zh-CN><en>Complete Vue SFC text.</en></lang>
  * @param {string} side <lang><zh-CN>`upstream` 或 `hia`。</zh-CN><en>`upstream` or `hia`.</en></lang>
- * @param {boolean} hasService <lang><zh-CN>组件目录是否另含公开能力 service 文件。</zh-CN><en>Whether the component directory also contains a public-capability service file.</en></lang>
  * @returns {{inventoryState:string,items:Array<{name:string}>,issueCodes:string[]}} <lang><zh-CN>imperative API 名称事实与解析状态。</zh-CN><en>Imperative API name facts and parse state.</en></lang>
  */
-function extractImperativeApis(source, side, hasService) {
+function extractImperativeApis(source, side) {
   const macro = extractMacroCall(source, 'defineExpose');
   const names = new Set();
   const issueCodes = [];
@@ -2078,11 +2089,6 @@ function extractImperativeApis(source, side, hasService) {
         }
       }
     }
-  }
-
-  if (hasService) {
-    // <lang><zh-CN>独立 service 表面可能包含实例方法和状态，SFC expose 静态结果不足以证明完整性。</zh-CN><en>A separate service surface may contain instance methods and state, so SFC expose facts cannot prove completeness.</en></lang>
-    issueCodes.push('UPSTREAM_SERVICE_SURFACE_REQUIRES_REVIEW');
   }
 
   const uniqueIssueCodes = [...new Set(issueCodes)].sort(compareCodePointStrings);
@@ -2237,16 +2243,11 @@ function buildNamedItems(componentName, priority, surface, idPrefix, upstreamInv
  * @lang zh-CN 将 parser 问题代码转换为组件作用域的稳定公开 issue ID，避免不同组件问题相互覆盖。
  * @lang en Converts a parser issue code into a stable public component-scoped issue ID so issues from different components cannot collide.
  * @param {string} componentName <lang><zh-CN>组件名。</zh-CN><en>Component name.</en></lang>
- * @param {string} issueCode <lang><zh-CN>parser 或 service 问题代码。</zh-CN><en>Parser or service issue code.</en></lang>
+ * @param {string} issueCode <lang><zh-CN>parser 问题代码。</zh-CN><en>Parser issue code.</en></lang>
  * @returns {string} <lang><zh-CN>稳定 issue ID。</zh-CN><en>Stable issue ID.</en></lang>
  */
 function normalizeIssueId(componentName, issueCode) {
   if (issueCode.startsWith('PARSER_')) return issueCode;
-
-  // <lang><zh-CN>service 问题使用来源前缀，明确它不是 HIA parser 本身的错误。</zh-CN><en>Service issues use an upstream-source prefix, making clear they are not HIA parser failures.</en></lang>
-  if (issueCode === 'UPSTREAM_SERVICE_SURFACE_REQUIRES_REVIEW') {
-    return `UPSTREAM_${componentName.toUpperCase().replaceAll('-', '_')}_SERVICE_SURFACE_REQUIRES_REVIEW`;
-  }
 
   // <lang><zh-CN>其余静态抽取未知统一进入组件作用域 parser ID。</zh-CN><en>Every other static-extraction unknown becomes a component-scoped parser ID.</en></lang>
   return `PARSER_${componentName.toUpperCase().replaceAll('-', '_')}_${issueCode}`;
@@ -2274,19 +2275,6 @@ function resolveSurfaceIssueIds(componentName, ...inventories) {
  * @returns {Record<string,any>} <lang><zh-CN>公开 issue 对象。</zh-CN><en>Public issue object.</en></lang>
  */
 function createComponentIssue(issueId, componentName) {
-  if (issueId.includes('SERVICE_SURFACE_REQUIRES_REVIEW')) {
-    return {
-      id: issueId,
-      severity: 'review-required',
-      scope: 'imperativeApis',
-      component: componentName,
-      message: {
-        'zh-CN': '上游组件另含 service 文件；仅扫描 SFC defineExpose 无法证明完整 imperative API，需逐项人工审计。',
-        en: 'The upstream component also contains a service file; scanning SFC defineExpose alone cannot prove the complete imperative API and requires item-by-item human review.'
-      }
-    };
-  }
-
   return {
     id: issueId,
     severity: 'review-required',
@@ -2721,8 +2709,8 @@ async function buildComponent(componentName, upstream, local) {
   const hiaEvents = mergeApiInventories(extractEvents(hiaSource, '', 'hia'), hiaModel.events, 'HIA_DEFINE_MODEL_EVENT_CONFLICT');
   const upstreamSlots = extractSlots(upstreamSource, 'upstream');
   const hiaSlots = extractSlots(hiaSource, 'hia');
-  const upstreamImperative = extractImperativeApis(upstreamSource, 'upstream', expectedService);
-  const hiaImperative = extractImperativeApis(hiaSource, 'hia', false);
+  const upstreamImperative = extractImperativeApis(upstreamSource, 'upstream');
+  const hiaImperative = extractImperativeApis(hiaSource, 'hia');
   // <lang><zh-CN>每个 surface 只绑定直接 parser/service 问题，并由非空 issueIds 唯一决定 unresolved。</zh-CN><en>Each surface binds only direct parser/service issues, and non-empty issueIds are the sole cause of unresolved state.</en></lang>
   const propsIssueIds = resolveSurfaceIssueIds(componentName, upstreamProps, hiaProps);
   const eventsIssueIds = resolveSurfaceIssueIds(componentName, upstreamEvents, hiaEvents);
@@ -2796,6 +2784,7 @@ async function buildComponent(componentName, upstream, local) {
     events,
     slots,
     imperativeApis,
+    services: { scope: 'public-composable-services', inventoryState: 'complete', items: [], issueIds: [] },
     aliases: { scope: 'runtime-aliases', inventoryState: 'complete', items: [], issueIds: [] },
     easycom: {
       upstream: {
@@ -2844,6 +2833,451 @@ async function buildComponent(componentName, upstream, local) {
 }
 
 /**
+ * @lang zh-CN 判断语义 review 值是否为普通 JSON record；数组与 null 不属于对象 envelope。
+ * @lang en Determines whether a semantic-review value is a plain JSON record; arrays and null are not object envelopes.
+ * @param {unknown} value <lang><zh-CN>待检查值。</zh-CN><en>Value to inspect.</en></lang>
+ * @returns {boolean} <lang><zh-CN>是否为普通 record。</zh-CN><en>Whether the value is a plain record.</en></lang>
+ */
+function isReviewRecord(value) {
+  // <lang><zh-CN>只有非 null、非数组的对象才能作为具有精确字段集合的 review record。</zh-CN><en>Only a non-null, non-array object can act as a review record with an exact field set.</en></lang>
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+/**
+ * @lang zh-CN 要求 review record 只包含且完整包含指定字段；不接受注释式扩展、执行入口或静默默认值。
+ * @lang en Requires a review record to contain exactly every specified field; note-like extensions, execution entries, and silent defaults are rejected.
+ * @param {unknown} value <lang><zh-CN>待验证 JSON 值。</zh-CN><en>JSON value to validate.</en></lang>
+ * @param {string[]} fields <lang><zh-CN>完整字段集合。</zh-CN><en>Complete field set.</en></lang>
+ * @param {string} context <lang><zh-CN>不含主机路径的错误上下文。</zh-CN><en>Error context without host paths.</en></lang>
+ * @returns {Record<string,any>} <lang><zh-CN>通过门禁的 record。</zh-CN><en>Record that passed the gate.</en></lang>
+ */
+function requireReviewFields(value, fields, context) {
+  // <lang><zh-CN>先拒绝非 record，避免后续 Object.keys 在错误容器上抛出低层异常。</zh-CN><en>Reject non-record values first so Object.keys cannot throw a low-level error for a malformed container.</en></lang>
+  if (!isReviewRecord(value)) throw new Error(`${context} must be a JSON object.`);
+
+  // <lang><zh-CN>实际字段副本按代码点排序，只用于集合比较，不改变 review record 的声明顺序。</zh-CN><en>Sort a copy of the actual fields by code point for set comparison without changing review-record declaration order.</en></lang>
+  const actualFields = Object.keys(value).sort(compareCodePointStrings);
+  // <lang><zh-CN>预期字段也复制并按相同规则排序，避免调用方数组被原地改写。</zh-CN><en>Copy and sort the expected fields by the same rule so the caller-owned array is not mutated.</en></lang>
+  const expectedFields = [...fields].sort(compareCodePointStrings);
+
+  // <lang><zh-CN>序列化后的排序数组必须完全相等，从而同时拒绝缺字段和额外字段。</zh-CN><en>The serialized sorted arrays must match exactly, rejecting both missing and extra fields.</en></lang>
+  if (JSON.stringify(actualFields) !== JSON.stringify(expectedFields)) {
+    throw new Error(`${context} must declare exactly: ${expectedFields.join(', ')}.`);
+  }
+
+  // <lang><zh-CN>返回原 record 供调用方读取；校验过程不复制或补写字段。</zh-CN><en>Return the original record for caller reads; validation neither copies nor fills fields.</en></lang>
+  return value;
+}
+
+/**
+ * @lang zh-CN 验证语义事实字符串非空且不是常见占位词；自由描述仍由 review 摘要锁定。
+ * @lang en Validates that a semantic fact string is nonempty and not a common placeholder; free descriptions remain locked by the review digest.
+ * @param {unknown} value <lang><zh-CN>待验证事实。</zh-CN><en>Fact to validate.</en></lang>
+ * @param {string} context <lang><zh-CN>错误上下文。</zh-CN><en>Error context.</en></lang>
+ * @returns {string} <lang><zh-CN>已验证字符串。</zh-CN><en>Validated string.</en></lang>
+ */
+function requireSemanticString(value, context) {
+  // <lang><zh-CN>语义事实必须是 trim-stable 的非空字符串，并显式拒绝受控占位词。</zh-CN><en>A semantic fact must be a nonempty trim-stable string and explicitly reject controlled placeholder tokens.</en></lang>
+  if (typeof value !== 'string' || value.trim() !== value || value.length === 0 || /^(?:generic|placeholder|tbd|todo|unknown)$/iu.test(value)) {
+    throw new Error(`${context} must be a non-placeholder semantic string.`);
+  }
+
+  // <lang><zh-CN>保留输入原文，不做修剪或规范化，以便摘要继续锁定精确事实。</zh-CN><en>Preserve the input verbatim without trimming or normalization so the digest continues to lock the exact fact.</en></lang>
+  return value;
+}
+
+/**
+ * @lang zh-CN 验证按声明顺序表达的字符串列表；重复值会让作用或证据身份含糊，因此拒绝。
+ * @lang en Validates an ordered string list; duplicate values would make effect or evidence identity ambiguous and are rejected.
+ * @param {unknown} values <lang><zh-CN>字符串数组候选。</zh-CN><en>Candidate string array.</en></lang>
+ * @param {string} context <lang><zh-CN>错误上下文。</zh-CN><en>Error context.</en></lang>
+ * @param {boolean} allowEmpty <lang><zh-CN>是否允许空列表。</zh-CN><en>Whether an empty list is allowed.</en></lang>
+ * @returns {string[]} <lang><zh-CN>原顺序的已验证数组。</zh-CN><en>Validated array in its original order.</en></lang>
+ */
+function requireSemanticStrings(values, context, allowEmpty) {
+  // <lang><zh-CN>先验证数组容器及空列表策略，坏容器不进入逐项枚举。</zh-CN><en>Validate the array container and empty-list policy first so malformed containers are never enumerated.</en></lang>
+  if (!Array.isArray(values) || (!allowEmpty && values.length === 0)) throw new Error(`${context} must be a ${allowEmpty ? '' : 'nonempty '}string array.`);
+
+  // <lang><zh-CN>逐项验证后再检查唯一性，避免字符串化比较掩盖坏值。</zh-CN><en>Validate each item before checking uniqueness so stringification cannot hide an invalid value.</en></lang>
+  const validated = values.map((value, index) => requireSemanticString(value, `${context}[${index}]`));
+
+  // <lang><zh-CN>合法字符串仍必须唯一，避免一个事实或证据被重复计数。</zh-CN><en>Validated strings must still be unique so one fact or evidence reference cannot be counted twice.</en></lang>
+  if (new Set(validated).size !== validated.length) throw new Error(`${context} must not repeat a value.`);
+  // <lang><zh-CN>返回保持声明顺序的验证结果，供后续顺序与前缀门禁复用。</zh-CN><en>Return validated results in declaration order for later ordering and prefix gates.</en></lang>
+  return validated;
+}
+
+/**
+ * @lang zh-CN 验证 event/slot/imperative/service 使用的命名 shape；`optional` 只在明确声明时出现。
+ * @lang en Validates a named shape used by events, slots, imperative APIs, and services; `optional` appears only when explicitly declared.
+ * @param {unknown} value <lang><zh-CN>命名 shape 候选。</zh-CN><en>Candidate named shape.</en></lang>
+ * @param {string} context <lang><zh-CN>错误上下文。</zh-CN><en>Error context.</en></lang>
+ * @returns {string} <lang><zh-CN>用于唯一性检查的名称。</zh-CN><en>Name used for uniqueness checks.</en></lang>
+ */
+function validateNamedShape(value, context) {
+  // <lang><zh-CN>optional 的存在性决定 exact envelope；不存在时不臆造默认值。</zh-CN><en>The presence of `optional` selects the exact envelope; no default is invented when absent.</en></lang>
+  const fields = isReviewRecord(value) && Object.hasOwn(value, 'optional') ? ['name', 'shape', 'optional'] : ['name', 'shape'];
+  // <lang><zh-CN>精确字段门禁通过后才读取 name、shape 与 optional。</zh-CN><en>Read name, shape, and optional only after the exact-field gate succeeds.</en></lang>
+  const record = requireReviewFields(value, fields, context);
+  // <lang><zh-CN>名称作为同一 shape 列表中的唯一性键，必须先通过语义文本门禁。</zh-CN><en>The name is the uniqueness key within one shape list and must pass the semantic-text gate first.</en></lang>
+  const name = requireSemanticString(record.name, `${context}.name`);
+  // <lang><zh-CN>shape 本身是独立事实，即使名称合法也必须单独校验。</zh-CN><en>The shape is an independent fact and must be validated even when the name is valid.</en></lang>
+  requireSemanticString(record.shape, `${context}.shape`);
+
+  // <lang><zh-CN>显式 optional 只接受 boolean，禁止字符串真值造成调用语义歧义。</zh-CN><en>An explicit optional flag accepts only a Boolean so string truthiness cannot create invocation ambiguity.</en></lang>
+  if (Object.hasOwn(record, 'optional') && typeof record.optional !== 'boolean') throw new Error(`${context}.optional must be a boolean.`);
+  // <lang><zh-CN>只返回已验证名称用于外层去重，不暴露可变 record。</zh-CN><en>Return only the validated name for outer deduplication rather than exposing the mutable record.</en></lang>
+  return name;
+}
+
+/**
+ * @lang zh-CN 验证命名 shape 数组及成员唯一性；空 payload/binding/parameter 是合法的显式审计事实。
+ * @lang en Validates a named-shape array and member uniqueness; an empty payload, binding, or parameter list is a valid explicit audited fact.
+ * @param {unknown} values <lang><zh-CN>shape 数组候选。</zh-CN><en>Candidate shape array.</en></lang>
+ * @param {string} context <lang><zh-CN>错误上下文。</zh-CN><en>Error context.</en></lang>
+ * @returns {void} <lang><zh-CN>通过时无返回。</zh-CN><en>No return value on success.</en></lang>
+ */
+function validateNamedShapes(values, context) {
+  // <lang><zh-CN>命名 shape 必须保持有序数组形态；非数组无法表达参数或绑定位置。</zh-CN><en>Named shapes must remain an ordered array because a non-array cannot express parameter or binding positions.</en></lang>
+  if (!Array.isArray(values)) throw new Error(`${context} must be an array.`);
+
+  // <lang><zh-CN>名称序列保留参数/绑定顺序，同时单独拒绝同名成员。</zh-CN><en>The name sequence preserves parameter or binding order while rejecting duplicate members separately.</en></lang>
+  const names = values.map((value, index) => validateNamedShape(value, `${context}[${index}]`));
+
+  // <lang><zh-CN>同一列表不得重复成员名，否则 payload、binding 或 parameter 的身份会产生歧义。</zh-CN><en>A list cannot repeat a member name because that would make payload, binding, or parameter identity ambiguous.</en></lang>
+  if (new Set(names).size !== names.length) throw new Error(`${context} must not repeat a name.`);
+}
+
+/**
+ * @lang zh-CN 验证一侧已交付的 kind-specific 语义，并将 prop value domain 与静态结构事实交叉核对。
+ * @lang en Validates delivered kind-specific semantics for one side and cross-checks a prop value domain against the statically extracted structural fact.
+ * @param {unknown} value <lang><zh-CN>upstream 或 HIA 语义侧。</zh-CN><en>Upstream or HIA semantic side.</en></lang>
+ * @param {'prop'|'event'|'slot'|'imperativeApi'|'service'} kind <lang><zh-CN>受控语义种类。</zh-CN><en>Controlled semantic kind.</en></lang>
+ * @param {Record<string,any>|null} propFact <lang><zh-CN>prop 结构事实；其他 kind 为 null。</zh-CN><en>Structural prop fact, or null for other kinds.</en></lang>
+ * @param {string} context <lang><zh-CN>错误上下文。</zh-CN><en>Error context.</en></lang>
+ * @returns {void} <lang><zh-CN>通过时无返回。</zh-CN><en>No return value on success.</en></lang>
+ */
+function validateDeliveredSemanticSide(value, kind, propFact, context) {
+  // <lang><zh-CN>kind 选择互斥字段集合，阻止 event payload 字段混入 slot 或 prop。</zh-CN><en>The kind selects a mutually exclusive field set, preventing event payload fields from leaking into slots or props.</en></lang>
+  const fieldsByKind = {
+    prop: ['status', 'kind', 'valueDomain', 'ownership', 'control', 'coercion', 'validation', 'sideEffects', 'parentChild'],
+    event: ['status', 'kind', 'trigger', 'parameters', 'delivery', 'cancellable', 'modelRelation', 'sideEffects'],
+    slot: ['status', 'kind', 'bindings', 'fallback', 'cardinality', 'contextOwner'],
+    imperativeApi: ['status', 'kind', 'entry', 'parameters', 'returns', 'effects', 'lifecycle', 'scope', 'concurrency', 'failure'],
+    service: ['status', 'kind', 'entry', 'parameters', 'returns', 'scope', 'host', 'lifecycle', 'effects', 'concurrency', 'failure']
+  };
+  // <lang><zh-CN>按受控 kind 取得精确 envelope，并在读取任何嵌套事实前完成字段门禁。</zh-CN><en>Select the exact envelope for the controlled kind and finish the field gate before reading nested facts.</en></lang>
+  const record = requireReviewFields(value, fieldsByKind[kind], context);
+
+  // <lang><zh-CN>已交付侧必须同时声明 delivered 状态和当前 kind，不能仅凭字段形状推断。</zh-CN><en>A delivered side must state both delivered status and the current kind rather than relying on field shape inference.</en></lang>
+  if (record.status !== 'delivered' || record.kind !== kind) throw new Error(`${context} must declare delivered ${kind} semantics.`);
+
+  // <lang><zh-CN>prop 分支需要把人工语义 review 与 parser 提取的结构事实逐字段对齐。</zh-CN><en>The prop branch aligns the human semantic review field by field with parser-extracted structural facts.</en></lang>
+  if (kind === 'prop') {
+    // <lang><zh-CN>valueDomain 复用矩阵六项 prop 事实，避免人工 review 与 parser 结果分别漂移。</zh-CN><en>The value domain reuses the matrix's six prop facts so the human review and parser result cannot drift independently.</en></lang>
+    const domain = requireReviewFields(record.valueDomain, ['typeKinds', 'typeOrder', 'default', 'required', 'validator'], `${context}.valueDomain`);
+    // <lang><zh-CN>期望 domain 只从当前 item 的结构事实构造，并保持生成 JSON 的字段顺序。</zh-CN><en>Build the expected domain only from the current item's structural fact while preserving generated-JSON field order.</en></lang>
+    const expectedDomain = {
+      typeKinds: propFact.typeKinds,
+      typeOrder: propFact.typeOrder,
+      default: propFact.default,
+      required: propFact.required,
+      validator: propFact.validator
+    };
+
+    // <lang><zh-CN>类型顺序、默认值、required 或 validator 的任一漂移都会阻断生成。</zh-CN><en>Any drift in type order, default, required state, or validator blocks generation.</en></lang>
+    if (JSON.stringify(domain) !== JSON.stringify(expectedDomain)) throw new Error(`${context}.valueDomain does not match the extracted prop fact.`);
+    // <lang><zh-CN>逐项验证控制与所有权文本，禁止以笼统占位词替代审计事实。</zh-CN><en>Validate each control and ownership text so generic placeholders cannot replace audited facts.</en></lang>
+    for (const field of ['ownership', 'control', 'coercion', 'validation', 'parentChild']) requireSemanticString(record[field], `${context}.${field}`);
+    // <lang><zh-CN>prop 副作用必须显式、非空且唯一，即使唯一事实是无副作用。</zh-CN><en>Prop side effects must be explicit, nonempty, and unique even when the sole fact is no side effect.</en></lang>
+    requireSemanticStrings(record.sideEffects, `${context}.sideEffects`, false);
+    // <lang><zh-CN>prop 专属字段已经完整验证，避免落入调用型 API 分支。</zh-CN><en>Return after complete prop-specific validation so it cannot fall through to callable-API handling.</en></lang>
+    return;
+  }
+
+  // <lang><zh-CN>event 分支锁定触发、投递、payload、可取消性与副作用，不从事件名推断。</zh-CN><en>The event branch locks trigger, delivery, payload, cancellability, and side effects without inferring from the event name.</en></lang>
+  if (kind === 'event') {
+    // <lang><zh-CN>三个事件文字事实分别校验，以保留独立诊断上下文。</zh-CN><en>Validate the three event text facts separately to preserve independent diagnostic context.</en></lang>
+    for (const field of ['trigger', 'delivery', 'modelRelation']) requireSemanticString(record[field], `${context}.${field}`);
+    // <lang><zh-CN>当前 Vue emit 审计面没有 DOM 风格取消返回通道，因此必须明确为 false。</zh-CN><en>The reviewed Vue emit surface has no DOM-style cancellation return channel and must explicitly be false.</en></lang>
+    if (record.cancellable !== false) throw new Error(`${context}.cancellable must explicitly be false for the reviewed Vue emit surface.`);
+    // <lang><zh-CN>payload 参数保持声明顺序并逐项验证。</zh-CN><en>Payload parameters preserve declaration order and are validated item by item.</en></lang>
+    validateNamedShapes(record.parameters, `${context}.parameters`);
+    // <lang><zh-CN>事件副作用必须作为非空唯一事实集合声明。</zh-CN><en>Event side effects must be declared as a nonempty unique fact set.</en></lang>
+    requireSemanticStrings(record.sideEffects, `${context}.sideEffects`, false);
+    // <lang><zh-CN>event 专属字段验证完毕后立即返回。</zh-CN><en>Return immediately after validating event-specific fields.</en></lang>
+    return;
+  }
+
+  // <lang><zh-CN>slot 分支锁定 binding、fallback、cardinality 与上下文所有权。</zh-CN><en>The slot branch locks bindings, fallback, cardinality, and context ownership.</en></lang>
+  if (kind === 'slot') {
+    // <lang><zh-CN>slot binding 可以为空，但存在的命名 shape 必须合法且唯一。</zh-CN><en>Slot bindings may be empty, but any named shapes present must be valid and unique.</en></lang>
+    validateNamedShapes(record.bindings, `${context}.bindings`);
+    // <lang><zh-CN>其余 slot 事实逐字段拒绝空值和占位词。</zh-CN><en>Reject empty values and placeholders in every remaining slot fact.</en></lang>
+    for (const field of ['fallback', 'cardinality', 'contextOwner']) requireSemanticString(record[field], `${context}.${field}`);
+    // <lang><zh-CN>slot 专属字段验证完毕后立即返回。</zh-CN><en>Return immediately after validating slot-specific fields.</en></lang>
+    return;
+  }
+
+  // <lang><zh-CN>imperative 与 service 共享调用形状；service 另以 operations 锁定 controller 方法集合。</zh-CN><en>Imperative APIs and services share a call shape; services additionally lock the controller method set through operations.</en></lang>
+  validateNamedShapes(record.parameters, `${context}.parameters`);
+  // <lang><zh-CN>共同调用生命周期字段逐项校验，避免 entry 或 scope 等事实互相代偿。</zh-CN><en>Validate common invocation-lifecycle fields individually so entry, scope, and related facts cannot substitute for one another.</en></lang>
+  for (const field of ['entry', 'scope', 'lifecycle', 'concurrency', 'failure']) requireSemanticString(record[field], `${context}.${field}`);
+  // <lang><zh-CN>调用效果必须显式列出且不得重复。</zh-CN><en>Invocation effects must be listed explicitly without duplicates.</en></lang>
+  requireSemanticStrings(record.effects, `${context}.effects`, false);
+
+  // <lang><zh-CN>imperative API 使用单一返回 shape 字符串；service 则使用 controller shape 与 operation 清单。</zh-CN><en>An imperative API uses one return-shape string, while a service uses a controller shape plus an operation list.</en></lang>
+  if (kind === 'imperativeApi') {
+    requireSemanticString(record.returns, `${context}.returns`);
+  } else {
+    // <lang><zh-CN>service 返回 envelope 只允许 shape 与 operations 两个字段。</zh-CN><en>The service return envelope permits only shape and operations.</en></lang>
+    const returns = requireReviewFields(record.returns, ['shape', 'operations'], `${context}.returns`);
+    // <lang><zh-CN>controller shape 是独立的非占位语义事实。</zh-CN><en>The controller shape is an independent non-placeholder semantic fact.</en></lang>
+    requireSemanticString(returns.shape, `${context}.returns.shape`);
+    // <lang><zh-CN>operation 清单必须非空、逐项合法且唯一。</zh-CN><en>The operation list must be nonempty, valid item by item, and unique.</en></lang>
+    const operations = requireSemanticStrings(returns.operations, `${context}.returns.operations`, false);
+
+    // <lang><zh-CN>代码点顺序锁定跨 locale 的稳定输出，不对输入进行自动排序。</zh-CN><en>Code-point order locks locale-independent output stability without sorting the input automatically.</en></lang>
+    if (JSON.stringify([...operations].sort(compareCodePointStrings)) !== JSON.stringify(operations)) throw new Error(`${context}.returns.operations must use code-point order.`);
+  }
+}
+
+/**
+ * @lang zh-CN 验证完整语义 envelope、证据等级与交付边界；migration disposition 仍是独立事实，不由语义字段自动升级。
+ * @lang en Validates a complete semantic envelope, evidence level, and delivery boundary; the migration disposition remains independent and is never auto-promoted from semantic fields.
+ * @param {unknown} value <lang><zh-CN>语义 envelope。</zh-CN><en>Semantic envelope.</en></lang>
+ * @param {Record<string,any>} expected <lang><zh-CN>当前矩阵 item 或 service 的交叉核对事实。</zh-CN><en>Cross-check facts for the current matrix item or service.</en></lang>
+ * @param {string} context <lang><zh-CN>错误上下文。</zh-CN><en>Error context.</en></lang>
+ * @returns {void} <lang><zh-CN>通过时无返回。</zh-CN><en>No return value on success.</en></lang>
+ */
+function validateSemanticEnvelope(value, expected, context) {
+  // <lang><zh-CN>完整 envelope 只允许完成状态、证据、剩余证据与上下游两侧事实。</zh-CN><en>The complete envelope permits only completion state, evidence, remaining evidence, and the two implementation-side facts.</en></lang>
+  const semantics = requireReviewFields(
+    value,
+    ['reviewState', 'evidenceLevel', 'evidenceRefs', 'remainingEvidence', 'upstream', 'hia'],
+    context
+  );
+
+  // <lang><zh-CN>所有纳入矩阵的语义 review 必须显式完成，不接受部分状态。</zh-CN><en>Every semantic review admitted to the matrix must be explicitly complete; partial states are rejected.</en></lang>
+  if (semantics.reviewState !== 'complete') throw new Error(`${context}.reviewState must be complete.`);
+  // <lang><zh-CN>证据等级只允许源码审阅或运行时验证，不允许隐式层级。</zh-CN><en>Evidence level permits only source review or runtime testing and no implicit tier.</en></lang>
+  if (!['source-reviewed', 'runtime-tested'].includes(semantics.evidenceLevel)) throw new Error(`${context}.evidenceLevel is unsupported.`);
+
+  // <lang><zh-CN>证据只可引用公开比较、本仓文件或测试；驱动器、URI、父目录和空格均不接受。</zh-CN><en>Evidence may reference only public comparison, local repository, or test material; drive paths, URIs, parent traversal, and whitespace are rejected.</en></lang>
+  const evidenceRefs = requireSemanticStrings(semantics.evidenceRefs, `${context}.evidenceRefs`, false);
+
+  // <lang><zh-CN>证据引用必须保持代码点顺序，并逐项满足受控命名空间与路径安全规则。</zh-CN><en>Evidence references must remain in code-point order and individually satisfy controlled namespaces and path-safety rules.</en></lang>
+  if (JSON.stringify([...evidenceRefs].sort(compareCodePointStrings)) !== JSON.stringify(evidenceRefs)
+    || evidenceRefs.some((reference) => !/^(?:comparison|local|test):[A-Za-z0-9._@/-]+$/u.test(reference) || reference.includes('..'))) {
+    throw new Error(`${context}.evidenceRefs must be unique, code-point sorted, public references.`);
+  }
+  // <lang><zh-CN>每项 review 同时需要 comparison 与 local 证据，防止只审阅单侧。</zh-CN><en>Every review needs both comparison and local evidence so neither side can be omitted.</en></lang>
+  if (!evidenceRefs.some((reference) => reference.startsWith('comparison:')) || !evidenceRefs.some((reference) => reference.startsWith('local:'))) {
+    throw new Error(`${context}.evidenceRefs must include comparison and local evidence.`);
+  }
+  // <lang><zh-CN>runtime-tested 声明必须由 test 命名空间引用支撑。</zh-CN><en>A runtime-tested declaration must be supported by a test-namespace reference.</en></lang>
+  if (semantics.evidenceLevel === 'runtime-tested' && !evidenceRefs.some((reference) => reference.startsWith('test:'))) {
+    throw new Error(`${context} marked runtime-tested without test evidence.`);
+  }
+
+  const remainingEvidence = requireSemanticStrings(semantics.remainingEvidence, `${context}.remainingEvidence`, true);
+  // <lang><zh-CN>mapped 项保留 runtime parity 待办；其他 disposition 当前要求空列表。</zh-CN><en>Mapped items retain the runtime-parity task, while other dispositions currently require an empty list.</en></lang>
+  const expectedRemaining = expected.disposition === 'mapped' ? ['runtime-parity'] : [];
+
+  // <lang><zh-CN>剩余证据必须与迁移结论精确一致，不能额外隐藏未完成工作。</zh-CN><en>Remaining evidence must match the migration conclusion exactly and cannot hide extra unfinished work.</en></lang>
+  if (JSON.stringify(remainingEvidence) !== JSON.stringify(expectedRemaining)) throw new Error(`${context}.remainingEvidence does not match the migration disposition.`);
+  // <lang><zh-CN>只有 compatible 可使用 runtime-tested；其他结论保持 source-reviewed。</zh-CN><en>Only compatible may use runtime-tested; other conclusions remain source-reviewed.</en></lang>
+  if ((expected.disposition === 'compatible') !== (semantics.evidenceLevel === 'runtime-tested')) {
+    throw new Error(`${context}.evidenceLevel does not match the explicit compatibility evidence.`);
+  }
+
+  // <lang><zh-CN>上游始终是已交付审计对象，并与当前 kind/prop 结构事实交叉核对。</zh-CN><en>The upstream is always the delivered review subject and is cross-checked with the current kind and prop structural fact.</en></lang>
+  validateDeliveredSemanticSide(semantics.upstream, expected.kind, expected.upstreamPropFact ?? null, `${context}.upstream`);
+
+  // <lang><zh-CN>本地 target 只有真实存在时才验证完整交付语义，否则要求精确未交付 sentinel。</zh-CN><en>Validate complete local delivery semantics only when the target exists; otherwise require the exact undelivered sentinel.</en></lang>
+  if (expected.hiaDelivered) {
+    validateDeliveredSemanticSide(semantics.hia, expected.kind, expected.hiaPropFact ?? null, `${context}.hia`);
+  } else {
+    // <lang><zh-CN>未交付侧只允许 status 单字段，禁止携带伪造的部分能力。</zh-CN><en>The undelivered side permits only the status field and cannot carry invented partial capability.</en></lang>
+    const hia = requireReviewFields(semantics.hia, ['status'], `${context}.hia`);
+
+    // <lang><zh-CN>唯一合法 sentinel 值为 not-delivered。</zh-CN><en>The only valid sentinel value is not-delivered.</en></lang>
+    if (hia.status !== 'not-delivered') throw new Error(`${context}.hia must be explicitly not-delivered.`);
+  }
+
+  // <lang><zh-CN>`compatible` 结论要求上下游 kind-specific 语义逐字段相同；runtime evidence 本身不能掩盖 ownership、payload 或 side-effect 差异。</zh-CN><en>A `compatible` conclusion requires field-for-field equal kind-specific semantics on both sides; runtime evidence alone cannot hide ownership, payload, or side-effect differences.</en></lang>
+  if (expected.disposition === 'compatible' && JSON.stringify(semantics.upstream) !== JSON.stringify(semantics.hia)) {
+    throw new Error(`${context} compatible sides must declare identical semantics.`);
+  }
+}
+
+/**
+ * @lang zh-CN 读取、验证并应用 127 项 P0 review 与两个独立 service inventory；全部交叉核对完成前不返回部分矩阵。
+ * @lang en Reads, validates, and applies 127 P0 reviews plus two separate service inventories; no partial matrix is returned before every cross-check succeeds.
+ * @param {Array<Record<string,any>>} components <lang><zh-CN>已生成的 99 个组件记录。</zh-CN><en>Generated 99 component records.</en></lang>
+ * @param {string} reviewSource <lang><zh-CN>仓内 review JSON 原文。</zh-CN><en>Repository-local review JSON source.</en></lang>
+ * @param {Record<string,any>} upstream <lang><zh-CN>已验证比较输入。</zh-CN><en>Validated comparison input.</en></lang>
+ * @param {Record<string,any>} local <lang><zh-CN>已验证本地输入。</zh-CN><en>Validated local input.</en></lang>
+ * @returns {Record<string,any>} <lang><zh-CN>写入矩阵的 review provenance。</zh-CN><en>Review provenance written to the matrix.</en></lang>
+ */
+function applySemanticReview(components, reviewSource, upstream, local) {
+  // <lang><zh-CN>解析失败直接阻断生成，不以空 review 或旧 v1 输出回退。</zh-CN><en>A parse failure blocks generation and never falls back to an empty review or stale v1 output.</en></lang>
+  let review;
+
+  // <lang><zh-CN>只解析仓内固定 review 原文，不执行字段中的任何字符串。</zh-CN><en>Parse only the fixed repository review source and never execute strings stored in its fields.</en></lang>
+  try {
+    review = JSON.parse(reviewSource);
+  } catch (error) {
+    // <lang><zh-CN>将解析异常收敛为不含源码正文或主机路径的稳定错误。</zh-CN><en>Collapse parse failures into a stable error containing neither source text nor host paths.</en></lang>
+    throw new Error(`Semantic review JSON is invalid: ${error instanceof Error ? error.message : 'unknown parse error'}.`);
+  }
+
+  // <lang><zh-CN>顶层先通过 exact-field 门禁，再读取比较与本地 provenance。</zh-CN><en>Pass the top-level exact-field gate before reading comparison and local provenance.</en></lang>
+  const top = requireReviewFields(review, ['version', 'kind', 'profile', 'comparison', 'local', 'items', 'services'], 'Semantic review');
+  // <lang><zh-CN>比较 provenance 只允许冻结 commit 与 materialization digest。</zh-CN><en>Comparison provenance permits only the frozen commit and materialization digest.</en></lang>
+  const comparison = requireReviewFields(top.comparison, ['commit', 'materializationDigest'], 'Semantic review comparison');
+  // <lang><zh-CN>本地 provenance 只允许 component manifest 与 runtime entry 摘要。</zh-CN><en>Local provenance permits only component-manifest and runtime-entry digests.</en></lang>
+  const localReview = requireReviewFields(top.local, ['componentManifestDigest', 'runtimeEntryDigest'], 'Semantic review local');
+
+  // <lang><zh-CN>版本、kind 与 profile 必须共同命中当前受控 review 身份。</zh-CN><en>Version, kind, and profile must jointly match the current controlled review identity.</en></lang>
+  if (top.version !== 1 || top.kind !== 'hia-uview-api-semantic-review' || top.profile !== MATRIX_IDENTITY.profile) {
+    throw new Error('Semantic review identity is unsupported.');
+  }
+  // <lang><zh-CN>比较 commit 与内容摘要必须同时对应已验证的冻结 materialization。</zh-CN><en>Comparison commit and content digest must both match the validated frozen materialization.</en></lang>
+  if (comparison.commit !== CURRENT_COMPARISON.commit || comparison.materializationDigest !== upstream.materialization.contentDigest) {
+    throw new Error('Semantic review comparison provenance does not match the validated upstream materialization.');
+  }
+  // <lang><zh-CN>本地两个摘要从本次已读取输入重新计算，不信任 review 自报值。</zh-CN><en>Recompute both local digests from inputs read in this run rather than trusting review-reported values.</en></lang>
+  if (localReview.componentManifestDigest !== digest(local.manifestSource) || localReview.runtimeEntryDigest !== digest(local.runtimeSource)) {
+    throw new Error('Semantic review local digests do not match the validated HIA inputs.');
+  }
+  // <lang><zh-CN>items 与 services 必须是显式数组，后续精确覆盖检查不接受缺省空值。</zh-CN><en>Items and services must be explicit arrays; later exact-coverage checks do not accept default empty values.</en></lang>
+  if (!Array.isArray(top.items) || !Array.isArray(top.services)) throw new Error('Semantic review items and services must be arrays.');
+
+  // <lang><zh-CN>期望表从真实组件现场派生，精确覆盖 P0 items；review 不能自行扩大或缩小范围。</zh-CN><en>The expected map is derived live from generated components and covers P0 items exactly; the review cannot expand or shrink its own scope.</en></lang>
+  const expectedItems = new Map();
+
+  // <lang><zh-CN>按生成组件顺序构造 P0 期望表，保持与矩阵当前现场一致。</zh-CN><en>Build the expected P0 map in generated-component order so it matches the current matrix state.</en></lang>
+  for (const component of components) {
+    // <lang><zh-CN>四个 API 维度与对应 semantic kind 使用固定顺序，service 保持独立 inventory。</zh-CN><en>Traverse the four API dimensions and matching semantic kinds in fixed order while services remain a separate inventory.</en></lang>
+    for (const [dimension, kind] of [['props', 'prop'], ['events', 'event'], ['slots', 'slot'], ['imperativeApis', 'imperativeApi']]) {
+      // <lang><zh-CN>逐项读取生成后的结构事实，不从 review 自行发现能力。</zh-CN><en>Read each generated structural fact instead of discovering capabilities from the review itself.</en></lang>
+      for (const item of component[dimension].items) {
+        // <lang><zh-CN>非 P0 项不属于本 review 的覆盖分母，明确跳过。</zh-CN><en>Non-P0 items are outside this review denominator and are skipped explicitly.</en></lang>
+        if (item.priority !== 'P0') continue;
+        // <lang><zh-CN>稳定键组合公开组件名与 API item ID，用于一对一覆盖核验。</zh-CN><en>The stable key combines public component name and API item ID for one-to-one coverage checks.</en></lang>
+        const key = `${component.name}/${item.id}`;
+        // <lang><zh-CN>语义目标必须按 migration.target 精确选择；多个 HIA target 时不得默认把数组首项当作迁移对象。</zh-CN><en>The semantic target is selected exactly by migration.target; when several HIA targets exist, the first array entry is never assumed to be the migration target.</en></lang>
+        const semanticTarget = item.migration.target
+          ? item.hia.targets.find((target) => target.name === item.migration.target) ?? null
+          : null;
+
+        // <lang><zh-CN>期望事实保留原组件/item 引用供最终写入，并保存按 target 选出的 prop 对照。</zh-CN><en>The expected fact retains original component and item references for final attachment and stores the prop counterpart selected by target.</en></lang>
+        expectedItems.set(key, {
+          component,
+          item,
+          kind,
+          disposition: item.migration.disposition,
+          hiaDelivered: Boolean(semanticTarget),
+          upstreamPropFact: kind === 'prop' ? item.upstream : null,
+          hiaPropFact: kind === 'prop' ? semanticTarget : null
+        });
+      }
+    }
+  }
+
+  // <lang><zh-CN>现场分母与 review 声明都必须精确为当前冻结的 127 项。</zh-CN><en>Both the live denominator and review declaration must equal the current frozen 127 items exactly.</en></lang>
+  if (expectedItems.size !== 127 || top.items.length !== 127) throw new Error(`Semantic review must cover exactly 127 P0 items (expected=${expectedItems.size}, actual=${top.items.length}).`);
+
+  // <lang><zh-CN>按 review 声明顺序收集 ID，供唯一性、排序与缺失项门禁复用。</zh-CN><en>Collect IDs in review declaration order for uniqueness, ordering, and missing-item gates.</en></lang>
+  const reviewItemIds = [];
+
+  // <lang><zh-CN>逐 review item 交叉核对身份、语义与生成现场，任一失败均阻断整体返回。</zh-CN><en>Cross-check identity, semantics, and generated state for every review item; any failure blocks the whole return.</en></lang>
+  for (const rawEntry of top.items) {
+    // <lang><zh-CN>item 外壳只允许稳定 ID、组件、item ID 与语义 envelope。</zh-CN><en>The item envelope permits only stable ID, component, item ID, and semantic envelope.</en></lang>
+    const entry = requireReviewFields(rawEntry, ['id', 'component', 'itemId', 'semantics'], 'Semantic review item');
+    // <lang><zh-CN>规范 ID 必须是非占位语义字符串，且保持原文。</zh-CN><en>The canonical ID must be a non-placeholder semantic string and remains verbatim.</en></lang>
+    const id = requireSemanticString(entry.id, 'Semantic review item.id');
+    // <lang><zh-CN>只从现场 P0 表取得预期记录，review 不能引入额外能力。</zh-CN><en>Resolve the expected record only from the live P0 map so the review cannot introduce extra capability.</en></lang>
+    const expected = expectedItems.get(id);
+
+    // <lang><zh-CN>ID、组件名与 item ID 必须三向一致，阻止错位复用语义。</zh-CN><en>ID, component name, and item ID must agree in all directions to prevent shifted semantic reuse.</en></lang>
+    if (!expected || entry.component !== expected.component.name || entry.itemId !== expected.item.id || id !== `${entry.component}/${entry.itemId}`) {
+      throw new Error(`Semantic review item does not match a generated P0 capability: ${id}.`);
+    }
+    // <lang><zh-CN>完整验证 envelope 后才允许把语义附加到矩阵 item。</zh-CN><en>Attach semantics to the matrix item only after the complete envelope validates.</en></lang>
+    validateSemanticEnvelope(entry.semantics, expected, `Semantic review ${id}`);
+    // <lang><zh-CN>深复制隔离 review parse tree 与矩阵对象，不在输入对象上追加字段。</zh-CN><en>A deep copy isolates the parsed review tree from the matrix object and appends no fields to the input object.</en></lang>
+    expected.item.semantics = JSON.parse(JSON.stringify(entry.semantics));
+    // <lang><zh-CN>记录已应用 ID，用于循环后的全局集合检查。</zh-CN><en>Record the applied ID for global set checks after the loop.</en></lang>
+    reviewItemIds.push(id);
+  }
+
+  // <lang><zh-CN>声明顺序必须唯一且按代码点排序，确保生成物跨 locale 字节稳定。</zh-CN><en>Declaration order must be unique and code-point sorted for locale-independent byte stability.</en></lang>
+  if (new Set(reviewItemIds).size !== reviewItemIds.length || JSON.stringify([...reviewItemIds].sort(compareCodePointStrings)) !== JSON.stringify(reviewItemIds)) {
+    throw new Error('Semantic review items must be unique and code-point sorted.');
+  }
+  // <lang><zh-CN>反向检查现场期望键，捕获相同数量下的遗漏与替换。</zh-CN><en>Reverse-check live expected keys to catch omissions and substitutions even when counts match.</en></lang>
+  if ([...expectedItems.keys()].some((id) => !reviewItemIds.includes(id))) {
+    throw new Error('Semantic review item set differs from the generated P0 capability set.');
+  }
+
+  // <lang><zh-CN>两个 service entrypoint 由包根 reachability 审计锁定，且不进入四类 API 或组件 migration 计数。</zh-CN><en>The two service entrypoints are locked by the package-root reachability audit and enter neither the four API dimensions nor component migration counts.</en></lang>
+  const expectedServices = new Map([
+    ['u-modal/service:useModal', { component: 'u-modal', itemId: 'service:useModal' }],
+    ['u-toast/service:useToast', { component: 'u-toast', itemId: 'service:useToast' }]
+  ]);
+  // <lang><zh-CN>按 review 声明顺序收集 service ID，供精确集合门禁使用。</zh-CN><en>Collect service IDs in review declaration order for the exact-set gate.</en></lang>
+  const reviewServiceIds = [];
+
+  // <lang><zh-CN>逐 service 审阅固定的公开入口，不进行动态导出发现。</zh-CN><en>Review each fixed public service entrypoint without dynamic export discovery.</en></lang>
+  for (const rawEntry of top.services) {
+    // <lang><zh-CN>service 外壳与普通 item 使用相同身份字段和语义边界。</zh-CN><en>The service envelope uses the same identity fields and semantic boundary as regular items.</en></lang>
+    const entry = requireReviewFields(rawEntry, ['id', 'component', 'itemId', 'semantics'], 'Semantic review service');
+    // <lang><zh-CN>service ID 保持公开原文并通过非占位门禁。</zh-CN><en>The service ID remains verbatim and passes the non-placeholder gate.</en></lang>
+    const id = requireSemanticString(entry.id, 'Semantic review service.id');
+    // <lang><zh-CN>只从固定二项表解析预期 owner 与 item ID。</zh-CN><en>Resolve the expected owner and item ID only from the fixed two-entry map.</en></lang>
+    const expectedService = expectedServices.get(id);
+
+    // <lang><zh-CN>ID、owner 与 item ID 必须完整命中锁定入口。</zh-CN><en>ID, owner, and item ID must fully match a locked entrypoint.</en></lang>
+    if (!expectedService || entry.component !== expectedService.component || entry.itemId !== expectedService.itemId || id !== `${entry.component}/${entry.itemId}`) {
+      throw new Error(`Semantic review service does not match the locked public service set: ${id}.`);
+    }
+    // <lang><zh-CN>service 始终按上游已交付、本地未交付的 unsupported 事实验证。</zh-CN><en>Validate a service as an unsupported fact with upstream delivered and local undelivered.</en></lang>
+    validateSemanticEnvelope(entry.semantics, { kind: 'service', disposition: 'unsupported', hiaDelivered: false }, `Semantic review ${id}`);
+
+    // <lang><zh-CN>owner 必须已经存在于生成组件集合，service 不创建幽灵组件。</zh-CN><en>The owner must already exist in generated components; a service cannot create a phantom component.</en></lang>
+    const owner = components.find((component) => component.name === entry.component);
+
+    // <lang><zh-CN>找不到 owner 时立即阻断，避免随后对 undefined inventory 写入。</zh-CN><en>Abort immediately when the owner is absent so no write targets an undefined inventory.</en></lang>
+    if (!owner) throw new Error(`Semantic review service owner is absent from the matrix: ${entry.component}.`);
+    // <lang><zh-CN>向独立 service inventory 追加受控 migration 与深复制语义，不污染四类 API。</zh-CN><en>Append controlled migration and deep-copied semantics to the separate service inventory without contaminating the four API dimensions.</en></lang>
+    owner.services.items.push({
+      id: entry.itemId,
+      migration: { disposition: 'unsupported', reasonCode: 'HIA_SERVICE_NOT_DELIVERED' },
+      semantics: JSON.parse(JSON.stringify(entry.semantics))
+    });
+    // <lang><zh-CN>记录已应用 service ID，供最终二项精确覆盖检查。</zh-CN><en>Record the applied service ID for the final exact two-entry coverage check.</en></lang>
+    reviewServiceIds.push(id);
+  }
+
+  // <lang><zh-CN>service 必须恰好覆盖两个唯一、排序且无遗漏的锁定入口。</zh-CN><en>Services must cover exactly the two unique, sorted, and complete locked entrypoints.</en></lang>
+  if (top.services.length !== 2 || new Set(reviewServiceIds).size !== 2
+    || JSON.stringify([...reviewServiceIds].sort(compareCodePointStrings)) !== JSON.stringify(reviewServiceIds)
+    || [...expectedServices.keys()].some((id) => !reviewServiceIds.includes(id))) {
+    throw new Error('Semantic review services must exactly cover the two sorted public service entrypoints.');
+  }
+
+  // <lang><zh-CN>只返回可公开写入矩阵的相对路径、内容摘要与现场计数。</zh-CN><en>Return only the relative path, content digest, and live counts that may be written publicly to the matrix.</en></lang>
+  return {
+    path: SEMANTIC_REVIEW_RELATIVE_PATH,
+    digest: digest(reviewSource),
+    itemCount: reviewItemIds.length,
+    serviceCount: reviewServiceIds.length
+  };
+}
+
+/**
  * @lang zh-CN 验证生成后的关键 capability 计数与分级 canary，防止 parser 或规则回归仍产出表面合法 JSON。
  * @lang en Validates generated capability counts and priority canaries so parser or rule regressions cannot still produce superficially valid JSON.
  * @param {Array<Record<string,any>>} components <lang><zh-CN>完整 99 项组件矩阵。</zh-CN><en>Complete 99-item component matrix.</en></lang>
@@ -2868,6 +3302,7 @@ function validateGeneratedCapabilities(components) {
     events: 'names-only',
     slots: 'names-only',
     imperativeApis: 'names-only',
+    services: 'public-composable-services',
     aliases: 'runtime-aliases'
   };
 
@@ -2922,6 +3357,21 @@ function validateGeneratedCapabilities(components) {
         }
       }
     }
+  }
+
+  // <lang><zh-CN>v2 只要求 P0 items 拥有逐项 semantics；P1/P2 不得被无 review 数据的生成器自动宣称完成。</zh-CN><en>Version 2 requires item semantics only for P0; the generator must not auto-claim P1/P2 completion without review data.</en></lang>
+  const p0Items = components.flatMap((component) =>
+    [component.props, component.events, component.slots, component.imperativeApis]
+      .flatMap((surface) => surface.items)
+      .filter((item) => item.priority === 'P0')
+  );
+  const semanticServiceItems = components.flatMap((component) => component.services.items);
+
+  if (p0Items.length !== 127 || p0Items.some((item) => !item.semantics || item.semantics.reviewState !== 'complete')) {
+    throw new Error(`P0 semantic coverage must be 127/127 (actual=${p0Items.filter((item) => item.semantics?.reviewState === 'complete').length}/${p0Items.length}).`);
+  }
+  if (semanticServiceItems.length !== 2 || semanticServiceItems.some((item) => item.semantics?.reviewState !== 'complete')) {
+    throw new Error('Public service inventory must contain two fully reviewed entrypoints.');
   }
 
   // <lang><zh-CN>至少一个组件必须在其 API 内形成混合优先级，否则说明又退化为复制组件优先级。</zh-CN><en>At least one component must contain mixed API priorities; otherwise capability classification has regressed to copying component priority.</en></lang>
@@ -3004,9 +3454,10 @@ function validateGeneratedCapabilities(components) {
  * @lang en Assembles top-level provenance, local input digests, public issues, and the 99-item component matrix without timestamps or machine paths, guaranteeing byte stability for equal inputs.
  * @param {Record<string,any>} upstream <lang><zh-CN>已验证上游输入。</zh-CN><en>Validated upstream inputs.</en></lang>
  * @param {Record<string,any>} local <lang><zh-CN>已验证 HIA 输入。</zh-CN><en>Validated HIA inputs.</en></lang>
+ * @param {string} semanticReviewSource <lang><zh-CN>已从固定仓内路径读取的 P0 语义审阅 JSON 原文。</zh-CN><en>P0 semantic-review JSON source read from the fixed repository-local path.</en></lang>
  * @returns {Promise<Record<string,any>>} <lang><zh-CN>完整矩阵 JSON 对象。</zh-CN><en>Complete matrix JSON object.</en></lang>
  */
-async function buildMatrix(upstream, local) {
+async function buildMatrix(upstream, local, semanticReviewSource) {
   // <lang><zh-CN>组件按冻结名称顺序串行读取；确定性优先于并发，且避免大量文件句柄。</zh-CN><en>Components are read serially in frozen name order; determinism takes priority over concurrency and avoids a large file-handle burst.</en></lang>
   const components = [];
   // <lang><zh-CN>顶层问题先包含已核验的 package types entry 缺陷。</zh-CN><en>Top-level issues begin with the verified package types-entry defect.</en></lang>
@@ -3072,7 +3523,8 @@ async function buildMatrix(upstream, local) {
     issues.push(...built.issues);
   }
 
-  // <lang><zh-CN>在组装顶层 JSON 前执行完整性与分级 canary，失败时不写部分生成物。</zh-CN><en>Runs completeness and priority canaries before top-level JSON assembly so failures never write a partial artifact.</en></lang>
+  // <lang><zh-CN>先应用被摘要锁定的人工 review，再执行完整性 canary；任一步失败都不会写部分生成物。</zh-CN><en>Apply the digest-locked human review before completeness canaries; failure at either step writes no partial artifact.</en></lang>
+  const semanticReview = applySemanticReview(components, semanticReviewSource, upstream, local);
   validateGeneratedCapabilities(components);
 
   // <lang><zh-CN>不同 parser 分支可能引用同一 issue；按 ID 去重并排序，确保 Tool 可以二分/稳定统计。</zh-CN><en>Different parser branches may reference the same issue; ID deduplication and sorting enable stable Tool statistics and lookup.</en></lang>
@@ -3166,6 +3618,7 @@ async function buildMatrix(upstream, local) {
         digest: digest(local.pagesSource)
       }
     },
+    semanticReview,
     issues: sortedIssues,
     components
   };
@@ -3185,7 +3638,9 @@ async function main() {
   // <lang><zh-CN>先分别验证上游和 HIA 边界，再读取组件细节。</zh-CN><en>Validates upstream and HIA boundaries separately before reading component details.</en></lang>
   const upstream = await validateUpstream(options.upstreamRoot);
   const local = await validateLocalInputs(upstream.componentNames);
-  const matrix = await buildMatrix(upstream, local);
+  // <lang><zh-CN>人工 review 只从固定仓内路径读取；缺失或摘要漂移必须阻断 v2 生成。</zh-CN><en>The human review is read only from its fixed repository-local path; absence or digest drift must block v2 generation.</en></lang>
+  const semanticReviewSource = await readFile(SEMANTIC_REVIEW_PATH, 'utf8');
+  const matrix = await buildMatrix(upstream, local, semanticReviewSource);
   // <lang><zh-CN>两空格缩进与末尾换行是生成物字节契约的一部分。</zh-CN><en>Two-space indentation and the trailing newline are part of the artifact byte contract.</en></lang>
   const serialized = `${JSON.stringify(matrix, null, 2)}\n`;
 

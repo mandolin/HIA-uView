@@ -98,6 +98,26 @@ function createDispositionCounts() {
 }
 
 /**
+ * @lang zh-CN 创建 P0 语义复核零值计数器；字段同时区分证据层级和仍需 runtime parity 的映射项。
+ * @lang en Creates a zero-value P0 semantic-review counter that separates evidence levels from mapped items still requiring runtime parity.
+ * @returns {{itemCount:number,reviewed:number,sourceReviewed:number,runtimeTested:number,runtimeParityRemaining:number}} <lang><zh-CN>当前组件或矩阵独占的可变计数器。</zh-CN><en>A mutable counter owned by the current component or matrix summary.</en></lang>
+ */
+function createP0SemanticCounts() {
+  // <lang><zh-CN>所有固定字段均显式置零，使 v1 矩阵与没有 P0 的组件仍产生稳定 JSON 形状。</zh-CN><en>Every fixed field starts at zero so version 1 matrices and components without P0 items still produce a stable JSON shape.</en></lang>
+  return { itemCount: 0, reviewed: 0, sourceReviewed: 0, runtimeTested: 0, runtimeParityRemaining: 0 };
+}
+
+/**
+ * @lang zh-CN 创建独立 service 清单的零值计数器；service 不进入四类 API item 或迁移 disposition 总数。
+ * @lang en Creates a zero-value counter for the separate service inventory; services enter neither the four API-item dimensions nor migration-disposition totals.
+ * @returns {{itemCount:number,unsupported:number}} <lang><zh-CN>当前组件独占的 service 计数器。</zh-CN><en>A service counter owned by the current component summary.</en></lang>
+ */
+function createServiceCounts() {
+  // <lang><zh-CN>当前 v2 service 只允许明确 unsupported；保留独立 itemCount 以便未来受控扩展时发现统计漂移。</zh-CN><en>Version 2 services currently permit only explicit unsupported facts; the separate item count exposes drift during future controlled extension.</en></lang>
+  return { itemCount: 0, unsupported: 0 };
+}
+
+/**
  * @lang zh-CN 从已通过 schema 校验的单组件矩阵现场派生 API item、disposition 与 unresolved 数；不信任或接受 manifest 自报 totals。
  * @lang en Derives API-item, disposition, and unresolved counts on the fly from one schema-valid component matrix; trusts and accepts no manifest-reported totals.
  * @param {object} component <lang><zh-CN>已校验且只含公开 metadata 的组件矩阵项。</zh-CN><en>A validated component-matrix entry containing only public metadata.</en></lang>
@@ -108,6 +128,8 @@ function summarizeApiComponent(component) {
   const dispositions = createDispositionCounts();
   // <lang><zh-CN>按公开维度保留独立 item 数，使使用者能区分 prop 缺口和 event/slot/imperative 缺口。</zh-CN><en>Retain item counts per public dimension so users can distinguish prop gaps from event, slot, or imperative gaps.</en></lang>
   const dimensions = {};
+  // <lang><zh-CN>P0 语义统计从各 item 的真实 priority、reviewState、evidenceLevel 与 remainingEvidence 现场派生。</zh-CN><en>P0 semantic totals are derived live from each item's priority, reviewState, evidenceLevel, and remainingEvidence.</en></lang>
+  const p0Semantics = createP0SemanticCounts();
   // <lang><zh-CN>unresolvedInventory 只统计显式 unresolved 容器；unsupported item 仍属于 complete inventory，不被错误归入未知。</zh-CN><en>Unresolved inventory counts only explicit unresolved containers; unsupported items may still belong to a complete inventory and are not mislabeled unknown.</en></lang>
   let unresolvedInventories = 0;
 
@@ -125,8 +147,25 @@ function summarizeApiComponent(component) {
     // <lang><zh-CN>每个 item 恰好拥有一个受控 migration disposition，因此可安全累加到固定键。</zh-CN><en>Each item owns exactly one constrained migration disposition and can therefore be safely accumulated into a fixed key.</en></lang>
     for (const item of inventory.items) {
       dispositions[item.migration.disposition] += 1;
+      // <lang><zh-CN>v1 item 没有 semantics；只有显式 P0 才进入语义复核分母。</zh-CN><en>Version 1 items have no semantics; only explicit P0 items enter the semantic-review denominator.</en></lang>
+      if (item.priority !== 'P0') continue;
+      // <lang><zh-CN>分母来自实际 P0 item 数，而不是顶层 semanticReview 自报数量。</zh-CN><en>The denominator comes from the actual P0 item count rather than the top-level semanticReview declaration.</en></lang>
+      p0Semantics.itemCount += 1;
+      // <lang><zh-CN>完整复核、证据层级和待补 runtime parity 分开累计，避免 source review 被误报成运行时等价。</zh-CN><en>Complete reviews, evidence levels, and pending runtime parity accumulate separately so source review cannot be mistaken for runtime equivalence.</en></lang>
+      if (item.semantics?.reviewState === 'complete') p0Semantics.reviewed += 1;
+      if (item.semantics?.evidenceLevel === 'source-reviewed') p0Semantics.sourceReviewed += 1;
+      if (item.semantics?.evidenceLevel === 'runtime-tested') p0Semantics.runtimeTested += 1;
+      if (item.semantics?.remainingEvidence?.includes('runtime-parity')) p0Semantics.runtimeParityRemaining += 1;
     }
   }
+
+  // <lang><zh-CN>v2 service container 在所有组件上存在，但只有真实 item 才进入公开 service 统计；v1 使用空数组兼容读取。</zh-CN><en>The version 2 service container exists on every component, but only real items enter public service totals; version 1 uses an empty array for compatible inspection.</en></lang>
+  const serviceItems = Array.isArray(component.services?.items) ? component.services.items : [];
+  // <lang><zh-CN>service 计数与 API disposition 完全分离，防止 1740 项既有 API 基线被新维度悄然改变。</zh-CN><en>Service counts remain separate from API dispositions so the established 1,740-item API baseline cannot change silently.</en></lang>
+  const services = createServiceCounts();
+  // <lang><zh-CN>实际数组长度是 service 分母；合法 v2 item 当前均为明确 unsupported。</zh-CN><en>The actual array length is the service denominator; every valid version 2 item is currently explicitly unsupported.</en></lang>
+  services.itemCount = serviceItems.length;
+  services.unsupported = serviceItems.filter((item) => item.migration.disposition === 'unsupported').length;
 
   // <lang><zh-CN>itemCount 是四个维度的真实和；显式 reduce 起点避免空容器组合产生非数字值。</zh-CN><en>Item count is the actual sum of the four dimensions; an explicit reduce seed prevents an all-empty inventory from producing a nonnumeric value.</en></lang>
   const itemCount = Object.values(dimensions).reduce((total, count) => total + count, 0);
@@ -134,6 +173,8 @@ function summarizeApiComponent(component) {
     itemCount,
     dimensions,
     dispositions,
+    p0Semantics,
+    services,
     unresolvedInventories,
     issueCount: component.issueIds.length,
     easycom: component.easycom.migration.disposition,
@@ -157,12 +198,26 @@ function summarizeApiManifest(componentRecords, issueCount) {
   // <lang><zh-CN>实际 API item 与 unresolved 容器数从零开始逐组件累积，不依赖矩阵中的易漂移 summary。</zh-CN><en>Actual API-item and unresolved-container counts accumulate from zero per component and do not depend on a drifting summary in the matrix.</en></lang>
   let itemCount = 0;
   let unresolvedInventories = 0;
+  // <lang><zh-CN>P0 语义总计只累计逐组件现场统计，不读取顶层 semanticReview count。</zh-CN><en>P0 semantic totals aggregate only component-level live summaries and never read the top-level semanticReview count.</en></lang>
+  const p0Semantics = createP0SemanticCounts();
+  // <lang><zh-CN>service 总计额外记录真正拥有 service item 的组件数，避免把 99 个空 container 说成 99 项能力。</zh-CN><en>Service totals additionally count components that actually own service items so 99 empty containers are not reported as 99 capabilities.</en></lang>
+  const services = { componentCount: 0, ...createServiceCounts() };
 
   // <lang><zh-CN>组件输入已按 code point 校验；保持该顺序同时累积统计，不做 locale 排序。</zh-CN><en>Component input is already validated in code-point order; preserve that order while accumulating totals and perform no locale sort.</en></lang>
   for (const record of componentRecords) {
     priorities[record.component.priority] += 1;
     itemCount += record.summary.itemCount;
     unresolvedInventories += record.summary.unresolvedInventories;
+    // <lang><zh-CN>逐字段累加保持语义分母、完成数、两类证据和待补证据彼此独立。</zh-CN><en>Field-by-field accumulation keeps the semantic denominator, completed reviews, both evidence levels, and remaining evidence independent.</en></lang>
+    p0Semantics.itemCount += record.summary.p0Semantics.itemCount;
+    p0Semantics.reviewed += record.summary.p0Semantics.reviewed;
+    p0Semantics.sourceReviewed += record.summary.p0Semantics.sourceReviewed;
+    p0Semantics.runtimeTested += record.summary.p0Semantics.runtimeTested;
+    p0Semantics.runtimeParityRemaining += record.summary.p0Semantics.runtimeParityRemaining;
+    // <lang><zh-CN>只有非空 service inventory 才增加组件数；item 与 unsupported 仍按真实数组累计。</zh-CN><en>Only a nonempty service inventory increments the component count, while item and unsupported totals still use actual arrays.</en></lang>
+    if (record.summary.services.itemCount > 0) services.componentCount += 1;
+    services.itemCount += record.summary.services.itemCount;
+    services.unsupported += record.summary.services.unsupported;
     // <lang><zh-CN>逐个固定 disposition 键相加，避免 Object iteration 接纳未来未审计分类。</zh-CN><en>Add each fixed disposition key explicitly, avoiding acceptance of a future unaudited category through object iteration.</en></lang>
     dispositions.compatible += record.summary.dispositions.compatible;
     dispositions.mapped += record.summary.dispositions.mapped;
@@ -174,6 +229,8 @@ function summarizeApiManifest(componentRecords, issueCount) {
     itemCount,
     priorities,
     dispositions,
+    p0Semantics,
+    services,
     unresolvedInventories,
     issueCount
   };
@@ -209,6 +266,8 @@ export function createApiCompatibilityInspection(apiCompatibilityManifests) {
         profile: manifest.profile,
         comparison: structuredClone(manifest.comparison),
         local: structuredClone(manifest.local),
+        // <lang><zh-CN>v2 JSON inspect 保留已验证 sidecar provenance；v1 不伪造不存在的 review 字段。</zh-CN><en>Version 2 JSON inspection retains the validated sidecar provenance, while version 1 invents no review field.</en></lang>
+        ...(manifest.version === 2 ? { semanticReview: structuredClone(manifest.semanticReview) } : {}),
         summary,
         issues: structuredClone(manifest.issues),
         components: componentRecords.map((record) => ({

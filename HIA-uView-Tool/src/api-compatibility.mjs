@@ -18,6 +18,12 @@ import { isCodePointSorted, readDeclaredJson } from './metadata.mjs';
 const allowedTopLevelFields = new Set(['version', 'kind', 'profile', 'comparison', 'local', 'issues', 'components']);
 
 /**
+ * @lang zh-CN v2 顶层在 v1 只读比较边界上增加 semantic review provenance；旧矩阵不会被静默按 v2 解释。
+ * @lang en Version 2 adds semantic-review provenance to the v1 read-only comparison boundary; an older matrix is never silently reinterpreted as v2.
+ */
+const allowedTopLevelFieldsV2 = new Set([...allowedTopLevelFields, 'semanticReview']);
+
+/**
  * @lang zh-CN 每个比较组件必须拥有的固定维度；`imperativeApis` 与 declarative API 分开，避免方法/service 被 props 名称覆盖。
  * @lang en Fixed dimensions required for every comparison component; `imperativeApis` stays separate from declarative APIs so methods and services cannot be hidden by prop names.
  */
@@ -39,10 +45,22 @@ const allowedComponentFields = new Set([
 ]);
 
 /**
+ * @lang zh-CN v2 组件增加独立 services inventory；它不进入四类 API item 或 `api-items-only` migration 统计。
+ * @lang en Version 2 components add a separate services inventory that enters neither the four API-item dimensions nor `api-items-only` migration totals.
+ */
+const allowedComponentFieldsV2 = new Set([...allowedComponentFields, 'services']);
+
+/**
  * @lang zh-CN 上游主导 API item 的固定字段；迁移状态与优先级不能被备注或名称推断代替。
  * @lang en Fixed fields of an upstream-led API item; migration disposition and priority cannot be replaced by notes or name inference.
  */
 const allowedApiItemFields = new Set(['id', 'upstream', 'hia', 'priority', 'migration']);
+
+/**
+ * @lang zh-CN v2 的 P0 item 以额外 `semantics` 字段承载逐项审阅；P1/P2 继续使用 v1 五字段 envelope。
+ * @lang en A version 2 P0 item carries item-by-item review in an additional `semantics` field, while P1/P2 retain the v1 five-field envelope.
+ */
+const allowedP0ApiItemFieldsV2 = new Set([...allowedApiItemFields, 'semantics']);
 
 /**
  * @lang zh-CN API 兼容矩阵可声明的组件/API 优先级。
@@ -956,6 +974,264 @@ function validateApiMigration(migration, targetNames, context, diagnostics) {
 }
 
 /**
+ * @lang zh-CN kind-specific semantic side 的固定字段集合；互斥 envelope 防止 payload、slot binding 或 service controller 事实跨种类混用。
+ * @lang en Fixed fields for each kind-specific semantic side; mutually exclusive envelopes prevent payload, slot-binding, or service-controller facts from crossing kinds.
+ */
+const semanticSideFields = Object.freeze({
+  prop: ['status', 'kind', 'valueDomain', 'ownership', 'control', 'coercion', 'validation', 'sideEffects', 'parentChild'],
+  event: ['status', 'kind', 'trigger', 'parameters', 'delivery', 'cancellable', 'modelRelation', 'sideEffects'],
+  slot: ['status', 'kind', 'bindings', 'fallback', 'cardinality', 'contextOwner'],
+  imperativeApi: ['status', 'kind', 'entry', 'parameters', 'returns', 'effects', 'lifecycle', 'scope', 'concurrency', 'failure'],
+  service: ['status', 'kind', 'entry', 'parameters', 'returns', 'scope', 'host', 'lifecycle', 'effects', 'concurrency', 'failure']
+});
+
+/**
+ * @lang zh-CN 校验一个非空、无外围空格且非占位词的语义字符串。
+ * @lang en Validates one nonempty, trim-stable semantic string that is not a placeholder token.
+ * @param {unknown} value <lang><zh-CN>待校验值。</zh-CN><en>Value to validate.</en></lang>
+ * @param {string} context <lang><zh-CN>公开诊断上下文。</zh-CN><en>Public diagnostic context.</en></lang>
+ * @param {Array<object>} diagnostics <lang><zh-CN>诊断累积器。</zh-CN><en>Diagnostic accumulator.</en></lang>
+ * @returns {boolean} <lang><zh-CN>值是否有效。</zh-CN><en>Whether the value is valid.</en></lang>
+ */
+function validateSemanticText(value, context, diagnostics) {
+  // <lang><zh-CN>布尔结果同时要求字符串类型、无外围空格、非空且不命中受控占位词。</zh-CN><en>The Boolean result simultaneously requires string type, trim stability, nonemptiness, and absence from the controlled placeholder set.</en></lang>
+  const valid = typeof value === 'string'
+    && value.trim() === value
+    && value.length > 0
+    && !/^(?:generic|placeholder|tbd|todo|unknown)$/iu.test(value);
+
+  // <lang><zh-CN>坏文本产生稳定语义诊断；返回值仍供上层决定是否进入集合检查。</zh-CN><en>Invalid text emits the stable semantic diagnostic while the return value lets the caller decide whether it may enter set checks.</en></lang>
+  if (!valid) addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context} must be a non-placeholder semantic string.`);
+  // <lang><zh-CN>不修剪或改写输入，确保校验器保持只读。</zh-CN><en>Return without trimming or rewriting input so the validator remains read-only.</en></lang>
+  return valid;
+}
+
+/**
+ * @lang zh-CN 校验语义字符串数组的形状、成员与唯一性；声明顺序保持不变。
+ * @lang en Validates the shape, members, and uniqueness of a semantic string array while preserving declaration order.
+ * @param {unknown} values <lang><zh-CN>字符串数组候选。</zh-CN><en>Candidate string array.</en></lang>
+ * @param {string} context <lang><zh-CN>公开诊断上下文。</zh-CN><en>Public diagnostic context.</en></lang>
+ * @param {boolean} allowEmpty <lang><zh-CN>是否允许空数组。</zh-CN><en>Whether an empty array is allowed.</en></lang>
+ * @param {Array<object>} diagnostics <lang><zh-CN>诊断累积器。</zh-CN><en>Diagnostic accumulator.</en></lang>
+ * @returns {string[]} <lang><zh-CN>可用于后续集合检查的合法字符串。</zh-CN><en>Valid strings usable by later set checks.</en></lang>
+ */
+function validateSemanticTextArray(values, context, allowEmpty, diagnostics) {
+  // <lang><zh-CN>数组形状与非空策略先行；坏容器不再被枚举。</zh-CN><en>Check array shape and the empty-list policy first; a malformed container is never enumerated.</en></lang>
+  if (!Array.isArray(values) || (!allowEmpty && values.length === 0)) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context} must be a ${allowEmpty ? '' : 'nonempty '}string array.`);
+    return [];
+  }
+
+  // <lang><zh-CN>只收集通过文本门禁的值，坏成员不会制造二次重复诊断。</zh-CN><en>Collect only values that pass the text gate so a malformed member cannot create a secondary duplicate diagnostic.</en></lang>
+  const validValues = values.filter((value, index) => validateSemanticText(value, `${context}[${index}]`, diagnostics));
+
+  // <lang><zh-CN>只对合法成员检查重复，避免一个坏值同时产生无意义的重复噪声。</zh-CN><en>Check duplicates only among valid members so one malformed value cannot create meaningless duplicate noise.</en></lang>
+  if (new Set(validValues).size !== validValues.length) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context} must not repeat a value.`);
+  }
+  // <lang><zh-CN>返回筛选后的只读视图供排序、前缀和集合门禁复用。</zh-CN><en>Return the filtered read-only view for ordering, prefix, and set gates.</en></lang>
+  return validValues;
+}
+
+/**
+ * @lang zh-CN 校验 payload、binding 或 parameter 的命名 shape 数组；`optional` 只能是显式 boolean。
+ * @lang en Validates a named-shape array for payloads, bindings, or parameters; `optional` may only be an explicit boolean.
+ * @param {unknown} values <lang><zh-CN>命名 shape 数组。</zh-CN><en>Named-shape array.</en></lang>
+ * @param {string} context <lang><zh-CN>公开诊断上下文。</zh-CN><en>Public diagnostic context.</en></lang>
+ * @param {Array<object>} diagnostics <lang><zh-CN>诊断累积器。</zh-CN><en>Diagnostic accumulator.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回。</zh-CN><en>No return value.</en></lang>
+ */
+function validateSemanticShapes(values, context, diagnostics) {
+  // <lang><zh-CN>非数组不能形成有序 payload/binding/parameter contract，立即停止该节点。</zh-CN><en>A non-array cannot form an ordered payload, binding, or parameter contract, so validation of this node stops immediately.</en></lang>
+  if (!Array.isArray(values)) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context} must be an array.`);
+    return;
+  }
+
+  // <lang><zh-CN>名称序列只收集通过字段门禁的成员，用于独立唯一性检查。</zh-CN><en>The name sequence collects only members that pass field validation for an independent uniqueness check.</en></lang>
+  const names = [];
+
+  // <lang><zh-CN>按声明顺序逐项校验，保留 payload/parameter 的位置语义。</zh-CN><en>Validate in declaration order to preserve positional payload and parameter semantics.</en></lang>
+  for (const [index, value] of values.entries()) {
+    // <lang><zh-CN>optional 只有显式出现时才属于 envelope，校验器不会补默认值。</zh-CN><en>Optional belongs to the envelope only when explicitly present; the validator never supplies a default.</en></lang>
+    const fields = isRecord(value) && Object.hasOwn(value, 'optional') ? ['name', 'shape', 'optional'] : ['name', 'shape'];
+
+    // <lang><zh-CN>字段形状失败的成员跳过后续属性读取，防止派生异常掩盖主诊断。</zh-CN><en>Skip property reads after a field-shape failure so derived exceptions cannot hide the primary diagnostic.</en></lang>
+    if (!validateExactFields(value, new Set(fields), fields, `${context}[${index}]`, diagnostics)) continue;
+    // <lang><zh-CN>名称只有通过文本门禁才进入唯一性集合；shape 始终单独校验。</zh-CN><en>A name enters the uniqueness set only after passing the text gate, while shape is always validated independently.</en></lang>
+    if (validateSemanticText(value.name, `${context}[${index}].name`, diagnostics)) names.push(value.name);
+    validateSemanticText(value.shape, `${context}[${index}].shape`, diagnostics);
+    // <lang><zh-CN>显式 optional 必须是 boolean，禁止字符串真值产生调用歧义。</zh-CN><en>An explicit optional flag must be Boolean so string truthiness cannot create invocation ambiguity.</en></lang>
+    if (Object.hasOwn(value, 'optional') && typeof value.optional !== 'boolean') {
+      addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context}[${index}].optional must be a boolean.`);
+    }
+  }
+
+  // <lang><zh-CN>同一 payload/binding/parameter 列表不能重复命名成员。</zh-CN><en>A single payload, binding, or parameter list cannot repeat a named member.</en></lang>
+  if (new Set(names).size !== names.length) addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context} must not repeat a name.`);
+}
+
+/**
+ * @lang zh-CN 校验一侧 delivered semantic record，并在 prop 上复核既有结构事实。
+ * @lang en Validates one delivered semantic-side record and cross-checks existing structural facts for props.
+ * @param {unknown} side <lang><zh-CN>upstream 或 HIA 语义侧。</zh-CN><en>Upstream or HIA semantic side.</en></lang>
+ * @param {'prop'|'event'|'slot'|'imperativeApi'|'service'} kind <lang><zh-CN>受控语义 kind。</zh-CN><en>Controlled semantic kind.</en></lang>
+ * @param {object|null} propFact <lang><zh-CN>prop 结构事实；其他 kind 为 null。</zh-CN><en>Structural prop fact, or null for other kinds.</en></lang>
+ * @param {string} context <lang><zh-CN>公开诊断上下文。</zh-CN><en>Public diagnostic context.</en></lang>
+ * @param {Array<object>} diagnostics <lang><zh-CN>诊断累积器。</zh-CN><en>Diagnostic accumulator.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回。</zh-CN><en>No return value.</en></lang>
+ */
+function validateDeliveredSemanticSide(side, kind, propFact, context, diagnostics) {
+  // <lang><zh-CN>kind 选择互斥字段集合；未知 kind 不会获得宽松 fallback。</zh-CN><en>The kind selects a mutually exclusive field set; an unknown kind receives no permissive fallback.</en></lang>
+  const fields = semanticSideFields[kind];
+
+  // <lang><zh-CN>字段集合不成立时停止该侧，避免读取未验证的嵌套值。</zh-CN><en>Stop this side when its field set is invalid so unvalidated nested values are never read.</en></lang>
+  if (!fields || !validateExactFields(side, new Set(fields), fields, context, diagnostics)) return;
+  // <lang><zh-CN>交付侧必须同时陈述 delivered 与预期 kind，不能借字段外形跨 kind 复用。</zh-CN><en>A delivered side must state both delivered status and the expected kind and cannot reuse a field shape across kinds.</en></lang>
+  if (side.status !== 'delivered' || side.kind !== kind) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context} must declare delivered ${kind} semantics.`);
+  }
+
+  // <lang><zh-CN>prop 分支将人工语义与当前结构事实逐字段对齐。</zh-CN><en>The prop branch aligns human-reviewed semantics field by field with the current structural fact.</en></lang>
+  if (kind === 'prop') {
+    // <lang><zh-CN>valueDomain 复用既有结构 prop 的五项固定事实，不另建更宽 schema。</zh-CN><en>The value domain reuses the five fixed facts from the structural prop rather than defining a wider schema.</en></lang>
+    const domainFields = ['typeKinds', 'typeOrder', 'default', 'required', 'validator'];
+
+    // <lang><zh-CN>只有完整 valueDomain 才能与结构事实比较。</zh-CN><en>Only a complete value domain can be compared with the structural fact.</en></lang>
+    if (validateExactFields(side.valueDomain, new Set(domainFields), domainFields, `${context}.valueDomain`, diagnostics)) {
+      // <lang><zh-CN>期望对象保持与 JSON 生成物相同字段顺序，使深比较稳定。</zh-CN><en>The expected object preserves generated-JSON field order for a stable deep comparison.</en></lang>
+      const expectedDomain = {
+        typeKinds: propFact?.typeKinds,
+        typeOrder: propFact?.typeOrder,
+        default: propFact?.default,
+        required: propFact?.required,
+        validator: propFact?.validator
+      };
+
+      // <lang><zh-CN>任何类型顺序、default、required 或 validator 漂移都属于语义冲突。</zh-CN><en>Any drift in type order, default, required state, or validator is a semantic conflict.</en></lang>
+      if (JSON.stringify(side.valueDomain) !== JSON.stringify(expectedDomain)) {
+        addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context}.valueDomain must match the API prop fact.`);
+      }
+    }
+    // <lang><zh-CN>其余 prop 语义字段逐项拒绝占位文本，副作用列表必须非空且唯一。</zh-CN><en>Every remaining prop semantic field rejects placeholders, while the side-effect list must be nonempty and unique.</en></lang>
+    for (const field of ['ownership', 'control', 'coercion', 'validation', 'parentChild']) validateSemanticText(side[field], `${context}.${field}`, diagnostics);
+    // <lang><zh-CN>副作用列表单独验证，使无副作用也必须成为显式且唯一的事实。</zh-CN><en>Validate the side-effect list separately so even no side effect must be an explicit unique fact.</en></lang>
+    validateSemanticTextArray(side.sideEffects, `${context}.sideEffects`, false, diagnostics);
+    // <lang><zh-CN>prop 专属字段完成后返回，避免落入调用型 API 分支。</zh-CN><en>Return after prop-specific fields so validation cannot fall through to callable-API handling.</en></lang>
+    return;
+  }
+
+  // <lang><zh-CN>event 分支独立锁定 trigger、payload、投递与副作用事实。</zh-CN><en>The event branch independently locks trigger, payload, delivery, and side-effect facts.</en></lang>
+  if (kind === 'event') {
+    // <lang><zh-CN>事件 trigger/delivery/model relation 与参数、副作用分别验证；不从事件名推断这些事实。</zh-CN><en>Validate event trigger, delivery, model relation, parameters, and side effects separately instead of inferring them from the event name.</en></lang>
+    for (const field of ['trigger', 'delivery', 'modelRelation']) validateSemanticText(side[field], `${context}.${field}`, diagnostics);
+    // <lang><zh-CN>当前审计面是 Vue emit，不具有 DOM 风格取消返回通道，必须明确为 false。</zh-CN><en>The reviewed surface is a Vue emit without a DOM-style cancellation return channel and must explicitly be false.</en></lang>
+    if (side.cancellable !== false) addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context}.cancellable must be false.`);
+    // <lang><zh-CN>参数列表保留声明顺序并逐项验证，不从事件名猜测 payload。</zh-CN><en>Validate the parameter list in declaration order without guessing payload from the event name.</en></lang>
+    validateSemanticShapes(side.parameters, `${context}.parameters`, diagnostics);
+    // <lang><zh-CN>事件副作用必须作为非空唯一事实列表声明。</zh-CN><en>Event side effects must be declared as a nonempty unique fact list.</en></lang>
+    validateSemanticTextArray(side.sideEffects, `${context}.sideEffects`, false, diagnostics);
+    // <lang><zh-CN>event 专属字段完成后返回。</zh-CN><en>Return after event-specific fields are complete.</en></lang>
+    return;
+  }
+
+  // <lang><zh-CN>slot 分支独立锁定 binding、fallback、cardinality 与上下文所有权。</zh-CN><en>The slot branch independently locks bindings, fallback, cardinality, and context ownership.</en></lang>
+  if (kind === 'slot') {
+    // <lang><zh-CN>slot 的 binding 列表与 fallback/cardinality/context owner 共同构成完整 P0 语义。</zh-CN><en>The slot binding list and fallback, cardinality, and context owner together form complete P0 semantics.</en></lang>
+    validateSemanticShapes(side.bindings, `${context}.bindings`, diagnostics);
+    // <lang><zh-CN>其余 slot 语义逐字段拒绝空值与占位词。</zh-CN><en>Reject empty values and placeholders for every remaining slot semantic fact.</en></lang>
+    for (const field of ['fallback', 'cardinality', 'contextOwner']) validateSemanticText(side[field], `${context}.${field}`, diagnostics);
+    // <lang><zh-CN>slot 专属字段完成后返回。</zh-CN><en>Return after slot-specific fields are complete.</en></lang>
+    return;
+  }
+
+  // <lang><zh-CN>imperative/service 共享参数与执行语义字段；kind-specific return 形状在后续分支处理。</zh-CN><en>Imperative APIs and services share parameter and execution-semantic fields, while kind-specific return shapes are handled below.</en></lang>
+  validateSemanticShapes(side.parameters, `${context}.parameters`, diagnostics);
+  // <lang><zh-CN>共同调用生命周期字段逐项校验，避免 scope 或 failure 等事实彼此代偿。</zh-CN><en>Validate common invocation-lifecycle fields individually so scope, failure, and related facts cannot substitute for one another.</en></lang>
+  for (const field of ['entry', 'scope', 'lifecycle', 'concurrency', 'failure']) validateSemanticText(side[field], `${context}.${field}`, diagnostics);
+  // <lang><zh-CN>调用效果必须显式列出且不得重复。</zh-CN><en>Invocation effects must be listed explicitly without duplicates.</en></lang>
+  validateSemanticTextArray(side.effects, `${context}.effects`, false, diagnostics);
+
+  // <lang><zh-CN>imperative API 使用单字符串返回 shape；service 使用 controller envelope。</zh-CN><en>An imperative API uses a single return-shape string, while a service uses a controller envelope.</en></lang>
+  if (kind === 'imperativeApi') {
+    // <lang><zh-CN>组件 ref method 的返回值使用一个非占位 shape 字符串。</zh-CN><en>A component-ref method uses one non-placeholder return-shape string.</en></lang>
+    validateSemanticText(side.returns, `${context}.returns`, diagnostics);
+  } else if (validateExactFields(side.returns, new Set(['shape', 'operations']), ['shape', 'operations'], `${context}.returns`, diagnostics)) {
+    // <lang><zh-CN>service controller 同时声明 controller shape 与公开 operation 清单。</zh-CN><en>A service controller declares both its controller shape and public operation list.</en></lang>
+    validateSemanticText(side.returns.shape, `${context}.returns.shape`, diagnostics);
+    // <lang><zh-CN>operations 保留合法、唯一字符串，用于代码点顺序门禁。</zh-CN><en>Operations retains valid unique strings for the code-point ordering gate.</en></lang>
+    const operations = validateSemanticTextArray(side.returns.operations, `${context}.returns.operations`, false, diagnostics);
+
+    // <lang><zh-CN>controller operation 使用跨 locale 代码点顺序，确保生成物字节稳定。</zh-CN><en>Controller operations use locale-independent code-point order for byte-stable artifacts.</en></lang>
+    if (!isCodePointSorted(operations)) addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context}.returns.operations must use code-point order.`);
+  }
+}
+
+/**
+ * @lang zh-CN 校验一个完整 P0/service semantics envelope 的 evidence、remaining-evidence 与上下游交付事实。
+ * @lang en Validates evidence, remaining evidence, and upstream/local delivery facts for one complete P0 or service semantic envelope.
+ * @param {unknown} semantics <lang><zh-CN>语义 envelope。</zh-CN><en>Semantic envelope.</en></lang>
+ * @param {object} expected <lang><zh-CN>kind、disposition 与结构交叉核对事实。</zh-CN><en>Kind, disposition, and structural cross-check facts.</en></lang>
+ * @param {string} context <lang><zh-CN>公开诊断上下文。</zh-CN><en>Public diagnostic context.</en></lang>
+ * @param {Array<object>} diagnostics <lang><zh-CN>诊断累积器。</zh-CN><en>Diagnostic accumulator.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回。</zh-CN><en>No return value.</en></lang>
+ */
+function validateItemSemantics(semantics, expected, context, diagnostics) {
+  // <lang><zh-CN>统一 envelope 将完成状态、证据、剩余证据与上下游事实绑定在同一 item 上。</zh-CN><en>The common envelope binds completion, evidence, remaining evidence, and both implementation sides to the same item.</en></lang>
+  const fields = ['reviewState', 'evidenceLevel', 'evidenceRefs', 'remainingEvidence', 'upstream', 'hia'];
+
+  // <lang><zh-CN>坏 envelope 不进入证据或 nested-side 读取。</zh-CN><en>A malformed envelope never enters evidence or nested-side reads.</en></lang>
+  if (!validateExactFields(semantics, new Set(fields), fields, context, diagnostics)) return;
+  // <lang><zh-CN>v2 不接受部分完成或未定义 evidence level。</zh-CN><en>Version 2 accepts neither partially completed reviews nor undefined evidence levels.</en></lang>
+  if (semantics.reviewState !== 'complete' || !['source-reviewed', 'runtime-tested'].includes(semantics.evidenceLevel)) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context} must declare a complete supported evidence level.`);
+  }
+
+  // <lang><zh-CN>先取得合法 evidence 字符串视图，再进行安全前缀与相对引用检查。</zh-CN><en>Obtain the valid evidence-string view before checking safe prefixes and relative references.</en></lang>
+  const evidenceRefs = validateSemanticTextArray(semantics.evidenceRefs, `${context}.evidenceRefs`, false, diagnostics);
+  // <lang><zh-CN>公开引用只允许 comparison/local/test 三种命名空间，且拒绝父目录片段。</zh-CN><en>Public references allow only comparison, local, and test namespaces and reject parent-directory segments.</en></lang>
+  const evidenceIsSafe = evidenceRefs.every((reference) => /^(?:comparison|local|test):[A-Za-z0-9._@/-]+$/u.test(reference) && !reference.includes('..'));
+
+  // <lang><zh-CN>每项审计必须具有排序稳定且同时覆盖上下游的证据集合。</zh-CN><en>Every review must have a stably sorted evidence set covering both upstream and local sides.</en></lang>
+  if (!isCodePointSorted(evidenceRefs) || !evidenceIsSafe
+    || !evidenceRefs.some((reference) => reference.startsWith('comparison:'))
+    || !evidenceRefs.some((reference) => reference.startsWith('local:'))) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context}.evidenceRefs must be sorted safe public comparison/local references.`);
+  }
+  // <lang><zh-CN>runtime-tested 没有 test reference 时属于虚假升级，必须拒绝。</zh-CN><en>A runtime-tested claim without a test reference is a false upgrade and must be rejected.</en></lang>
+  if (semantics.evidenceLevel === 'runtime-tested' && !evidenceRefs.some((reference) => reference.startsWith('test:'))) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context} requires a test evidence reference.`);
+  }
+
+  // <lang><zh-CN>剩余证据允许空数组，但成员仍需通过非占位与唯一性门禁。</zh-CN><en>Remaining evidence may be empty, but every member still passes non-placeholder and uniqueness gates.</en></lang>
+  const remainingEvidence = validateSemanticTextArray(semantics.remainingEvidence, `${context}.remainingEvidence`, true, diagnostics);
+  // <lang><zh-CN>mapped 项固定保留 runtime-parity；compatible/unsupported 当前不得携带该待办。</zh-CN><en>Mapped items retain exactly runtime-parity, while compatible and unsupported items currently carry no such remaining work.</en></lang>
+  const expectedRemaining = expected.disposition === 'mapped' ? ['runtime-parity'] : [];
+
+  // <lang><zh-CN>disposition、evidenceLevel 与 remainingEvidence 必须互相一致，防止 source review 冒充兼容。</zh-CN><en>Disposition, evidence level, and remaining evidence must agree so source review cannot masquerade as compatibility.</en></lang>
+  if (JSON.stringify(remainingEvidence) !== JSON.stringify(expectedRemaining)
+    || ((expected.disposition === 'compatible') !== (semantics.evidenceLevel === 'runtime-tested'))) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context} evidence level or remaining evidence contradicts migration disposition.`);
+  }
+
+  // <lang><zh-CN>上游是审计对象，必须始终声明 delivered kind-specific 事实。</zh-CN><en>The upstream is the review subject and must always declare delivered kind-specific facts.</en></lang>
+  validateDeliveredSemanticSide(semantics.upstream, expected.kind, expected.upstreamPropFact ?? null, `${context}.upstream`, diagnostics);
+
+  // <lang><zh-CN>本地已交付目标需完整语义；未交付目标只能使用精确单字段 sentinel。</zh-CN><en>A delivered local target requires complete semantics, while an undelivered target may use only the exact one-field sentinel.</en></lang>
+  if (expected.hiaDelivered) {
+    validateDeliveredSemanticSide(semantics.hia, expected.kind, expected.hiaPropFact ?? null, `${context}.hia`, diagnostics);
+  } else if (validateExactFields(semantics.hia, new Set(['status']), ['status'], `${context}.hia`, diagnostics)
+    && semantics.hia.status !== 'not-delivered') {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context}.hia must be explicitly not-delivered.`);
+  }
+
+  // <lang><zh-CN>`compatible` 必须具有逐字段相同的上下游 kind-specific 语义；仅有 runtime 证据或同名 target 不能覆盖 ownership、payload、side effect 等差异。</zh-CN><en>A `compatible` item must have field-for-field equal upstream and local kind-specific semantics; runtime evidence or a same-name target cannot hide ownership, payload, or side-effect differences.</en></lang>
+  if (expected.disposition === 'compatible' && JSON.stringify(semantics.upstream) !== JSON.stringify(semantics.hia)) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTICS_INVALID', `${context} compatible sides must declare identical semantics.`);
+  }
+}
+
+/**
  * @lang zh-CN 校验一个 prop item，包括上下游类型顺序、default、required、validator、HIA targets、优先级与迁移 target。
  * @lang en Validates one prop item, including upstream and HIA type order, default, required, validator, HIA targets, priority, and migration target.
  * @param {unknown} item <lang><zh-CN>prop item。</zh-CN><en>Prop item.</en></lang>
@@ -963,14 +1239,17 @@ function validateApiMigration(migration, targetNames, context, diagnostics) {
  * @param {Map<string, object>} issuesById <lang><zh-CN>issue registry。</zh-CN><en>Issue registry.</en></lang>
  * @param {Set<string>} componentIssueIds <lang><zh-CN>当前组件 issue 集。</zh-CN><en>Current component issue set.</en></lang>
  * @param {Set<string>} surfaceIssueIds <lang><zh-CN>当前 props container 的直接 issue 集。</zh-CN><en>Direct issue set of the current props container.</en></lang>
+ * @param {number} schemaVersion <lang><zh-CN>矩阵 schema version。</zh-CN><en>Matrix schema version.</en></lang>
  * @param {Array<object>} diagnostics <lang><zh-CN>诊断累积器。</zh-CN><en>Diagnostic accumulator.</en></lang>
  * @returns {string | null} <lang><zh-CN>合法 id 候选；形状无效时为 null。</zh-CN><en>Valid id candidate, or null for an invalid shape.</en></lang>
  */
-function validatePropItem(item, componentName, issuesById, componentIssueIds, surfaceIssueIds, diagnostics) {
+function validatePropItem(item, componentName, issuesById, componentIssueIds, surfaceIssueIds, schemaVersion, diagnostics) {
   // <lang><zh-CN>上下文只包含公开组件名和维度，用于稳定诊断而不暴露源码位置。</zh-CN><en>The context contains only the public component name and dimension, producing stable diagnostics without exposing source locations.</en></lang>
   const context = `API compatibility component ${componentName} prop item`;
-  // <lang><zh-CN>先锁定 item 五字段外壳；形状失败时不读取任何嵌套 API 数据。</zh-CN><en>Lock the five-field item envelope first; nested API data is not read when the shape fails.</en></lang>
-  if (!validateExactFields(item, allowedApiItemFields, [...allowedApiItemFields], context, diagnostics)) return null;
+  // <lang><zh-CN>v2 只给 P0 增加 semantics；其他优先级与 v1 均保持五字段 envelope。</zh-CN><en>Version 2 adds semantics only to P0; every other priority and v1 retain the five-field envelope.</en></lang>
+  const itemFields = schemaVersion === 2 && item?.priority === 'P0' ? allowedP0ApiItemFieldsV2 : allowedApiItemFields;
+
+  if (!validateExactFields(item, itemFields, [...itemFields], context, diagnostics)) return null;
 
   // <lang><zh-CN>上游 prop 必须完整声明类型集合/源码顺序、default、required 与 validator 事实。</zh-CN><en>The upstream prop must fully declare its type set and source order, default, required flag, and validator fact.</en></lang>
   const upstreamFields = ['name', 'typeKinds', 'typeOrder', 'default', 'required', 'validator'];
@@ -1030,6 +1309,22 @@ function validatePropItem(item, componentName, issuesById, componentIssueIds, su
   }
   // <lang><zh-CN>迁移 target 最后对照已验证名称序列，避免引用尚未通过形状门禁的目标。</zh-CN><en>Validate the migration target last against the checked name sequence so it cannot reference a target that failed the shape gate.</en></lang>
   validateApiMigration(item.migration, targetNames, `${context}.migration`, diagnostics);
+  if (schemaVersion === 2 && item.priority === 'P0') {
+    // <lang><zh-CN>语义交叉核对必须跟随明确的 migration target；多个候选 target 时不得默认取数组首项。</zh-CN><en>Semantic cross-checking must follow the explicit migration target and must not default to the first array entry when several targets exist.</en></lang>
+    const semanticTargetName = isNonemptyString(item.migration?.target) ? item.migration.target.trim() : null;
+    // <lang><zh-CN>只在已声明 targets 中按精确名称选择语义目标；无 target 的 unsupported 项保持未交付。</zh-CN><en>Select the semantic target by exact name only among declared targets; a targetless unsupported item remains undelivered.</en></lang>
+    const semanticTarget = semanticTargetName
+      ? item.hia.targets.find((target) => isNonemptyString(target?.name) && target.name.trim() === semanticTargetName) ?? null
+      : null;
+
+    validateItemSemantics(item.semantics, {
+      kind: 'prop',
+      disposition: item.migration?.disposition,
+      hiaDelivered: Boolean(semanticTarget),
+      upstreamPropFact: item.upstream,
+      hiaPropFact: semanticTarget
+    }, `${context}.semantics`, diagnostics);
+  }
   // <lang><zh-CN>返回稳定 item id 供容器做唯一/顺序检查；坏 id 返回 null，避免污染派生序列。</zh-CN><en>Return a stable item ID for container uniqueness and ordering checks; an invalid ID returns null so it cannot pollute the derived sequence.</en></lang>
   return isNonemptyString(item.id) ? item.id : null;
 }
@@ -1041,14 +1336,17 @@ function validatePropItem(item, componentName, issuesById, componentIssueIds, su
  * @param {string} componentName <lang><zh-CN>当前组件名。</zh-CN><en>Current component name.</en></lang>
  * @param {string} dimension <lang><zh-CN>公开维度名。</zh-CN><en>Public dimension name.</en></lang>
  * @param {string} idPrefix <lang><zh-CN>稳定 id 前缀。</zh-CN><en>Stable id prefix.</en></lang>
+ * @param {number} schemaVersion <lang><zh-CN>矩阵 schema version。</zh-CN><en>Matrix schema version.</en></lang>
  * @param {Array<object>} diagnostics <lang><zh-CN>诊断累积器。</zh-CN><en>Diagnostic accumulator.</en></lang>
  * @returns {string | null} <lang><zh-CN>合法 id 候选；形状无效时为 null。</zh-CN><en>Valid id candidate, or null for an invalid shape.</en></lang>
  */
-function validateNamedApiItem(item, componentName, dimension, idPrefix, diagnostics) {
+function validateNamedApiItem(item, componentName, dimension, idPrefix, schemaVersion, diagnostics) {
   // <lang><zh-CN>诊断上下文保留具体 event/slot/imperative 维度，但不携带源码路径或声明正文。</zh-CN><en>The diagnostic context retains the concrete event, slot, or imperative dimension without carrying source paths or declaration bodies.</en></lang>
   const context = `API compatibility component ${componentName} ${dimension} item`;
-  // <lang><zh-CN>共同五字段外壳和单字段 upstream name 先后通过后，才进入名称映射校验。</zh-CN><en>Name-mapping validation begins only after the common five-field envelope and single-field upstream name both pass.</en></lang>
-  if (!validateExactFields(item, allowedApiItemFields, [...allowedApiItemFields], context, diagnostics)) return null;
+  // <lang><zh-CN>v2 P0 使用六字段语义 envelope；其他条目保持 v1 五字段兼容面。</zh-CN><en>Version 2 P0 uses a six-field semantic envelope; other items retain the v1 five-field compatibility surface.</en></lang>
+  const itemFields = schemaVersion === 2 && item?.priority === 'P0' ? allowedP0ApiItemFieldsV2 : allowedApiItemFields;
+
+  if (!validateExactFields(item, itemFields, [...itemFields], context, diagnostics)) return null;
   // <lang><zh-CN>upstream name 外壳无效时无法建立稳定 item ID，立即返回 null。</zh-CN><en>An invalid upstream-name envelope cannot establish a stable item ID and returns null immediately.</en></lang>
   if (!validateExactFields(item.upstream, new Set(['name']), ['name'], `${context}.upstream`, diagnostics)) return null;
   // <lang><zh-CN>规范 API 名是稳定 id 的唯一后缀；不会推断 alias 或修改大小写。</zh-CN><en>The normalized API name is the sole stable-ID suffix; no alias is inferred and casing is preserved.</en></lang>
@@ -1083,6 +1381,15 @@ function validateNamedApiItem(item, componentName, dimension, idPrefix, diagnost
   }
   // <lang><zh-CN>映射结论最后绑定到已验证目标集合，unsupported 则维持无 target 的明确事实。</zh-CN><en>Bind the migration conclusion to the checked target set last; unsupported remains an explicit targetless fact.</en></lang>
   validateApiMigration(item.migration, targetNames, `${context}.migration`, diagnostics);
+  if (schemaVersion === 2 && item.priority === 'P0') {
+    const semanticKind = dimension === 'events' ? 'event' : dimension === 'slots' ? 'slot' : 'imperativeApi';
+
+    validateItemSemantics(item.semantics, {
+      kind: semanticKind,
+      disposition: item.migration?.disposition,
+      hiaDelivered: targetNames.length > 0
+    }, `${context}.semantics`, diagnostics);
+  }
   // <lang><zh-CN>容器只接收非空 item id，以便独立检查重复和代码点顺序。</zh-CN><en>The container receives only a nonempty item ID for independent duplicate and code-point-order checks.</en></lang>
   return isNonemptyString(item.id) ? item.id : null;
 }
@@ -1095,10 +1402,11 @@ function validateNamedApiItem(item, componentName, dimension, idPrefix, diagnost
  * @param {string} dimension <lang><zh-CN>维度字段名。</zh-CN><en>Dimension field name.</en></lang>
  * @param {Map<string, object>} issuesById <lang><zh-CN>issue registry。</zh-CN><en>Issue registry.</en></lang>
  * @param {Set<string>} componentIssueIds <lang><zh-CN>组件 issue 引用。</zh-CN><en>Component issue references.</en></lang>
+ * @param {number} schemaVersion <lang><zh-CN>矩阵 schema version。</zh-CN><en>Matrix schema version.</en></lang>
  * @param {Array<object>} diagnostics <lang><zh-CN>诊断累积器。</zh-CN><en>Diagnostic accumulator.</en></lang>
  * @returns {{itemCount:number,unresolved:number}} <lang><zh-CN>供组件 summary 复核的数量。</zh-CN><en>Counts used to verify the component summary.</en></lang>
  */
-function validateApiContainer(container, componentName, dimension, issuesById, componentIssueIds, diagnostics) {
+function validateApiContainer(container, componentName, dimension, issuesById, componentIssueIds, schemaVersion, diagnostics) {
   // <lang><zh-CN>上下文与字段白名单按当前组件维度固定，所有后续诊断均落在同一公开位置。</zh-CN><en>The context and field allowlist are fixed to the current component dimension so all later diagnostics share one public location.</en></lang>
   const context = `API compatibility component ${componentName}.${dimension}`;
   // <lang><zh-CN>inventory container 只允许 scope、完成状态、items 与直接 issueIds，禁止内嵌自报 summary 或扫描入口。</zh-CN><en>An inventory container allows only scope, completion state, items, and direct issueIds, forbidding embedded self-reported summaries or scan entry points.</en></lang>
@@ -1139,12 +1447,13 @@ function validateApiContainer(container, componentName, dimension, issuesById, c
   for (const item of container.items) {
     // <lang><zh-CN>当前 item 的返回 ID 只在嵌套形状足够可靠时存在；诊断仍由被调 validator 累积。</zh-CN><en>The current item returns an ID only when its nested shape is reliable enough; diagnostics continue accumulating in the delegated validator.</en></lang>
     const itemId = dimension === 'props'
-      ? validatePropItem(item, componentName, issuesById, componentIssueIds, surfaceIssueIds, diagnostics)
+      ? validatePropItem(item, componentName, issuesById, componentIssueIds, surfaceIssueIds, schemaVersion, diagnostics)
       : validateNamedApiItem(
         item,
         componentName,
         dimension,
         dimension === 'events' ? 'event' : dimension === 'slots' ? 'slot' : 'imperative',
+        schemaVersion,
         diagnostics
       );
     // <lang><zh-CN>跳过 null ID，防止原始坏值参与重复/排序比较而制造二次噪声。</zh-CN><en>Skip a null ID so a malformed raw value cannot create secondary duplicate or ordering noise.</en></lang>
@@ -1470,6 +1779,80 @@ function countComponentMigration(component) {
 }
 
 /**
+ * @lang zh-CN 校验 v2 独立 public composable service inventory；其 item 只记录 unsupported migration 与完整 service semantics。
+ * @lang en Validates the separate v2 public-composable-service inventory; each item records only an unsupported migration and complete service semantics.
+ * @param {unknown} services <lang><zh-CN>service inventory container。</zh-CN><en>Service-inventory container.</en></lang>
+ * @param {string} componentName <lang><zh-CN>拥有 service 的比较组件。</zh-CN><en>Comparison component owning the service.</en></lang>
+ * @param {Array<object>} diagnostics <lang><zh-CN>诊断累积器。</zh-CN><en>Diagnostic accumulator.</en></lang>
+ * @returns {number} <lang><zh-CN>结构中声明的 service item 数。</zh-CN><en>Number of service items declared by the structure.</en></lang>
+ */
+function validateServices(services, componentName, diagnostics) {
+  // <lang><zh-CN>诊断上下文只含公开组件名；不泄露 service 源码或主机路径。</zh-CN><en>The diagnostic context contains only the public component name and leaks neither service source nor host paths.</en></lang>
+  const context = `API compatibility component ${componentName}.services`;
+  // <lang><zh-CN>service inventory 使用固定四字段 envelope，拒绝未来未经审计的执行或发现配置。</zh-CN><en>The service inventory uses a fixed four-field envelope and rejects future unaudited execution or discovery configuration.</en></lang>
+  const containerFields = ['scope', 'inventoryState', 'items', 'issueIds'];
+
+  // <lang><zh-CN>容器形状或 items 数组无效时停止枚举，避免派生异常掩盖主诊断。</zh-CN><en>Stop enumeration when the container shape or items array is invalid so a derived exception cannot hide the primary diagnostic.</en></lang>
+  if (!validateExactFields(services, new Set(containerFields), containerFields, context, diagnostics) || !Array.isArray(services.items)) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID', `${context} must be a complete service inventory.`);
+    return 0;
+  }
+  // <lang><zh-CN>当前 service inventory 只陈述已完成且无 parser issue 的公开 composable 入口。</zh-CN><en>The current service inventory declares only complete public composable entrypoints with no parser issue.</en></lang>
+  if (services.scope !== 'public-composable-services' || services.inventoryState !== 'complete'
+    || !Array.isArray(services.issueIds) || services.issueIds.length !== 0) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID', `${context} must use public-composable-services, complete, and no issues.`);
+  }
+
+  // <lang><zh-CN>合法 ID 单独收集，以便在完整枚举后统一验证重复与跨 locale 顺序。</zh-CN><en>Collect valid IDs separately so duplicate and cross-locale ordering checks run after complete enumeration.</en></lang>
+  const itemIds = [];
+
+  // <lang><zh-CN>逐 service 聚合所有诊断；一个坏 entry 不会阻断同容器其他事实。</zh-CN><en>Accumulate diagnostics service by service; one malformed entry does not hide other facts in the container.</en></lang>
+  for (const item of services.items) {
+    // <lang><zh-CN>单项上下文保持稳定且不回显原始 JSON。</zh-CN><en>The per-item context remains stable and never echoes raw JSON.</en></lang>
+    const itemContext = `${context} item`;
+    // <lang><zh-CN>service item 只允许身份、迁移结论与完整语义三类字段。</zh-CN><en>A service item allows only identity, migration disposition, and complete semantics.</en></lang>
+    const itemFields = ['id', 'migration', 'semantics'];
+
+    // <lang><zh-CN>坏 item 外壳跳过当前项的嵌套读取，同时保留已产生的字段诊断。</zh-CN><en>A malformed item envelope skips nested reads for that item while retaining its field diagnostics.</en></lang>
+    if (!validateExactFields(item, new Set(itemFields), itemFields, itemContext, diagnostics)) continue;
+    // <lang><zh-CN>规范 ID 只去除外围空白，不改写公开 entry 名。</zh-CN><en>The canonical ID removes outer whitespace only and does not rewrite the public entry name.</en></lang>
+    const itemId = isNonemptyString(item.id) ? item.id.trim() : '';
+
+    // <lang><zh-CN>ID 必须采用 service:identifier 形式；只有合法 ID 才进入排序集合。</zh-CN><en>An ID must use the service:identifier form; only a valid ID enters the ordering set.</en></lang>
+    if (!/^service:[A-Za-z_$][\w$]*$/u.test(itemId)) {
+      addDiagnostic(diagnostics, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID', `${itemContext}.id must use service:<entry>.`);
+    } else {
+      // <lang><zh-CN>只有合法 service ID 才进入最终唯一性与排序集合。</zh-CN><en>Only a valid service ID enters the final uniqueness and ordering set.</en></lang>
+      itemIds.push(itemId);
+    }
+    // <lang><zh-CN>复用统一 migration validator，并额外锁定“当前 HIA 未交付 service”的专用原因。</zh-CN><en>Reuse the common migration validator and additionally lock the dedicated reason for a service not currently delivered by HIA.</en></lang>
+    validateApiMigration(item.migration, [], `${itemContext}.migration`, diagnostics);
+    // <lang><zh-CN>通用迁移形状合法仍不够；service 必须使用专用未交付结论。</zh-CN><en>A valid common migration shape is insufficient; a service must use the dedicated undelivered conclusion.</en></lang>
+    if (item.migration?.disposition !== 'unsupported' || item.migration?.reasonCode !== 'HIA_SERVICE_NOT_DELIVERED') {
+      addDiagnostic(diagnostics, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID', `${itemContext}.migration must explicitly report the undelivered HIA service.`);
+    }
+    // <lang><zh-CN>service 语义仍需完整审阅上游入口，而 HIA 侧必须保持精确未交付 sentinel。</zh-CN><en>Service semantics still require a complete upstream review while the HIA side remains the exact undelivered sentinel.</en></lang>
+    validateItemSemantics(item.semantics, {
+      kind: 'service',
+      disposition: 'unsupported',
+      hiaDelivered: false
+    }, `${itemContext}.semantics`, diagnostics);
+
+    // <lang><zh-CN>语义 entry 与结构 ID 必须同源，防止复用另一 composable 的审阅事实。</zh-CN><en>The semantic entry and structural ID must have the same identity so review facts from another composable cannot be reused.</en></lang>
+    if (item.semantics?.upstream?.entry && itemId !== `service:${item.semantics.upstream.entry}`) {
+      addDiagnostic(diagnostics, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID', `${itemContext}.id must match semantics.upstream.entry.`);
+    }
+  }
+
+  // <lang><zh-CN>唯一性与代码点顺序在合法 ID 全部收集后统一核验。</zh-CN><en>Validate uniqueness and code-point order after all valid IDs have been collected.</en></lang>
+  if (new Set(itemIds).size !== itemIds.length || !isCodePointSorted(itemIds)) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID', `${context} item ids must be unique and code-point sorted.`);
+  }
+  // <lang><zh-CN>返回声明 item 总数供顶层 provenance 现场复核，不把有效 ID 数冒充覆盖数。</zh-CN><en>Return the declared item count for top-level provenance verification rather than presenting the valid-ID count as coverage.</en></lang>
+  return services.items.length;
+}
+
+/**
  * @lang zh-CN 校验单个比较组件 record 与上游组件根目录及本地 component manifest 的成员、source 和 contract 对齐。
  * @lang en Validates one comparison-component record against the upstream component root and membership, source, and contract in the local component manifest.
  * @param {unknown} component <lang><zh-CN>组件 record。</zh-CN><en>Component record.</en></lang>
@@ -1477,12 +1860,15 @@ function countComponentMigration(component) {
  * @param {string | null} componentRoot <lang><zh-CN>已通过安全门禁的上游组件根路径。</zh-CN><en>Upstream component-root path after the safety gate.</en></lang>
  * @param {Map<string, object>} issuesById <lang><zh-CN>issue registry。</zh-CN><en>Issue registry.</en></lang>
  * @param {Map<string, object>} localComponents <lang><zh-CN>本地 component manifest 名称索引。</zh-CN><en>Local component-manifest index by name.</en></lang>
+ * @param {number} schemaVersion <lang><zh-CN>矩阵 schema version。</zh-CN><en>Matrix schema version.</en></lang>
  * @param {Array<object>} diagnostics <lang><zh-CN>诊断累积器。</zh-CN><en>Diagnostic accumulator.</en></lang>
  * @returns {string | null} <lang><zh-CN>组件名；形状无效时为 null。</zh-CN><en>Component name, or null for an invalid shape.</en></lang>
  */
-function validateComponent(component, profile, componentRoot, issuesById, localComponents, diagnostics) {
+function validateComponent(component, profile, componentRoot, issuesById, localComponents, schemaVersion, diagnostics) {
   // <lang><zh-CN>完整组件外壳先过字段白名单；失败时不读取 name 或任何嵌套 capability。</zh-CN><en>The complete component envelope passes the field allowlist first; a failure prevents reads of name or nested capabilities.</en></lang>
-  if (!validateExactFields(component, allowedComponentFields, [...allowedComponentFields], 'API compatibility component', diagnostics)) return null;
+  const componentFields = schemaVersion === 2 ? allowedComponentFieldsV2 : allowedComponentFields;
+
+  if (!validateExactFields(component, componentFields, [...componentFields], 'API compatibility component', diagnostics)) return null;
   // <lang><zh-CN>规范名称是组件内所有上下文、owner 和本地成员关联的稳定键，只去除外围空白。</zh-CN><en>The normalized name is the stable key for all component contexts, owners, and local membership linkage and removes outer whitespace only.</en></lang>
   const componentName = isNonemptyString(component.name) ? component.name.trim() : '';
   // <lang><zh-CN>组件名称与总体优先级必须先成立；空名称时继续读取嵌套数据会产生不可定位诊断。</zh-CN><en>Component name and overall priority must be established first; reading nested data with an empty name would create unlocatable diagnostics.</en></lang>
@@ -1572,8 +1958,10 @@ function validateComponent(component, profile, componentRoot, issuesById, localC
 
   // <lang><zh-CN>四个 API 维度按固定顺序累积诊断，使 text/JSON 报告跨主机稳定且能力边界清晰。</zh-CN><en>Accumulate diagnostics across the four API dimensions in fixed order, keeping text/JSON reports stable across hosts and capability boundaries explicit.</en></lang>
   for (const dimension of ['props', 'events', 'slots', 'imperativeApis']) {
-    validateApiContainer(component[dimension], componentName, dimension, issuesById, componentIssueIds, diagnostics);
+    validateApiContainer(component[dimension], componentName, dimension, issuesById, componentIssueIds, schemaVersion, diagnostics);
   }
+  // <lang><zh-CN>service inventory 只属于 v2；v1 exact component envelope 已确保该字段不存在。</zh-CN><en>The service inventory belongs only to v2; the exact v1 component envelope already guarantees its absence there.</en></lang>
+  if (schemaVersion === 2) validateServices(component.services, componentName, diagnostics);
   // <lang><zh-CN>alias 使用同一直接 issue 归属规则，但保持 runtime-aliases 独立 scope。</zh-CN><en>Aliases use the same direct-issue ownership rule while retaining an independent runtime-aliases scope.</en></lang>
   validateAliases(component.aliases, componentName, issuesById, componentIssueIds, diagnostics);
   // <lang><zh-CN>parser-owned issue 只允许绑定一个 surface；此跨容器门禁在各自直接引用校验后统一复核。</zh-CN><en>A parser-owned issue may bind to only one surface; this cross-container gate is checked after each direct-reference validation.</en></lang>
@@ -1602,12 +1990,13 @@ export function validateApiCompatibilityManifest(manifest, manifestPath, configu
 
   // <lang><zh-CN>所有独立问题在固定遍历顺序内累积，支持一次修复完整 metadata。</zh-CN><en>All independent issues accumulate in fixed traversal order so complete metadata can be repaired in one pass.</en></lang>
   const diagnostics = [];
-  // <lang><zh-CN>顶层 exact-field 门禁拒绝 summary、时间戳或执行字段，但 record 形状成立后继续收集其他独立错误。</zh-CN><en>The top-level exact-field gate rejects summaries, timestamps, and execution fields while continuing to collect independent errors once record shape is established.</en></lang>
-  validateExactFields(manifest, allowedTopLevelFields, [...allowedTopLevelFields], `API compatibility manifest ${manifestPath}`, diagnostics);
+  // <lang><zh-CN>版本先只用于选择 exact-field envelope；未知版本沿用 v1 最小面并由独立 version 诊断拒绝。</zh-CN><en>The version initially selects only the exact-field envelope; an unknown version uses the minimal v1 surface and is rejected by the independent version diagnostic.</en></lang>
+  const topLevelFields = manifest.version === 2 ? allowedTopLevelFieldsV2 : allowedTopLevelFields;
+  validateExactFields(manifest, topLevelFields, [...topLevelFields], `API compatibility manifest ${manifestPath}`, diagnostics);
 
   // <lang><zh-CN>版本、kind 与 profile 分别锁定 schema 世代、公开用途和本次调用环境，三者互不代偿。</zh-CN><en>Version, kind, and profile independently lock schema generation, public purpose, and invocation environment; none substitutes for another.</en></lang>
-  if (manifest.version !== 1) {
-    addDiagnostic(diagnostics, 'API_COMPATIBILITY_VERSION_UNSUPPORTED', `API compatibility manifest version must be 1: ${manifestPath}.`);
+  if (manifest.version !== 1 && manifest.version !== 2) {
+    addDiagnostic(diagnostics, 'API_COMPATIBILITY_VERSION_UNSUPPORTED', `API compatibility manifest version must be 1 or 2: ${manifestPath}.`);
   }
   // <lang><zh-CN>kind 独立于版本校验，防止其他 v1 JSON 被误当作 API compatibility matrix。</zh-CN><en>Kind is checked independently of version so another v1 JSON document cannot masquerade as an API compatibility matrix.</en></lang>
   if (manifest.kind !== 'hia-uview-api-compatibility') {
@@ -1624,6 +2013,19 @@ export function validateApiCompatibilityManifest(manifest, manifestPath, configu
   const localManifestPath = validateLocal(manifest.local, manifest.profile, diagnostics);
   // <lang><zh-CN>issue registry 在组件遍历前建立，使 unresolved、types 与 owner 引用共享同一可信索引。</zh-CN><en>Build the issue registry before component traversal so unresolved, types, and owner references share one trusted index.</en></lang>
   const issuesById = validateIssues(manifest.issues, diagnostics);
+
+  // <lang><zh-CN>v2 review provenance 只声明安全相对路径、摘要与两类数量；Tool 不打开该 review 文件。</zh-CN><en>Version 2 review provenance declares only a safe relative path, digest, and two counts; the Tool never opens the review file.</en></lang>
+  if (manifest.version === 2) {
+    const reviewFields = ['path', 'digest', 'itemCount', 'serviceCount'];
+
+    if (validateExactFields(manifest.semanticReview, new Set(reviewFields), reviewFields, 'API compatibility semanticReview', diagnostics)) {
+      if (!isSafeRelativePath(manifest.semanticReview.path) || !isSha256Digest(manifest.semanticReview.digest)
+        || !Number.isInteger(manifest.semanticReview.itemCount) || manifest.semanticReview.itemCount < 1
+        || !Number.isInteger(manifest.semanticReview.serviceCount) || manifest.semanticReview.serviceCount < 0) {
+        addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTIC_REVIEW_INVALID', 'API compatibility semanticReview must declare a safe path, SHA-256 digest, and nonnegative counts.');
+      }
+    }
+  }
 
   // <lang><zh-CN>只允许关联 configuration 已加载的 component manifest；不猜测包位置或打开替代路径。</zh-CN><en>Only a component manifest already loaded from configuration may be linked; no package location is guessed and no alternative path is opened.</en></lang>
   const loadedComponentManifest = localManifestPath ? componentManifests.get(localManifestPath) : null;
@@ -1661,7 +2063,7 @@ export function validateApiCompatibilityManifest(manifest, manifestPath, configu
   // <lang><zh-CN>按 manifest 声明顺序遍历，使组件顺序错误可被顶层代码点门禁观察。</zh-CN><en>Traverse in manifest declaration order so the top-level code-point gate can observe component ordering errors.</en></lang>
   for (const component of manifest.components) {
     // <lang><zh-CN>组件 validator 返回可靠名称或 null；所有嵌套错误已进入共享 diagnostics。</zh-CN><en>The component validator returns a reliable name or null; all nested errors already enter shared diagnostics.</en></lang>
-    const componentName = validateComponent(component, manifest.profile, comparisonComponentRoot, issuesById, localComponents, diagnostics);
+    const componentName = validateComponent(component, manifest.profile, comparisonComponentRoot, issuesById, localComponents, manifest.version, diagnostics);
     // <lang><zh-CN>null 名称无法成为集合或 owner 键，跳过可避免二次重复/排序噪声。</zh-CN><en>A null name cannot become a set or owner key and is skipped to prevent secondary duplicate or ordering noise.</en></lang>
     if (!componentName) continue;
     // <lang><zh-CN>名称序列保留声明顺序；反向表只复制 issue ID，不修改组件 record。</zh-CN><en>The name sequence preserves declaration order; the reverse table copies only issue IDs and never mutates the component record.</en></lang>
@@ -1681,6 +2083,21 @@ export function validateApiCompatibilityManifest(manifest, manifestPath, configu
   // <lang><zh-CN>现场摘要必须与 comparison 声明一致，防止 count 相同但名称集合漂移。</zh-CN><en>The live digest must match the comparison declaration so a same-sized but different name set cannot drift silently.</en></lang>
   if (actualNameDigest !== manifest.comparison?.components?.nameDigest) {
     addDiagnostic(diagnostics, 'API_COMPATIBILITY_COMPONENT_SET_INVALID', 'API compatibility component names do not match comparison.components.nameDigest.');
+  }
+
+  // <lang><zh-CN>v2 semantic review 数量从当前合法形状现场派生；不信任 provenance 自报 127/2。</zh-CN><en>Version 2 semantic-review counts are derived live from the current valid shapes; provenance-reported 127/2 is not trusted.</en></lang>
+  if (manifest.version === 2 && isRecord(manifest.semanticReview)) {
+    const semanticItemCount = manifest.components.reduce((total, component) => total
+      + ['props', 'events', 'slots', 'imperativeApis'].reduce((componentTotal, dimension) => componentTotal
+        + (Array.isArray(component?.[dimension]?.items)
+          ? component[dimension].items.filter((item) => item?.priority === 'P0' && item?.semantics?.reviewState === 'complete').length
+          : 0), 0), 0);
+    const serviceCount = manifest.components.reduce((total, component) => total
+      + (Array.isArray(component?.services?.items) ? component.services.items.length : 0), 0);
+
+    if (manifest.semanticReview.itemCount !== semanticItemCount || manifest.semanticReview.serviceCount !== serviceCount) {
+      addDiagnostic(diagnostics, 'API_COMPATIBILITY_SEMANTIC_REVIEW_INVALID', 'API compatibility semanticReview counts must match live complete P0 semantics and service items.');
+    }
   }
 
   // <lang><zh-CN>显式拥有 component/components 的 issue 要求由每个所有者反向引用；全局 package issue 可以无组件引用。</zh-CN><en>An issue that explicitly owns component/components requires a reverse reference from every owner; global package issues may remain unreferenced by components.</en></lang>

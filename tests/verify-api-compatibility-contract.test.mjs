@@ -5,6 +5,8 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 // <lang><zh-CN>直接调用公开 validator，负例无需创建临时文件或扩大 Tool 的读取白名单。</zh-CN><en>Calls the public validator directly so negative cases need no temporary files or expanded Tool read allowlist.</en></lang>
 import { validateApiCompatibilityManifest } from '../HIA-uView-Tool/src/api-compatibility.mjs';
+// <lang><zh-CN>直接调用纯 inspect projector，验证 v1/v2 provenance 字段而不创建额外磁盘 fixture。</zh-CN><en>Calls the pure inspection projector directly to verify version 1/version 2 provenance fields without creating another disk fixture.</en></lang>
+import { createApiCompatibilityInspection } from '../HIA-uView-Tool/src/inspect.mjs';
 // <lang><zh-CN>通过公开 Tool 入口验证真实 inspect 流程，并通过注入 writer 捕获只读文本输出。</zh-CN><en>Verifies the real inspection flow through the public Tool entry and captures read-only text output through an injected writer.</en></lang>
 import { executeToolCommand, runToolCli } from '../HIA-uView-Tool/src/index.mjs';
 // <lang><zh-CN>复用公开 formatter 检查同一已校验报告的稳定 JSON 投影。</zh-CN><en>Reuses the public formatter to verify the stable JSON projection of the same validated report.</en></lang>
@@ -12,8 +14,8 @@ import { formatReport } from '../HIA-uView-Tool/src/report.mjs';
 
 /**
  * @module verify-api-compatibility-contract.test
- * @lang zh-CN 锁定 HIA-uView-UI 对 uView-Pro 0.6.15 的不可变比较来源、99 组件在声明 scope 内的 API inventory、本地成员关联、能力级优先级与 HIA-uView-Tool 只读 inspect 边界；合法 unsupported/unresolved 仍是事实，不被误判为 schema 失败。
- * @lang en Locks the immutable uView-Pro 0.6.15 comparison provenance, the 99-component API inventory within its declared scopes, local membership linkage, capability-level priorities, and read-only HIA-uView-Tool inspection boundary; valid unsupported and unresolved states remain facts rather than being misreported as schema failures.
+ * @lang zh-CN 锁定 HIA-uView-UI 对 uView-Pro 0.6.15 的不可变比较来源、99 组件在声明 scope 内的 API inventory、127 项 P0 语义复核、独立 service 清单、本地成员关联、能力级优先级与 HIA-uView-Tool 只读 inspect 边界；合法 unsupported/unresolved 仍是事实，不被误判为 schema 失败。
+ * @lang en Locks the immutable uView-Pro 0.6.15 comparison provenance, the 99-component API inventory within its declared scopes, 127 P0 semantic reviews, the separate service inventory, local membership linkage, capability-level priorities, and read-only HIA-uView-Tool inspection boundary; valid unsupported and unresolved states remain facts rather than being misreported as schema failures.
  */
 
 /**
@@ -166,6 +168,30 @@ function createValidationInput() {
 }
 
 /**
+ * @lang zh-CN 从当前 v2 fixture 投影一份不含 semantics/services provenance 的 v1 兼容输入，证明 Tool 的旧矩阵读取能力没有因升级被破坏。
+ * @lang en Projects a version 1 compatibility input without semantics, services, or review provenance from the current version 2 fixture, proving the Tool upgrade preserves legacy matrix reads.
+ * @returns {{manifest:object,configuration:object,componentManifests:Map<string,object>}} <lang><zh-CN>仅用于 validator 兼容性断言的 v1 输入。</zh-CN><en>Version 1 input used only by the validator compatibility assertion.</en></lang>
+ */
+function createLegacyV1ValidationInput() {
+  // <lang><zh-CN>复用标准隔离输入，保证 v1 投影仍使用同一可信 configuration 与 component manifest 对照。</zh-CN><en>Reuse the standard isolated input so the version 1 projection retains the same trusted configuration and component-manifest control.</en></lang>
+  const input = createValidationInput();
+  // <lang><zh-CN>v1 顶层只删除 v2 新增 provenance；其他不可变比较事实保持完全相同。</zh-CN><en>The version 1 top level removes only version 2 provenance while every other immutable comparison fact remains identical.</en></lang>
+  input.manifest.version = 1;
+  delete input.manifest.semanticReview;
+  // <lang><zh-CN>逐组件删除 v2 service container 与 P0 semantics，准确恢复 v1 exact-field envelope。</zh-CN><en>Remove the version 2 service container and P0 semantics from every component to restore the exact version 1 field envelope.</en></lang>
+  for (const component of input.manifest.components) {
+    delete component.services;
+    // <lang><zh-CN>固定四类 API 维度与生产 validator 使用同一边界，防止漏删某一类 P0 扩展字段。</zh-CN><en>The fixed four API dimensions match the production validator boundary so no P0 extension field is left behind.</en></lang>
+    for (const dimension of ['props', 'events', 'slots', 'imperativeApis']) {
+      // <lang><zh-CN>只删除真实存在的 v2 semantics；P1/P2 本来就没有该字段。</zh-CN><en>Delete only existing version 2 semantics; P1 and P2 items never carried the field.</en></lang>
+      for (const item of component[dimension].items) delete item.semantics;
+    }
+  }
+  // <lang><zh-CN>返回同一对象包，调用方仍可安全独占突变。</zh-CN><en>Return the same input bundle, which remains safe for caller-owned mutation.</en></lang>
+  return input;
+}
+
+/**
  * @lang zh-CN 从确定性诊断列表提取公开 code，便于负例只锁定错误类别而不耦合可读 message。
  * @lang en Extracts public codes from deterministic diagnostics so negative cases lock the error category without coupling to human-readable messages.
  * @param {Array<{code:string}>} diagnostics <lang><zh-CN>validator 返回的诊断。</zh-CN><en>Diagnostics returned by the validator.</en></lang>
@@ -239,7 +265,7 @@ function requireComponent(manifest, componentName) {
  */
 function attachStaticParserIssue(manifest, componentName, surface) {
   // <lang><zh-CN>复用一个无 evidence 的既有 component issue 形状，避免测试发明 loader 不接受的额外字段。</zh-CN><en>Reuse the shape of an existing component issue without evidence so the test invents no additional fields rejected by the loader.</en></lang>
-  const issueTemplate = manifest.issues.find((issue) => issue.id === 'UPSTREAM_U_MODAL_SERVICE_SURFACE_REQUIRES_REVIEW');
+  const issueTemplate = manifest.issues.find((issue) => issue.id === 'UPSTREAM_U_STEP_DECLARATION_PATH_INVALID');
   assert.ok(issueTemplate, 'Missing component-issue template');
   // <lang><zh-CN>新问题拥有独立对象与双语 message，不共享或覆盖真实 modal 问题。</zh-CN><en>The new issue owns an independent object and bilingual message and neither shares nor overwrites the real modal issue.</en></lang>
   const issue = structuredClone(issueTemplate);
@@ -318,7 +344,35 @@ test('locks immutable provenance, declared-scope API counts, and local component
   assert.equal(countApiItems(manifest, 'events'), 200);
   assert.equal(countApiItems(manifest, 'slots'), 87);
   assert.equal(countApiItems(manifest, 'imperativeApis'), 145);
-  assert.equal(manifest.issues.length, 6);
+  assert.equal(manifest.version, 2);
+  assert.equal(manifest.issues.length, 4);
+  assert.deepEqual(manifest.semanticReview, {
+    path: 'HIA-uView-UI/hia-uview.api-semantic-review.json',
+    digest: 'sha256:c611100b1173c19dff05cf45d14641cb7b5ee921d767019240501ab9c12faad5',
+    itemCount: 127,
+    serviceCount: 2
+  });
+
+  // <lang><zh-CN>从四类 API inventory 现场汇集 P0 项，避免仅信任 semanticReview.itemCount 自报值。</zh-CN><en>Collect P0 items live from the four API inventories rather than trusting the self-reported semanticReview.itemCount.</en></lang>
+  const p0Items = manifest.components.flatMap((component) => ['props', 'events', 'slots', 'imperativeApis']
+    .flatMap((dimension) => component[dimension].items.filter((item) => item.priority === 'P0')));
+  // <lang><zh-CN>证据层级和待补 runtime parity 分别计算，以锁定“已审计”不等于“已运行时等价”。</zh-CN><en>Count evidence levels and pending runtime parity separately, locking that “reviewed” does not mean “runtime equivalent.”</en></lang>
+  assert.equal(p0Items.length, 127);
+  assert.equal(p0Items.filter((item) => item.semantics.reviewState === 'complete').length, 127);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 45);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 82);
+  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 71);
+
+  // <lang><zh-CN>service 从 imperative API 中独立汇集；只有 useModal/useToast 两个已确认公开入口且均明确未由 HIA 交付。</zh-CN><en>Collect services separately from imperative APIs; only the confirmed public useModal/useToast entries exist and both are explicitly undelivered by HIA.</en></lang>
+  const services = manifest.components.flatMap((component) => component.services.items
+    .map((item) => ({ component: component.name, ...item })));
+  assert.deepEqual(services.map((item) => `${item.component}/${item.id}`), [
+    'u-modal/service:useModal',
+    'u-toast/service:useToast'
+  ]);
+  assert.ok(services.every((item) => item.migration.disposition === 'unsupported'
+    && item.migration.reasonCode === 'HIA_SERVICE_NOT_DELIVERED'
+    && item.semantics.reviewState === 'complete'));
 
   // <lang><zh-CN>u-button 是能力级优先级校准 sentinel：常规 click 保持 P0，小程序开放能力、语言参数及其失败事件明确降至 P2。</zh-CN><en>u-button is the capability-level priority calibration sentinel: ordinary click remains P0 while Mini Program open capabilities, the language parameter, and their failure event are explicitly P2.</en></lang>
   const button = requireComponent(manifest, 'u-button');
@@ -390,9 +444,13 @@ test('inspects the real matrix deterministically without host paths or source bo
     itemCount: 1740,
     priorities: { P0: 30, P1: 42, P2: 27 },
     dispositions: { compatible: 49, mapped: 258, unsupported: 1433 },
-    unresolvedInventories: 2,
-    issueCount: 6
+    p0Semantics: { itemCount: 127, reviewed: 127, sourceReviewed: 82, runtimeTested: 45, runtimeParityRemaining: 71 },
+    services: { componentCount: 2, itemCount: 2, unsupported: 2 },
+    unresolvedInventories: 0,
+    issueCount: 4
   });
+  // <lang><zh-CN>v2 inspect 必须携带已由 validator 核验的 sidecar provenance，JSON consumer 才能把逐项语义绑定到固定审阅输入。</zh-CN><en>Version 2 inspection must carry validator-checked sidecar provenance so a JSON consumer can bind item semantics to the fixed review input.</en></lang>
+  assert.deepEqual(firstReport.details.manifests[0].semanticReview, apiCompatibilityFixture.semanticReview);
 
   // <lang><zh-CN>注入 writer 捕获两次 text 输出；CLI 不创建 snapshot 或临时文件。</zh-CN><en>Capture two text outputs through injected writers; the CLI creates no snapshot or temporary file.</en></lang>
   let firstTextOutput = '';
@@ -413,6 +471,8 @@ test('inspects the real matrix deterministically without host paths or source bo
   assert.equal(secondTextOutput, firstTextOutput);
   assert.match(firstTextOutput, /uview-pro@0\.6\.15; bec4b39cd3195354d65c1fc8722745d72052bd8c/u);
   assert.match(firstTextOutput, /99 components; 1740 API items/u);
+  assert.match(firstTextOutput, /P0 semantics: 127\/127 reviewed; 45 runtime-tested; 82 source-reviewed; 71 require runtime parity/u);
+  assert.match(firstTextOutput, /services: 2 items across 2 components; 2 unsupported/u);
 
   // <lang><zh-CN>JSON 由同一已校验 report 格式化两次，防止 serializer 注入非确定字段。</zh-CN><en>Format JSON twice from the same validated report so the serializer cannot inject nondeterministic fields.</en></lang>
   const firstJsonOutput = formatReport(firstReport, 'json');
@@ -452,6 +512,52 @@ test('accepts one directly owned static-parser issue on one surface', () => {
     configuration,
     componentManifests
   );
+
+  assert.deepEqual(diagnostics, []);
+});
+
+/**
+ * @lang zh-CN 验证 v2 扩展保持向后兼容：没有 semanticReview、P0 semantics 或 services 的合法 v1 矩阵仍可被当前 Tool 读取。
+ * @lang en Verifies backward compatibility of the version 2 extension: a valid version 1 matrix without semanticReview, P0 semantics, or services remains readable by the current Tool.
+ */
+test('continues to accept the exact version 1 API compatibility envelope', () => {
+  // <lang><zh-CN>兼容输入由已验证 v2 fixture 确定性降级，不创建未审计磁盘 fixture。</zh-CN><en>The compatibility input is deterministically downgraded from the validated version 2 fixture without creating an unaudited disk fixture.</en></lang>
+  const { manifest, configuration, componentManifests } = createLegacyV1ValidationInput();
+  // <lang><zh-CN>同一公开 validator 应返回空诊断，证明升级没有强迫既有 v1 consumer 立即迁移。</zh-CN><en>The same public validator must return no diagnostics, proving the upgrade does not force existing version 1 consumers to migrate immediately.</en></lang>
+  const diagnostics = validateApiCompatibilityManifest(manifest, apiCompatibilityPath, configuration, componentManifests);
+  // <lang><zh-CN>合法 v1 投影不应伪造 v2 semanticReview 字段。</zh-CN><en>A valid version 1 projection must not invent the version 2 semanticReview field.</en></lang>
+  const inspection = createApiCompatibilityInspection([{ path: apiCompatibilityPath, manifest, diagnostics }]);
+
+  assert.deepEqual(diagnostics, []);
+  assert.equal(Object.hasOwn(inspection.manifests[0], 'semanticReview'), false);
+});
+
+/**
+ * @lang zh-CN 验证多 target prop 的语义交叉核对跟随明确 migration target，而不是数组首项。
+ * @lang en Verifies that semantic cross-checking for a multi-target prop follows the explicit migration target rather than the first array entry.
+ */
+test('cross-checks P0 prop semantics against the selected migration target', () => {
+  // <lang><zh-CN>使用 mapped prop 允许上下游 value domain 有审计差异，同时保持 runtime-parity 待办语义。</zh-CN><en>Use a mapped prop so the reviewed local value domain may differ from upstream while retaining the runtime-parity remainder.</en></lang>
+  const { manifest, configuration, componentManifests } = createValidationInput();
+  // <lang><zh-CN>从 checkbox-group 获取稳定的 P0 modelValue 映射，不改变其他组件或全局计数。</zh-CN><en>Obtain the stable P0 modelValue mapping from checkbox-group without changing another component or global counts.</en></lang>
+  const modelValue = requireComponent(manifest, 'u-checkbox-group').props.items.find((item) => item.id === 'prop:modelValue');
+  // <lang><zh-CN>第二 target 使用不同 required 事实，确保若 validator 错取首项就必然失败。</zh-CN><en>The second target uses a different required fact so validation must fail if it incorrectly selects the first entry.</en></lang>
+  const selectedTarget = structuredClone(modelValue.hia.targets[0]);
+  selectedTarget.name = 'selectedValues';
+  selectedTarget.required = true;
+  modelValue.hia.targets.push(selectedTarget);
+  modelValue.migration.target = selectedTarget.name;
+  modelValue.semantics.hia.valueDomain = {
+    typeKinds: selectedTarget.typeKinds,
+    typeOrder: selectedTarget.typeOrder,
+    default: selectedTarget.default,
+    required: selectedTarget.required,
+    validator: selectedTarget.validator
+  };
+  // <lang><zh-CN>目标数组仍按代码点排序，隔离本测试只验证 target 选择。</zh-CN><en>Keep the target array code-point sorted so this test isolates target selection.</en></lang>
+  modelValue.hia.targets.sort((left, right) => (left.name < right.name ? -1 : left.name > right.name ? 1 : 0));
+
+  const diagnostics = validateApiCompatibilityManifest(manifest, apiCompatibilityPath, configuration, componentManifests);
 
   assert.deepEqual(diagnostics, []);
 });
@@ -505,12 +611,13 @@ test('rejects malformed matrix facts through stable diagnostics', () => {
     requireComponent(manifest, 'u-button').slots.inventoryState = 'unresolved';
   }, 'API_COMPATIBILITY_ISSUE_REFERENCE_INVALID');
 
-  // <lang><zh-CN>即使 issue 属于同一组件，也不能用 imperative surface 的原因替 props unresolved 兜底。</zh-CN><en>Even an issue owned by the same component cannot use an imperative-surface reason to satisfy an unresolved props inventory.</en></lang>
+  // <lang><zh-CN>即使 issue 属于同一组件，也不能把 alias surface 的 parser 原因复用于 props unresolved。</zh-CN><en>Even an issue owned by the same component cannot reuse an alias-surface parser reason for an unresolved props inventory.</en></lang>
   assertMutationRejected('wrong-surface component issue', (manifest) => {
-    // <lang><zh-CN>u-modal 已合法拥有 service/imperative issue；把它直接挂到 props 可隔离验证 surface ownership。</zh-CN><en>u-modal already legally owns a service/imperative issue; attaching it directly to props isolates surface ownership validation.</en></lang>
-    const modal = requireComponent(manifest, 'u-modal');
-    modal.props.inventoryState = 'unresolved';
-    modal.props.issueIds = ['UPSTREAM_U_MODAL_SERVICE_SURFACE_REQUIRES_REVIEW'];
+    // <lang><zh-CN>helper 先建立合法 alias 绑定，再把同一 parser issue 非法挂到 props，并同步派生 unresolved 计数。</zh-CN><en>The helper first creates a legal alias binding, then illegally attaches the same parser issue to props and synchronizes the derived unresolved count.</en></lang>
+    const { component, issueId } = attachStaticParserIssue(manifest, 'u-button', 'aliases');
+    component.props.inventoryState = 'unresolved';
+    component.props.issueIds = [issueId];
+    component.migration.counts.unresolved = 1;
   }, 'API_COMPATIBILITY_ISSUE_REFERENCE_INVALID');
 
   // <lang><zh-CN>package/global issue 不能通过复制到组件与 container 列表来伪装成具体 surface 的未决依据。</zh-CN><en>A package/global issue cannot masquerade as a surface-specific unresolved basis merely by being copied into component and container lists.</en></lang>
@@ -577,4 +684,53 @@ test('rejects malformed matrix facts through stable diagnostics', () => {
     // <lang><zh-CN>runtimeEntry 路径改为越界形式，digest 保持合法以隔离路径错误。</zh-CN><en>Change runtimeEntry to an escaping path while retaining a valid digest to isolate the path error.</en></lang>
     manifest.local.runtimeEntry.path = '../outside/index.mjs';
   }, 'API_COMPATIBILITY_PATH_INVALID');
+
+  // <lang><zh-CN>v2 P0 semantics 必须保持 complete，不能用 pending 隐藏尚未完成的审计。</zh-CN><en>Version 2 P0 semantics must remain complete and cannot hide unfinished review behind pending.</en></lang>
+  assertMutationRejected('incomplete P0 semantic review', (manifest) => {
+    // <lang><zh-CN>click 是已知 P0 sentinel，只改变 reviewState 以隔离语义 envelope 门禁。</zh-CN><en>Click is a known P0 sentinel; change only reviewState to isolate the semantic-envelope gate.</en></lang>
+    const clickEvent = requireComponent(manifest, 'u-button').events.items.find((item) => item.id === 'event:click');
+    clickEvent.semantics.reviewState = 'pending';
+  }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
+
+  // <lang><zh-CN>prop 的语义 valueDomain 必须与既有结构事实逐字段相等，不能另写一套 required/default 解释。</zh-CN><en>A prop semantic valueDomain must equal the existing structural fact field by field and cannot invent a second required/default interpretation.</en></lang>
+  assertMutationRejected('P0 prop semantic value-domain drift', (manifest) => {
+    // <lang><zh-CN>disabled 是 u-button 的 P0 prop；翻转 required 只制造结构—语义冲突。</zh-CN><en>Disabled is a P0 u-button prop; flipping required creates only a structural-versus-semantic conflict.</en></lang>
+    const disabledProp = requireComponent(manifest, 'u-button').props.items.find((item) => item.id === 'prop:disabled');
+    disabledProp.semantics.upstream.valueDomain.required = !disabledProp.upstream.required;
+  }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
+
+  // <lang><zh-CN>compatible 不仅需要 runtime-tested；上下游完整 kind-specific 语义也必须相同。</zh-CN><en>Compatible requires more than runtime-tested evidence: complete kind-specific semantics must also match across both sides.</en></lang>
+  assertMutationRejected('compatible P0 semantic-side drift', (manifest) => {
+    // <lang><zh-CN>只改变 HIA control 事实并保持合法非占位文本，证明 validator 检查等价而不只是字段形状。</zh-CN><en>Change only the HIA control fact to another valid non-placeholder string, proving the validator checks equivalence rather than field shape alone.</en></lang>
+    const disabledProp = requireComponent(manifest, 'u-button').props.items.find((item) => item.id === 'prop:disabled');
+    disabledProp.semantics.hia.control = 'different-interaction-guard';
+  }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
+
+  // <lang><zh-CN>语义证据引用只能使用安全 comparison/local/test 前缀，不得以父目录片段逃逸。</zh-CN><en>Semantic evidence references must use safe comparison/local/test prefixes and may not escape through parent-directory segments.</en></lang>
+  assertMutationRejected('unsafe P0 semantic evidence reference', (manifest) => {
+    // <lang><zh-CN>将 click 的首个公开引用替换为越界形式，保留数组其余顺序与证据。</zh-CN><en>Replace click's first public reference with an escaping form while preserving the rest of the evidence array.</en></lang>
+    const clickEvent = requireComponent(manifest, 'u-button').events.items.find((item) => item.id === 'event:click');
+    clickEvent.semantics.evidenceRefs[0] = 'comparison:../outside.vue';
+  }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
+
+  // <lang><zh-CN>service item ID 必须精确绑定已审计的公开 composable entry，不能将 useModal 事实重标为其他服务。</zh-CN><en>A service item ID must bind exactly to the reviewed public composable entry and cannot relabel useModal facts as another service.</en></lang>
+  assertMutationRejected('service id and entry mismatch', (manifest) => {
+    // <lang><zh-CN>只修改 ID，保留 useModal 语义事实与迁移结论作为可信对照。</zh-CN><en>Change only the ID while retaining the useModal semantic facts and migration conclusion as controls.</en></lang>
+    requireComponent(manifest, 'u-modal').services.items[0].id = 'service:useDialog';
+  }, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID');
+
+  // <lang><zh-CN>semanticReview 数量必须由当前完整 P0 与 service records 现场校验，不能漂移为手写摘要。</zh-CN><en>SemanticReview counts must be checked live against complete P0 and service records and cannot drift into a hand-written summary.</en></lang>
+  assertMutationRejected('semantic review count drift', (manifest) => {
+    // <lang><zh-CN>仅增加自报 itemCount，实际 127 项保持不变。</zh-CN><en>Increment only the declared itemCount while the actual 127 items remain unchanged.</en></lang>
+    manifest.semanticReview.itemCount += 1;
+  }, 'API_COMPATIBILITY_SEMANTIC_REVIEW_INVALID');
+
+  // <lang><zh-CN>v2 semantics 只属于 P0；P1/P2 不能夹带看似已审计的扩展字段。</zh-CN><en>Version 2 semantics belongs only to P0; P1 and P2 cannot carry an apparently reviewed extension field.</en></lang>
+  assertMutationRejected('semantics attached to a non-P0 item', (manifest) => {
+    // <lang><zh-CN>复用合法 P0 envelope 仅作为字段形状，目标 P2 openType 仍必须因未知字段被拒绝。</zh-CN><en>Reuse a valid P0 envelope only for field shape; the target P2 openType must still be rejected for the unknown field.</en></lang>
+    const button = requireComponent(manifest, 'u-button');
+    const openTypeProp = button.props.items.find((item) => item.id === 'prop:openType');
+    const disabledProp = button.props.items.find((item) => item.id === 'prop:disabled');
+    openTypeProp.semantics = structuredClone(disabledProp.semantics);
+  }, 'API_COMPATIBILITY_FIELD_UNKNOWN');
 });

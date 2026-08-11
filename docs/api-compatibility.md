@@ -1,8 +1,8 @@
 # API compatibility inventory / API 兼容盘点
 
-HIA-uView maintains a versioned, read-only migration inventory for the 99 component names shared with the fixed uView-Pro comparison snapshot. The inventory is a pre-release engineering aid: it reports the bounded API facts defined below, explicit migration work, unsupported capabilities, and unresolved review questions. It is not a claim that every same-named component has identical behavior or that every integration surface has already been inventoried.
+HIA-uView maintains a versioned, read-only migration inventory for the 99 component names shared with the fixed uView-Pro comparison snapshot. Version 2 adds complete semantic-review records for all 127 P0 API items and a separate inventory for the two confirmed public composable services. The inventory is a pre-release engineering aid: it reports the bounded API facts defined below, explicit migration work, unsupported capabilities, and remaining evidence. It is not a claim that every same-named component has identical behavior or that every integration surface has already been inventoried.
 
-HIA-uView 为与固定 uView-Pro 比较快照同名的 99 个组件维护版本化、只读迁移盘点。该盘点是预发布工程辅助资料：它报告下文定义的受限 API 事实、明确迁移工作、未支持能力和待复核问题；并不宣称所有同名组件具有相同行为，也不表示所有集成表面均已完成盘点。
+HIA-uView 为与固定 uView-Pro 比较快照同名的 99 个组件维护版本化、只读迁移盘点。版本 2 为全部 127 项 P0 API 增加完整语义复核记录，并为两个已确认的公开 composable service 建立独立清单。该盘点是预发布工程辅助资料：它报告下文定义的受限 API 事实、明确迁移工作、未支持能力和剩余证据；并不宣称所有同名组件具有相同行为，也不表示所有集成表面均已完成盘点。
 
 ## Fixed comparison / 固定比较面
 
@@ -34,9 +34,9 @@ Tool 只读取仓库配置中显式声明的 JSON 矩阵；不会扫描 SFC、�
 mise exec -- npm run tool:inspect:api-compatibility
 ```
 
-Text output provides a stable summary and one line per component. Configure `report.format` as `json` when complete records within the declared inventory scopes are needed. A successful command means those declared scopes are structurally complete and internally consistent; it does **not** mean that unsupported or unresolved counts are zero.
+Text output provides a stable summary, including P0 evidence levels and independent service counts, plus one line per component. Configure `report.format` as `json` when complete records within the declared inventory scopes are needed. A successful command means those declared scopes are structurally complete and internally consistent; it does **not** mean that every source-reviewed item has runtime parity or that unsupported counts are zero. The current summary is 127/127 P0 items reviewed: 45 runtime-tested, 82 source-reviewed, and 71 mapped items still explicitly requiring runtime-parity evidence.
 
-text 输出提供稳定汇总和每组件一行的摘要。需要查看声明范围内的完整记录时，将 `report.format` 配置为 `json`。命令成功只表示这些声明范围结构完整、内部一致；并不表示 unsupported 或 unresolved 数量为零。
+text 输出提供稳定汇总（包括 P0 证据层级和独立 service 计数）及每组件一行的摘要。需要查看声明范围内的完整记录时，将 `report.format` 配置为 `json`。命令成功只表示这些声明范围结构完整、内部一致；并不表示每个 source-reviewed 项都已具备 runtime parity，也不表示 unsupported 数量为零。当前汇总为 127/127 项 P0 已复核：45 项 runtime-tested、82 项 source-reviewed，且 71 个 mapped 项仍明确需要 runtime-parity 证据。
 
 For reviewed caller guidance over a deliberately smaller part of this matrix, use the separate read-only [migration action packet](migration-actions.md). It cross-checks declared item priority/disposition and scope coverage, but does not scan or modify a consumer project.
 
@@ -44,19 +44,29 @@ For reviewed caller guidance over a deliberately smaller part of this matrix, us
 
 ## Declared scopes / 声明范围
 
-The props inventory covers runtime option facts: type set and declaration order, required state, controlled default classification, and an opaque validator-presence digest where applicable. Event, slot, and imperative inventories are explicitly `names-only`; runtime aliases are limited to declared aliases. `complete` therefore means complete only within the container's recorded scope.
+The structural props inventory covers runtime option facts: type set and declaration order, required state, controlled default classification, and an opaque validator-presence digest where applicable. Structural event, slot, and imperative inventories remain explicitly `names-only`; runtime aliases remain limited to declared aliases. Version 2 layers a kind-specific semantic envelope onto every P0 item: prop ownership/control/coercion/validation/side effects/parent-child facts, event trigger/parameters/delivery/model relation, slot bindings/fallback/cardinality/context owner, or imperative signature/effects/lifecycle/scope/concurrency/failure. `complete` therefore means complete only within the recorded structural or P0 semantic scope.
 
-props inventory 覆盖 runtime option 事实：类型集合与声明顺序、required 状态、受控 default 分类，以及适用时只保留摘要的 validator 事实。event、slot 与 imperative inventory 显式限定为 `names-only`；runtime aliases 只覆盖已声明 alias。因此，`complete` 只表示对应 container 记录的 scope 已完成。
+结构性 props inventory 覆盖 runtime option 事实：类型集合与声明顺序、required 状态、受控 default 分类，以及适用时只保留摘要的 validator 事实。结构性 event、slot 与 imperative inventory 仍显式限定为 `names-only`；runtime aliases 仍只覆盖已声明 alias。版本 2 在每个 P0 item 上叠加 kind-specific semantics envelope：prop 的 ownership/control/coercion/validation/side effects/parent-child 事实，event 的 trigger/parameters/delivery/model relation，slot 的 bindings/fallback/cardinality/context owner，或 imperative 的 signature/effects/lifecycle/scope/concurrency/failure。因此，`complete` 只表示已记录的结构范围或 P0 语义范围已完成。
 
-This inventory does not compare event payloads or validators, scoped-slot bindings, imperative method signatures, provide/inject or `useParent`/`useChildren` composition contracts, component-parent registration, global bus/listener channels such as `uni.$emit`, or complete service behavior. It also does not compare lifecycle, rendering, accessibility, device, or cross-platform behavior. Those surfaces require later semantic and runtime review before a migration can be declared compatible.
+Semantic coverage is deliberately priority-bounded. Non-P0 event payloads/validators, scoped-slot bindings, imperative signatures, provide/inject or `useParent`/`useChildren` composition contracts, component-parent registration, and general global bus/listener channels remain outside this review. Lifecycle, rendering, accessibility, device, and cross-platform behavior also remain outside unless a specific `test:` evidence reference says otherwise. A `source-reviewed` result is not runtime equivalence; every mapped P0 item retains `remainingEvidence: ["runtime-parity"]`.
 
-本盘点不比较 event payload/validator、scoped-slot bindings、imperative method signatures、provide/inject 或 `useParent`/`useChildren` 组合契约、组件父子注册、`uni.$emit` 等全局 bus/listener channel，也不覆盖完整 service 行为；同时不比较 lifecycle、rendering、无障碍、真机或跨端行为。上述表面必须在后续语义与 runtime 复核后，才能声明迁移兼容。
+语义覆盖刻意限定在 P0。非 P0 的 event payload/validator、scoped-slot bindings、imperative signatures、provide/inject 或 `useParent`/`useChildren` 组合契约、组件父子注册和一般性全局 bus/listener channel 仍不在本次复核范围内。lifecycle、rendering、无障碍、真机与跨端行为也仍在范围外，除非具体记录具有明确的 `test:` evidence reference。`source-reviewed` 不等于运行时等价；每个 mapped P0 item 都保留 `remainingEvidence: ["runtime-parity"]`。
+
+## P0 semantics and services / P0 语义与服务
+
+Each P0 semantic record is `complete` and uses exactly one evidence level. `runtime-tested` requires a repository-local `test:` reference in addition to immutable `comparison:` and `local:` references. `source-reviewed` records a completed source-level comparison but never claims runtime parity. Prop semantic value domains must exactly match the structural prop facts, preventing two contradictory descriptions of type order, default, required state, or validator presence.
+
+每项 P0 semantics record 均为 `complete`，并且只使用一种证据层级。`runtime-tested` 除 immutable `comparison:` 与 `local:` references 外，还必须具有仓库内 `test:` reference。`source-reviewed` 表示已完成源码级比较，但绝不宣称 runtime parity。prop semantics 的 value domain 必须与结构性 prop 事实精确一致，避免 type order、default、required 或 validator presence 出现两套矛盾描述。
+
+Public composable services are not imperative component-ref methods and do not enter the 1,740 API-item baseline. The fixed upstream exposes `useModal` and `useToast` from its package root. Their controller operations, host/scope lifecycle, effects, concurrency, and failure behavior are source-reviewed in independent service records. HIA-uView does not currently deliver corresponding services, so both records are explicit `unsupported` facts with `HIA_SERVICE_NOT_DELIVERED`; they are no longer unresolved parser issues.
+
+公开 composable service 不是组件 ref 的 imperative method，也不进入 1,740 项 API item 基线。固定上游从 package root 导出 `useModal` 与 `useToast`；它们的 controller operations、host/scope lifecycle、effects、concurrency 与 failure 行为已在独立 service record 中完成源码复核。HIA-uView 当前尚未交付对应 service，因此两项均以 `HIA_SERVICE_NOT_DELIVERED` 明确记录为 `unsupported`，不再是未解决的 parser issue。
 
 ## Inventory dimensions / 盘点维度
 
-Each component has explicit records for props and defaults, events, slots, imperative APIs, runtime aliases, easycom delivery, type delivery, platform comparison scope, and an API-item migration summary whose fixed scope is `api-items-only`. That summary covers props/events/slots/imperative items only; easycom, types, aliases, and platform remain separate dimensions and may still be unsupported or unassessed. The platform field is a comparison/migration declaration only: HIA records `comparisonScope: ["mp-weixin"]` with `evidenceStatus: "not-assessed"`; verified platform evidence comes exclusively from the separate compatibility manifest. Every prop/event/slot/imperative capability has its own priority and migration result; a component-level priority never silently assigns the same urgency to all of its APIs.
+Each component has explicit records for props and defaults, events, slots, imperative APIs, runtime aliases, services, easycom delivery, type delivery, platform comparison scope, and an API-item migration summary whose fixed scope is `api-items-only`. That summary covers props/events/slots/imperative items only; services, easycom, types, aliases, and platform remain separate dimensions and may still be unsupported or unassessed. The platform field is a comparison/migration declaration only: HIA records `comparisonScope: ["mp-weixin"]` with `evidenceStatus: "not-assessed"`; verified platform evidence comes exclusively from the separate compatibility manifest. Every prop/event/slot/imperative capability has its own priority and migration result; a component-level priority never silently assigns the same urgency to all of its APIs.
 
-每个组件都显式记录 props/defaults、events、slots、imperative APIs、runtime aliases、easycom 交付、类型交付、平台比较范围，以及固定为 `api-items-only` 的 API item 迁移摘要。该摘要只覆盖 props/events/slots/imperative items；easycom、types、aliases 与 platform 仍是独立维度，可能继续处于 unsupported 或 not-assessed。platform 字段只是一项比较/迁移声明：HIA 在其中记录 `comparisonScope: ["mp-weixin"]` 与 `evidenceStatus: "not-assessed"`；已验证的平台证据只能来自独立 compatibility manifest。每个 prop/event/slot/imperative 能力均有自己的优先级和迁移结果；组件级优先级不会悄然把所有 API 归入同一紧急程度。
+每个组件都显式记录 props/defaults、events、slots、imperative APIs、runtime aliases、services、easycom 交付、类型交付、平台比较范围，以及固定为 `api-items-only` 的 API item 迁移摘要。该摘要只覆盖 props/events/slots/imperative items；services、easycom、types、aliases 与 platform 仍是独立维度，可能继续处于 unsupported 或 not-assessed。platform 字段只是一项比较/迁移声明：HIA 在其中记录 `comparisonScope: ["mp-weixin"]` 与 `evidenceStatus: "not-assessed"`；已验证的平台证据只能来自独立 compatibility manifest。每个 prop/event/slot/imperative 能力均有自己的优先级和迁移结果；组件级优先级不会悄然把所有 API 归入同一紧急程度。
 
 | Value / 值 | Meaning / 含义 |
 | --- | --- |
@@ -74,9 +84,9 @@ default 是数据，绝不是可执行表达式。矩阵区分 `absent`、JSON `
 
 ## Offline regeneration / 离线重新生成
 
-The generator requires an explicit local materialization prepared from the immutable comparison commit. The maintainer is responsible for checkout identity; the network-free generator validates canonical-LF package/license content, the package version, the exact 99-name component set, and a locked aggregate of the complete upstream package materialization rather than executing Git or claiming to verify `HEAD`. Text line endings are normalized only for stable content hashing; binary content remains byte-exact. It has no network or undeclared discovery outside its fixed inputs, accepts no arbitrary output path, and writes the single fixed matrix only with explicit `--write`.
+The generator requires an explicit local materialization prepared from the immutable comparison commit. It also reads the fixed repository-local `HIA-uView-UI/hia-uview.api-semantic-review.json`, validates its immutable upstream and local digests, requires exactly 127 P0 item reviews plus two service reviews, and copies only validated semantic records into matrix version 2. The maintainer is responsible for checkout identity; the network-free generator validates canonical-LF package/license content, the package version, the exact 99-name component set, and a locked aggregate of the complete upstream package materialization rather than executing Git or claiming to verify `HEAD`. Text line endings are normalized only for stable content hashing; binary content remains byte-exact. It has no network or undeclared discovery outside its fixed inputs, accepts no arbitrary output path, and writes the single fixed matrix only with explicit `--write`.
 
-生成器要求调用方显式提供从 immutable comparison commit 准备的本地 materialization。checkout identity 由维护者负责；无网络生成器会校验 canonical-LF package/license 内容、package version、精确 99 名称组件集合和完整上游 package materialization 的固定内容聚合，而不会运行 Git 或宣称验证 `HEAD`。文本换行只在稳定内容摘要时规范化，二进制内容保持逐字节校验。它不会在固定输入之外作未声明发现，不接受任意输出路径，并且只有显式 `--write` 才会写入唯一固定矩阵。
+生成器要求调用方显式提供从 immutable comparison commit 准备的本地 materialization。它还会读取固定的仓库内 `HIA-uView-UI/hia-uview.api-semantic-review.json`，校验其中不可变的上游与本地 digest，要求精确 127 项 P0 item review 与两项 service review，并且只把通过校验的语义记录复制到版本 2 矩阵。checkout identity 由维护者负责；无网络生成器会校验 canonical-LF package/license 内容、package version、精确 99 名称组件集合和完整上游 package materialization 的固定内容聚合，而不会运行 Git 或宣称验证 `HEAD`。文本换行只在稳定内容摘要时规范化，二进制内容保持逐字节校验。它不会在固定输入之外作未声明发现，不接受任意输出路径，并且只有显式 `--write` 才会写入唯一固定矩阵。
 
 ```powershell
 mise exec -- node scripts/generate-api-compatibility-matrix.mjs --upstream-root <local-uview-pro-checkout> --check
