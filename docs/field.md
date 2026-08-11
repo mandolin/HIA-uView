@@ -1,54 +1,38 @@
 # UField component contract / UField 组件契约
 
-> Status / 状态：Private pre-release contract. Independent implementation, Vue runtime behavior tests, and an `mp-weixin` compile fixture exist; `UField` remains a private, unpublished package API.
-> 私有的预发布契约。独立实现、Vue runtime 行为测试和 `mp-weixin` 编译 fixture 已存在；`UField` 仍是私有、未发布的包 API。
+> Status / 状态：Private pre-release dual-mode field contract with runtime behavior coverage.
+> 具有 runtime 行为覆盖的私有预发布双模式字段契约。
 
-`UField` is a proposed presentational field structure for the private UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. It presents caller-owned label, required indication, help text, and validation display around a default-slot control. It does not own a form model, validation rule, validator lifecycle, submission, identity, backend, or business field definition.
+`UField` combines visible label/help/validation presentation with either a built-in `UInput` or a caller-owned default slot. This preserves the familiar `u-field` migration surface without taking ownership of a form model, rule lifecycle, submission, storage, request, identity, or business field definition.
 
-`UField` 是面向私有 UniApp Vue 3 与微信小程序（`mp-weixin`）配置的展示型字段结构组件候选。它围绕默认插槽中的控件展示调用方自有的标签、必填提示、帮助文字和校验显示。它不拥有表单模型、校验规则、validator 生命周期、提交、身份、后端或业务字段定义。
+`UField` 将可见标签、帮助与校验呈现同内建 `UInput` 或调用方拥有的默认 slot 组合。它保留熟悉的 `u-field` 迁移表面，但不拥有表单模型、规则生命周期、提交、存储、请求、身份或业务字段定义。
 
 ## Public API / 公开 API
 
 | Prop / 属性 | Type / 类型 | Default / 默认值 | Contract / 约定 |
 | --- | --- | --- | --- |
-| `label` | `string` | `''` | Caller-owned visible field label. Applications must supply a meaningful non-empty label for every input control. / 调用方自有的可见字段标签。应用必须为每个输入控件提供有意义的非空标签。 |
-| `required` | `boolean` | `false` | Adds a visible required marker only. It does not create native form semantics or execute a required-value rule. / 仅增加可见必填标记；它不创建原生表单语义或执行必填值规则。 |
-| `helpText` | `string` | `''` | Optional caller-owned guidance shown below the control context. / 显示在控件上下文下方的可选调用方自有指引。 |
-| `validationState` | `'idle' \| 'validating' \| 'error'` | `'idle'` | Caller-declared presentation state passed to `UValidationMessage`; it is not a validation engine state machine. / 传递给 `UValidationMessage` 的调用方声明式呈现状态；它不是校验引擎状态机。 |
-| `validationMessage` | `string` | `''` | Caller-owned localized validation text. It is shown only with a non-idle validation state. / 调用方自有的本地化校验文字；仅在非 idle 校验状态下显示。 |
+| `modelValue` | `string \| number` | `''` | Caller-owned value used only by built-in-input mode. / 仅由内建输入模式使用的调用方自有值。 |
+| `label` / `helpText` | `string` | `''` / `''` | Caller-localized visible copy. / 调用方本地化的可见文字。 |
+| `required` | `boolean` | `false` | Presents a required marker only; it creates no rule. / 只呈现必填标记；不创建规则。 |
+| `placeholder` | `string` | `''` | Caller-owned hint for the built-in input. / 内建输入使用的调用方自有提示。 |
+| `disabled` / `readonly` | `boolean` | `false` / `false` | Local guards forwarded to the built-in input. / 转发给内建输入的局部 guard。 |
+| `validationState` | `'idle' \| 'validating' \| 'error'` | `'idle'` | Caller-declared presentation state. / 调用方声明的呈现状态。 |
+| `validationMessage` | `string` | `''` | Caller-localized presentation copy. / 调用方本地化的呈现文字。 |
 
-`UField` has one default slot for the application-owned control, such as `UInput`. The slot remains responsible for its own value, disabled state, native attributes, and events. `UField` emits no events and does not intercept or transform the slotted control's events.
+## Two composition modes / 两种组合模式
 
-`UField` 有一个用于应用自有控件（例如 `UInput`）的默认插槽。该插槽仍自行负责其值、禁用状态、原生属性和事件。`UField` 不触发事件，也不拦截或转换插槽控件的事件。
+Without a default slot, `UField` renders a built-in `UInput` and forwards `modelValue`, `placeholder`, `disabled`, and `readonly`. In this mode it exposes exactly four events: `update:modelValue(value: string)`, `input(value: string)`, `confirm(value: string)`, and `click()`.
 
-The `label` and `required` props are presentation-compatible with their recorded upstream names only. They do not turn `UField` into a controlled input, forward `disabled` or `readonly`, or expose upstream input/confirm/click events.
+没有默认 slot 时，`UField` 渲染内建 `UInput`，并转发 `modelValue`、`placeholder`、`disabled` 与 `readonly`。此模式精确暴露四个事件：`update:modelValue(value: string)`、`input(value: string)`、`confirm(value: string)` 与 `click()`。
 
-`label` 和 `required` 属性仅在呈现意义上与已记录的上游名称兼容。它们不会将 `UField` 变成受控输入、转发 `disabled` 或 `readonly`，也不会暴露上游的输入/确认/点击事件。
+With a default slot, the slot replaces the built-in input. The slotted control owns its value, props, native attributes, and events; `UField` neither synthesizes nor proxies input events in this mode. A slotted input placed under a surrounding `UFormItem` may still consume that item's private guards and validation notifications through its own component contract.
 
-## Composition and validation boundary / 组合与校验边界
+存在默认 slot 时，slot 会替代内建输入。插槽控件拥有自身值、prop、原生属性与事件；`UField` 在此模式既不合成也不代理输入事件。位于外围 `UFormItem` 下的插槽输入，仍可按照自身组件契约消费该表单项的私有 guard 与校验通知。
 
-The proposed structure renders the visible label and optional required marker before the default slot, retains optional help text, and composes `UValidationMessage` below it. A validation message is visible only when `validationState` is `validating` or `error` and `validationMessage` is non-empty. The application chooses whether and when to change these props, including all asynchronous validation, cancellation, retry, submission, and error-recovery behavior.
+`validationState` and `validationMessage` are presentation inputs passed to `UValidationMessage`; they are not a validator state machine. Use `UFormItem` when field registration, rules, automatic `change`/`blur` triggers, clear, or snapshot reset is required.
 
-计划中的结构会在默认插槽前渲染可见标签和可选必填标记，保留可选帮助文字，并在其下组合 `UValidationMessage`。仅当 `validationState` 为 `validating` 或 `error` 且 `validationMessage` 非空时，校验消息才可见。应用自行选择是否以及何时改变这些 prop，并拥有全部异步校验、取消、重试、提交和错误恢复行为。
+`validationState` 与 `validationMessage` 是传给 `UValidationMessage` 的呈现输入，并非 validator 状态机。需要字段注册、规则、自动 `change`/`blur` 触发、清除或快照重置时，应使用 `UFormItem`。
 
-The component never evaluates rules, accepts validator functions, serializes slot values, performs a submit/reset action, invokes a request, reads identity, creates a route, or writes storage. A visible required marker is informative presentation, not proof that a submission would be rejected.
+The root namespace is `u-field` and consumes `--u-comp-field-*`; validation-message visuals remain in `--u-comp-validation-message-*`. Provide a meaningful visible label, do not treat placeholder text as a label, and do not rely only on color for required or validation state. Native label linkage, keyboard, screen-reader, accessibility-tree, IME, and device behavior remain platform verification responsibilities.
 
-该组件绝不执行规则、接受 validator 函数、序列化插槽值、执行 submit/reset 操作、发起请求、读取身份、创建路由或写入存储。可见必填标记属于提示性呈现，而不是提交必定被拒绝的证明。
-
-## Theme and customization / 主题与定制
-
-The root namespace is `u-field`. The planned implementation consumes `--u-comp-field-*` tokens for label, required marker, help text, vertical spacing, and future focus context. Validation-message colors and state treatment remain in the independent `--u-comp-validation-message-*` token family. Consumers must not rely on deep selectors or raw status colors.
-
-根命名空间为 `u-field`。计划实现消费 `--u-comp-field-*` token，用于标签、必填标记、帮助文字、纵向间距和后续焦点上下文。校验消息的颜色与状态样式仍属于独立的 `--u-comp-validation-message-*` token 族。使用者不得依赖深层选择器或原始状态颜色。
-
-## Accessibility and platform disclosure / 无障碍与平台披露
-
-The field label, required mark, help text, and validation message are visible text; required and validation states must not rely only on color. The initial component does not claim native `for`/`id` linkage, ARIA behavior, screen-reader announcement, keyboard traversal, accessibility-tree linkage, WeChat DevTools, or device validation. Applications remain responsible for meaningful labels and for platform-specific semantics outside this contract.
-
-字段标签、必填标记、帮助文字和校验消息均为可见文字；必填和校验状态不能只依靠颜色表达。初始组件不承诺原生 `for`/`id` 关联、ARIA 行为、读屏播报、键盘遍历、无障碍树关联、微信开发者工具或真机验证。应用仍需负责有意义的标签以及本文契约外的平台专属语义。
-
-## Required fixtures / 实现必需 fixture
-
-Before release, fixtures must expand to cover label-only structure, required indication, help text, a slotted controlled input, idle/no-message output, validating/message output, error/message output, empty-message suppression, long Chinese/English labels/messages, and the absence of events, rule execution, submission, storage, request, or backend behavior.
-
-发布前，fixture 必须扩展覆盖仅标签结构、必填提示、帮助文字、插槽化受控输入、idle/无消息输出、validating/消息输出、error/消息输出、空消息抑制、较长的中英文标签/消息，以及不存在事件、规则执行、提交、存储、请求或后端行为。
+根命名空间为 `u-field`，消费 `--u-comp-field-*`；校验消息视觉仍属于 `--u-comp-validation-message-*`。应提供有意义的可见标签，不要把 placeholder 当作标签，也不要只依靠颜色表达必填或校验状态。原生标签关联、键盘、读屏、无障碍树、输入法与真机行为仍由平台验证负责。
