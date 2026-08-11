@@ -5,9 +5,10 @@
  */
 
 // <lang><zh-CN>导入本地 Vue mount、Vitest 断言和本仓 runtime 组件；测试不安装全局 plugin、路由、Tool 或平台 mock。</zh-CN><en>Imports local Vue mount, Vitest assertions, and repository runtime components; the test installs no global plugin, router, Tool, or platform mock.</en></lang>
+import { defineComponent, nextTick, reactive, ref } from 'vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import { UField, UInput, UValidationMessage } from '../../HIA-uView-UI/src/index.mjs';
+import { UField, UForm, UFormItem, UInput, UValidationMessage } from '../../HIA-uView-UI/src/index.mjs';
 
 /**
  * @lang zh-CN 验证 UInput 只报告未修改的本地值和焦点意图，并由调用方 prop 写回决定下一次渲染值。
@@ -48,9 +49,13 @@ describe('UInput runtime behavior', () => {
 
     await enabled.get('input').trigger('focus');
     await enabled.get('input').trigger('blur');
+    await enabled.get('input').trigger('click');
+    await enabled.get('input').trigger('confirm', { detail: { value: 'Confirmed' } });
 
     expect(enabled.emitted('focus')).toHaveLength(1);
     expect(enabled.emitted('blur')).toHaveLength(1);
+    expect(enabled.emitted('click')).toEqual([[]]);
+    expect(enabled.emitted('confirm')).toEqual([['Confirmed']]);
 
     // <lang><zh-CN>禁用实例即使在测试中直接收到 input/focus/blur 事件也必须全部由 handler guard 抑制。</zh-CN><en>The disabled instance must suppress every event through handler guards even when the test directly supplies input/focus/blur events.</en></lang>
     const disabled = mount(UInput, { props: { modelValue: 'Disabled', disabled: true } });
@@ -58,12 +63,75 @@ describe('UInput runtime behavior', () => {
     await disabled.get('input').trigger('input', { detail: { value: 'Ignored' } });
     await disabled.get('input').trigger('focus');
     await disabled.get('input').trigger('blur');
+    await disabled.get('input').trigger('click');
+    await disabled.get('input').trigger('confirm', { detail: { value: 'Ignored' } });
 
     expect(disabled.emitted('update:modelValue')).toBeUndefined();
     expect(disabled.emitted('input')).toBeUndefined();
     expect(disabled.emitted('focus')).toBeUndefined();
     expect(disabled.emitted('blur')).toBeUndefined();
+    expect(disabled.emitted('click')).toBeUndefined();
+    expect(disabled.emitted('confirm')).toBeUndefined();
     expect(disabled.get('input').classes()).toContain('u-input--disabled');
+  });
+
+  /**
+   * @lang zh-CN 验证最近 UFormItem 的 disabled/readonly 继承，并在宿主写回后触发 change 规则。
+   * @lang en Verifies nearest-UFormItem disabled/readonly inheritance and change-rule execution after host writeback.
+   * @returns {Promise<void>} <lang><zh-CN>受控输入、Vue 更新与规则执行完成后解决。</zh-CN><en>Resolves after controlled input, Vue updates, and rule execution complete.</en></lang>
+   */
+  it('inherits form-item guards and validates the caller-written value', async () => {
+    // <lang><zh-CN>测试壳拥有 model、guard 与规则；UInput 只 emit，父壳在同一事件中显式写回。</zh-CN><en>The harness owns the model, guards, and rules; UInput only emits and the parent harness explicitly writes back in the same event.</en></lang>
+    const Harness = defineComponent({
+      components: { UForm, UFormItem, UInput },
+      setup() {
+        // <lang><zh-CN>初始非空值用于观察后续空值 change 失败与恢复。</zh-CN><en>The initial nonempty value allows observing a later empty-value change failure and recovery.</en></lang>
+        const model = reactive({ name: 'initial' });
+        // <lang><zh-CN>只有 change trigger 会由输入通知自动执行。</zh-CN><en>Only the change trigger runs automatically from the input notification.</en></lang>
+        const rules = { name: { required: true, trigger: 'change', message: 'Required after change' } };
+        // <lang><zh-CN>两个 guard 可独立切换，证明 readonly 与 disabled 不是同一状态。</zh-CN><en>Two guards can be switched independently, proving readonly and disabled are not the same state.</en></lang>
+        const formDisabled = ref(false);
+        const itemReadonly = ref(false);
+        return { model, rules, formDisabled, itemReadonly };
+      },
+      template: '<u-form :model="model" :rules="rules" :disabled="formDisabled"><u-form-item prop="name" :readonly="itemReadonly"><u-input :model-value="model.name" @update:model-value="model.name = $event" /></u-form-item></u-form>'
+    });
+
+    // <lang><zh-CN>空字符串先由宿主写回；UInput 的 nextTick 通知随后读取新 model 并投影错误。</zh-CN><en>The host first writes back an empty string; UInput's nextTick notification then reads the new model and projects the error.</en></lang>
+    const wrapper = mount(Harness);
+    const input = wrapper.getComponent(UInput);
+    await input.get('input').trigger('input', { detail: { value: '' } });
+    await nextTick();
+    expect(wrapper.vm.model.name).toBe('');
+    expect(wrapper.text()).toContain('Required after change');
+
+    // <lang><zh-CN>恢复非空值后同一 change 规则清除旧错误。</zh-CN><en>After restoring a nonempty value, the same change rule clears the old error.</en></lang>
+    await input.get('input').trigger('input', { detail: { value: 'ready' } });
+    await nextTick();
+    expect(wrapper.vm.model.name).toBe('ready');
+    expect(wrapper.text()).not.toContain('Required after change');
+
+    // <lang><zh-CN>父级 disabled 同时进入原生属性和全部事件 guard。</zh-CN><en>Parent disabled enters both the native attribute and every event guard.</en></lang>
+    wrapper.vm.formDisabled = true;
+    await nextTick();
+    const valueEventCount = input.emitted('update:modelValue')?.length ?? 0;
+    await input.get('input').trigger('input', { detail: { value: 'blocked' } });
+    await input.get('input').trigger('click');
+    expect(input.get('input').attributes()).toHaveProperty('disabled');
+    expect(input.emitted('update:modelValue')).toHaveLength(valueEventCount);
+    expect(input.emitted('click')).toBeUndefined();
+
+    // <lang><zh-CN>readonly 仅阻止值事件；实际到达的 click/confirm 仍按冻结 payload 转发。</zh-CN><en>Readonly blocks only value events; click/confirm observations that actually arrive still forward with frozen payloads.</en></lang>
+    wrapper.vm.formDisabled = false;
+    wrapper.vm.itemReadonly = true;
+    await nextTick();
+    await input.get('input').trigger('input', { detail: { value: 'readonly-blocked' } });
+    await input.get('input').trigger('click');
+    await input.get('input').trigger('confirm', { detail: { value: 'ready' } });
+    expect(wrapper.vm.model.name).toBe('ready');
+    expect(input.get('input').attributes()).toHaveProperty('readonly');
+    expect(input.emitted('click')).toEqual([[]]);
+    expect(input.emitted('confirm')).toEqual([['ready']]);
   });
 });
 
