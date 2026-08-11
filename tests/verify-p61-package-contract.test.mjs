@@ -42,14 +42,14 @@ function readRuntimeComponentNames(source) {
 }
 
 /**
- * @lang zh-CN 从 declaration 中取得 `UViewComponent` 基线和精确 `DefineComponent` 常量；类型 alias 与 helper 不属于 runtime 组件集。
- * @lang en Obtains `UViewComponent` baseline and precise `DefineComponent` constants from declarations; type aliases and helpers are not part of the runtime component set.
+ * @lang zh-CN 从 declaration 中取得 `UViewComponent` 基线、既有精确 `DefineComponent` 与带公开实例/事件的 `UViewTypedComponent` 常量；类型 alias 与 helper 本身不属于 runtime 组件集。
+ * @lang en Obtains the `UViewComponent` baseline, existing precise `DefineComponent`, and public-instance/event-aware `UViewTypedComponent` constants from declarations; type aliases and helpers themselves are not part of the runtime component set.
  * @param {string} source <lang><zh-CN>固定 type declaration 原文。</zh-CN><en>Fixed type-declaration source text.</en></lang>
  * @returns {string[]} <lang><zh-CN>按 code-point 排序的唯一组件名。</zh-CN><en>Unique component names sorted by code point.</en></lang>
  */
 function readDeclarationComponentNames(source) {
-  // <lang><zh-CN>匹配两个受控组件声明形式，防止任意 `declare const` 被误计为 UI runtime export。</zh-CN><en>Matches the two controlled component-declaration forms, preventing arbitrary `declare const` values from being counted as UI runtime exports.</en></lang>
-  const names = [...source.matchAll(/^export declare const (U[A-Z][A-Za-z0-9]*): (?:UViewComponent|DefineComponent<[^;]+>);$/gmu)].map((match) => match[1]);
+  // <lang><zh-CN>匹配三个受控组件声明形式，防止任意 `declare const` 被误计为 UI runtime export。</zh-CN><en>Matches the three controlled component-declaration forms, preventing arbitrary `declare const` values from being counted as UI runtime exports.</en></lang>
+  const names = [...source.matchAll(/^export declare const (U[A-Z][A-Za-z0-9]*): (?:UViewComponent|DefineComponent<[^;]+>|UViewTypedComponent<[^;]+>);$/gmu)].map((match) => match[1]);
 
   // <lang><zh-CN>以相同规则归一集合，确保每个 runtime component 恰有一个 declaration。</zh-CN><en>Normalizes the set with the same rule, ensuring every runtime component has exactly one declaration.</en></lang>
   return [...new Set(names)].sort((left, right) => (left < right ? -1 : left > right ? 1 : 0));
@@ -72,15 +72,25 @@ test('declares every current runtime component exactly once without overclaiming
   // <lang><zh-CN>运行时/声明名称集合必须精确相同；这个静态比较不会加载 component implementation 或执行任何 Vue code。</zh-CN><en>Runtime/declaration name sets must be exactly equal; this static comparison loads no component implementation or executes Vue code.</en></lang>
   assert.deepEqual(readDeclarationComponentNames(declarationSource), readRuntimeComponentNames(runtimeSource));
 
-  // <lang><zh-CN>十个已审计表面保持精确 props，其他成员明确采用 generic baseline 而不是编造上游 API 形状。</zh-CN><en>Ten audited surfaces retain precise props, while remaining members explicitly use the generic baseline instead of inventing upstream API shapes.</en></lang>
-  for (const componentName of ['UAlertTips', 'UCheckbox', 'UCheckboxGroup', 'URadio', 'URadioGroup', 'USwitch', 'UTabbar', 'UNoticeBar', 'UPicker', 'UTag']) {
+  // <lang><zh-CN>既有十个审计表面继续保持精确 props，不因 P66 实例类型扩展而退化。</zh-CN><en>The existing ten audited surfaces retain precise props and do not regress because P66 adds instance-aware types.</en></lang>
+  for (const componentName of ['UAlertTips', 'UCheckbox', 'UCheckboxGroup', 'UNoticeBar', 'UPicker', 'URadio', 'URadioGroup', 'USwitch', 'UTabbar', 'UTag']) {
     assert.match(declarationSource, new RegExp(`export declare const ${componentName}: DefineComponent<`, 'u'));
+  }
+
+  // <lang><zh-CN>P66 六组件必须使用带 RawBindings 与 emits 的精确 helper，使 public instance 和 payload 同时可检查。</zh-CN><en>The six P66 components must use the precise RawBindings/emits helper so public instances and payloads are both checkable.</en></lang>
+  for (const componentName of ['UField', 'UForm', 'UFormItem', 'UInput', 'USearch', 'UTextarea']) {
+    assert.match(declarationSource, new RegExp(`export declare const ${componentName}: UViewTypedComponent<`, 'u'));
   }
 
   assert.match(declarationSource, /not yet promise complete TypeScript shapes/u);
   assert.match(globalDeclarationSource, /declare module 'vue'/u);
   assert.match(globalDeclarationSource, /UTabbar: typeof UTabbar/u);
   assert.match(globalDeclarationSource, /UTag: typeof UTag/u);
+
+  // <lang><zh-CN>可选 global augmentation 必须同步覆盖全部六个 P66 精确组件。</zh-CN><en>The optional global augmentation must cover all six precise P66 components in sync.</en></lang>
+  for (const componentName of ['UField', 'UForm', 'UFormItem', 'UInput', 'USearch', 'UTextarea']) {
+    assert.match(globalDeclarationSource, new RegExp(`${componentName}: typeof ${componentName}`, 'u'));
+  }
 });
 
 test('keeps Easycom static, consumer-owned, and compiler-testable', () => {
@@ -98,5 +108,9 @@ test('keeps Easycom static, consumer-owned, and compiler-testable', () => {
 
   // <lang><zh-CN>类型 fixture 必须显式导入 global augmentation，并保持 package alias 映射受控在本仓测试目录。</zh-CN><en>The type fixture must explicitly import the global augmentation and keep package-alias mapping controlled in this repository test directory.</en></lang>
   assert.match(consumerSource, /import '@hia-uview\/ui\/global';/u);
+  // <lang><zh-CN>fixture 同时锁定 expose InstanceType 与负类型门禁，避免精确声明退回 generic/any 仍然通过。</zh-CN><en>The fixture also locks exposed InstanceType and negative type gates so a regression to generic/any cannot still pass.</en></lang>
+  assert.match(consumerSource, /type UFormInstance/u);
+  assert.match(consumerSource, /asyncValidator: async \(value, context\)/u);
+  assert.match(consumerSource, /@ts-expect-error/u);
   assert.equal(typeConfig.compilerOptions.paths['@hia-uview/ui'][0], 'HIA-uView-UI/types/index.d.ts');
 });

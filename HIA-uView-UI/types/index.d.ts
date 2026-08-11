@@ -4,13 +4,413 @@
  * @lang en Defines the static TypeScript entry for the private pre-release UI package. It describes only current explicit runtime exports and audited controlled migration surfaces; declarations neither register components nor inject styles or broaden platform-support claims.
  */
 
-import type { App, ComputedRef, DefineComponent, Plugin } from 'vue';
+import type { App, ComponentOptionsMixin, ComputedRef, DefineComponent, EmitsOptions, Plugin } from 'vue';
 
 /**
  * @lang zh-CN 表示尚未提供逐 prop 精确声明的当前 runtime 组件。它保证导出名称可被类型检查，但不把通用基线表述为完整 API 或上游兼容承诺。
  * @lang en Represents a current runtime component whose per-prop precise declaration is not yet delivered. It guarantees that the export name type-checks, but does not present the generic baseline as a complete API or upstream-compatibility promise.
  */
 export type UViewComponent = DefineComponent<Record<string, unknown>, {}, unknown>;
+
+/**
+ * @lang zh-CN 描述具有精确 props、公开实例成员与事件 payload 的 Vue 组件；第二个泛型对应 Vue 3.4 `RawBindings`，使 `InstanceType` 能读取 `defineExpose` 对应成员。
+ * @lang en Describes a Vue component with precise props, public instance members, and event payloads; the second generic maps to Vue 3.4 `RawBindings`, allowing `InstanceType` to read members corresponding to `defineExpose`.
+ */
+export type UViewTypedComponent<Props, Exposed = {}, Emits extends EmitsOptions = {}> =
+  DefineComponent<Props, Exposed, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, Emits>;
+
+/**
+ * @lang zh-CN 表示调用方拥有的表单模型根；组件只在显式 reset 命令中恢复已经存在的安全字段路径。
+ * @lang en Represents the caller-owned form-model root; components restore an existing safe field path only through an explicit reset command.
+ */
+export type UFormModel = Record<string, unknown>;
+
+/**
+ * @lang zh-CN 表示 dotted/index 字段路径；危险段、空路径和不可遍历结构仍由 runtime 拒绝。
+ * @lang en Represents a dotted/index field path; dangerous segments, empty paths, and non-traversable structures remain rejected by runtime.
+ */
+export type UFormFieldPath = string;
+
+/**
+ * @lang zh-CN 表示输入后代可自动通知的有限规则触发器。
+ * @lang en Represents the finite rule triggers that input descendants may notify automatically.
+ */
+export type UFormRuleTrigger = 'change' | 'blur';
+
+/**
+ * @lang zh-CN 表示单字段校验调用的触发上下文；空字符串用于显式完整校验。
+ * @lang en Represents the trigger context of a single-field validation call; the empty string denotes explicit complete validation.
+ */
+export type UFormValidationTrigger = '' | UFormRuleTrigger;
+
+/**
+ * @lang zh-CN 表示首轮 runtime 实际实现的有限内建规则类型；未知类型会校验失败而不会被静默忽略。
+ * @lang en Represents the finite built-in rule types implemented by the current runtime; an unknown type fails validation rather than being silently ignored.
+ */
+export type UFormRuleType = 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object';
+
+/**
+ * @lang zh-CN 表示当前校验器可公开返回的稳定、非本地化失败代码。
+ * @lang en Represents the stable nonlocalized failure codes that the current validator may expose.
+ */
+export type UFormValidationErrorCode =
+  | 'required'
+  | 'type'
+  | 'len'
+  | 'min'
+  | 'max'
+  | 'pattern'
+  | 'invalid-rule'
+  | 'validator'
+  | 'validator-exception';
+
+/**
+ * @lang zh-CN 描述一个字段的首个公开校验错误；文字只来自调用方规则或 validator。
+ * @lang en Describes the first public validation error for a field; its copy comes only from a caller rule or validator.
+ */
+export interface UFormValidationError {
+  /** 中文：发生错误的规范字段路径。English: Canonical field path where the error occurred. */
+  prop: UFormFieldPath;
+  /** 中文：调用方提供的错误文字；库不生成默认语言。English: Caller-provided error copy; the library generates no default language. */
+  message: string;
+  /** 中文：原始合法规则声明序列中的零基索引，不因 trigger 过滤而重编号。English: Zero-based index in the original valid-rule declaration sequence, without renumbering after trigger filtering. */
+  ruleIndex: number;
+  /** 中文：产生本结果的显式或交互触发上下文。English: Explicit or interaction trigger context that produced this result. */
+  trigger: UFormValidationTrigger;
+  /** 中文：稳定、非本地化的失败分类。English: Stable nonlocalized failure classification. */
+  code: UFormValidationErrorCode;
+}
+
+/**
+ * @lang zh-CN 描述自定义 validator 的受控返回值；false、非空字符串和 Error 表示失败，true、空字符串、null 与 undefined 表示通过。
+ * @lang en Describes the controlled return value of a custom validator; false, a nonempty string, and Error mean failure, while true, an empty string, null, and undefined mean success.
+ */
+export type UFormRuleValidatorOutcome = boolean | string | Error | null | void;
+
+/**
+ * @lang zh-CN 描述传给调用方 validator 的浅冻结上下文；model 仍由调用方拥有并按只读约定提供。
+ * @lang en Describes the shallow-frozen context passed to a caller validator; the model remains caller-owned and is provided under a readonly convention.
+ */
+export interface UFormRuleValidatorContext {
+  /** 中文：当前规范字段路径。English: Current canonical field path. */
+  readonly field: UFormFieldPath;
+  /** 中文：调用方模型的只读类型视图。English: Readonly typed view of the caller model. */
+  readonly model: Readonly<UFormModel>;
+  /** 中文：当前显式或交互触发上下文。English: Current explicit or interaction trigger context. */
+  readonly trigger: UFormValidationTrigger;
+  /** 中文：当前执行规则的只读类型视图。English: Readonly typed view of the currently executing rule. */
+  readonly rule: Readonly<UFormRule>;
+}
+
+/**
+ * @lang zh-CN 描述应用源码直接提供的同步或 Promise validator；参数顺序固定为字段值与受控上下文。
+ * @lang en Describes a synchronous or Promise validator supplied directly by application source; parameters are fixed as field value followed by constrained context.
+ */
+export type UFormRuleValidator = (
+  value: unknown,
+  context: UFormRuleValidatorContext
+) => UFormRuleValidatorOutcome | Promise<UFormRuleValidatorOutcome>;
+
+/**
+ * @lang zh-CN 描述当前 runtime 支持的声明式单条表单规则；没有网络、脚本字符串、toast 或业务默认文案。
+ * @lang en Describes one declarative form rule supported by the current runtime; it contains no network, script string, toast, or business-default copy.
+ */
+export interface UFormRule {
+  /** 中文：是否拒绝 undefined、null、空字符串或空数组。English: Whether to reject undefined, null, an empty string, or an empty array. */
+  required?: boolean;
+  /** 中文：有限内建值类型。English: Finite built-in value type. */
+  type?: UFormRuleType;
+  /** 中文：字符串/数组精确长度或数字精确值。English: Exact string/array length or exact numeric value. */
+  len?: number;
+  /** 中文：字符串/数组最小长度或数字下界。English: Minimum string/array length or numeric lower bound. */
+  min?: number;
+  /** 中文：字符串/数组最大长度或数字上界。English: Maximum string/array length or numeric upper bound. */
+  max?: number;
+  /** 中文：用于字符串化值检查的调用方 RegExp。English: Caller RegExp used to check the stringified value. */
+  pattern?: RegExp;
+  /** 中文：允许自动执行本规则的交互触发器。English: Interaction triggers allowed to run this rule automatically. */
+  trigger?: UFormRuleTrigger | readonly UFormRuleTrigger[];
+  /** 中文：调用方本地化的失败文字。English: Caller-localized failure copy. */
+  message?: string;
+  /** 中文：同步或 Promise validator；与 asyncValidator 皆存在时后者优先。English: Synchronous or Promise validator; asyncValidator takes precedence when both exist. */
+  validator?: UFormRuleValidator;
+  /** 中文：上游熟悉的异步命名 alias，使用相同受控签名。English: Upstream-familiar asynchronous naming alias using the same constrained signature. */
+  asyncValidator?: UFormRuleValidator;
+}
+
+/**
+ * @lang zh-CN 描述表单规则根；既支持精确 dotted key，也支持与字段路径等价的安全嵌套对象。
+ * @lang en Describes the form-rule root; it supports both exact dotted keys and safe nested objects equivalent to field paths.
+ */
+export interface UFormRules {
+  /** 中文：字段路径或单个安全路径段映射到规则、规则数组或下一层规则对象。English: A field path or one safe path segment maps to a rule, rule array, or nested rule object. */
+  [fieldPathOrSegment: string]: UFormRule | readonly UFormRule[] | UFormRules;
+}
+
+/**
+ * @lang zh-CN 表示表单项与字段可呈现的有限校验状态。
+ * @lang en Represents the finite validation states that a form item or field may present.
+ */
+export type UFormValidationState = 'idle' | 'validating' | 'error';
+
+/**
+ * @lang zh-CN 描述 UForm 的兼容 callback；每次调用都获得 boolean 与新的错误数组。
+ * @lang en Describes the compatibility callback of UForm; each invocation receives a boolean and a fresh error array.
+ */
+export type UFormValidateCallback = (valid: boolean, errors: UFormValidationError[]) => void;
+
+/**
+ * @lang zh-CN 描述 UForm 的调用方模型、规则、禁用继承与有限标签布局。
+ * @lang en Describes UForm caller model, rules, disabled inheritance, and finite label layout.
+ */
+export interface UFormProps {
+  /** 中文：调用方拥有的表单模型。English: Caller-owned form model. */
+  model?: UFormModel;
+  /** 中文：dotted 或安全嵌套规则根。English: Dotted or safely nested rule root. */
+  rules?: UFormRules;
+  /** 中文：是否禁用本表单子树及 submit/reset 意图。English: Whether this form subtree and submit/reset intents are disabled. */
+  disabled?: boolean;
+  /** 中文：字段标签的有限默认位置。English: Finite default position of field labels. */
+  labelPosition?: 'top' | 'left';
+}
+
+/**
+ * @lang zh-CN 描述 UForm 的无 payload submit/reset 意图事件；事件不表示校验、重置或提交已经发生。
+ * @lang en Describes UForm submit/reset intent events with no payload; neither event means validation, reset, or submission has occurred.
+ */
+export type UFormEmits = {
+  /** 中文：显式提交意图。English: Explicit submit intent. */
+  submit: () => void;
+  /** 中文：显式重置意图。English: Explicit reset intent. */
+  reset: () => void;
+};
+
+/**
+ * @lang zh-CN 描述 UForm 通过组件 ref 暴露的有限 imperative API；内部 registry 和 context 不公开。
+ * @lang en Describes the finite imperative API exposed by UForm through a component ref; the internal registry and context remain private.
+ */
+export interface UFormExposed {
+  /** 中文：替换后续校验规则并清除旧投影。English: Replaces rules for subsequent validation and clears old projections. */
+  setRules(rules: UFormRules): void;
+  /** 中文：校验全部当前注册字段并始终 resolve boolean。English: Validates all currently registered fields and always resolves a boolean. */
+  validate(callback?: UFormValidateCallback): Promise<boolean>;
+  /** 中文：校验一个或多个当前注册字段并始终 resolve boolean。English: Validates one or more currently registered fields and always resolves a boolean. */
+  validateField(paths: UFormFieldPath | readonly UFormFieldPath[], callback?: UFormValidateCallback): Promise<boolean>;
+  /** 中文：清除全部或所选字段的内部校验投影。English: Clears internal validation projections for all or selected fields. */
+  clearValidate(paths?: UFormFieldPath | readonly UFormFieldPath[]): void;
+  /** 中文：显式恢复全部注册字段的挂载快照。English: Explicitly restores mount snapshots for all registered fields. */
+  resetFields(): void;
+  /** 中文：请求既有 submit 意图而不隐式校验。English: Requests the existing submit intent without implicit validation. */
+  requestSubmit(): void;
+  /** 中文：请求既有 reset 意图而不隐式恢复字段。English: Requests the existing reset intent without implicitly restoring fields. */
+  requestReset(): void;
+}
+
+/**
+ * @lang zh-CN 描述 UFormItem 的字段生命周期、局部规则和兼容呈现输入。
+ * @lang en Describes UFormItem field lifecycle, local rules, and compatible presentation inputs.
+ */
+export interface UFormItemProps {
+  /** 中文：注册到最近 UForm 的安全字段路径；空值表示独立展示。English: Safe field path registered with the nearest UForm; empty means standalone presentation. */
+  prop?: UFormFieldPath;
+  /** 中文：在 form-level 规则之后运行的局部规则。English: Local rules run after form-level rules. */
+  rules?: UFormRule | readonly UFormRule[];
+  /** 中文：调用方本地化标签。English: Caller-localized label. */
+  label?: string;
+  /** 中文：仅用于呈现的必填星号。English: Required asterisk used only for presentation. */
+  required?: boolean;
+  /** 中文：调用方帮助文字。English: Caller-provided help copy. */
+  helpText?: string;
+  /** 中文：无内部活动时使用的兼容状态；空字符串表示自动。English: Compatible state used without internal activity; empty means automatic. */
+  validationState?: '' | UFormValidationState;
+  /** 中文：无内部活动时呈现的调用方消息。English: Caller message presented without internal activity. */
+  validationMessage?: string;
+  /** 中文：局部标签位置覆盖；空字符串继承最近表单。English: Local label-position override; empty inherits from the nearest form. */
+  labelPosition?: '' | 'top' | 'left';
+  /** 中文：与最近表单禁用状态合并。English: Merges with the nearest form disabled state. */
+  disabled?: boolean;
+  /** 中文：向最近输入后代传播的局部只读状态。English: Local readonly state propagated to nearest input descendants. */
+  readonly?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 UFormItem 通过组件 ref 暴露的单字段 API。
+ * @lang en Describes the single-field API exposed by UFormItem through a component ref.
+ */
+export interface UFormItemExposed {
+  /** 中文：校验字段快照并返回首错误或 null。English: Validates the field snapshot and returns the first error or null. */
+  validate(trigger?: UFormValidationTrigger): Promise<UFormValidationError | null>;
+  /** 中文：清除本项内部校验投影。English: Clears this item's internal validation projection. */
+  clearValidate(): void;
+  /** 中文：显式恢复本项挂载快照。English: Explicitly restores this item's mount snapshot. */
+  resetField(): void;
+}
+
+/**
+ * @lang zh-CN 描述 UField 的内建受控输入与既有标签/帮助/校验呈现输入；有 default slot 时不合成输入事件。
+ * @lang en Describes UField built-in controlled input and existing label/help/validation presentation inputs; no input event is synthesized when a default slot exists.
+ */
+export interface UFieldProps {
+  /** 中文：调用方拥有的字符串或数字值。English: Caller-owned string or numeric value. */
+  modelValue?: string | number;
+  /** 中文：调用方本地化标签。English: Caller-localized label. */
+  label?: string;
+  /** 中文：仅用于呈现的必填星号。English: Required asterisk used only for presentation. */
+  required?: boolean;
+  /** 中文：内建输入提示文字。English: Placeholder copy for the built-in input. */
+  placeholder?: string;
+  /** 中文：局部禁用状态。English: Local disabled state. */
+  disabled?: boolean;
+  /** 中文：局部只读状态。English: Local readonly state. */
+  readonly?: boolean;
+  /** 中文：调用方帮助文字。English: Caller-provided help copy. */
+  helpText?: string;
+  /** 中文：独立校验呈现状态。English: Independent validation presentation state. */
+  validationState?: UFormValidationState;
+  /** 中文：独立校验呈现文字。English: Independent validation presentation copy. */
+  validationMessage?: string;
+}
+
+/**
+ * @lang zh-CN 描述 UField 内建模式的四项事件；click 无 payload，confirm 只返回已确认字符串。
+ * @lang en Describes the four events of UField built-in mode; click has no payload and confirm returns only a confirmed string.
+ */
+export type UFieldEmits = {
+  /** 中文：标准受控值更新意图。English: Standard controlled-value update intent. */
+  'update:modelValue': (value: string) => void;
+  /** 中文：未修改字符串输入意图。English: Unmodified string input intent. */
+  input: (value: string) => void;
+  /** 中文：已确认字符串意图。English: Confirmed string intent. */
+  confirm: (value: string) => void;
+  /** 中文：无 payload 本地点击意图。English: Local click intent with no payload. */
+  click: () => void;
+};
+
+/**
+ * @lang zh-CN 描述 UInput 的受控值与局部可用性输入。
+ * @lang en Describes UInput controlled value and local availability inputs.
+ */
+export interface UInputProps {
+  /** 中文：调用方拥有的字符串或数字值；编辑事件返回字符串。English: Caller-owned string or numeric value; editing events return a string. */
+  modelValue?: string | number;
+  /** 中文：调用方提示文字。English: Caller-provided placeholder copy. */
+  placeholder?: string;
+  /** 中文：局部禁用状态。English: Local disabled state. */
+  disabled?: boolean;
+  /** 中文：局部只读状态。English: Local readonly state. */
+  readonly?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 UInput 的精确事件 payload；click 无参数，confirm 返回确认字符串，焦点事件保持跨平台 unknown。
+ * @lang en Describes precise UInput event payloads; click has no argument, confirm returns a confirmed string, and focus events remain cross-platform unknown values.
+ */
+export type UInputEmits = {
+  /** 中文：标准受控值更新意图。English: Standard controlled-value update intent. */
+  'update:modelValue': (value: string) => void;
+  /** 中文：未修改字符串输入意图。English: Unmodified string input intent. */
+  input: (value: string) => void;
+  /** 中文：原始跨平台聚焦事件。English: Original cross-platform focus event. */
+  focus: (event: unknown) => void;
+  /** 中文：原始跨平台失焦事件。English: Original cross-platform blur event. */
+  blur: (event: unknown) => void;
+  /** 中文：无 payload 本地点击意图。English: Local click intent with no payload. */
+  click: () => void;
+  /** 中文：已确认字符串意图。English: Confirmed string intent. */
+  confirm: (value: string) => void;
+};
+
+/**
+ * @lang zh-CN 描述 UTextarea 的受控多行值和有限平台呈现开关。
+ * @lang en Describes UTextarea controlled multiline value and finite platform-presentation switches.
+ */
+export interface UTextareaProps {
+  /** 中文：调用方拥有的多行字符串。English: Caller-owned multiline string. */
+  modelValue?: string;
+  /** 中文：调用方提示文字。English: Caller-provided placeholder copy. */
+  placeholder?: string;
+  /** 中文：局部禁用状态。English: Local disabled state. */
+  disabled?: boolean;
+  /** 中文：局部只读状态。English: Local readonly state. */
+  readonly?: boolean;
+  /** 中文：交给平台的最大长度约束。English: Maximum-length constraint passed to the platform. */
+  maxlength?: number;
+  /** 中文：平台自动高度开关。English: Platform automatic-height switch. */
+  autoHeight?: boolean;
+  /** 中文：调用方控制的聚焦开关。English: Caller-controlled focus switch. */
+  focus?: boolean;
+  /** 中文：是否呈现中性字符计数。English: Whether to present a neutral character count. */
+  showCount?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 UTextarea 的精确文本事件和跨平台观察事件；click 无 payload，confirm 保留 unknown 平台事件。
+ * @lang en Describes UTextarea precise text events and cross-platform observation events; click has no payload while confirm preserves an unknown platform event.
+ */
+export type UTextareaEmits = {
+  /** 中文：标准受控值更新意图。English: Standard controlled-value update intent. */
+  'update:modelValue': (value: string) => void;
+  /** 中文：未修改字符串输入意图。English: Unmodified string input intent. */
+  input: (value: string) => void;
+  /** 中文：与 input 相同候选值的 change 意图。English: Change intent carrying the same candidate value as input. */
+  change: (value: string) => void;
+  /** 中文：原始跨平台聚焦事件。English: Original cross-platform focus event. */
+  focus: (event: unknown) => void;
+  /** 中文：原始跨平台失焦事件。English: Original cross-platform blur event. */
+  blur: (event: unknown) => void;
+  /** 中文：原始跨平台确认事件。English: Original cross-platform confirm event. */
+  confirm: (event: unknown) => void;
+  /** 中文：无 payload 本地点击意图。English: Local click intent with no payload. */
+  click: () => void;
+};
+
+/**
+ * @lang zh-CN 描述 USearch 的受控 query、调用方文字和有限 action 显示开关。
+ * @lang en Describes USearch controlled query, caller copy, and finite action-visibility switches.
+ */
+export interface USearchProps {
+  /** 中文：调用方拥有的 query 字符串。English: Caller-owned query string. */
+  modelValue?: string;
+  /** 中文：调用方提示文字。English: Caller-provided placeholder copy. */
+  placeholder?: string;
+  /** 中文：局部禁用状态。English: Local disabled state. */
+  disabled?: boolean;
+  /** 中文：调用方控制的聚焦开关。English: Caller-controlled focus switch. */
+  focus?: boolean;
+  /** 中文：是否在非空值时显示 clear control。English: Whether to show the clear control for a nonempty value. */
+  showClear?: boolean;
+  /** 中文：调用方本地化 clear 文字。English: Caller-localized clear copy. */
+  clearText?: string;
+  /** 中文：是否显示 search action control。English: Whether to show the search action control. */
+  showAction?: boolean;
+  /** 中文：调用方本地化 action 文字。English: Caller-localized action copy. */
+  actionText?: string;
+}
+
+/**
+ * @lang zh-CN 描述 USearch 的文本、观察与 action 事件；click/confirm 保留 unknown 平台事件，clear 无 payload。
+ * @lang en Describes USearch text, observation, and action events; click/confirm preserve unknown platform events and clear has no payload.
+ */
+export type USearchEmits = {
+  /** 中文：标准受控值更新意图。English: Standard controlled-value update intent. */
+  'update:modelValue': (value: string) => void;
+  /** 中文：未修改字符串输入意图。English: Unmodified string input intent. */
+  input: (value: string) => void;
+  /** 中文：与 input 相同候选值的 change 意图。English: Change intent carrying the same candidate value as input. */
+  change: (value: string) => void;
+  /** 中文：原始跨平台聚焦事件。English: Original cross-platform focus event. */
+  focus: (event: unknown) => void;
+  /** 中文：原始跨平台失焦事件。English: Original cross-platform blur event. */
+  blur: (event: unknown) => void;
+  /** 中文：原始跨平台确认事件。English: Original cross-platform confirm event. */
+  confirm: (event: unknown) => void;
+  /** 中文：原始跨平台点击事件。English: Original cross-platform click event. */
+  click: (event: unknown) => void;
+  /** 中文：携带当前受控 query 的搜索意图。English: Search intent carrying the current controlled query. */
+  search: (value: string) => void;
+  /** 中文：无 payload 清除意图。English: Clear intent with no payload. */
+  clear: () => void;
+};
 
 /**
  * @lang zh-CN 表示受控单选或多选项所使用的透明本地键；组件不解释其业务含义。
@@ -207,9 +607,33 @@ export interface UTagProps {
 }
 
 /**
- * @lang zh-CN 当前受审计的 choice/navigation/feedback 组件保持精确 props 声明；其余导出采用 `UViewComponent` 基线，等待逐项 API 审计。
- * @lang en Current audited choice/navigation/feedback components retain precise prop declarations; the remaining exports use the `UViewComponent` baseline pending per-item API audit.
+ * @lang zh-CN 当前受审计的 choice/navigation/feedback/form/input 组件保持精确 props、事件和必要实例声明；其余导出采用 `UViewComponent` 基线，等待逐项 API 审计。
+ * @lang en Current audited choice/navigation/feedback/form/input components retain precise props, events, and required instance declarations; the remaining exports use the `UViewComponent` baseline pending per-item API audit.
  */
+export declare const UField: UViewTypedComponent<UFieldProps, {}, UFieldEmits>;
+/** @lang zh-CN UField 的公开组件实例类型。 @lang en Public component-instance type of UField. */
+export type UFieldInstance = InstanceType<typeof UField>;
+/** @lang zh-CN 表单 owner、registry 与校验编排组件。 @lang en Form owner, registry, and validation-orchestration component. */
+export declare const UForm: UViewTypedComponent<UFormProps, UFormExposed, UFormEmits>;
+/** @lang zh-CN UForm 的公开组件实例类型，包含七个 expose 方法。 @lang en Public component-instance type of UForm including its seven exposed methods. */
+export type UFormInstance = InstanceType<typeof UForm>;
+/** @lang zh-CN 单字段注册、校验与错误投影组件。 @lang en Single-field registration, validation, and error-projection component. */
+export declare const UFormItem: UViewTypedComponent<UFormItemProps, UFormItemExposed>;
+/** @lang zh-CN UFormItem 的公开组件实例类型，包含单字段 validate/clear/reset。 @lang en Public component-instance type of UFormItem including single-field validate/clear/reset. */
+export type UFormItemInstance = InstanceType<typeof UFormItem>;
+/** @lang zh-CN 受控单行输入组件。 @lang en Controlled single-line input component. */
+export declare const UInput: UViewTypedComponent<UInputProps, {}, UInputEmits>;
+/** @lang zh-CN UInput 的公开组件实例类型。 @lang en Public component-instance type of UInput. */
+export type UInputInstance = InstanceType<typeof UInput>;
+/** @lang zh-CN 受控搜索意图组件。 @lang en Controlled search-intent component. */
+export declare const USearch: UViewTypedComponent<USearchProps, {}, USearchEmits>;
+/** @lang zh-CN USearch 的公开组件实例类型。 @lang en Public component-instance type of USearch. */
+export type USearchInstance = InstanceType<typeof USearch>;
+/** @lang zh-CN 受控多行输入组件。 @lang en Controlled multiline input component. */
+export declare const UTextarea: UViewTypedComponent<UTextareaProps, {}, UTextareaEmits>;
+/** @lang zh-CN UTextarea 的公开组件实例类型。 @lang en Public component-instance type of UTextarea. */
+export type UTextareaInstance = InstanceType<typeof UTextarea>;
+/** @lang zh-CN 受控 checkbox 组件。 @lang en Controlled checkbox component. */
 export declare const UCheckbox: DefineComponent<UCheckboxProps>;
 /** @lang zh-CN 受控多选 group 组件。 @lang en Controlled multi-choice group component. */
 export declare const UCheckboxGroup: DefineComponent<UCheckboxGroupProps>;
@@ -261,9 +685,6 @@ export declare const UDropdown: UViewComponent;
 export declare const UDropdownItem: UViewComponent;
 export declare const UEmpty: UViewComponent;
 export declare const UFab: UViewComponent;
-export declare const UField: UViewComponent;
-export declare const UForm: UViewComponent;
-export declare const UFormItem: UViewComponent;
 export declare const UFullScreen: UViewComponent;
 export declare const UGap: UViewComponent;
 export declare const UGrid: UViewComponent;
@@ -272,7 +693,6 @@ export declare const UIcon: UViewComponent;
 export declare const UImage: UViewComponent;
 export declare const UIndexAnchor: UViewComponent;
 export declare const UIndexList: UViewComponent;
-export declare const UInput: UViewComponent;
 export declare const UKeyboard: UViewComponent;
 export declare const ULazyLoad: UViewComponent;
 export declare const ULine: UViewComponent;
@@ -301,7 +721,6 @@ export declare const URow: UViewComponent;
 export declare const URowNotice: UViewComponent;
 export declare const USafeBottom: UViewComponent;
 export declare const UScrollList: UViewComponent;
-export declare const USearch: UViewComponent;
 export declare const USection: UViewComponent;
 export declare const USelect: UViewComponent;
 export declare const USkeleton: UViewComponent;
@@ -319,7 +738,6 @@ export declare const UTabs: UViewComponent;
 export declare const UTabsSwiper: UViewComponent;
 export declare const UTd: UViewComponent;
 export declare const UText: UViewComponent;
-export declare const UTextarea: UViewComponent;
 export declare const UTh: UViewComponent;
 export declare const UTimeLine: UViewComponent;
 export declare const UTimeLineItem: UViewComponent;
