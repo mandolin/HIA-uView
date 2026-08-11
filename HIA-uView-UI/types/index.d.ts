@@ -419,12 +419,25 @@ export type USearchEmits = {
 export type UChoiceValue = string | number;
 
 /**
+ * @lang zh-CN 描述独立 `UCheckbox` 的既有 change payload；group 模式由 group 直接报告下一成员数组，不产生此 payload。
+ * @lang en Describes the existing change payload of an independent `UCheckbox`; group mode reports the next membership array directly from the group and does not emit this payload.
+ */
+export interface UCheckboxChangeDetail {
+  /** 中文：调用方提供的透明本地键。English: Caller-provided transparent local key. */
+  value: UChoiceValue;
+  /** 中文：本次交互请求的下一选中态。English: Next checked state requested by this interaction. */
+  checked: boolean;
+}
+
+/**
  * @lang zh-CN 描述 `UCheckbox` 当前受审计的 caller-controlled prop 表面；`checked` 是既有 alias，显式提供时优先于 `modelValue`。
  * @lang en Describes the current audited caller-controlled prop surface of `UCheckbox`; `checked` is the existing alias and takes precedence over `modelValue` when explicitly provided.
  */
 export interface UCheckboxProps {
   /** 中文：独立事件或 group 成员关系使用的透明本地键。English: Transparent local key for independent events or group membership. */
   value?: UChoiceValue;
+  /** 中文：`value` 缺省时使用的上游熟悉透明键 alias。English: Upstream-familiar transparent-key alias used when `value` is omitted. */
+  name?: UChoiceValue;
   /** 中文：调用方可见标签；默认 slot 可以替代其显示内容。English: Caller-visible label; the default slot may replace its displayed content. */
   label?: string;
   /** 中文：既有 HIA 受控 alias；显式提供时优先。English: Existing HIA controlled alias; it takes precedence when explicit. */
@@ -433,7 +446,20 @@ export interface UCheckboxProps {
   modelValue?: boolean;
   /** 中文：本地不可操作声明；非空字符串和 true 均为禁用。English: Local inactivity declaration; a nonempty string and true both disable interaction. */
   disabled?: string | boolean;
+  /** 中文：是否仅阻止 label 区域触发选择。English: Whether to prevent selection from the label area only. */
+  labelDisabled?: boolean;
 }
+
+/**
+ * @lang zh-CN 描述独立 `UCheckbox` 的标准受控更新与既有 change 事件。
+ * @lang en Describes the standard controlled update and existing change events of an independent `UCheckbox`.
+ */
+export type UCheckboxEmits = {
+  /** 中文：下一独立布尔值。English: Next independent boolean value. */
+  'update:modelValue': (value: boolean) => void;
+  /** 中文：透明键与下一布尔值。English: Transparent key and next boolean value. */
+  change: (detail: UCheckboxChangeDetail) => void;
+};
 
 /**
  * @lang zh-CN 描述 `UCheckboxGroup` 的只读成员集合和局部禁用边界；组件 emit 新数组而不修改传入数组。
@@ -444,7 +470,22 @@ export interface UCheckboxGroupProps {
   modelValue?: ReadonlyArray<UChoiceValue>;
   /** 中文：是否阻止该子树中 checkbox 的局部交互。English: Whether to prevent local checkbox interaction in this subtree. */
   disabled?: boolean;
+  /** 中文：是否仅阻止该子树中 label 区域触发选择。English: Whether to prevent selection from label areas in this subtree only. */
+  labelDisabled?: boolean;
+  /** 中文：正整数时限制新增成员数量；其他数值或字符串表示不限制。English: Limits added members when it resolves to a positive integer; other numbers or strings mean unlimited. */
+  max?: number | string;
 }
+
+/**
+ * @lang zh-CN 描述 `UCheckboxGroup` 创建的下一成员数组事件；两个事件接收同一新数组。
+ * @lang en Describes next-membership-array events created by `UCheckboxGroup`; both events receive the same new array.
+ */
+export type UCheckboxGroupEmits = {
+  /** 中文：下一调用方成员数组。English: Next caller membership array. */
+  'update:modelValue': (values: UChoiceValue[]) => void;
+  /** 中文：与受控更新相同的下一成员数组。English: The same next membership array as the controlled update. */
+  change: (values: UChoiceValue[]) => void;
+};
 
 /**
  * @lang zh-CN 描述 `URadio` 当前受审计的本地单选表面；group 内的 selected state 由 `URadioGroup` 控制。
@@ -453,13 +494,28 @@ export interface UCheckboxGroupProps {
 export interface URadioProps {
   /** 中文：独立事件或 group 比较使用的透明本地键。English: Transparent local key for independent events or group comparison. */
   value?: UChoiceValue;
+  /** 中文：`value` 缺省时使用的上游熟悉透明键 alias。English: Upstream-familiar transparent-key alias used when `value` is omitted. */
+  name?: UChoiceValue;
   /** 中文：调用方可见标签；默认 slot 可以替代其显示内容。English: Caller-visible label; the default slot may replace its displayed content. */
   label?: string;
   /** 中文：独立模式的受控选中态。English: Controlled selected state in independent mode. */
   checked?: boolean;
   /** 中文：本地不可操作声明；非空字符串和 true 均为禁用。English: Local inactivity declaration; a nonempty string and true both disable interaction. */
   disabled?: string | boolean;
+  /** 中文：是否仅阻止 label 区域触发选择。English: Whether to prevent selection from the label area only. */
+  labelDisabled?: boolean;
 }
+
+/**
+ * @lang zh-CN 描述独立 `URadio` 保留的 select/change 透明键事件。
+ * @lang en Describes the transparent-key select/change events retained by an independent `URadio`.
+ */
+export type URadioEmits = {
+  /** 中文：既有选择意图。English: Existing selection intent. */
+  select: (value: UChoiceValue) => void;
+  /** 中文：迁移用 change 意图。English: Migration change intent. */
+  change: (value: UChoiceValue) => void;
+};
 
 /**
  * @lang zh-CN 描述 `URadioGroup` 的 caller-owned 单个本地键和禁用边界。
@@ -470,15 +526,38 @@ export interface URadioGroupProps {
   modelValue?: UChoiceValue;
   /** 中文：是否阻止该子树中 radio 的局部交互。English: Whether to prevent local radio interaction in this subtree. */
   disabled?: boolean;
+  /** 中文：是否仅阻止该子树中 label 区域触发选择。English: Whether to prevent selection from label areas in this subtree only. */
+  labelDisabled?: boolean;
 }
+
+/**
+ * @lang zh-CN 描述 `URadioGroup` 的单一透明值更新事件。
+ * @lang en Describes single-transparent-value update events of `URadioGroup`.
+ */
+export type URadioGroupEmits = {
+  /** 中文：下一调用方选择值。English: Next caller selection value. */
+  'update:modelValue': (value: UChoiceValue) => void;
+  /** 中文：与受控更新相同的下一选择值。English: The same next selection value as the controlled update. */
+  change: (value: UChoiceValue) => void;
+};
+
+/**
+ * @lang zh-CN 表示 `USwitch` 在原生布尔态与调用方值之间透明映射的有限值域。
+ * @lang en Represents the finite value domain transparently mapped by `USwitch` between native boolean state and caller values.
+ */
+export type USwitchValue = boolean | string | number;
 
 /**
  * @lang zh-CN 描述 `USwitch` 的受控布尔选择表面；loading 只阻止局部切换，不表示异步业务完成。
  * @lang en Describes the controlled boolean-choice surface of `USwitch`; loading only blocks local toggling and does not represent asynchronous business completion.
  */
 export interface USwitchProps {
-  /** 中文：调用方拥有的当前布尔值。English: Caller-owned current boolean value. */
-  modelValue?: boolean;
+  /** 中文：调用方拥有的当前透明值。English: Caller-owned current transparent value. */
+  modelValue?: USwitchValue;
+  /** 中文：原生 true 映射到的调用方值。English: Caller value mapped from native true. */
+  activeValue?: USwitchValue;
+  /** 中文：原生 false 映射到的调用方值。English: Caller value mapped from native false. */
+  inactiveValue?: USwitchValue;
   /** 中文：调用方可见标签。English: Caller-visible label. */
   label?: string;
   /** 中文：是否阻止局部切换。English: Whether to prevent local toggling. */
@@ -486,6 +565,17 @@ export interface USwitchProps {
   /** 中文：是否以本地 loading guard 阻止切换。English: Whether to prevent toggling with a local loading guard. */
   loading?: boolean;
 }
+
+/**
+ * @lang zh-CN 描述 `USwitch` 映射后的标准更新与 change 事件。
+ * @lang en Describes mapped standard update and change events of `USwitch`.
+ */
+export type USwitchEmits = {
+  /** 中文：由原生布尔结果映射出的下一 caller 值。English: Next caller value mapped from the native boolean result. */
+  'update:modelValue': (value: USwitchValue) => void;
+  /** 中文：与受控更新相同的映射值。English: The same mapped value as the controlled update. */
+  change: (value: USwitchValue) => void;
+};
 
 /**
  * @lang zh-CN 描述 `UTabbar` 的有限、非路由 tab 项；没有图标、徽标、页面或原生 tabBar 生命周期语义。
@@ -535,36 +625,717 @@ export interface UNoticeBarProps {
 }
 
 /**
- * @lang zh-CN 描述 `UPicker` 单列 option 的声明式本地结构；它不是日期、地区、远端或多列 picker contract。
- * @lang en Describes the declarative local shape of a single-column `UPicker` option; it is not a date, region, remote, or multi-column picker contract.
+ * @lang zh-CN 描述 `UPicker` 可读取的 option 结构；额外字段保持调用方拥有，并且 `rangeKey` 只读取一个浅层自有字段。
+ * @lang en Describes an option shape readable by `UPicker`; extra fields remain caller-owned, and `rangeKey` reads one shallow own field only.
  */
 export interface UPickerOption {
-  /** 中文：可见文字。English: Visible text. */
+  /** 中文：默认可见文字。English: Default visible copy. */
   label?: string | number;
   /** 中文：透明本地值。English: Transparent local value. */
   value?: UChoiceValue;
-  /** 中文：是否禁止选择该 option。English: Whether selection of this option is prevented. */
+  /** 中文：是否阻止选择该 option。English: Whether selection of this option is prevented. */
   disabled?: boolean;
+  /** 中文：供浅层 `rangeKey` 或调用方元数据使用的透明字段。English: Transparent field used by a shallow `rangeKey` or caller metadata. */
+  [field: string]: unknown;
 }
 
 /**
- * @lang zh-CN 描述 `UPicker` 的有限单列受控草稿/确认表面；其同名 `modelValue` 不等同于上游 popup、地区、时间或多列状态语义。
- * @lang en Describes the finite single-column controlled draft/confirm surface of `UPicker`; its same-name `modelValue` is not equivalent to upstream popup, region, time, or multi-column state semantics.
+ * @lang zh-CN 表示 picker 列中的原始标量或调用方 option 记录。
+ * @lang en Represents a raw scalar or caller option record in a picker column.
+ */
+export type UPickerEntry = UChoiceValue | UPickerOption;
+
+/**
+ * @lang zh-CN 表示 `UPicker` 的单列标量或多列数组受控值。
+ * @lang en Represents the controlled scalar value of a single-column `UPicker` or the array value of a multi-column picker.
+ */
+export type UPickerModelValue = UChoiceValue | ReadonlyArray<UChoiceValue>;
+
+/**
+ * @lang zh-CN 描述 picker 取消时的不可变列快照；未解析列明确使用 null 与 -1，顶层 value 保留 caller 当前值。
+ * @lang en Describes an immutable per-column snapshot on picker cancellation; unresolved columns explicitly use null and -1, while the top-level value preserves the caller's current value.
+ */
+export interface UPickerCancelDetail {
+  /** 中文：单列标量或多列值数组；取消时保留调用方当前受控值。English: Single-column scalar or multi-column value array; cancellation preserves the caller's current controlled value. */
+  readonly value: UPickerModelValue;
+  /** 中文：逐列透明值；未解析列为 null。English: Transparent values by column, with null for an unresolved column. */
+  readonly values: ReadonlyArray<UChoiceValue | null>;
+  /** 中文：逐列零基索引；未解析列为 -1。English: Zero-based indexes by column, with -1 for an unresolved column. */
+  readonly indexes: ReadonlyArray<number>;
+  /** 中文：逐列原始 caller option；未解析列为 null。English: Raw caller options by column, with null for an unresolved column. */
+  readonly options: ReadonlyArray<UPickerEntry | null>;
+}
+
+/**
+ * @lang zh-CN 描述 picker 仅在全部列均解析为 enabled option 后产生的不可变确定快照。
+ * @lang en Describes the immutable picker confirmation snapshot produced only after every column resolves to an enabled option.
+ */
+export interface UPickerConfirmDetail {
+  /** 中文：已确定的单列标量或多列值数组。English: Confirmed single-column scalar or multi-column value array. */
+  readonly value: UPickerModelValue;
+  /** 中文：每列均已解析的透明值。English: Resolved transparent value for every column. */
+  readonly values: ReadonlyArray<UChoiceValue>;
+  /** 中文：每列均有效的零基 option 索引。English: Valid zero-based option index for every column. */
+  readonly indexes: ReadonlyArray<number>;
+  /** 中文：每列均已解析的原始 caller option。English: Resolved raw caller option for every column. */
+  readonly options: ReadonlyArray<UPickerEntry>;
+}
+
+/**
+ * @lang zh-CN 描述一次 picker 列草稿变化及其完整不可变选择快照。
+ * @lang en Describes one picker-column draft change and its complete immutable selection snapshot.
+ */
+export interface UPickerColumnChangeDetail {
+  /** 中文：变化列的零基索引。English: Zero-based index of the changed column. */
+  readonly column: number;
+  /** 中文：该列中 option 的零基索引。English: Zero-based index of the option within that column. */
+  readonly index: number;
+  /** 中文：变化 option 的透明值。English: Transparent value of the changed option. */
+  readonly value: UChoiceValue;
+  /** 中文：变化 option 的原始 caller 输入。English: Raw caller input of the changed option. */
+  readonly option: UPickerEntry;
+  /** 中文：逐列透明值；未解析列为 null。English: Transparent values by column, with null for an unresolved column. */
+  readonly values: ReadonlyArray<UChoiceValue | null>;
+  /** 中文：逐列零基索引；未解析列为 -1。English: Zero-based indexes by column, with -1 for an unresolved column. */
+  readonly indexes: ReadonlyArray<number>;
+  /** 中文：逐列原始 caller option；未解析列为 null。English: Raw caller options by column, with null for an unresolved column. */
+  readonly options: ReadonlyArray<UPickerEntry | null>;
+}
+
+/**
+ * @lang zh-CN 描述 `UPicker` 的有限单列/多列受控草稿与确定/取消表面；它不绑定 popup、地区、时间或远端数据。
+ * @lang en Describes the finite single-/multi-column controlled draft and confirm/cancel surface of `UPicker`; it binds to no popup, region, time, or remote data.
  */
 export interface UPickerProps {
-  /** 中文：调用方拥有的已确认值。English: Caller-owned confirmed value. */
-  modelValue?: UChoiceValue;
-  /** 中文：有限单列 option；原始 string/number 同样可用。English: Finite single-column options; primitive strings/numbers are also accepted. */
-  columns?: ReadonlyArray<UChoiceValue | UPickerOption>;
+  /** 中文：调用方拥有的已确认单列或多列值。English: Caller-owned confirmed single- or multi-column value. */
+  modelValue?: UPickerModelValue;
+  /** 中文：有限单列或完整嵌套多列；混合嵌套形状在 runtime 失败关闭。English: Finite single column or fully nested multiple columns; mixed nesting fails closed at runtime. */
+  columns?: ReadonlyArray<UPickerEntry> | ReadonlyArray<ReadonlyArray<UPickerEntry>>;
+  /** 中文：`columns` 为空时使用的单列迁移 alias。English: Single-column migration alias used when `columns` is empty. */
+  range?: ReadonlyArray<UPickerEntry>;
+  /** 中文：仅用于读取 option 一个浅层自有显示字段的键。English: Key used only to read one shallow own display field from an option. */
+  rangeKey?: string;
+  /** 中文：列更新后是否尝试保留仍完整有效的最近确认值。English: Whether to try preserving the latest fully valid confirmed value after columns change. */
+  preserveSelection?: boolean;
   /** 中文：本地标题。English: Local title. */
   title?: string;
-  /** 中文：调用方提供的确认文字。English: Caller-provided confirm text. */
+  /** 中文：调用方提供的确认文字。English: Caller-provided confirm copy. */
   confirmText?: string;
-  /** 中文：调用方提供的取消文字。English: Caller-provided cancel text. */
+  /** 中文：调用方提供的取消文字。English: Caller-provided cancel copy. */
   cancelText?: string;
   /** 中文：是否阻止本地 option/action 操作。English: Whether to prevent local option/action interaction. */
   disabled?: boolean;
 }
+
+/**
+ * @lang zh-CN 描述 `UPicker` 的草稿变化、确定、取消与受控写回事件。
+ * @lang en Describes draft-change, confirm, cancel, and controlled-writeback events of `UPicker`.
+ */
+export type UPickerEmits = {
+  /** 中文：确定后产生的单列标量或多列数组写回意图。English: Single-column scalar or multi-column array writeback intent produced after confirmation. */
+  'update:modelValue': (value: UPickerModelValue) => void;
+  /** 中文：一次列草稿变化的完整快照。English: Complete snapshot of one column-draft change. */
+  columnchange: (detail: UPickerColumnChangeDetail) => void;
+  /** 中文：确定后的不可变选择快照。English: Immutable selection snapshot after confirmation. */
+  confirm: (detail: UPickerConfirmDetail) => void;
+  /** 中文：恢复 caller 值后的不可变取消快照。English: Immutable cancellation snapshot after restoring the caller value. */
+  cancel: (detail: UPickerCancelDetail) => void;
+};
+
+/**
+ * @lang zh-CN 描述 `UCalendar` 对单月 Gregorian 日期字段的受控输入；所有字符串在 runtime 按 `YYYY-MM-DD` 校验。
+ * @lang en Describes controlled inputs of `UCalendar` for single-month Gregorian date fields; every string is validated as `YYYY-MM-DD` at runtime.
+ */
+export interface UCalendarProps {
+  /** 中文：调用方拥有的当前选中日期。English: Caller-owned currently selected date. */
+  modelValue?: string;
+  /** 中文：调用方拥有的当前视图月份锚点。English: Caller-owned current view-month anchor. */
+  viewDate?: string;
+  /** 中文：可选择的最小日期边界。English: Minimum selectable-date bound. */
+  minDate?: string;
+  /** 中文：可选择的最大日期边界。English: Maximum selectable-date bound. */
+  maxDate?: string;
+  /** 中文：调用方声明的不可选择日期集合。English: Caller-declared set of unselectable dates. */
+  disabledDates?: ReadonlyArray<string>;
+  /** 中文：是否阻止日期选择但仍允许月份浏览。English: Whether to prevent date selection while retaining month navigation. */
+  readonly?: boolean;
+  /** 中文：可选的本地“今天”呈现日期。English: Optional local presentation date for “today”. */
+  today?: string;
+  /** 中文：恰好七项时覆盖 locale 星期文字。English: Overrides locale weekday copy when exactly seven entries are supplied. */
+  weekLabels?: ReadonlyArray<string>;
+}
+
+/**
+ * @lang zh-CN 描述一次合法 Gregorian 日期选择的冻结字段结果。
+ * @lang en Describes the frozen field result of one valid Gregorian date selection.
+ */
+export interface UCalendarChangeDetail {
+  /** 中文：规范 `YYYY-MM-DD` 日期。English: Canonical `YYYY-MM-DD` date. */
+  readonly value: string;
+  /** 中文：完整 Gregorian 年份。English: Full Gregorian year. */
+  readonly year: number;
+  /** 中文：一基 Gregorian 月份。English: One-based Gregorian month. */
+  readonly month: number;
+  /** 中文：一基月内日期。English: One-based day of month. */
+  readonly day: number;
+}
+
+/**
+ * @lang zh-CN 描述 `UCalendar` 的日期选择与独立视图月份事件。
+ * @lang en Describes date-selection and independent view-month events of `UCalendar`.
+ */
+export type UCalendarEmits = {
+  /** 中文：下一选中日期。English: Next selected date. */
+  'update:modelValue': (value: string) => void;
+  /** 中文：与 model 更新相同的旧版输入日期。English: Legacy input date equal to the model update. */
+  input: (value: string) => void;
+  /** 中文：结构化 Gregorian 日期字段。English: Structured Gregorian date fields. */
+  change: (detail: UCalendarChangeDetail) => void;
+  /** 中文：与 model 更新相同的旧版选择日期。English: Legacy selected date equal to the model update. */
+  select: (value: string) => void;
+  /** 中文：下一视图月份的一号日期锚点。English: First-day date anchor of the next view month. */
+  'update:viewDate': (value: string) => void;
+};
+
+/**
+ * @lang zh-CN 描述 `USelect` 可读取的 option；额外元数据只作为原始 option 随确认/取消快照返回。
+ * @lang en Describes an option readable by `USelect`; extra metadata is returned only as the raw option in confirm/cancel snapshots.
+ */
+export interface USelectOption {
+  /** 中文：可见文字。English: Visible copy. */
+  label?: string | number;
+  /** 中文：透明本地值。English: Transparent local value. */
+  value?: UChoiceValue;
+  /** 中文：是否阻止选择该 option。English: Whether selection of this option is prevented. */
+  disabled?: boolean;
+  /** 中文：随原始 option 保留的调用方元数据。English: Caller metadata retained with the raw option. */
+  [field: string]: unknown;
+}
+
+/**
+ * @lang zh-CN 表示 select 集合中的原始标量或调用方 option 记录。
+ * @lang en Represents a raw scalar or caller option record in a select collection.
+ */
+export type USelectEntry = UChoiceValue | USelectOption;
+
+/**
+ * @lang zh-CN 描述 `USelect` 显式确定后的冻结快照；只有已解析 enabled option 才会产生该事件。
+ * @lang en Describes the frozen snapshot of `USelect` after explicit confirmation; this event is produced only for a resolved enabled option.
+ */
+export interface USelectConfirmResult {
+  /** 中文：已解析 option 的透明值。English: Transparent value of the resolved option. */
+  readonly value: UChoiceValue;
+  /** 中文：已解析 option 的零基索引。English: Zero-based index of the resolved option. */
+  readonly index: number;
+  /** 中文：已解析的原始 caller option。English: Resolved raw caller option. */
+  readonly option: USelectEntry;
+}
+
+/**
+ * @lang zh-CN 描述 `USelect` 取消恢复后的冻结快照；未匹配 caller 值保留 value，同时 index 为 -1、option 为 null。
+ * @lang en Describes the frozen snapshot of `USelect` after cancellation restore; an unmatched caller value is retained while index is -1 and option is null.
+ */
+export interface USelectCancelResult {
+  /** 中文：恢复的透明 caller 值；没有合法值时为 null。English: Restored transparent caller value, or null when no valid value exists. */
+  readonly value: UChoiceValue | null;
+  /** 中文：匹配 option 的零基索引；未匹配时为 -1。English: Zero-based index of the matching option, or -1 when unmatched. */
+  readonly index: number;
+  /** 中文：匹配的原始 caller option；未匹配时为 null。English: Matching raw caller option, or null when unmatched. */
+  readonly option: USelectEntry | null;
+}
+
+/**
+ * @lang zh-CN 描述 `USelect` 的有限 inline 单选和显式确定模式输入。
+ * @lang en Describes finite inline single-selection and explicit-confirmation inputs of `USelect`.
+ */
+export interface USelectProps {
+  /** 中文：调用方拥有的当前透明值。English: Caller-owned current transparent value. */
+  modelValue?: UChoiceValue;
+  /** 中文：有限 caller option 集合。English: Finite caller option collection. */
+  options?: ReadonlyArray<USelectEntry>;
+  /** 中文：没有匹配项时的调用方占位文字。English: Caller placeholder shown when no option matches. */
+  placeholder?: string;
+  /** 中文：调用方提供的确认文字。English: Caller-provided confirm copy. */
+  confirmText?: string;
+  /** 中文：调用方提供的取消文字。English: Caller-provided cancel copy. */
+  cancelText?: string;
+  /** 中文：是否先维护局部草稿并要求显式确定。English: Whether to retain a local draft and require explicit confirmation. */
+  confirmMode?: boolean;
+  /** 中文：是否阻止展开与选择。English: Whether to prevent opening and selection. */
+  disabled?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `USelect` 的 inline 触发、受控写回与确定/取消事件。
+ * @lang en Describes inline-trigger, controlled-writeback, and confirm/cancel events of `USelect`.
+ */
+export type USelectEmits = {
+  /** 中文：提交后的下一透明值。English: Next transparent value after commit. */
+  'update:modelValue': (value: UChoiceValue) => void;
+  /** 中文：与受控更新相同的提交值。English: The same committed value as the controlled update. */
+  change: (value: UChoiceValue) => void;
+  /** 中文：展开 inline panel 的原始跨平台事件。English: Original cross-platform event that opens the inline panel. */
+  click: (event: unknown) => void;
+  /** 中文：显式确定后的结构化快照。English: Structured snapshot after explicit confirmation. */
+  confirm: (result: USelectConfirmResult) => void;
+  /** 中文：恢复 caller 值后的结构化取消快照。English: Structured cancellation snapshot after restoring the caller value. */
+  cancel: (result: USelectCancelResult) => void;
+};
+
+/**
+ * @lang zh-CN 描述 `UDropdown` 的 caller-owned legacy 值与局部 registry 禁用边界。
+ * @lang en Describes the caller-owned legacy value and local-registry disabled boundary of `UDropdown`.
+ */
+export interface UDropdownProps {
+  /** 中文：legacy 子项共享的当前透明值。English: Current transparent value shared by legacy children. */
+  modelValue?: UChoiceValue;
+  /** 中文：是否阻止 legacy 选择及 registry open。English: Whether to prevent legacy selection and registry opening. */
+  disabled?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `UDropdown` 的 legacy 值更新与真正关闭显式 registry item 的事件。
+ * @lang en Describes legacy-value updates of `UDropdown` and the event emitted when an explicit registry item actually closes.
+ */
+export type UDropdownEmits = {
+  /** 中文：legacy 子项请求的下一透明值。English: Next transparent value requested by a legacy child. */
+  'update:modelValue': (value: UChoiceValue) => void;
+  /** 中文：与受控更新相同的 legacy 选择值。English: The same legacy selection value as the controlled update. */
+  change: (value: UChoiceValue) => void;
+  /** 中文：真正关闭的显式 item 原始 name。English: Raw name of the explicit item that actually closed. */
+  close: (name: UChoiceValue) => void;
+};
+
+/**
+ * @lang zh-CN 描述 `UDropdown` 唯一公开的 registry 控制方法；注册关系与 owner token 保持私有。
+ * @lang en Describes the only public registry-control methods of `UDropdown`; registrations and owner tokens remain private.
+ */
+export interface UDropdownExposed {
+  /** 中文：打开当前 registry 中唯一匹配且可交互的 item。English: Opens the sole matching interactive item in the current registry. */
+  open(name: UChoiceValue): boolean;
+  /** 中文：关闭当前 active item；没有 active item 时返回 false 且不发事件。English: Closes the current active item; returns false without emitting when none is active. */
+  close(): boolean;
+}
+
+/**
+ * @lang zh-CN 表示 `UDropdownItem` options 模式接受的透明标量或透明值数组。
+ * @lang en Represents a transparent scalar or transparent-value array accepted by `UDropdownItem` options mode.
+ */
+export type UDropdownItemValue = UChoiceValue | ReadonlyArray<UChoiceValue>;
+
+/**
+ * @lang zh-CN 描述 `UDropdownItem` 的有限 option 记录；额外字段仅保留在 caller 对象中，不形成父级 registry API。
+ * @lang en Describes a finite `UDropdownItem` option record; extra fields stay on the caller object and form no parent-registry API.
+ */
+export interface UDropdownItemOption {
+  /** 中文：选择时原样交付的透明标量或数组。English: Transparent scalar or array delivered unchanged on selection. */
+  value?: UDropdownItemValue;
+  /** 中文：可见文字。English: Visible copy. */
+  label?: string | number;
+  /** 中文：是否阻止选择该 option。English: Whether selection of this option is prevented. */
+  disabled?: boolean;
+  /** 中文：由调用方保留且不被组件解释的元数据。English: Metadata retained by the caller and not interpreted by the component. */
+  [field: string]: unknown;
+}
+
+/**
+ * @lang zh-CN 描述 `UDropdownItem` 的独立 legacy 模式或显式 name/options 模式输入。
+ * @lang en Describes independent legacy mode or explicit name/options mode inputs of `UDropdownItem`.
+ */
+export interface UDropdownItemProps {
+  /** 中文：独立 legacy 或父级 legacy 模式使用的透明标量。English: Transparent scalar used by independent or parent legacy mode. */
+  value?: UChoiceValue;
+  /** 中文：显式提供后进入 registry options 模式的稳定 identity。English: Stable identity that enters registry options mode when explicitly supplied. */
+  name?: UChoiceValue;
+  /** 中文：trigger 可见文字；缺省时可回退到匹配 option label。English: Visible trigger copy, with fallback to a matching option label when omitted. */
+  label?: string;
+  /** 中文：是否阻止本 item 的本地交互。English: Whether to prevent local interaction for this item. */
+  disabled?: boolean;
+  /** 中文：options 模式中由调用方拥有的当前值。English: Caller-owned current value in options mode. */
+  modelValue?: UDropdownItemValue;
+  /** 中文：options 模式的有限 caller 记录集合。English: Finite caller-record collection for options mode. */
+  options?: ReadonlyArray<UDropdownItemOption>;
+  /** 中文：是否投影并注册当前显式 item。English: Whether to project and register the current explicit item. */
+  show?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `UDropdownItem` 在两个互斥模式下的 legacy select 或受控 option 事件。
+ * @lang en Describes legacy select or controlled-option events of `UDropdownItem` in its two mutually exclusive modes.
+ */
+export type UDropdownItemEmits = {
+  /** 中文：独立或父级 legacy 模式的透明标量选择。English: Transparent scalar selection in independent or parent legacy mode. */
+  select: (value: UChoiceValue) => void;
+  /** 中文：options 模式选择的下一透明标量或数组。English: Next transparent scalar or array selected in options mode. */
+  'update:modelValue': (value: UDropdownItemValue) => void;
+  /** 中文：与 options 模式受控更新相同的值。English: The same value as the options-mode controlled update. */
+  change: (value: UDropdownItemValue) => void;
+};
+
+/**
+ * @lang zh-CN 描述 `UNumberBox` 的有限数值范围、步长与本地交互 guard。
+ * @lang en Describes finite numeric bounds, step, and local interaction guards of `UNumberBox`.
+ */
+export interface UNumberBoxProps {
+  /** 中文：调用方拥有的当前数值。English: Caller-owned current number. */
+  modelValue?: number;
+  /** 中文：本地数值下界；反向有限边界在 runtime 规范为升序。English: Local numeric lower bound; reversed finite bounds are normalized in ascending order at runtime. */
+  min?: number;
+  /** 中文：本地数值上界。English: Local numeric upper bound. */
+  max?: number;
+  /** 中文：按钮使用的十进制定点步长；非正值回退为 1。English: Decimal fixed-point step used by buttons; nonpositive values fall back to 1. */
+  step?: number;
+  /** 中文：是否阻止全部本地输入。English: Whether to prevent every local input. */
+  disabled?: boolean;
+  /** 中文：是否将按钮和直接输入同时置为只读。English: Whether to make buttons and direct input readonly together. */
+  readonly?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `UNumberBox` 对同一有限下一值按固定顺序发送的三个事件。
+ * @lang en Describes the three events emitted by `UNumberBox` in fixed order for the same finite next value.
+ */
+export type UNumberBoxEmits = {
+  /** 中文：下一受控数值。English: Next controlled number. */
+  'update:modelValue': (value: number) => void;
+  /** 中文：与受控更新相同的旧版 input 数值。English: Legacy input number equal to the controlled update. */
+  input: (value: number) => void;
+  /** 中文：与受控更新相同的 change 数值。English: Change number equal to the controlled update. */
+  change: (value: number) => void;
+};
+
+/**
+ * @lang zh-CN 描述 `URate` 的 caller-owned 分级值、显式 current alias 与可见符号。
+ * @lang en Describes caller-owned level value, explicit current alias, and visible symbols of `URate`.
+ */
+export interface URateProps {
+  /** 中文：`current` 缺省时拥有显示状态的当前值。English: Current value that owns presentation state when `current` is omitted. */
+  modelValue?: number;
+  /** 中文：显式提供时优先的迁移显示 alias；组件不会修改它。English: Migration presentation alias that takes precedence when explicit and is never modified by the component. */
+  current?: number;
+  /** 中文：可见分级项数量；runtime 收紧为至少一项的有限整数。English: Visible level count, narrowed at runtime to a finite integer of at least one. */
+  count?: number;
+  /** 中文：是否阻止本地选择。English: Whether to prevent local selection. */
+  disabled?: boolean;
+  /** 中文：active 项的调用方可见符号。English: Caller-visible symbol for an active item. */
+  activeSymbol?: string;
+  /** 中文：inactive 项的调用方可见符号。English: Caller-visible symbol for an inactive item. */
+  inactiveSymbol?: string;
+}
+
+/**
+ * @lang zh-CN 描述 `URate` 对同一整数选择按固定顺序发送的三个事件。
+ * @lang en Describes the three events emitted by `URate` in fixed order for the same integer selection.
+ */
+export type URateEmits = {
+  /** 中文：下一受控整数选择。English: Next controlled integer selection. */
+  'update:modelValue': (value: number) => void;
+  /** 中文：与受控更新相同的旧版 input 数值。English: Legacy input number equal to the controlled update. */
+  input: (value: number) => void;
+  /** 中文：与受控更新相同的 change 数值。English: Change number equal to the controlled update. */
+  change: (value: number) => void;
+};
+
+/**
+ * @lang zh-CN 描述 `USlider` 的 caller-owned 数值、相对 min 步进网格与本地显示 guard。
+ * @lang en Describes caller-owned number, min-relative step grid, and local presentation guard of `USlider`.
+ */
+export interface USliderProps {
+  /** 中文：调用方拥有的当前数值。English: Caller-owned current number. */
+  modelValue?: number;
+  /** 中文：相对 step 网格的原点与下界。English: Origin and lower bound of the relative step grid. */
+  min?: number;
+  /** 中文：网格允许的数值上界。English: Numeric upper bound allowed by the grid. */
+  max?: number;
+  /** 中文：相对 min 的正十进制步长；无效值回退为 1。English: Positive decimal step relative to min; invalid values fall back to 1. */
+  step?: number;
+  /** 中文：是否显示规范后的当前数值。English: Whether to display the normalized current number. */
+  showValue?: boolean;
+  /** 中文：是否阻止原生 change。English: Whether to prevent native change. */
+  disabled?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `USlider` 对同一网格对齐数值发送的受控更新与 change 事件。
+ * @lang en Describes controlled-update and change events emitted by `USlider` for the same grid-aligned number.
+ */
+export type USliderEmits = {
+  /** 中文：下一网格对齐数值。English: Next grid-aligned number. */
+  'update:modelValue': (value: number) => void;
+  /** 中文：与受控更新相同的网格对齐数值。English: The same grid-aligned number as the controlled update. */
+  change: (value: number) => void;
+};
+
+/**
+ * @lang zh-CN 表示 `UUpload` 仅用于本地呈现和 retry 资格的有限 caller 状态。
+ * @lang en Represents the finite caller state used by `UUpload` only for local presentation and retry eligibility.
+ */
+export type UUploadFileStatus = 'ready' | 'pending' | 'error';
+
+/**
+ * @lang zh-CN 描述 `UUpload` 可读的 caller 文件状态记录；额外业务字段保持 opaque，组件不读取文件字节、URL 或凭据。
+ * @lang en Describes a caller file-state record readable by `UUpload`; extra business fields stay opaque, and the component reads no file bytes, URL, or credentials.
+ */
+export interface UUploadFileRecord {
+  /** 中文：首选可见标签。English: Preferred visible label. */
+  label?: string | number;
+  /** 中文：`label` 缺省时使用的可见标签 alias。English: Visible-label alias used when `label` is absent. */
+  name?: string | number;
+  /** 中文：可选的调用方说明文字。English: Optional caller description copy. */
+  description?: string;
+  /** 中文：有限本地呈现状态。English: Finite local presentation state. */
+  status?: UUploadFileStatus;
+  /** 中文：调用方本地化的状态文字。English: Caller-localized status copy. */
+  statusText?: string;
+  /** 中文：是否阻止该记录的 preview/remove/retry intent。English: Whether to prevent preview/remove/retry intent for this record. */
+  disabled?: boolean;
+  /** 中文：由调用方拥有且只作为 opaque record 随事件返回的额外字段。English: Extra caller-owned field returned only as part of the opaque record in events. */
+  [field: string]: unknown;
+}
+
+/**
+ * @lang zh-CN 表示可读字符串/数字快捷项或调用方文件状态记录；它不是文件路径、URL、binary handle 或上传任务。
+ * @lang en Represents a readable string/number shorthand or caller file-state record; it is not a file path, URL, binary handle, or upload task.
+ */
+export type UUploadFile = string | number | UUploadFileRecord;
+
+/**
+ * @lang zh-CN 表示受限 upload adapter action；组件只按这四个固定名称读取方法。
+ * @lang en Represents a constrained upload-adapter action; the component reads methods only by these four fixed names.
+ */
+export type UUploadAdapterAction = 'select' | 'preview' | 'remove' | 'retry';
+
+/**
+ * @lang zh-CN 描述 select adapter 获得的精确浅冻结上下文；不包含 chooser、transport、URL、header、token 或 bytes。
+ * @lang en Describes the exact shallow-frozen context received by the select adapter; it contains no chooser, transport, URL, header, token, or bytes.
+ */
+export interface UUploadSelectAdapterContext {
+  /** 中文：固定 select discriminant。English: Fixed select discriminant. */
+  readonly action: 'select';
+  /** 中文：开始调用时 caller 文件数组的新容器快照。English: New-container snapshot of the caller file array at invocation start. */
+  readonly files: ReadonlyArray<UUploadFile>;
+  /** 中文：有限显示列表中的剩余可请求槽位。English: Remaining requestable slots in the finite visible list. */
+  readonly remainingSlots: number;
+  /** 中文：未解析的原始跨平台交互事件。English: Uninterpreted original cross-platform interaction event. */
+  readonly event: unknown;
+  /** 中文：仅在当前组件实例内递增的请求关联号。English: Request correlation number increasing only within the current component instance. */
+  readonly requestId: number;
+}
+
+/**
+ * @lang zh-CN 描述某一个精确 preview/remove/retry action 的浅冻结 adapter 上下文；泛型 discriminant 不允许方法混淆 action。
+ * @lang en Describes the shallow-frozen adapter context for one exact preview/remove/retry action; its generic discriminant prevents methods from conflating actions.
+ */
+export interface UUploadFileAdapterContext<Action extends Exclude<UUploadAdapterAction, 'select'>> {
+  /** 中文：当前方法唯一对应的文件 action。English: File action corresponding uniquely to the current method. */
+  readonly action: Action;
+  /** 中文：开始调用时 caller 文件数组的新容器快照。English: New-container snapshot of the caller file array at invocation start. */
+  readonly files: ReadonlyArray<UUploadFile>;
+  /** 中文：当前原始 caller 文件记录。English: Current raw caller file record. */
+  readonly file: UUploadFile;
+  /** 中文：记录在原受控 source 数组中的索引。English: Record index in the original controlled source array. */
+  readonly index: number;
+  /** 中文：未解析的原始跨平台交互事件。English: Uninterpreted original cross-platform interaction event. */
+  readonly event: unknown;
+  /** 中文：仅在当前组件实例内递增的请求关联号。English: Request correlation number increasing only within the current component instance. */
+  readonly requestId: number;
+}
+
+/**
+ * @lang zh-CN 表示 preview 方法唯一可接收的精确 adapter context。
+ * @lang en Represents the exact adapter context accepted only by the preview method.
+ */
+export type UUploadPreviewAdapterContext = UUploadFileAdapterContext<'preview'>;
+
+/**
+ * @lang zh-CN 表示 remove 方法唯一可接收的精确 adapter context。
+ * @lang en Represents the exact adapter context accepted only by the remove method.
+ */
+export type UUploadRemoveAdapterContext = UUploadFileAdapterContext<'remove'>;
+
+/**
+ * @lang zh-CN 表示 retry 方法唯一可接收的精确 adapter context。
+ * @lang en Represents the exact adapter context accepted only by the retry method.
+ */
+export type UUploadRetryAdapterContext = UUploadFileAdapterContext<'retry'>;
+
+/**
+ * @lang zh-CN 表示 adapter 可完成但不请求 model 写回，或交付一个不同 identity 的下一数组。
+ * @lang en Represents adapter completion without a model writeback request, or delivery of a next array with a distinct identity.
+ */
+export type UUploadAdapterOutcome = void | ReadonlyArray<UUploadFile>;
+
+/**
+ * @lang zh-CN 表示 upload adapter 的同步、Promise 或 thenable 完成值；所有 rejection 由组件收束为稳定状态。
+ * @lang en Represents a synchronous, Promise, or thenable upload-adapter outcome; every rejection is contained by the component as a stable state.
+ */
+export type UUploadAdapterResult = UUploadAdapterOutcome | PromiseLike<UUploadAdapterOutcome>;
+
+/**
+ * @lang zh-CN 描述调用方可选注入的四方法 adapter；缺失方法保持纯 legacy intent，且没有内置 transport 回退。
+ * @lang en Describes the four-method adapter optionally injected by the caller; a missing method preserves pure legacy intent, with no built-in transport fallback.
+ */
+export interface UUploadAdapter {
+  /** 中文：请求调用方选择下一文件状态。English: Requests that the caller select next file state. */
+  select?(context: UUploadSelectAdapterContext): UUploadAdapterResult;
+  /** 中文：请求调用方预览当前 opaque 记录。English: Requests that the caller preview the current opaque record. */
+  preview?(context: UUploadPreviewAdapterContext): UUploadAdapterResult;
+  /** 中文：请求调用方移除当前 opaque 记录。English: Requests that the caller remove the current opaque record. */
+  remove?(context: UUploadRemoveAdapterContext): UUploadAdapterResult;
+  /** 中文：请求调用方重试当前 error 记录。English: Requests that the caller retry the current error record. */
+  retry?(context: UUploadRetryAdapterContext): UUploadAdapterResult;
+}
+
+/**
+ * @lang zh-CN 描述 legacy select intent；它只报告有限剩余槽位和原始事件。
+ * @lang en Describes the legacy select intent; it reports only finite remaining slots and the original event.
+ */
+export interface UUploadSelectIntent {
+  /** 中文：有限显示列表中的剩余可请求槽位。English: Remaining requestable slots in the finite visible list. */
+  readonly remainingSlots: number;
+  /** 中文：未解析的原始跨平台事件。English: Uninterpreted original cross-platform event. */
+  readonly event: unknown;
+}
+
+/**
+ * @lang zh-CN 描述 legacy preview/remove/retry intent；opaque caller 记录原样返回。
+ * @lang en Describes legacy preview/remove/retry intent; the opaque caller record is returned unchanged.
+ */
+export interface UUploadFileIntent {
+  /** 中文：当前原始 caller 文件记录。English: Current raw caller file record. */
+  readonly file: UUploadFile;
+  /** 中文：未解析的原始跨平台事件。English: Uninterpreted original cross-platform event. */
+  readonly event: unknown;
+}
+
+/**
+ * @lang zh-CN 表示 upload adapter 唯一公开失败状态中的稳定、非本地化代码。
+ * @lang en Represents the stable nonlocalized code in the sole public failure state of the upload adapter.
+ */
+export type UUploadAdapterFailureCode = 'adapter-threw' | 'adapter-rejected' | 'invalid-result';
+
+/**
+ * @lang zh-CN 描述不会泄漏原始异常、凭据或 caller error 对象的冻结失败信息。
+ * @lang en Describes frozen failure information that leaks no original exception, credential, or caller error object.
+ */
+export interface UUploadAdapterFailure {
+  /** 中文：稳定失败分类。English: Stable failure classification. */
+  readonly code: UUploadAdapterFailureCode;
+}
+
+/**
+ * @lang zh-CN 描述 adapter 方法调用前同步发送的 pending 状态。
+ * @lang en Describes the pending state emitted synchronously before an adapter method call.
+ */
+export interface UUploadAdapterPendingState {
+  /** 中文：pending discriminant。English: Pending discriminant. */
+  readonly status: 'pending';
+  /** 中文：当前受限 action。English: Current constrained action. */
+  readonly action: UUploadAdapterAction;
+  /** 中文：组件实例内 request id。English: Component-instance-local request id. */
+  readonly requestId: number;
+}
+
+/**
+ * @lang zh-CN 描述失去 per-action latest、source 或 adapter identity 资格后的最小 stale 状态。
+ * @lang en Describes the minimal stale state after loss of per-action-latest, source, or adapter-identity eligibility.
+ */
+export interface UUploadAdapterStaleState {
+  /** 中文：stale discriminant。English: Stale discriminant. */
+  readonly status: 'stale';
+  /** 中文：当前受限 action。English: Current constrained action. */
+  readonly action: UUploadAdapterAction;
+  /** 中文：组件实例内 request id。English: Component-instance-local request id. */
+  readonly requestId: number;
+}
+
+/**
+ * @lang zh-CN 描述 adapter 正常完成后的状态，并明确是否已产生 caller model 更新意图。
+ * @lang en Describes state after normal adapter completion and explicitly states whether a caller-model update intent was produced.
+ */
+export interface UUploadAdapterSucceededState {
+  /** 中文：succeeded discriminant。English: Succeeded discriminant. */
+  readonly status: 'succeeded';
+  /** 中文：当前受限 action。English: Current constrained action. */
+  readonly action: UUploadAdapterAction;
+  /** 中文：组件实例内 request id。English: Component-instance-local request id. */
+  readonly requestId: number;
+  /** 中文：是否已在本状态之前发送新的 model 数组。English: Whether a new model array was emitted before this state. */
+  readonly updated: boolean;
+}
+
+/**
+ * @lang zh-CN 描述当前 eligible adapter 请求的稳定失败状态。
+ * @lang en Describes the stable failure state of a currently eligible adapter request.
+ */
+export interface UUploadAdapterFailedState {
+  /** 中文：failed discriminant。English: Failed discriminant. */
+  readonly status: 'failed';
+  /** 中文：当前受限 action。English: Current constrained action. */
+  readonly action: UUploadAdapterAction;
+  /** 中文：组件实例内 request id。English: Component-instance-local request id. */
+  readonly requestId: number;
+  /** 中文：不含原始异常的冻结失败分类。English: Frozen failure classification containing no original exception. */
+  readonly failure: UUploadAdapterFailure;
+}
+
+/**
+ * @lang zh-CN 表示 `UUpload` 唯一异步状态事件的完整 discriminated union。
+ * @lang en Represents the complete discriminated union of the sole asynchronous state event from `UUpload`.
+ */
+export type UUploadAdapterState =
+  | UUploadAdapterPendingState
+  | UUploadAdapterStaleState
+  | UUploadAdapterSucceededState
+  | UUploadAdapterFailedState;
+
+/**
+ * @lang zh-CN 描述 `UUpload` 的 caller-owned 文件状态、可选 adapter 和全部 caller-localized action copy。
+ * @lang en Describes caller-owned file state, optional adapter, and all caller-localized action copy of `UUpload`.
+ */
+export interface UUploadProps {
+  /** 中文：是否输出有限文件状态或 select control。English: Whether to output finite file state or a select control. */
+  visible?: boolean;
+  /** 中文：首选 caller-owned 文件状态数组；显式提供时优先于 `files`。English: Preferred caller-owned file-state array, taking precedence over `files` when explicit. */
+  modelValue?: ReadonlyArray<UUploadFile>;
+  /** 中文：`modelValue` 缺省时使用的旧版数组。English: Legacy array used when `modelValue` is omitted. */
+  files?: ReadonlyArray<UUploadFile>;
+  /** 中文：显式注入的有限 adapter；null 或缺失方法保持纯 legacy intent。English: Explicitly injected finite adapter; null or a missing method preserves pure legacy intent. */
+  adapter?: UUploadAdapter | null;
+  /** 中文：收紧到 1–12 的本地显示/选择槽位上限。English: Local display/select slot limit narrowed to 1–12. */
+  max?: number;
+  /** 中文：caller-localized group label。English: Caller-localized group label. */
+  label?: string;
+  /** 中文：非空时输出 select control 的 caller 文字。English: Caller copy that outputs the select control when nonempty. */
+  selectText?: string;
+  /** 中文：非空时输出 preview intent control 的 caller 文字。English: Caller copy that outputs the preview-intent control when nonempty. */
+  previewText?: string;
+  /** 中文：非空时输出 remove intent control 的 caller 文字。English: Caller copy that outputs the remove-intent control when nonempty. */
+  removeText?: string;
+  /** 中文：error 记录上非空时输出 retry intent control 的 caller 文字。English: Caller copy that outputs the retry-intent control when nonempty on an error record. */
+  retryText?: string;
+  /** 中文：是否阻止全部本地 intent。English: Whether to prevent every local intent. */
+  disabled?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `UUpload` 的四个 legacy intent、可选 model 写回与唯一 adapter 状态事件。
+ * @lang en Describes four legacy intents, optional model writeback, and the sole adapter-state event of `UUpload`.
+ */
+export type UUploadEmits = {
+  /** 中文：请求调用方选择文件状态的 legacy intent。English: Legacy intent requesting caller file-state selection. */
+  select: (intent: UUploadSelectIntent) => void;
+  /** 中文：请求调用方预览 opaque 记录的 legacy intent。English: Legacy intent requesting caller preview of an opaque record. */
+  preview: (intent: UUploadFileIntent) => void;
+  /** 中文：请求调用方移除 opaque 记录的 legacy intent。English: Legacy intent requesting caller removal of an opaque record. */
+  remove: (intent: UUploadFileIntent) => void;
+  /** 中文：请求调用方重试 opaque error 记录的 legacy intent。English: Legacy intent requesting caller retry of an opaque error record. */
+  retry: (intent: UUploadFileIntent) => void;
+  /** 中文：adapter 返回不同 identity 新数组后的受控写回意图。English: Controlled writeback intent after an adapter returns a new array with distinct identity. */
+  'update:modelValue': (files: ReadonlyArray<UUploadFile>) => void;
+  /** 中文：pending/succeeded/stale/failed 的唯一异步状态 union。English: Sole asynchronous state union of pending/succeeded/stale/failed. */
+  'adapter-state': (state: UUploadAdapterState) => void;
+};
 
 /**
  * @lang zh-CN 描述 `UAlertTips` 的局部、caller-controlled 可见性和有限文字表面；它不是全局反馈或自动关闭服务。
@@ -607,8 +1378,8 @@ export interface UTagProps {
 }
 
 /**
- * @lang zh-CN 当前受审计的 choice/navigation/feedback/form/input 组件保持精确 props、事件和必要实例声明；其余导出采用 `UViewComponent` 基线，等待逐项 API 审计。
- * @lang en Current audited choice/navigation/feedback/form/input components retain precise props, events, and required instance declarations; the remaining exports use the `UViewComponent` baseline pending per-item API audit.
+ * @lang zh-CN 当前受审计的 choice、picker/date、dropdown、numeric、upload、navigation、feedback 与 form/input 组件保持精确 props、事件和必要实例声明；其余导出采用 `UViewComponent` 基线，等待逐项 API 审计。
+ * @lang en Current audited choice, picker/date, dropdown, numeric, upload, navigation, feedback, and form/input components retain precise props, events, and required instance declarations; the remaining exports use the `UViewComponent` baseline pending per-item API audit.
  */
 export declare const UField: UViewTypedComponent<UFieldProps, {}, UFieldEmits>;
 /** @lang zh-CN UField 的公开组件实例类型。 @lang en Public component-instance type of UField. */
@@ -634,21 +1405,65 @@ export declare const UTextarea: UViewTypedComponent<UTextareaProps, {}, UTextare
 /** @lang zh-CN UTextarea 的公开组件实例类型。 @lang en Public component-instance type of UTextarea. */
 export type UTextareaInstance = InstanceType<typeof UTextarea>;
 /** @lang zh-CN 受控 checkbox 组件。 @lang en Controlled checkbox component. */
-export declare const UCheckbox: DefineComponent<UCheckboxProps>;
+export declare const UCheckbox: DefineComponent<UCheckboxProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, UCheckboxEmits>;
+/** @lang zh-CN UCheckbox 的公开组件实例类型。 @lang en Public component-instance type of UCheckbox. */
+export type UCheckboxInstance = InstanceType<typeof UCheckbox>;
 /** @lang zh-CN 受控多选 group 组件。 @lang en Controlled multi-choice group component. */
-export declare const UCheckboxGroup: DefineComponent<UCheckboxGroupProps>;
+export declare const UCheckboxGroup: DefineComponent<UCheckboxGroupProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, UCheckboxGroupEmits>;
+/** @lang zh-CN UCheckboxGroup 的公开组件实例类型。 @lang en Public component-instance type of UCheckboxGroup. */
+export type UCheckboxGroupInstance = InstanceType<typeof UCheckboxGroup>;
 /** @lang zh-CN 受控单选项组件。 @lang en Controlled single-choice item component. */
-export declare const URadio: DefineComponent<URadioProps>;
+export declare const URadio: DefineComponent<URadioProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, URadioEmits>;
+/** @lang zh-CN URadio 的公开组件实例类型。 @lang en Public component-instance type of URadio. */
+export type URadioInstance = InstanceType<typeof URadio>;
 /** @lang zh-CN 受控单选 group 组件。 @lang en Controlled single-choice group component. */
-export declare const URadioGroup: DefineComponent<URadioGroupProps>;
+export declare const URadioGroup: DefineComponent<URadioGroupProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, URadioGroupEmits>;
+/** @lang zh-CN URadioGroup 的公开组件实例类型。 @lang en Public component-instance type of URadioGroup. */
+export type URadioGroupInstance = InstanceType<typeof URadioGroup>;
 /** @lang zh-CN 受控布尔选择组件。 @lang en Controlled boolean-choice component. */
-export declare const USwitch: DefineComponent<USwitchProps>;
+export declare const USwitch: DefineComponent<USwitchProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, USwitchEmits>;
+/** @lang zh-CN USwitch 的公开组件实例类型。 @lang en Public component-instance type of USwitch. */
+export type USwitchInstance = InstanceType<typeof USwitch>;
 /** @lang zh-CN 局部、非路由 tabbar 组件。 @lang en Local non-routing tabbar component. */
 export declare const UTabbar: DefineComponent<UTabbarProps>;
 /** @lang zh-CN caller-controlled 非滚动横幅组件。 @lang en Caller-controlled non-scrolling banner component. */
 export declare const UNoticeBar: DefineComponent<UNoticeBarProps>;
-/** @lang zh-CN 有限单列本地 picker 组件。 @lang en Finite single-column local picker component. */
-export declare const UPicker: DefineComponent<UPickerProps>;
+/** @lang zh-CN 有限单列/多列本地 picker 组件。 @lang en Finite single-/multi-column local picker component. */
+export declare const UPicker: DefineComponent<UPickerProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, UPickerEmits>;
+/** @lang zh-CN UPicker 的公开组件实例类型。 @lang en Public component-instance type of UPicker. */
+export type UPickerInstance = InstanceType<typeof UPicker>;
+/** @lang zh-CN 受控单月 Gregorian 日期组件。 @lang en Controlled single-month Gregorian calendar component. */
+export declare const UCalendar: UViewTypedComponent<UCalendarProps, {}, UCalendarEmits>;
+/** @lang zh-CN UCalendar 的公开组件实例类型。 @lang en Public component-instance type of UCalendar. */
+export type UCalendarInstance = InstanceType<typeof UCalendar>;
+/** @lang zh-CN 有限 inline 单值选择组件。 @lang en Finite inline single-value selection component. */
+export declare const USelect: UViewTypedComponent<USelectProps, {}, USelectEmits>;
+/** @lang zh-CN USelect 的公开组件实例类型。 @lang en Public component-instance type of USelect. */
+export type USelectInstance = InstanceType<typeof USelect>;
+/** @lang zh-CN 受控 legacy 选择与显式 name registry owner。 @lang en Controlled legacy-selection and explicit-name registry owner. */
+export declare const UDropdown: UViewTypedComponent<UDropdownProps, UDropdownExposed, UDropdownEmits>;
+/** @lang zh-CN UDropdown 的公开实例类型，包含 open/close。 @lang en Public UDropdown instance type including open/close. */
+export type UDropdownInstance = InstanceType<typeof UDropdown>;
+/** @lang zh-CN 独立 legacy 或 registry options 下拉子项。 @lang en Independent legacy or registry-options dropdown child. */
+export declare const UDropdownItem: UViewTypedComponent<UDropdownItemProps, {}, UDropdownItemEmits>;
+/** @lang zh-CN UDropdownItem 的公开组件实例类型。 @lang en Public component-instance type of UDropdownItem. */
+export type UDropdownItemInstance = InstanceType<typeof UDropdownItem>;
+/** @lang zh-CN 十进制定点受控 number-box。 @lang en Decimal fixed-point controlled number box. */
+export declare const UNumberBox: UViewTypedComponent<UNumberBoxProps, {}, UNumberBoxEmits>;
+/** @lang zh-CN UNumberBox 的公开组件实例类型。 @lang en Public component-instance type of UNumberBox. */
+export type UNumberBoxInstance = InstanceType<typeof UNumberBox>;
+/** @lang zh-CN 有限整数分级受控组件。 @lang en Finite integer-level controlled component. */
+export declare const URate: UViewTypedComponent<URateProps, {}, URateEmits>;
+/** @lang zh-CN URate 的公开组件实例类型。 @lang en Public component-instance type of URate. */
+export type URateInstance = InstanceType<typeof URate>;
+/** @lang zh-CN 相对 min 十进制网格受控 slider。 @lang en Min-relative decimal-grid controlled slider. */
+export declare const USlider: UViewTypedComponent<USliderProps, {}, USliderEmits>;
+/** @lang zh-CN USlider 的公开组件实例类型。 @lang en Public component-instance type of USlider. */
+export type USliderInstance = InstanceType<typeof USlider>;
+/** @lang zh-CN caller-owned 文件状态与显式 injected adapter 编排组件。 @lang en Caller-owned file-state and explicit injected-adapter orchestration component. */
+export declare const UUpload: UViewTypedComponent<UUploadProps, {}, UUploadEmits>;
+/** @lang zh-CN UUpload 的公开组件实例类型；它没有文件或 adapter expose 方法。 @lang en Public UUpload component-instance type; it exposes no file or adapter methods. */
+export type UUploadInstance = InstanceType<typeof UUpload>;
 /** @lang zh-CN caller-controlled 局部提示条组件。 @lang en Caller-controlled local alert-strip component. */
 export declare const UAlertTips: DefineComponent<UAlertTipsProps>;
 /** @lang zh-CN 有限 token 化文字标签组件。 @lang en Finite tokenized text-tag component. */
@@ -665,7 +1480,6 @@ export declare const UAvatarCropper: UViewComponent;
 export declare const UBackTop: UViewComponent;
 export declare const UBadge: UViewComponent;
 export declare const UButton: UViewComponent;
-export declare const UCalendar: UViewComponent;
 export declare const UCard: UViewComponent;
 export declare const UCarKeyboard: UViewComponent;
 export declare const UCell: UViewComponent;
@@ -681,8 +1495,6 @@ export declare const UConfigProvider: UViewComponent;
 export declare const UCountDown: UViewComponent;
 export declare const UCountTo: UViewComponent;
 export declare const UDivider: UViewComponent;
-export declare const UDropdown: UViewComponent;
-export declare const UDropdownItem: UViewComponent;
 export declare const UEmpty: UViewComponent;
 export declare const UFab: UViewComponent;
 export declare const UFullScreen: UViewComponent;
@@ -710,11 +1522,9 @@ export declare const UNavBar: UViewComponent;
 export declare const UNavbar: UViewComponent;
 export declare const UNoNetwork: UViewComponent;
 export declare const UNotice: UViewComponent;
-export declare const UNumberBox: UViewComponent;
 export declare const UNumberKeyboard: UViewComponent;
 export declare const UPagination: UViewComponent;
 export declare const UPopup: UViewComponent;
-export declare const URate: UViewComponent;
 export declare const UReadMore: UViewComponent;
 export declare const URootPortal: UViewComponent;
 export declare const URow: UViewComponent;
@@ -722,9 +1532,7 @@ export declare const URowNotice: UViewComponent;
 export declare const USafeBottom: UViewComponent;
 export declare const UScrollList: UViewComponent;
 export declare const USection: UViewComponent;
-export declare const USelect: UViewComponent;
 export declare const USkeleton: UViewComponent;
-export declare const USlider: UViewComponent;
 export declare const UStack: UViewComponent;
 export declare const UStatusBar: UViewComponent;
 export declare const UStep: UViewComponent;
@@ -745,7 +1553,6 @@ export declare const UToast: UViewComponent;
 export declare const UTopTips: UViewComponent;
 export declare const UTr: UViewComponent;
 export declare const UTransition: UViewComponent;
-export declare const UUpload: UViewComponent;
 export declare const UValidationMessage: UViewComponent;
 export declare const UVerificationCode: UViewComponent;
 export declare const UWaterfall: UViewComponent;
