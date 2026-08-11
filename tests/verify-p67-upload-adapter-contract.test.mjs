@@ -66,7 +66,10 @@ test('locks exact shallow-frozen adapter contexts and allowlisted methods', () =
   // <lang><zh-CN>两个 context literal 的 key 集合和顺序必须精确；file action 必须包含原 source index。</zh-CN><en>The key sets and order of both context literals must be exact, and a file action must include the original source index.</en></lang>
   assert.match(executableSource, /Object\.freeze\(\{ action: 'select', files, remainingSlots, event, requestId \}\)/u);
   assert.match(executableSource, /Object\.freeze\(\{ action, files, file, index, event, requestId \}\)/u);
-  assert.match(executableSource, /Object\.freeze\(files\.slice\(\)\)/u);
+  // <lang><zh-CN>snapshot 必须使用组件创建的新容器逐项复制，禁止调用 caller 可覆写的 slice/species 或冻结 source。</zh-CN><en>The snapshot must copy per item into a component-created container and may neither call caller-overridable slice/species nor freeze the source.</en></lang>
+  assert.match(executableSource, /const snapshot = new Array\(sourceLength\)[\s\S]*?snapshot\[index\] = files\[index\][\s\S]*?Object\.freeze\(snapshot\)/u);
+  assert.doesNotMatch(executableSource, /files\.slice\s*\(/u);
+  assert.doesNotMatch(executableSource, /Object\.freeze\(files\)/u);
   assert.match(executableSource, /key:\s*`file-\$\{index\}`\s*,\s*index/u);
   assert.match(executableSource, /runAdapterAction\(intent,\s*\{ file: file\.source, index: file\.index, event \}\)/u);
 });
@@ -84,8 +87,10 @@ test('locks latest-request identity and silent terminal behavior', () => {
   assert.match(executableSource, /latestRequestByAction\.get\(action\) !== requestId/u);
   assert.match(executableSource, /consumeTerminatedAdapterRequest\(requestId\)/u);
 
-  // <lang><zh-CN>current 资格必须同时检查 lifecycle、per-action id、active source raw identity 与 adapter raw identity。</zh-CN><en>Current eligibility must check lifecycle, per-action id, active-source raw identity, and adapter raw identity together.</en></lang>
-  assert.match(executableSource, /acceptsAdapterSettlement[\s\S]*?latestRequestByAction\.get\(action\) === requestId[\s\S]*?activeSourceIdentity\.value === sourceIdentity[\s\S]*?callerIdentity\(props\.adapter\) === adapterIdentity/u);
+  // <lang><zh-CN>current 资格必须同时检查 lifecycle、per-action id，以及捕获后的 active source/adapter raw identity 与可读性。</zh-CN><en>Current eligibility must check lifecycle, per-action id, plus captured active-source/adapter raw identities and readability.</en></lang>
+  assert.match(executableSource, /acceptsAdapterSettlement[\s\S]*?latestRequestByAction\.get\(action\) === requestId[\s\S]*?hasSameCallerIdentity\(initialInputs\.source, currentInputs\.source\)[\s\S]*?hasSameCallerIdentity\(initialInputs\.adapter, currentInputs\.adapter\)/u);
+  assert.match(executableSource, /function inspectCallerIdentity\(value\)\s*\{\s*try\s*\{[\s\S]*?readable: true[\s\S]*?catch\s*\{[\s\S]*?readable: false/u);
+  assert.match(executableSource, /const currentInputs = captureAdapterInputs\(\)[\s\S]*?isCurrentAdapterRequest\(action, requestId, initialInputs, currentInputs\)/u);
   assert.match(executableSource, /onBeforeUnmount\(stopAdapterSettlements\)/u);
   assert.match(executableSource, /acceptsAdapterSettlement = false[\s\S]*?latestRequestByAction\.clear\(\)[\s\S]*?terminatedAdapterRequestIds\.clear\(\)/u);
 
@@ -105,17 +110,20 @@ test('locks strict adapter results and stable failure codes', () => {
   assert.doesNotMatch(executableSource, /status:\s*'(?:success|failure|error)'/u);
 
   // <lang><zh-CN>failure code 必须固定为三项，catch 不绑定或透传任意 error/cause。</zh-CN><en>Failure codes must remain exactly three, and catch clauses bind or forward no arbitrary error/cause.</en></lang>
-  const failureCodes = [...executableSource.matchAll(/emitFailedAdapterState\(action,\s*requestId,\s*'(adapter-threw|adapter-rejected|invalid-result)'\)/gu)].map((match) => match[1]);
+  const failureCodes = [...executableSource.matchAll(/'(adapter-threw|adapter-rejected|invalid-result)'/gu)].map((match) => match[1]);
   assert.deepEqual(new Set(failureCodes), new Set(['adapter-threw', 'adapter-rejected', 'invalid-result']));
   assert.doesNotMatch(executableSource, /catch\s*\([^)]/u);
   assert.match(executableSource, /try\s*\{\s*adapterMethod = adapterIdentity\[action\];\s*\}\s*catch\s*\{/u);
   assert.match(executableSource, /const failure = Object\.freeze\(\{ code \}\)/u);
 
-  // <lang><zh-CN>array result 必须同时不同于开始与 settlement 时的 modelValue/files raw identity。</zh-CN><en>An array result must differ from raw modelValue/files identities both at invocation start and settlement.</en></lang>
-  assert.match(executableSource, /settledResult === modelValueIdentity/u);
-  assert.match(executableSource, /settledResult === filesIdentity/u);
-  assert.match(executableSource, /settledResult === callerIdentity\(props\.modelValue\)/u);
-  assert.match(executableSource, /settledResult === callerIdentity\(props\.files\)/u);
+  // <lang><zh-CN>array result 必须先 raw-normalize，并同时不同于开始与 settlement 时的 modelValue/files raw identity；Proxy trap 失败关闭。</zh-CN><en>An array result must first be raw-normalized and differ from raw modelValue/files identities both at invocation start and settlement; a Proxy trap fails closed.</en></lang>
+  assert.match(executableSource, /const settledResultIdentity = inspectCallerIdentity\(settledResult\)/u);
+  assert.match(executableSource, /settledResultIdentity\.readable && Array\.isArray\(settledResultIdentity\.identity\)/u);
+  assert.match(executableSource, /settledResultIdentity\.identity === initialInputs\.modelValue\.identity/u);
+  assert.match(executableSource, /settledResultIdentity\.identity === initialInputs\.files\.identity/u);
+  assert.match(executableSource, /settledResultIdentity\.identity === resultCheckpointInputs\.modelValue\.identity/u);
+  assert.match(executableSource, /settledResultIdentity\.identity === resultCheckpointInputs\.files\.identity/u);
+  assert.doesNotMatch(executableSource, /Array\.isArray\(settledResult\)/u);
   assert.match(executableSource, /settledResult === undefined[\s\S]*?status: 'succeeded'[\s\S]*?updated: false/u);
   assert.match(executableSource, /emit\('update:modelValue', settledResult\)[\s\S]*?status: 'succeeded'[\s\S]*?updated: true/u);
 });

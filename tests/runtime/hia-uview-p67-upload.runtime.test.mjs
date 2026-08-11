@@ -4,8 +4,9 @@
  * @lang en Uses the real Vue runtime to verify P67 UUpload model precedence, legacy intents, exact adapter contexts, the sole state event, concurrent staleness, failures, and unmount boundaries. Tests start no chooser, file read, network, credential, cache, timer, platform API, or backend.
  */
 
-// <lang><zh-CN>导入真实组件挂载器、Promise flush、断言与 UUpload；不安装平台 mock、router、store 或网络拦截器。</zh-CN><en>Imports the real component mount harness, promise flush, assertions, and UUpload; no platform mock, router, store, or network interceptor is installed.</en></lang>
+// <lang><zh-CN>导入真实 Vue identity wrapper、组件挂载器、Promise flush、断言与 UUpload；不安装平台 mock、router、store 或网络拦截器。</zh-CN><en>Imports real Vue identity wrappers, the component mount harness, promise flush, assertions, and UUpload; no platform mock, router, store, or network interceptor is installed.</en></lang>
 import { flushPromises, mount } from '@vue/test-utils';
+import { reactive, readonly } from 'vue';
 import { describe, expect, it } from 'vitest';
 import { UUpload } from '../../HIA-uView-UI/src/index.mjs';
 
@@ -435,6 +436,17 @@ describe('P67 upload strict adapter failures', () => {
     expect(sameModel.emitted('update:modelValue')).toBeUndefined();
     expect(sameFiles.emitted('update:modelValue')).toBeUndefined();
 
+    // <lang><zh-CN>Vue reactive/readonly wrapper 即使 strict identity 不同，也共享 caller source raw identity，必须与直接返回输入数组同样失败。</zh-CN><en>Even with different strict identities, Vue reactive/readonly wrappers share the caller source's raw identity and must fail exactly like directly returned input arrays.</en></lang>
+    const proxySource = [{ label: 'Proxy source' }];
+    const reactiveAlias = reactive(proxySource);
+    const readonlyAlias = readonly(proxySource);
+    const sameReactiveAlias = await failedResult(() => reactiveAlias, proxySource, []);
+    const sameReadonlyAlias = await failedResult(() => readonlyAlias, proxySource, []);
+    expect(sameReactiveAlias.emitted('adapter-state').at(-1)[0].failure.code).toBe('invalid-result');
+    expect(sameReadonlyAlias.emitted('adapter-state').at(-1)[0].failure.code).toBe('invalid-result');
+    expect(sameReactiveAlias.emitted('update:modelValue')).toBeUndefined();
+    expect(sameReadonlyAlias.emitted('update:modelValue')).toBeUndefined();
+
     // <lang><zh-CN>等待期间替换 inactive files 后，adapter 返回该 settlement-time 输入 identity 也必须 invalid，而不是写回 active model。</zh-CN><en>After replacing inactive files while waiting, an adapter result equal to that settlement-time input identity must also be invalid rather than writing back the active model.</en></lang>
     const deferred = createDeferred();
     const currentInactiveFiles = [{ label: 'Current inactive files' }];
@@ -447,5 +459,106 @@ describe('P67 upload strict adapter failures', () => {
     await flushPromises();
     expect(settlementIdentity.emitted('adapter-state').at(-1)[0].failure.code).toBe('invalid-result');
     expect(settlementIdentity.emitted('update:modelValue')).toBeUndefined();
+  });
+
+  /**
+   * @lang zh-CN 验证 adapter/source/result 的 identity、snapshot 与 property Proxy trap 均形成稳定 terminal，且不产生未处理 rejection 或泄漏 cause。
+   * @lang en Verifies identity, snapshot, and property Proxy traps from adapter/source/result all produce stable terminals without an unhandled rejection or leaked cause.
+   * @returns {Promise<void>} <lang><zh-CN>四个 trap 实例与 rejection 观测完成后解决。</zh-CN><en>Resolves after four trap instances and rejection observation complete.</en></lang>
+   */
+  it('contains caller-controlled Proxy traps without cause or unhandled rejection', async () => {
+    // <lang><zh-CN>显式监听当前测试期间的 Node unhandledRejection；finally 必须移除监听器，避免污染其他 runtime case。</zh-CN><en>Explicitly observes Node unhandledRejection during this test; finally must remove the listener to avoid contaminating other runtime cases.</en></lang>
+    const unhandledReasons = [];
+    const observeUnhandledRejection = (reason) => unhandledReasons.push(reason);
+    process.on('unhandledRejection', observeUnhandledRejection);
+
+    try {
+      // <lang><zh-CN>adapter raw-identity trap 发生在 action getter 前；方法不得调用，状态只能是 pending→adapter-threw。</zh-CN><en>The adapter raw-identity trap occurs before action lookup; the method must not run and state may only be pending-to-adapter-threw.</en></lang>
+      let adapterCalls = 0;
+      let rejectAdapterIdentity = false;
+      const hostileAdapter = new Proxy({ select: () => { adapterCalls += 1; } }, {
+        get(target, property, receiver) {
+          // <lang><zh-CN>挂载后才在 Vue raw identity 探测时抛出私密 cause；测试工具的 prop 安装仍读取真实目标。</zh-CN><en>Throws a private cause during Vue raw-identity inspection only after mount; test-harness prop installation still reads the real target.</en></lang>
+          if (rejectAdapterIdentity && property === '__v_raw') throw new Error('secret adapter identity');
+          return Reflect.get(target, property, receiver);
+        }
+      });
+      const adapterTrap = mount(UUpload, { props: { visible: true, modelValue: [], selectText: 'Select', adapter: hostileAdapter } });
+      rejectAdapterIdentity = true;
+      await adapterTrap.get('button.u-upload__select').trigger('click');
+      await flushPromises();
+      expect(adapterCalls).toBe(0);
+      expect(adapterTrap.emitted('adapter-state')).toEqual([
+        [{ status: 'pending', action: 'select', requestId: 1 }],
+        [{ status: 'failed', action: 'select', requestId: 1, failure: { code: 'adapter-threw' } }]
+      ]);
+
+      // <lang><zh-CN>active source identity trap 在 action-time capture 中失败关闭，并在存在 adapter 方法时形成同一稳定同步失败。</zh-CN><en>An active-source identity trap fails closed during action-time capture and becomes the same stable synchronous failure when an adapter method exists.</en></lang>
+      let sourceAdapterCalls = 0;
+      let rejectSourceIdentity = false;
+      const hostileSource = new Proxy([], {
+        get(target, property, receiver) {
+          // <lang><zh-CN>挂载完成后 raw identity probe 才成为失败面；Array brand 与普通读取仍保持 caller Array 语义。</zh-CN><en>The raw-identity probe becomes the failing surface only after mount; Array brand and ordinary reads retain caller-Array semantics.</en></lang>
+          if (rejectSourceIdentity && property === '__v_raw') throw new Error('secret source identity');
+          return Reflect.get(target, property, receiver);
+        }
+      });
+      const sourceIdentityTrap = mount(UUpload, { props: { visible: true, modelValue: hostileSource, selectText: 'Select', adapter: { select: () => { sourceAdapterCalls += 1; } } } });
+      rejectSourceIdentity = true;
+      await sourceIdentityTrap.get('button.u-upload__select').trigger('click');
+      await flushPromises();
+      expect(sourceAdapterCalls).toBe(0);
+      expect(sourceIdentityTrap.emitted('adapter-state')).toEqual([
+        [{ status: 'pending', action: 'select', requestId: 1 }],
+        [{ status: 'failed', action: 'select', requestId: 1, failure: { code: 'adapter-threw' } }]
+      ]);
+
+      // <lang><zh-CN>source 可先正常渲染，再在 action snapshot 的 length 读取中抛错；组件不得调用 adapter 或冻结 caller source。</zh-CN><en>A source may render normally and then throw from the action snapshot's length read; the component must neither invoke the adapter nor freeze caller source.</en></lang>
+      let rejectSnapshot = false;
+      let snapshotAdapterCalls = 0;
+      const snapshotSource = new Proxy([{ label: 'Snapshot source' }], {
+        get(target, property, receiver) {
+          // <lang><zh-CN>测试开关仅在挂载完成后启用，从而隔离 action snapshot 而不是 render projection。</zh-CN><en>The test switch activates only after mount, isolating the action snapshot rather than the render projection.</en></lang>
+          if (rejectSnapshot && property === 'length') throw new Error('secret snapshot length');
+          return Reflect.get(target, property, receiver);
+        }
+      });
+      const snapshotTrap = mount(UUpload, { props: { visible: true, modelValue: snapshotSource, max: 2, selectText: 'Select', adapter: { select: () => { snapshotAdapterCalls += 1; } } } });
+      rejectSnapshot = true;
+      await snapshotTrap.get('button.u-upload__select').trigger('click');
+      await flushPromises();
+      expect(snapshotAdapterCalls).toBe(0);
+      expect(Object.isFrozen(snapshotSource)).toBe(false);
+      expect(snapshotTrap.emitted('adapter-state')).toEqual([
+        [{ status: 'pending', action: 'select', requestId: 1 }],
+        [{ status: 'failed', action: 'select', requestId: 1, failure: { code: 'adapter-threw' } }]
+      ]);
+
+      // <lang><zh-CN>完成值 raw-identity trap 属于不可验证结果，只公开 invalid-result，不读取数组元素或原始 cause。</zh-CN><en>A completion-value raw-identity trap is an unverifiable result and exposes only invalid-result without reading array items or the original cause.</en></lang>
+      const hostileResult = new Proxy([{ label: 'Hostile result' }], {
+        get(target, property, receiver) {
+          // <lang><zh-CN>Promise assimilation 可读取 then；只有后续 raw identity 归一化失败。</zh-CN><en>Promise assimilation may read then; only the later raw-identity normalization fails.</en></lang>
+          if (property === '__v_raw') throw new Error('secret result identity');
+          return Reflect.get(target, property, receiver);
+        }
+      });
+      const resultTrap = mount(UUpload, { props: { visible: true, modelValue: [], selectText: 'Select', adapter: { select: () => hostileResult } } });
+      await resultTrap.get('button.u-upload__select').trigger('click');
+      await flushPromises();
+      const resultFailure = resultTrap.emitted('adapter-state').at(-1)[0];
+      expect(resultTrap.emitted('adapter-state')).toEqual([
+        [{ status: 'pending', action: 'select', requestId: 1 }],
+        [{ status: 'failed', action: 'select', requestId: 1, failure: { code: 'invalid-result' } }]
+      ]);
+      expect(resultFailure).toEqual({ status: 'failed', action: 'select', requestId: 1, failure: { code: 'invalid-result' } });
+      expect(Object.keys(resultFailure.failure)).toEqual(['code']);
+      expect(resultTrap.emitted('update:modelValue')).toBeUndefined();
+
+      // <lang><zh-CN>所有 caller causes 已在组件内收束，测试进程不应观察到任一未处理 rejection。</zh-CN><en>All caller causes have been contained inside the component, so the test process must observe no unhandled rejection.</en></lang>
+      expect(unhandledReasons).toEqual([]);
+    } finally {
+      // <lang><zh-CN>无论断言是否通过都移除全局监听器，保持 runtime suite 隔离。</zh-CN><en>Removes the global listener regardless of assertion outcome, preserving runtime-suite isolation.</en></lang>
+      process.off('unhandledRejection', observeUnhandledRejection);
+    }
   });
 });

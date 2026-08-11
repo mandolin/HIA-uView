@@ -90,8 +90,61 @@ function callerIdentity(value) {
   return value !== null && typeof value === 'object' ? toRaw(value) : value;
 }
 
-// <lang><zh-CN>undefined 是唯一允许 files 回退的哨兵；null 或其他无效显式输入不会静默读取旧列表。</zh-CN><en>Undefined is the sole sentinel that permits files fallback; null or another invalid explicit input never silently reads the legacy list.</en></lang>
-const activeSourceIdentity = computed(() => callerIdentity(props.modelValue !== undefined ? props.modelValue : props.files));
+/**
+ * @lang zh-CN 在不信任 caller Proxy trap 的前提下读取 raw identity；失败时保留 wrapper identity 供确定性 stale/failure 判定，但不透传异常。
+ * @lang en Reads raw identity without trusting caller Proxy traps; on failure it retains wrapper identity for deterministic stale/failure decisions without forwarding the exception.
+ * @param {unknown} value <lang><zh-CN>待检查的 caller 值。</zh-CN><en>Caller value to inspect.</en></lang>
+ * @returns {Readonly<{readable: boolean, identity: unknown}>} <lang><zh-CN>冻结的可读性与 identity 记录。</zh-CN><en>Frozen readability and identity record.</en></lang>
+ */
+function inspectCallerIdentity(value) {
+  try {
+    // <lang><zh-CN>正常 Vue reactive/readonly wrapper 统一还原为 raw identity，使 alias 不能冒充新 caller 状态。</zh-CN><en>Normal Vue reactive/readonly wrappers normalize to raw identity so an alias cannot masquerade as new caller state.</en></lang>
+    return Object.freeze({ readable: true, identity: callerIdentity(value) });
+  } catch {
+    // <lang><zh-CN>异常 Proxy 只留下不可读标记和不触发 trap 的严格相等 token；原始 cause 不进入状态、日志或事件。</zh-CN><en>An exceptional Proxy leaves only an unreadable marker and a strict-equality token that triggers no trap; the original cause enters no state, log, or event.</en></lang>
+    return Object.freeze({ readable: false, identity: value });
+  }
+}
+
+/**
+ * @lang zh-CN 一次性捕获 adapter、modelValue、files 与当前 active source 的安全 identity，避免同一 checkpoint 重复触发 caller Proxy trap。
+ * @lang en Captures safe identities for adapter, modelValue, files, and the active source once, avoiding repeated caller Proxy traps within one checkpoint.
+ * @returns {Readonly<{adapter: Readonly<{readable: boolean, identity: unknown}>, modelValue: Readonly<{readable: boolean, identity: unknown}>, files: Readonly<{readable: boolean, identity: unknown}>, source: Readonly<{readable: boolean, identity: unknown}>}>} <lang><zh-CN>冻结的调用输入 identity 集合。</zh-CN><en>Frozen caller-input identity set.</en></lang>
+ */
+function captureAdapterInputs() {
+  // <lang><zh-CN>先读取三个浅层 prop 引用；嵌套 Proxy 只由 inspectCallerIdentity 在独立 try/catch 中触碰。</zh-CN><en>Reads the three shallow prop references first; nested Proxies are touched only by inspectCallerIdentity inside its isolated try/catch.</en></lang>
+  const adapterValue = props.adapter;
+  const modelValue = props.modelValue;
+  const filesValue = props.files;
+  // <lang><zh-CN>每个输入只规范化一次，防止状态化 Proxy 在一次 checkpoint 中给出互相矛盾的 identity。</zh-CN><en>Normalizes each input only once so a stateful Proxy cannot supply contradictory identities within one checkpoint.</en></lang>
+  const adapter = inspectCallerIdentity(adapterValue);
+  const modelValueIdentity = inspectCallerIdentity(modelValue);
+  const files = inspectCallerIdentity(filesValue);
+  // <lang><zh-CN>undefined 仍是唯一 files fallback 哨兵；active source 直接复用已经检查的对应 identity。</zh-CN><en>Undefined remains the sole files-fallback sentinel; the active source reuses the corresponding already-inspected identity.</en></lang>
+  const source = modelValue !== undefined ? modelValueIdentity : files;
+  // <lang><zh-CN>冻结外层记录，确保后续 listener 不能改写本次 request 的初始判定基线。</zh-CN><en>Freezes the outer record so a later listener cannot rewrite this request's initial decision baseline.</en></lang>
+  return Object.freeze({ adapter, modelValue: modelValueIdentity, files, source });
+}
+
+/**
+ * @lang zh-CN 比较两个安全 identity 记录；可读性变化或 wrapper/raw token 变化都表示不同 caller identity。
+ * @lang en Compares two safe identity records; a readability change or wrapper/raw-token change represents a different caller identity.
+ * @param {Readonly<{readable: boolean, identity: unknown}>} left <lang><zh-CN>开始时 identity。</zh-CN><en>Start-time identity.</en></lang>
+ * @param {Readonly<{readable: boolean, identity: unknown}>} right <lang><zh-CN>当前 identity。</zh-CN><en>Current identity.</en></lang>
+ * @returns {boolean} <lang><zh-CN>两者仍表示同一 caller identity 时为 true。</zh-CN><en>`true` when both still represent the same caller identity.</en></lang>
+ */
+function hasSameCallerIdentity(left, right) {
+  // <lang><zh-CN>严格比较不会读取 identity 对象属性，因此 hostile Proxy token 也不能在此再次抛错。</zh-CN><en>Strict comparison reads no identity-object property, so even a hostile Proxy token cannot throw again here.</en></lang>
+  return left.readable === right.readable && left.identity === right.identity;
+}
+
+// <lang><zh-CN>undefined 是唯一允许 files 回退的哨兵；identity trap 在渲染面失败关闭为空 source，而 adapter action 仍可报告稳定失败。</zh-CN><en>Undefined is the sole sentinel that permits files fallback; an identity trap fails closed to an empty render source while an adapter action may still report a stable failure.</en></lang>
+const activeSourceIdentity = computed(() => {
+  // <lang><zh-CN>渲染读取同样使用安全 identity 检查，避免 caller Proxy 在 computed 中中断组件树。</zh-CN><en>Rendering uses the same safe identity inspection so a caller Proxy cannot interrupt the component tree from a computed value.</en></lang>
+  const source = inspectCallerIdentity(props.modelValue !== undefined ? props.modelValue : props.files);
+  // <lang><zh-CN>不可读 source 不被解释或回退到另一 prop，只呈现为空列表。</zh-CN><en>An unreadable source is neither interpreted nor redirected to the other prop and renders only as an empty list.</en></lang>
+  return source.readable ? source.identity : null;
+});
 
 // <lang><zh-CN>只有数组能成为受控 source；显式无效 identity 收束为空数组，但 identity 本身仍参与陈旧判定。</zh-CN><en>Only an array can become the controlled source; an explicitly invalid identity narrows to an empty array while the identity itself still participates in stale detection.</en></lang>
 const activeSourceFiles = computed(() => Array.isArray(activeSourceIdentity.value) ? activeSourceIdentity.value : []);
@@ -125,8 +178,35 @@ function normalizeFile(file, index) {
   return Object.freeze({ key: `file-${index}`, index, label, description, status, statusText, disabled: Boolean(source.disabled), source: originalFile });
 }
 
-// <lang><zh-CN>最多十二项的有限投影阻止组件被误用作无限文件目录、上传队列或缓存。</zh-CN><en>The at-most-twelve finite projection prevents misuse of the component as an unbounded file directory, upload queue, or cache.</en></lang>
-const safeFiles = computed(() => activeSourceFiles.value.slice(0, 12).map(normalizeFile).filter((file) => file !== null));
+/**
+ * @lang zh-CN 在有限十二项内安全读取 caller source 与 record 属性；任何 length/index/property Proxy trap 都失败关闭为空投影且不泄漏异常。
+ * @lang en Safely reads caller source and record properties within twelve items; any length/index/property Proxy trap fails closed to an empty projection without leaking the exception.
+ * @param {unknown[]} files <lang><zh-CN>当前已通过 raw identity 归一化的 source。</zh-CN><en>Current source normalized through raw identity.</en></lang>
+ * @returns {ReadonlyArray<object>} <lang><zh-CN>新的有限可读投影，或 trap 时的空数组。</zh-CN><en>New finite readable projection, or an empty array after a trap.</en></lang>
+ */
+function createVisibleFileProjection(files) {
+  try {
+    // <lang><zh-CN>length 只读取一次并收紧到十二项；非有限/负值虽不应来自真实 Array，仍按不可读输入处理。</zh-CN><en>Length is read once and narrowed to twelve items; a non-finite or negative value, though impossible for a genuine Array, is still treated as unreadable input.</en></lang>
+    const sourceLength = files.length;
+    if (!Number.isSafeInteger(sourceLength) || sourceLength < 0) return [];
+    // <lang><zh-CN>本地数组始终由组件创建，caller 无法通过 species、slice override 或 Proxy 返回值替换其容器。</zh-CN><en>The local array is always component-created, so caller species, a slice override, or a Proxy return value cannot replace its container.</en></lang>
+    const projection = [];
+    const visibleLength = Math.min(12, sourceLength);
+    for (let index = 0; index < visibleLength; index += 1) {
+      // <lang><zh-CN>每个 index 与 record 字段读取都位于同一 containment 内；任一 trap 不会生成部分可交互表面。</zh-CN><en>Every index and record-field read stays inside the same containment; a trap never creates a partially interactive surface.</en></lang>
+      const normalizedFile = normalizeFile(files[index], index);
+      if (normalizedFile !== null) projection.push(normalizedFile);
+    }
+    // <lang><zh-CN>内部投影容器不向 adapter 暴露，返回后只供 computed/template 读取。</zh-CN><en>The internal projection container is not exposed to an adapter and is read only by the computed/template after return.</en></lang>
+    return projection;
+  } catch {
+    // <lang><zh-CN>caller trap 只关闭可见投影，不记录、字符串化或透传异常值。</zh-CN><en>A caller trap only closes the visible projection and never logs, stringifies, or forwards the thrown value.</en></lang>
+    return [];
+  }
+}
+
+// <lang><zh-CN>最多十二项的安全投影阻止组件被误用作无限文件目录、上传队列或缓存。</zh-CN><en>The safe at-most-twelve projection prevents misuse of the component as an unbounded file directory, upload queue, or cache.</en></lang>
+const safeFiles = computed(() => createVisibleFileProjection(activeSourceFiles.value));
 
 // <lang><zh-CN>max 收束为 1–12 的整数，使剩余 select 槽位与可见列表保持同一有限范围。</zh-CN><en>Max is constrained to an integer from one to twelve so remaining select slots and visible list share the same finite range.</en></lang>
 const safeMax = computed(() => Number.isFinite(props.max) ? Math.round(Math.min(12, Math.max(1, props.max))) : 1);
@@ -167,14 +247,23 @@ function statusClasses(status) {
 }
 
 /**
- * @lang zh-CN 构造 adapter 可读的冻结文件快照；只复制数组容器，不克隆或解释 caller record。
- * @lang en Builds the frozen file snapshot readable by an adapter; it copies only the array container and neither clones nor interprets caller records.
+ * @lang zh-CN 构造 adapter 可读的冻结文件快照；只把 caller index 逐项复制到组件新容器，不调用可覆写 slice/species，也不克隆或解释 record。length/index trap 会抛给受控 orchestrator 收束。
+ * @lang en Builds the frozen file snapshot readable by an adapter by copying caller indexes into a component-created container; it calls no overridable slice/species and neither clones nor interprets records. A length/index trap throws only into the contained orchestrator.
  * @param {unknown[]} files <lang><zh-CN>当前受控 source 数组。</zh-CN><en>Current controlled source array.</en></lang>
  * @returns {ReadonlyArray<unknown>} <lang><zh-CN>浅冻结的新数组快照。</zh-CN><en>A newly allocated shallow-frozen array snapshot.</en></lang>
  */
 function createFileSnapshot(files) {
-  // <lang><zh-CN>新容器防止 adapter 通过 push/splice 修改 caller 数组；record identity 保持透明。</zh-CN><en>The new container prevents an adapter from mutating the caller array through push/splice while record identities remain transparent.</en></lang>
-  return Object.freeze(files.slice());
+  // <lang><zh-CN>length 只读取一次；异常 Proxy trap 由调用点捕获，伪造的非法长度也不会进入数组分配。</zh-CN><en>Length is read once; an exceptional Proxy trap is caught by the call site, and a forged invalid length never reaches array allocation.</en></lang>
+  const sourceLength = files.length;
+  if (!Number.isSafeInteger(sourceLength) || sourceLength < 0) throw new TypeError('Unreadable upload source');
+  // <lang><zh-CN>标准 Array constructor 保证 snapshot container 由组件拥有，不受 caller `slice` 或 `Symbol.species` 控制。</zh-CN><en>The standard Array constructor guarantees a component-owned snapshot container outside caller `slice` or `Symbol.species` control.</en></lang>
+  const snapshot = new Array(sourceLength);
+  for (let index = 0; index < sourceLength; index += 1) {
+    // <lang><zh-CN>逐项读取保持 record identity；任一 index getter/proxy trap 在 freeze/context 暴露前终止整个 snapshot。</zh-CN><en>Per-index reads preserve record identity; any index getter/proxy trap terminates the whole snapshot before freeze/context exposure.</en></lang>
+    snapshot[index] = files[index];
+  }
+  // <lang><zh-CN>只冻结组件新容器，caller source 与 opaque record 始终保持未修改。</zh-CN><en>Only the component-created container is frozen; caller source and opaque records remain unmodified.</en></lang>
+  return Object.freeze(snapshot);
 }
 
 /**
@@ -221,20 +310,31 @@ function emitAdapterState(state) {
 }
 
 /**
- * @lang zh-CN 判断指定 request 是否仍拥有写回资格；卸载、同 action 后发请求、source identity 或 adapter identity 变化都会失去资格。
- * @lang en Determines whether a request still owns write-back eligibility; unmount, a later same-action request, source-identity change, or adapter-identity change removes eligibility.
+ * @lang zh-CN 判断一次输入捕获能否安全进入 adapter property lookup、source snapshot 与调用；任一 raw identity trap 都必须先形成稳定失败而非继续执行。
+ * @lang en Determines whether an input capture can safely enter adapter-property lookup, source snapshot, and invocation; any raw-identity trap must first become a stable failure instead of allowing execution to continue.
+ * @param {ReturnType<typeof captureAdapterInputs>} inputs <lang><zh-CN>单 checkpoint 输入捕获。</zh-CN><en>Single-checkpoint input capture.</en></lang>
+ * @returns {boolean} <lang><zh-CN>四项 identity 均可读时为 true。</zh-CN><en>`true` when all four identities are readable.</en></lang>
+ */
+function areAdapterInputsReadable(inputs) {
+  // <lang><zh-CN>active source 与 model/files 有重复但仍显式检查，防止 inactive 输入绕过结果 alias 安全基线。</zh-CN><en>The active source overlaps model/files but remains explicitly checked so an inactive input cannot bypass the result-alias safety baseline.</en></lang>
+  return inputs.adapter.readable && inputs.modelValue.readable && inputs.files.readable && inputs.source.readable;
+}
+
+/**
+ * @lang zh-CN 判断指定 request 是否仍拥有写回资格；卸载、同 action 后发请求、source identity/readability 或 adapter identity/readability 变化都会失去资格。
+ * @lang en Determines whether a request still owns write-back eligibility; unmount, a later same-action request, source identity/readability change, or adapter identity/readability change removes eligibility.
  * @param {'select'|'preview'|'remove'|'retry'} action <lang><zh-CN>受限 adapter action。</zh-CN><en>Constrained adapter action.</en></lang>
  * @param {number} requestId <lang><zh-CN>待核对 request id。</zh-CN><en>Request id to verify.</en></lang>
- * @param {unknown} sourceIdentity <lang><zh-CN>调用开始时的原始 modelValue/files identity。</zh-CN><en>Raw modelValue/files identity at invocation start.</en></lang>
- * @param {object} adapterIdentity <lang><zh-CN>调用开始时的 adapter identity。</zh-CN><en>Adapter identity at invocation start.</en></lang>
+ * @param {ReturnType<typeof captureAdapterInputs>} initialInputs <lang><zh-CN>调用开始时的安全输入 identity。</zh-CN><en>Safe input identities at invocation start.</en></lang>
+ * @param {ReturnType<typeof captureAdapterInputs>} currentInputs <lang><zh-CN>当前 checkpoint 的安全输入 identity。</zh-CN><en>Safe input identities at the current checkpoint.</en></lang>
  * @returns {boolean} <lang><zh-CN>仍可 settlement 时为 true。</zh-CN><en>`true` while settlement remains eligible.</en></lang>
  */
-function isCurrentAdapterRequest(action, requestId, sourceIdentity, adapterIdentity) {
-  // <lang><zh-CN>四项 identity/生命周期条件必须同时成立；测试不依赖时间或取消 API。</zh-CN><en>All four identity/lifecycle conditions must hold together; tests depend on neither time nor a cancellation API.</en></lang>
+function isCurrentAdapterRequest(action, requestId, initialInputs, currentInputs) {
+  // <lang><zh-CN>生命周期、per-action latest 与两个安全 identity 条件必须同时成立；比较不会触碰 caller Proxy 属性。</zh-CN><en>Lifecycle, per-action latest, and both safe-identity conditions must hold together; comparison touches no caller Proxy property.</en></lang>
   return acceptsAdapterSettlement
     && latestRequestByAction.get(action) === requestId
-    && activeSourceIdentity.value === sourceIdentity
-    && callerIdentity(props.adapter) === adapterIdentity;
+    && hasSameCallerIdentity(initialInputs.source, currentInputs.source)
+    && hasSameCallerIdentity(initialInputs.adapter, currentInputs.adapter);
 }
 
 /**
@@ -249,6 +349,20 @@ function emitStaleAdapterState(action, requestId) {
   clearCurrentAdapterRequest(action, requestId);
   // <lang><zh-CN>stale 不披露 source、adapter、event 或错误对象，也不区分可能同时成立的陈旧原因。</zh-CN><en>Stale discloses no source, adapter, event, or error object and does not distinguish potentially concurrent stale causes.</en></lang>
   emitAdapterState({ status: 'stale', action, requestId });
+}
+
+/**
+ * @lang zh-CN 在 caller-controlled checkpoint 之后只为尚未 terminal 的 request 发送 stale；同步 reentry 已经终止的 id 保持静默。
+ * @lang en Emits stale after a caller-controlled checkpoint only for a request that is not terminal yet; an id already terminated by synchronous re-entry stays silent.
+ * @param {'select'|'preview'|'remove'|'retry'} action <lang><zh-CN>受限 adapter action。</zh-CN><en>Constrained adapter action.</en></lang>
+ * @param {number} requestId <lang><zh-CN>可能已被 reentry 终止的 request id。</zh-CN><en>Request id that re-entry may already have terminated.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；卸载与既有 terminal 均不新增状态。</zh-CN><en>No return value; unmount and an existing terminal add no state.</en></lang>
+ */
+function emitStaleAdapterStateIfOpen(action, requestId) {
+  // <lang><zh-CN>caller Proxy getter 可在前一个 checkpoint 内同步重入；先消费 terminal marker 可防止 stale→stale 或 stale→failed 重复。</zh-CN><en>A caller Proxy getter may synchronously re-enter during the previous checkpoint; consuming its terminal marker first prevents stale-to-stale or stale-to-failed duplication.</en></lang>
+  if (!acceptsAdapterSettlement || consumeTerminatedAdapterRequest(requestId)) return;
+  // <lang><zh-CN>没有既有 terminal 时，identity/readability 失配统一公开最小 stale。</zh-CN><en>Without an existing terminal, an identity/readability mismatch uniformly exposes minimal stale.</en></lang>
+  emitStaleAdapterState(action, requestId);
 }
 
 /**
@@ -322,6 +436,29 @@ function emitFailedAdapterState(action, requestId, code) {
 }
 
 /**
+ * @lang zh-CN 在 pending 后以当前安全 identity 结算一个受控失败；同 action reentry、卸载或 identity 变化分别保持静默或最小 stale。
+ * @lang en Settles a contained failure after pending against current safe identities; same-action re-entry, unmount, or identity change respectively stays silent or becomes minimal stale.
+ * @param {'select'|'preview'|'remove'|'retry'} action <lang><zh-CN>受限 adapter action。</zh-CN><en>Constrained adapter action.</en></lang>
+ * @param {number} requestId <lang><zh-CN>待结算 request id。</zh-CN><en>Request id to settle.</en></lang>
+ * @param {ReturnType<typeof captureAdapterInputs>} initialInputs <lang><zh-CN>请求开始时输入 identity。</zh-CN><en>Input identities at request start.</en></lang>
+ * @param {'adapter-threw'|'adapter-rejected'|'invalid-result'} code <lang><zh-CN>不包含 caller cause 的稳定失败 code。</zh-CN><en>Stable failure code containing no caller cause.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；每个 request 最多形成一个 terminal。</zh-CN><en>No return value; each request reaches at most one terminal.</en></lang>
+ */
+function settleContainedAdapterFailure(action, requestId, initialInputs, code) {
+  // <lang><zh-CN>卸载或已经由后发同 action 请求终止的 id 直接静默，避免重复 terminal。</zh-CN><en>An unmounted or already superseded same-action id stays silent, preventing a duplicate terminal.</en></lang>
+  if (!acceptsAdapterSettlement || consumeTerminatedAdapterRequest(requestId)) return;
+  // <lang><zh-CN>当前 prop identity 只捕获一次；捕获本身吞掉 Proxy cause，但可读性变化仍参与 stale 判定。</zh-CN><en>Current prop identities are captured only once; capture contains Proxy causes while readability changes still participate in stale decisions.</en></lang>
+  const currentInputs = captureAdapterInputs();
+  if (!isCurrentAdapterRequest(action, requestId, initialInputs, currentInputs)) {
+    // <lang><zh-CN>身份不再匹配时 failure 不覆盖 stale，也不披露是哪一个 caller input 发生变化。</zh-CN><en>When identities no longer match, failure does not override stale and discloses no changed caller input.</en></lang>
+    emitStaleAdapterStateIfOpen(action, requestId);
+    return;
+  }
+  // <lang><zh-CN>只有仍 current 的请求公开冻结 failure code；原异常始终已在调用点丢弃。</zh-CN><en>Only a still-current request exposes a frozen failure code; the original exception has already been discarded at its call site.</en></lang>
+  emitFailedAdapterState(action, requestId, code);
+}
+
+/**
  * @lang zh-CN 以 caller-owned source、adapter identity 与 per-action latest 规则编排一个可选 adapter 方法。
  * @lang en Orchestrates one optional adapter method under caller-owned source, adapter-identity, and per-action-latest rules.
  * @param {'select'|'preview'|'remove'|'retry'} action <lang><zh-CN>受限 adapter action。</zh-CN><en>Constrained adapter action.</en></lang>
@@ -329,16 +466,23 @@ function emitFailedAdapterState(action, requestId, code) {
  * @returns {Promise<void>} <lang><zh-CN>所有同步/异步结果均在函数内收束，不向调用点泄漏 rejection。</zh-CN><en>Every synchronous/asynchronous result is settled inside the function and no rejection leaks to the call site.</en></lang>
  */
 async function runAdapterAction(action, details) {
-  // <lang><zh-CN>只有白名单 action、活跃生命周期和 object adapter 能进入动态方法读取。</zh-CN><en>Only an allowlisted action, active lifecycle, and object adapter may enter dynamic method lookup.</en></lang>
-  const adapterIdentity = callerIdentity(props.adapter);
-  if (!acceptsAdapterSettlement || !supportedAdapterActions.includes(action) || adapterIdentity === null || typeof adapterIdentity !== 'object') return;
+  // <lang><zh-CN>无效 action 或卸载状态不会读取任何 caller prop，保持零事件、零 Proxy trap surface。</zh-CN><en>An invalid action or unmounted state reads no caller prop, retaining a zero-event, zero-Proxy-trap surface.</en></lang>
+  if (!acceptsAdapterSettlement || !supportedAdapterActions.includes(action)) return;
 
-  // <lang><zh-CN>在任何 adapter property lookup 前捕获 active source 与两输入 raw identity；getter 副作用不能悄然移动本次请求的所有权基线。</zh-CN><en>Captures active-source and both-input raw identities before any adapter property lookup so getter side effects cannot silently move this request's ownership baseline.</en></lang>
-  const sourceIdentity = activeSourceIdentity.value;
-  const modelValueIdentity = callerIdentity(props.modelValue);
-  const filesIdentity = callerIdentity(props.files);
-  // <lang><zh-CN>context 文件快照来自同一开始时 source identity，而不是 property lookup 后可能变化的响应式值。</zh-CN><en>The context file snapshot comes from the same start-time source identity rather than a reactive value that may change after property lookup.</en></lang>
-  const sourceFiles = Array.isArray(sourceIdentity) ? sourceIdentity : [];
+  // <lang><zh-CN>在任何 adapter property lookup 前一次性捕获 active source、两输入与 adapter identity；getter 副作用不能悄然移动本次请求基线。</zh-CN><en>Captures active source, both inputs, and adapter identity once before any adapter-property lookup so getter side effects cannot silently move the request baseline.</en></lang>
+  const initialInputs = captureAdapterInputs();
+  const adapterIdentity = initialInputs.adapter.identity;
+  // <lang><zh-CN>正常可读的 null/primitive adapter 保持纯 legacy intent；不可读 Proxy 必须进入稳定失败而不能被当作“缺失”。</zh-CN><en>A normally readable null/primitive adapter preserves pure legacy intent; an unreadable Proxy must enter stable failure rather than being treated as “missing.”</en></lang>
+  if (initialInputs.adapter.readable && (adapterIdentity === null || typeof adapterIdentity !== 'object')) return;
+
+  // <lang><zh-CN>adapter identity 自身的 Proxy trap 发生在方法读取前，仍形成同 action request 的 pending→adapter-threw。</zh-CN><en>A Proxy trap in adapter identity itself occurs before method lookup but still forms pending-to-adapter-threw for the same-action request.</en></lang>
+  if (!initialInputs.adapter.readable) {
+    const failedIdentityRequestId = beginAdapterRequest(action);
+    if (failedIdentityRequestId === null) return;
+    emitAdapterState({ status: 'pending', action, requestId: failedIdentityRequestId });
+    settleContainedAdapterFailure(action, failedIdentityRequestId, initialInputs, 'adapter-threw');
+    return;
+  }
 
   // <lang><zh-CN>adapter 方法只按固定 action 名读取；getter/proxy 的同步 throw 也必须收束为稳定失败，而非泄漏 rejected async function。</zh-CN><en>An adapter method is read only by its fixed action name; a synchronous getter/proxy throw must also settle as a stable failure rather than leak a rejected async function.</en></lang>
   let adapterMethod;
@@ -350,32 +494,53 @@ async function runAdapterAction(action, details) {
     if (failedLookupRequestId === null) return;
     emitAdapterState({ status: 'pending', action, requestId: failedLookupRequestId });
     // <lang><zh-CN>pending listener 若卸载、换 source/adapter 或重入同 action，本 lookup failure 不得再发送第二个 terminal。</zh-CN><en>If the pending listener unmounts, replaces source/adapter, or re-enters the same action, this lookup failure must not emit a second terminal.</en></lang>
-    if (!acceptsAdapterSettlement || consumeTerminatedAdapterRequest(failedLookupRequestId)) return;
-    if (!isCurrentAdapterRequest(action, failedLookupRequestId, sourceIdentity, adapterIdentity)) emitStaleAdapterState(action, failedLookupRequestId);
-    else emitFailedAdapterState(action, failedLookupRequestId, 'adapter-threw');
+    settleContainedAdapterFailure(action, failedLookupRequestId, initialInputs, 'adapter-threw');
     return;
   }
   // <lang><zh-CN>缺失或非函数方法保持纯 legacy intent，不制造 pending/failed 状态。</zh-CN><en>A missing or non-function method preserves pure legacy intent and creates no pending/failed state.</en></lang>
   if (typeof adapterMethod !== 'function') return;
 
+  // <lang><zh-CN>只有真实存在的方法才要求 source、modelValue 与 files 的 raw identity 全部可读；trap 失败关闭且绝不调用 adapter。</zh-CN><en>Only an actually present method requires readable raw identities for source, modelValue, and files; a trap fails closed and never invokes the adapter.</en></lang>
+  if (!areAdapterInputsReadable(initialInputs)) {
+    const failedSourceRequestId = beginAdapterRequest(action);
+    if (failedSourceRequestId === null) return;
+    emitAdapterState({ status: 'pending', action, requestId: failedSourceRequestId });
+    settleContainedAdapterFailure(action, failedSourceRequestId, initialInputs, 'adapter-threw');
+    return;
+  }
+
   // <lang><zh-CN>开始新请求会先为同 action 旧 active request 发送唯一 stale terminal；其他 action 不受影响。</zh-CN><en>Starting a new request first emits the sole stale terminal for an older active request of the same action; other actions remain unaffected.</en></lang>
   const requestId = beginAdapterRequest(action);
   if (requestId === null) return;
 
-  // <lang><zh-CN>冻结数组快照只复制开始时 source 容器；record identity 保持 caller 原值。</zh-CN><en>The frozen array snapshot copies only the start-time source container while record identities retain caller values.</en></lang>
-  const fileSnapshot = createFileSnapshot(sourceFiles);
+  // <lang><zh-CN>source Array 判定、length 与 index 都可能来自 caller Proxy；统一在 pending 前捕获，失败后仍按稳定 pending→failed 顺序公开。</zh-CN><en>Source-array detection, length, and indexes may all come from a caller Proxy; they are contained before pending, while failure still exposes the stable pending-to-failed order.</en></lang>
+  let fileSnapshot;
+  try {
+    // <lang><zh-CN>非数组显式 source 沿用空 context；数组由组件新容器逐项复制，record identity 保持 caller 原值。</zh-CN><en>An explicit non-array source retains an empty context; an array is copied per item into a component-created container while record identities retain caller values.</en></lang>
+    const sourceFiles = Array.isArray(initialInputs.source.identity) ? initialInputs.source.identity : [];
+    fileSnapshot = createFileSnapshot(sourceFiles);
+  } catch {
+    // <lang><zh-CN>snapshot trap 不调用 adapter、不透传 cause；pending listener 的 reentry/unmount 仍由统一 failure settlement 守卫。</zh-CN><en>A snapshot trap neither invokes the adapter nor forwards its cause; pending-listener re-entry/unmount remains guarded by unified failure settlement.</en></lang>
+    if (!acceptsAdapterSettlement || consumeTerminatedAdapterRequest(requestId)) return;
+    emitAdapterState({ status: 'pending', action, requestId });
+    settleContainedAdapterFailure(action, requestId, initialInputs, 'adapter-threw');
+    return;
+  }
 
   // <lang><zh-CN>select 与 file action 拥有不同的精确 context 字段；两者都不携带 action 之外的运行配置。</zh-CN><en>Select and file actions have distinct exact context fields; neither carries runtime configuration beyond its action facts.</en></lang>
   const context = action === 'select'
     ? createSelectContext(fileSnapshot, details.remainingSlots, details.event, requestId)
     : createFileActionContext(action, fileSnapshot, details.file, details.index, details.event, requestId);
 
+  // <lang><zh-CN>snapshot getter 可能同步重入或卸载；已 terminal 的外层 request 不能在 stale 之后倒序发送 pending。</zh-CN><en>A snapshot getter may synchronously re-enter or unmount; an already-terminal outer request must not emit pending after stale.</en></lang>
+  if (!acceptsAdapterSettlement || consumeTerminatedAdapterRequest(requestId)) return;
   // <lang><zh-CN>pending 在调用 adapter 前同步发送，但 legacy intent 已由外层 handler 更早发送。</zh-CN><en>Pending emits synchronously before calling the adapter, while the outer handler has already emitted the legacy intent.</en></lang>
   emitAdapterState({ status: 'pending', action, requestId });
   // <lang><zh-CN>pending listener 可能同步卸载、换 identity 或重入同 action；失去 ownership 时不再调用 adapter，且已发 stale 不重复。</zh-CN><en>A pending listener may synchronously unmount, replace an identity, or re-enter the same action; an ineligible request no longer calls the adapter and never repeats an already-emitted stale state.</en></lang>
   if (!acceptsAdapterSettlement || consumeTerminatedAdapterRequest(requestId)) return;
-  if (!isCurrentAdapterRequest(action, requestId, sourceIdentity, adapterIdentity)) {
-    emitStaleAdapterState(action, requestId);
+  const afterPendingInputs = captureAdapterInputs();
+  if (!isCurrentAdapterRequest(action, requestId, initialInputs, afterPendingInputs)) {
+    emitStaleAdapterStateIfOpen(action, requestId);
     return;
   }
 
@@ -386,10 +551,7 @@ async function runAdapterAction(action, details) {
     adapterResult = adapterMethod.call(adapterIdentity, context);
   } catch {
     // <lang><zh-CN>同步 throw 若已经陈旧则只报告 stale；当前请求报告 adapter-threw，且不透传 error。</zh-CN><en>A synchronous throw reports only stale when already stale; a current request reports adapter-threw without forwarding the error.</en></lang>
-    if (!acceptsAdapterSettlement || consumeTerminatedAdapterRequest(requestId)) return;
-    if (!isCurrentAdapterRequest(action, requestId, sourceIdentity, adapterIdentity)) emitStaleAdapterState(action, requestId);
-    else emitFailedAdapterState(action, requestId, 'adapter-threw');
-    clearCurrentAdapterRequest(action, requestId);
+    settleContainedAdapterFailure(action, requestId, initialInputs, 'adapter-threw');
     return;
   }
 
@@ -400,19 +562,16 @@ async function runAdapterAction(action, details) {
     settledResult = await Promise.resolve(adapterResult);
   } catch {
     // <lang><zh-CN>rejection 先按 lifecycle/identity 判 stale；当前请求只报告 adapter-rejected 稳定 code。</zh-CN><en>A rejection is checked for lifecycle/identity staleness first; a current request reports only the stable adapter-rejected code.</en></lang>
-    if (!acceptsAdapterSettlement || consumeTerminatedAdapterRequest(requestId)) return;
-    if (!isCurrentAdapterRequest(action, requestId, sourceIdentity, adapterIdentity)) emitStaleAdapterState(action, requestId);
-    else emitFailedAdapterState(action, requestId, 'adapter-rejected');
-    clearCurrentAdapterRequest(action, requestId);
+    settleContainedAdapterFailure(action, requestId, initialInputs, 'adapter-rejected');
     return;
   }
 
   // <lang><zh-CN>任何完成值在解释前都重新验证 per-action latest、source identity 与 adapter identity。</zh-CN><en>Every completion value revalidates per-action latest, source identity, and adapter identity before interpretation.</en></lang>
   if (consumeTerminatedAdapterRequest(requestId)) return;
-  if (!isCurrentAdapterRequest(action, requestId, sourceIdentity, adapterIdentity)) {
+  const settlementInputs = captureAdapterInputs();
+  if (!isCurrentAdapterRequest(action, requestId, initialInputs, settlementInputs)) {
     // <lang><zh-CN>卸载已由前置生命周期 guard 静默；其余失去资格的完成统一为最小 stale。</zh-CN><en>Unmount is already silent through the lifecycle guard; every other ineligible completion becomes the minimal stale state.</en></lang>
-    if (acceptsAdapterSettlement) emitStaleAdapterState(action, requestId);
-    clearCurrentAdapterRequest(action, requestId);
+    emitStaleAdapterStateIfOpen(action, requestId);
     return;
   }
 
@@ -424,12 +583,31 @@ async function runAdapterAction(action, details) {
     return;
   }
 
-  // <lang><zh-CN>只有同时不同于调用开始与 settlement 时 modelValue/files identity 的新数组可写回；scalar/object/null 或任一输入数组本身都是 invalid-result。</zh-CN><en>Only a new array distinct from modelValue/files identities both at invocation start and settlement may write back; a scalar, object, null, or any input array itself is invalid-result.</en></lang>
-  if (!Array.isArray(settledResult)
-    || settledResult === modelValueIdentity
-    || settledResult === filesIdentity
-    || settledResult === callerIdentity(props.modelValue)
-    || settledResult === callerIdentity(props.files)) {
+  // <lang><zh-CN>先安全还原完成值的 raw identity；reactive/readonly alias 与其 caller source 共享 raw token，因此不能冒充新数组。</zh-CN><en>Safely restores the completion value's raw identity first; a reactive/readonly alias shares its caller source's raw token and cannot masquerade as a new array.</en></lang>
+  const settledResultIdentity = inspectCallerIdentity(settledResult);
+  // <lang><zh-CN>Array brand check 也保持在 containment 内；revoked/hostile result Proxy 统一成为 invalid-result。</zh-CN><en>The Array brand check also remains contained; a revoked/hostile result Proxy uniformly becomes invalid-result.</en></lang>
+  let isArrayResult = false;
+  try {
+    isArrayResult = settledResultIdentity.readable && Array.isArray(settledResultIdentity.identity);
+  } catch {
+    // <lang><zh-CN>不保存或传播 brand-check cause；下方单一 guard 产生冻结 invalid-result。</zh-CN><en>Stores or forwards no brand-check cause; the single guard below produces frozen invalid-result.</en></lang>
+    isArrayResult = false;
+  }
+  // <lang><zh-CN>result Proxy identity/brand trap 也可能同步重入、换 props 或卸载；在解释与写回前必须使用新的单次捕获重新确认 ownership。</zh-CN><en>A result-Proxy identity/brand trap may also synchronously re-enter, replace props, or unmount; ownership must be revalidated with a fresh single capture before interpretation or writeback.</en></lang>
+  if (!acceptsAdapterSettlement || consumeTerminatedAdapterRequest(requestId)) return;
+  const resultCheckpointInputs = captureAdapterInputs();
+  if (!isCurrentAdapterRequest(action, requestId, initialInputs, resultCheckpointInputs)) {
+    emitStaleAdapterStateIfOpen(action, requestId);
+    return;
+  }
+  // <lang><zh-CN>只有同时不同于调用开始与 settlement 时 modelValue/files raw identity 的新数组可写回；不可读 Proxy、scalar/object/null 或任一 alias 都失败关闭。</zh-CN><en>Only a new array distinct from raw modelValue/files identities both at invocation start and settlement may write back; an unreadable Proxy, scalar/object/null, or any alias fails closed.</en></lang>
+  if (!isArrayResult
+    || !resultCheckpointInputs.modelValue.readable
+    || !resultCheckpointInputs.files.readable
+    || settledResultIdentity.identity === initialInputs.modelValue.identity
+    || settledResultIdentity.identity === initialInputs.files.identity
+    || settledResultIdentity.identity === resultCheckpointInputs.modelValue.identity
+    || settledResultIdentity.identity === resultCheckpointInputs.files.identity) {
     emitFailedAdapterState(action, requestId, 'invalid-result');
     return;
   }
