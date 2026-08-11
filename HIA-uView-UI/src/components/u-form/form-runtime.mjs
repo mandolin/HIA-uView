@@ -324,11 +324,13 @@ function createValidationError(rule, context, ruleIndex, code, validatorMessage 
  * @returns {Promise<null | { prop: string, message: string, ruleIndex: number, trigger: string, code: string }>} <lang><zh-CN>通过时 null，失败时首个错误。</zh-CN><en>Null on success, otherwise the first error.</en></lang>
  */
 export async function validateFormValue(value, rules, context) {
-  // <lang><zh-CN>先过滤非法规则与不匹配 trigger，稳定保留原声明顺序。</zh-CN><en>Filters invalid rules and nonmatching triggers first while retaining declaration order.</en></lang>
-  const runnableRules = normalizeFormRules(rules).filter((rule) => ruleMatchesTrigger(rule, context.trigger));
+  // <lang><zh-CN>先为每条合法规则保留原声明索引，再过滤 trigger；公开 ruleIndex 不会因局部交互过滤而漂移。</zh-CN><en>Retains each valid rule's original declaration index before trigger filtering, so the public ruleIndex cannot drift during local-interaction filtering.</en></lang>
+  const runnableRules = normalizeFormRules(rules)
+    .map((rule, ruleIndex) => Object.freeze({ rule, ruleIndex }))
+    .filter(({ rule }) => ruleMatchesTrigger(rule, context.trigger));
 
   // <lang><zh-CN>顺序循环保证多个异步 validator 也不会乱序竞争首个错误。</zh-CN><en>Sequential iteration ensures multiple async validators cannot race for the first error.</en></lang>
-  for (const [ruleIndex, rule] of runnableRules.entries()) {
+  for (const { rule, ruleIndex } of runnableRules) {
     // <lang><zh-CN>每条规则独立计算空值，required 失败后立即停止。</zh-CN><en>Each rule computes emptiness independently and stops immediately on required failure.</en></lang>
     const empty = isEmptyRuleValue(value);
     if (rule.required === true && empty) {
@@ -357,10 +359,26 @@ export async function validateFormValue(value, rules, context) {
       return createValidationError(rule, context, ruleIndex, 'max');
     }
 
-    // <lang><zh-CN>pattern 只接受 RegExp；每次重置 lastIndex，避免 global/sticky 正则跨验证泄漏状态。</zh-CN><en>Pattern accepts RegExp only; lastIndex resets each time so global or sticky regex state cannot leak across validations.</en></lang>
+    // <lang><zh-CN>声明了 pattern 却不是 RegExp 时明确报告配置错误，避免拼写或序列化对象被静默当作通过。</zh-CN><en>When a declared pattern is not a RegExp, reports an explicit configuration error so a typo or serialized object cannot silently pass.</en></lang>
+    if (rule.pattern !== undefined && !(rule.pattern instanceof RegExp)) {
+      return createValidationError(rule, context, ruleIndex, 'invalid-rule');
+    }
+
+    // <lang><zh-CN>RegExp 验证临时从零开始并在 finally 恢复调用方 lastIndex，global/sticky 实例不会被库永久改写。</zh-CN><en>RegExp validation temporarily starts at zero and restores the caller's lastIndex in finally, so global/sticky instances are never permanently mutated by the library.</en></lang>
     if (rule.pattern instanceof RegExp) {
-      rule.pattern.lastIndex = 0;
-      if (!rule.pattern.test(String(value))) {
+      // <lang><zh-CN>保存调用前游标，使成功、失败或异常路径都能精确恢复。</zh-CN><en>Saves the pre-call cursor so success, failure, and exception paths can all restore it exactly.</en></lang>
+      const previousLastIndex = rule.pattern.lastIndex;
+      // <lang><zh-CN>匹配结果在 finally 外使用；该局部值不持有字段或 model。</zh-CN><en>The match result is used outside finally and retains neither the field nor the model.</en></lang>
+      let patternMatches = false;
+      try {
+        // <lang><zh-CN>每轮从零开始，避免上一次 global/sticky 匹配位置影响本次规则结论。</zh-CN><en>Each run starts at zero so a prior global/sticky match position cannot affect this rule result.</en></lang>
+        rule.pattern.lastIndex = 0;
+        patternMatches = rule.pattern.test(String(value));
+      } finally {
+        // <lang><zh-CN>恢复调用方正则游标，不把校验器内部状态变化留给应用。</zh-CN><en>Restores the caller's regex cursor so validator-internal state changes are not left in the application.</en></lang>
+        rule.pattern.lastIndex = previousLastIndex;
+      }
+      if (!patternMatches) {
         return createValidationError(rule, context, ruleIndex, 'pattern');
       }
     }
@@ -387,12 +405,12 @@ export async function validateFormValue(value, rules, context) {
         return createValidationError(rule, context, ruleIndex, 'validator', outcome);
       }
       if (outcome instanceof Error) {
-        return createValidationError(rule, context, ruleIndex, 'validator', outcome.message);
+        // <lang><zh-CN>Error 对象只表示失败；其内部 message 不进入公开错误，调用方应通过 rule.message 提供可展示文字。</zh-CN><en>An Error object indicates failure only; its internal message never enters the public error, and callers should provide display copy through rule.message.</en></lang>
+        return createValidationError(rule, context, ruleIndex, 'validator');
       }
-    } catch (error) {
-      // <lang><zh-CN>异常转换为验证失败而非未处理 rejection；只有 Error.message 可作为调用方函数的明确文字。</zh-CN><en>An exception becomes validation failure rather than an unhandled rejection; only Error.message is explicit copy from caller code.</en></lang>
-      const validatorMessage = error instanceof Error ? error.message : '';
-      return createValidationError(rule, context, ruleIndex, 'validator-exception', validatorMessage);
+    } catch {
+      // <lang><zh-CN>异常转换为稳定失败而非未处理 rejection；异常正文可能含敏感实现信息，永不投影到公开错误或 UI。</zh-CN><en>An exception becomes a stable failure rather than an unhandled rejection; exception text may contain sensitive implementation detail and is never projected to a public error or UI.</en></lang>
+      return createValidationError(rule, context, ruleIndex, 'validator-exception');
     }
   }
 

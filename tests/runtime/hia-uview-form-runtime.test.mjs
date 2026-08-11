@@ -122,6 +122,31 @@ describe('P66 rule execution', () => {
 
     await expect(validateFormValue('', rules, { field: 'code', model, trigger: 'change' })).resolves.toBeNull();
     await expect(validateFormValue('', rules, { field: 'code', model, trigger: '' })).resolves.toMatchObject({ code: 'required' });
+
+    // <lang><zh-CN>局部 trigger 过滤不得重编号原规则；第二条 change 规则失败时仍报告原始索引 1。</zh-CN><en>Local-trigger filtering must not renumber original rules; when the second change rule fails it still reports original index 1.</en></lang>
+    await expect(validateFormValue('A', rules, { field: 'code', model: { code: 'A' }, trigger: 'change' })).resolves.toMatchObject({
+      code: 'min',
+      ruleIndex: 1
+    });
+  });
+
+  /**
+   * @lang zh-CN 验证 pattern 不改变调用方正则游标，并把非 RegExp 配置明确报告为有限错误。
+   * @lang en Verifies that pattern does not mutate the caller's regex cursor and reports a non-RegExp configuration as a bounded error.
+   */
+  it('restores regex state and rejects malformed pattern rules', async () => {
+    // <lang><zh-CN>global 正则故意从非零游标开始，用于证明规则执行前后状态完全相同。</zh-CN><en>The global regex deliberately starts from a nonzero cursor to prove its state is identical before and after rule execution.</en></lang>
+    const pattern = /^A$/gu;
+    pattern.lastIndex = 2;
+
+    await expect(validateFormValue('A', { pattern }, { field: 'code', model: { code: 'A' }, trigger: '' })).resolves.toBeNull();
+    expect(pattern.lastIndex).toBe(2);
+
+    // <lang><zh-CN>字符串 pattern 不执行动态转换，也不被静默忽略。</zh-CN><en>A string pattern is neither dynamically converted nor silently ignored.</en></lang>
+    await expect(validateFormValue('A', { pattern: '^A$', message: 'Invalid rule configuration' }, { field: 'code', model: { code: 'A' }, trigger: '' })).resolves.toMatchObject({
+      code: 'invalid-rule',
+      message: 'Invalid rule configuration'
+    });
   });
 
   /**
@@ -148,6 +173,16 @@ describe('P66 rule execution', () => {
     await expect(validateFormValue('A', throwingRule, { field: 'code', model: { code: 'A' }, trigger: '' })).resolves.toMatchObject({
       code: 'validator-exception',
       message: 'Caller-safe failure'
+    });
+
+    // <lang><zh-CN>没有 rule.message 时，抛出或返回的 Error 正文均不得泄露到公开错误。</zh-CN><en>Without rule.message, Error text from either throwing or returning must never leak into the public error.</en></lang>
+    await expect(validateFormValue('A', { validator: () => { throw new Error('secret-throw'); } }, { field: 'code', model: { code: 'A' }, trigger: '' })).resolves.toMatchObject({
+      code: 'validator-exception',
+      message: ''
+    });
+    await expect(validateFormValue('A', { validator: () => new Error('secret-return') }, { field: 'code', model: { code: 'A' }, trigger: '' })).resolves.toMatchObject({
+      code: 'validator',
+      message: ''
     });
   });
 });
