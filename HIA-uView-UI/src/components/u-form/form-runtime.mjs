@@ -17,6 +17,18 @@ const UNSAFE_FIELD_SEGMENTS = new Set(['__proto__', 'prototype', 'constructor'])
 const NUMERIC_BRACKET_PATTERN = /\[(\d+)\]/gu;
 
 /**
+ * @lang zh-CN 标识最近的 UForm owner；Symbol 使其他字符串 provide 无法意外覆盖表单 registry。
+ * @lang en Identifies the nearest UForm owner; the Symbol prevents another string provide from accidentally overriding the form registry.
+ */
+export const U_FORM_CONTEXT = Symbol('hia-uview-form-context');
+
+/**
+ * @lang zh-CN 标识最近的 UFormItem；输入后代只读取受限 disabled/readonly 与 change/blur 通知面。
+ * @lang en Identifies the nearest UFormItem; input descendants read only the constrained disabled/readonly and change/blur notification surface.
+ */
+export const U_FORM_ITEM_CONTEXT = Symbol('hia-uview-form-item-context');
+
+/**
  * @lang zh-CN 判断值是否可被安全地作为路径容器读取或写入。
  * @lang en Determines whether a value can be safely read or written as a path container.
  * @param {unknown} value <lang><zh-CN>候选路径容器。</zh-CN><en>Candidate path container.</en></lang>
