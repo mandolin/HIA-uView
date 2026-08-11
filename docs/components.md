@@ -29,9 +29,9 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-dropdown-item` | `UDropdownItem` | [UDropdownItem](dropdown-item.md) | Finite dropdown option / 有限下拉选项 |
 | `u-divider` | `UDivider` | [UDivider](divider.md) | Local line and slot separation / 局部线条与 slot 分隔 |
 | `u-empty` | `UEmpty` | [UEmpty](empty.md) | Caller-owned empty projection / 调用方拥有的空态投影 |
-| `u-field` | `UField` | [UField](field.md) | Field layout without form ownership / 不拥有表单的字段布局 |
-| `u-form` | `UForm` | [UForm](form.md) | Static form grouping and explicit intents / 静态表单分组与显式意图 |
-| `u-form-item` | `UFormItem` | [UFormItem](form-item.md) | Label/help/message presentation / 标签、帮助与消息呈现 |
+| `u-field` | `UField` | [UField](field.md) | Built-in controlled input or caller-owned slot field / 内建受控输入或调用方自有 slot 字段 |
+| `u-form` | `UForm` | [UForm](form.md) | Private field registry and validation orchestration / 私有字段 registry 与校验编排 |
+| `u-form-item` | `UFormItem` | [UFormItem](form-item.md) | Field lifecycle, rules, snapshot, and message projection / 字段生命周期、规则、快照与消息投影 |
 | `u-full-screen` | `UFullScreen` | [UFullScreen](full-screen.md) | Caller-controlled full-viewport sheet / 调用方受控全视口 sheet |
 | `u-gap` | `UGap` | [UGap](gap.md) | Local vertical spacing / 局部垂直间距 |
 | `u-grid` | `UGrid` | [UGrid](grid.md) | Controlled local grid container / 受控本地网格容器 |
@@ -43,7 +43,7 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-avatar` | `UAvatar` | [UAvatar](avatar.md) | Image or initials placeholder / 图片或 initials 占位 |
 | `u-avatar-cropper` | `UAvatarCropper` | [UAvatarCropper](avatar-cropper.md) | Caller-owned crop geometry intent / 调用方拥有的裁剪几何意图 |
 | `u-badge` | `UBadge` | [UBadge](badge.md) | Controlled text or dot badge / 受控文字或 dot 徽标 |
-| `u-input` | `UInput` | [UInput](input.md) | Controlled string input intent / 受控字符串输入意图 |
+| `u-input` | `UInput` | [UInput](input.md) | Controlled string input with inherited form guards / 继承表单 guard 的受控字符串输入 |
 | `u-lazy-load` | `ULazyLoad` | [ULazyLoad](lazy-load.md) | Caller-controlled deferred image projection / 调用方受控延迟图片投影 |
 | `u-keyboard` | `UKeyboard` | [UKeyboard](keyboard.md) | Controlled local keyboard overlay / 受控局部键盘 overlay |
 | `u-line` | `ULine` | [ULine](line.md) | Local divider primitive / 局部分隔原语 |
@@ -68,7 +68,7 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-row` | `URow` | [URow](row.md) | Flex-row layout primitive / flex 行布局原语 |
 | `u-row-notice` | `URowNotice` | [URowNotice](row-notice.md) | Controlled current horizontal notice / 受控当前横向 notice |
 | `u-section` | `USection` | [USection](section.md) | Section heading and action / 区块标题与 action |
-| `u-search` | `USearch` | [USearch](search.md) | Controlled query intent / 受控查询意图 |
+| `u-search` | `USearch` | [USearch](search.md) | Controlled query, clear/search intent, and form notification / 受控查询、clear/search 意图与表单通知 |
 | `u-scroll-list` | `UScrollList` | [UScrollList](scroll-list.md) | CSS overflow horizontal list / CSS overflow 横向列表 |
 | `u-select` | `USelect` | [USelect](select.md) | Finite option selection / 有限选项选择 |
 | `u-skeleton` | `USkeleton` | [USkeleton](skeleton.md) | Static placeholder projection / 静态占位投影 |
@@ -87,7 +87,7 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 | `u-table` | `UTable` | [UTable](table.md) | View-based caller slot table container / 基于 view 的调用方 slot 表格容器 |
 | `u-tag` | `UTag` | [UTag](tag.md) | Finite-tone text tag / 有限 tone 文字标签 |
 | `u-text` | `UText` | [UText](text.md) | Finite text presentation / 有限文字呈现 |
-| `u-textarea` | `UTextarea` | [UTextarea](textarea.md) | Controlled multiline input / 受控多行输入 |
+| `u-textarea` | `UTextarea` | [UTextarea](textarea.md) | Controlled multiline input with inherited form guards / 继承表单 guard 的受控多行输入 |
 | `u-td` | `UTd` | [UTd](td.md) | Static view-based table cell / 静态 view 表格单元格 |
 | `u-th` | `UTh` | [UTh](th.md) | Static view-based header cell / 静态 view 表头单元格 |
 | `u-time-line` | `UTimeLine` | [UTimeLine](time-line.md) | Local slot-composed timeline / 本地 slot 组合时间线 |
