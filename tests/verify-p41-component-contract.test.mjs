@@ -1,7 +1,7 @@
 /**
  * @module verify-p41-component-contract.test
- * @lang zh-CN 验证 P41 新增七项高频组件的声明、双语契约、主题 token 与本地运行边界；静态证据不替代 Vue runtime、UniApp compiler、微信开发者工具、真机、读屏或 WCAG 认证。
- * @lang en Verifies declarations, bilingual contracts, theme tokens, and local runtime boundaries for the seven P41 high-frequency components; static evidence does not replace Vue runtime, UniApp compiler, WeChat DevTools, devices, screen readers, or WCAG certification.
+ * @lang zh-CN 验证 P41 七项高频组件的声明、双语契约、主题 token、本地运行边界与后续形成的私有表单 registry；静态证据不替代 Vue runtime、UniApp compiler、微信开发者工具、真机、读屏或 WCAG 认证。
+ * @lang en Verifies declarations, bilingual contracts, theme tokens, local runtime boundaries, and the subsequently delivered private form registry for the seven P41 high-frequency components; static evidence does not replace Vue runtime, UniApp compiler, WeChat DevTools, devices, screen readers, or WCAG certification.
  */
 
 // <lang><zh-CN>导入本地断言、文件读取、路径解析和 Node 测试入口；测试不访问网络、存储、子进程或仓库外部输入。</zh-CN><en>Imports local assertions, file reading, path resolution, and the Node test entry; the test accesses no network, storage, child process, or repository-external input.</en></lang>
@@ -44,20 +44,30 @@ test('keeps P41 component declarations aligned', async () => {
   }
 });
 /**
- * @lang zh-CN 验证 P41 源码使用 u-* 命名、受控事件边界和当前双语 ROP 表面，并排除网络、存储、路由、定时器与隐式平台服务。
- * @lang en Verifies P41 source uses u-* names, controlled event boundaries, and the current bilingual ROP surface while excluding network, storage, routing, timers, and implicit platform services.
+ * @lang zh-CN 验证 P41 源码使用 u-* 命名、受控事件边界、私有 Symbol/Map 表单协作和当前双语 ROP 表面，并排除网络、存储、全局状态、动态执行、路由、定时器与隐式平台服务。
+ * @lang en Verifies P41 source uses u-* names, controlled event boundaries, private Symbol/Map form coordination, and the current bilingual ROP surface while excluding network, storage, global state, dynamic execution, routing, timers, and implicit platform services.
  * @returns {Promise<void>} <lang><zh-CN>无返回值；断言失败时拒绝。</zh-CN><en>No return value; rejects on assertion failure.</en></lang>
  */
 test('keeps P41 source inside controlled local boundaries', async () => {
-  // <lang><zh-CN>读取全部新增源文件和局部样式；扫描只针对版本控制内容，不写入任何输出。</zh-CN><en>Reads all new source files and local styles; scanning targets version-controlled content only and writes no output.</en></lang>
+  // <lang><zh-CN>读取七项组件和其固定表单 runtime helper；扫描只针对版本控制内容，不写入任何输出。</zh-CN><en>Reads the seven components and their fixed form runtime helper; scanning targets version-controlled content only and writes no output.</en></lang>
   const componentSources = await Promise.all(p41ComponentRecords.map((componentRecord) => readFile(resolve(componentRecord.source), 'utf8')));
-  const combinedSource = componentSources.join('\n');
+  // <lang><zh-CN>私有注入 key 位于固定 helper 中，必须和使用它的组件进入同一静态边界检查。</zh-CN><en>Private injection keys reside in a fixed helper, which must enter the same static boundary check as their consuming components.</en></lang>
+  const formRuntimeSource = await readFile(resolve('HIA-uView-UI/src/components/u-form/form-runtime.mjs'), 'utf8');
+  // <lang><zh-CN>合并组件与 helper，避免将副作用移入辅助模块来绕过组件扫描。</zh-CN><en>Combines components and helper so moving a side effect into the helper cannot bypass component scanning.</en></lang>
+  const combinedSource = [...componentSources, formRuntimeSource].join('\n');
   const forbiddenPatterns = [
     /\bset(?:Timeout|Interval)\s*\(/,
     /<Teleport\b/,
     /\buni\.[A-Za-z]/,
+    /\buni\.\$u\b/,
     /\bfetch\s*\(/,
     /\b(?:localStorage|sessionStorage)\s*\./,
+    /\bglobalThis\s*\./,
+    /\bwindow\s*\./,
+    /\bdocument\s*\./,
+    /\beval\s*\(/,
+    /\b(?:new\s+)?Function\s*\(/,
+    /\bimport\s*\(/,
     /\bconsole\s*\./,
     /\buni\.navigate(?:To|Back|RedirectTo|ReLaunch|SwitchTab)?\s*\(/,
     /\bopen-type\s*=/
@@ -74,14 +84,22 @@ test('keeps P41 source inside controlled local boundaries', async () => {
     assert.match(componentSource, /<lang><zh-CN>/, `Missing inline ROP narration in ${p41ComponentRecords[index].name}.`);
   }
 
-  // <lang><zh-CN>高频组件必须保持受控值/意图表面，不能偷偷加入 validator、请求或字段 registry。</zh-CN><en>High-frequency components must retain controlled-value/intent surfaces and cannot smuggle in validators, requests, or field registries.</en></lang>
+  // <lang><zh-CN>五项输入组件保持精确受控值/意图表面；表单组件则必须公开最终七项命令式 API，并把 registry/context 留在实例私有边界。</zh-CN><en>The five input components retain precise controlled-value/intent surfaces; form components must expose the final seven imperative APIs while keeping registry and context inside instance-private boundaries.</en></lang>
   assert.match(componentSources[0], /defineEmits\(\['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click'\]\)/);
   assert.match(componentSources[1], /defineEmits\(\['update:modelValue', 'change'\]\)/);
   assert.match(componentSources[2], /defineEmits\(\['update:modelValue', 'input', 'change'\]\)/);
   assert.match(componentSources[3], /defineEmits\(\['update:modelValue', 'input', 'change'\]\)/);
   assert.match(componentSources[4], /defineEmits\(\['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click', 'search', 'clear'\]\)/);
-  assert.match(componentSources[5], /defineExpose\(\{ requestSubmit, requestReset \}\)/);
+  assert.match(formRuntimeSource, /export const U_FORM_CONTEXT = Symbol\('hia-uview-form-context'\);/);
+  assert.match(formRuntimeSource, /export const U_FORM_ITEM_CONTEXT = Symbol\('hia-uview-form-item-context'\);/);
+  assert.match(componentSources[5], /const fields = new Map\(\);/);
+  assert.match(componentSources[5], /provide\(U_FORM_CONTEXT, Object\.freeze\(\{\s*model,\s*disabled,\s*labelPosition,\s*registerField,\s*unregisterField,\s*resolveRules\s*\}\)\);/su);
+  assert.match(componentSources[5], /defineExpose\(\{ setRules, validate, validateField, clearValidate, resetFields, requestSubmit, requestReset \}\);/);
   assert.match(componentSources[6], /UValidationMessage/);
+  assert.match(componentSources[6], /const formContext = inject\(U_FORM_CONTEXT, null\);/);
+  assert.match(componentSources[6], /const fieldToken = Symbol\('hia-uview-form-field'\);/);
+  assert.match(componentSources[6], /provide\(U_FORM_ITEM_CONTEXT, Object\.freeze\(\{ disabled, readonly, notifyChange, notifyBlur \}\)\);/);
+  assert.match(componentSources[6], /defineExpose\(\{ validate, clearValidate, resetField \}\);/);
 });
 
 /**

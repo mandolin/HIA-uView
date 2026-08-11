@@ -49,11 +49,11 @@ test('keeps P13 component declarations aligned with their contracts', async () =
 });
 
 /**
- * @lang zh-CN 验证 P13 源码维持受控值、纯字段结构和纯消息展示边界，且含有当前 ROP 双语注释表面。
- * @lang en Verifies that P13 source retains controlled-value, pure field-structure, and pure message-display boundaries and contains the current ROP bilingual comment surface.
+ * @lang zh-CN 验证 P13 源码维持受控值、UField 双模式组合、私有表单项联动和纯消息展示边界，且含有当前 ROP 双语注释表面。
+ * @lang en Verifies that P13 source retains controlled values, UField dual-mode composition, private form-item coordination, and pure message-display boundaries and contains the current ROP bilingual comment surface.
  * @returns {Promise<void>} <lang><zh-CN>无返回值；断言失败时拒绝。</zh-CN><en>No return value; rejects on assertion failure.</en></lang>
  */
-test('keeps P13 source inside controlled presentation and ROP boundaries', async () => {
+test('keeps P13 source inside controlled dual-mode and ROP boundaries', async () => {
   // <lang><zh-CN>读取三份本地 Vue 源码；内容只用于静态边界断言，不写入输出、缓存或外部服务。</zh-CN><en>Reads the three local Vue sources; content is used only for static boundary assertions and is not written to output, cache, or an external service.</en></lang>
   const componentSources = await Promise.all(p13ComponentRecords.map((componentRecord) => readFile(resolve(componentRecord.source), 'utf8')));
 
@@ -63,11 +63,19 @@ test('keeps P13 source inside controlled presentation and ROP boundaries', async
   // <lang><zh-CN>合并源码用于统一扫描真实副作用 API；扫描目标是可执行 API 形态，不把注释中的边界说明误判为行为。</zh-CN><en>Combines sources for unified scanning of real side-effect APIs; scan targets executable API shapes and does not mistake boundary prose in comments for behavior.</en></lang>
   const combinedSource = componentSources.join('\n');
 
-  // <lang><zh-CN>禁止模式代表本 W 排除的请求、持久化、日志、路由和原生能力；命中必须停止实现并重新取得决定。</zh-CN><en>Forbidden patterns represent requests, persistence, logging, routing, and native capability excluded by this W; a match requires implementation to stop and obtain a new decision.</en></lang>
+  // <lang><zh-CN>禁止模式代表本地组件不得拥有的定时器、网络、持久化、全局总线、动态执行、日志、路由和原生能力；命中即证明运行边界发生漂移。</zh-CN><en>Forbidden patterns represent timers, network, persistence, global buses, dynamic execution, logging, routing, and native capabilities that local components must not own; a match proves runtime-boundary drift.</en></lang>
   const forbiddenPatterns = [
+    /\bset(?:Timeout|Interval)\s*\(/,
     /\buni\.request\s*\(/,
     /\bfetch\s*\(/,
     /\b(?:localStorage|sessionStorage)\s*\./,
+    /\bglobalThis\s*\./,
+    /\bwindow\s*\./,
+    /\bdocument\s*\./,
+    /\buni\.\$u\b/,
+    /\beval\s*\(/,
+    /\b(?:new\s+)?Function\s*\(/,
+    /\bimport\s*\(/,
     /\bconsole\s*\./,
     /\buni\.navigate(?:To|Back|RedirectTo|ReLaunch|SwitchTab)?\s*\(/,
     /\bopen-type\s*=/
@@ -85,16 +93,27 @@ test('keeps P13 source inside controlled presentation and ROP boundaries', async
     assert.match(componentSource, /<lang><zh-CN>/);
   }
 
-  // <lang><zh-CN>UInput 必须公开受控更新、输入、焦点、失焦及本地 click/confirm 观察，并保持原生 unavailable guard 和跨事件形状字符串提取；它不在此测试中被赋予规则或完成职责。</zh-CN><en>UInput must expose controlled update, input, focus, blur, and local click/confirm observation while retaining a native unavailable guard and cross-event-shape string extraction; this test assigns it no rule or completion responsibility.</en></lang>
+  // <lang><zh-CN>UInput 必须公开受控更新、输入、焦点、失焦及本地 click/confirm 观察，合并最近表单项 guard，并保持跨事件形状字符串提取；规则所有权仍位于私有 context 的表单项。</zh-CN><en>UInput must expose controlled update, input, focus, blur, and local click/confirm observation, merge the nearest form-item guards, and retain cross-event-shape string extraction; rule ownership remains in the form item behind private context.</en></lang>
   assert.match(inputSource, /defineEmits\(\['update:modelValue', 'input', 'focus', 'blur', 'click', 'confirm'\]\)/);
-  assert.match(inputSource, /if \(props\.disabled\)/);
+  assert.match(inputSource, /const formItemContext = inject\(U_FORM_ITEM_CONTEXT, null\);/);
+  assert.match(inputSource, /const effectiveDisabled = computed\(\(\) => props\.disabled \|\| Boolean\(formItemContext\?\.disabled\.value\)\);/);
+  assert.match(inputSource, /if \(effectiveDisabled\.value \|\| effectiveReadonly\.value\)/);
   assert.match(inputSource, /event\?\.detail\?\.value/);
   assert.match(inputSource, /event\?\.target\?\.value/);
+  assert.match(inputSource, /emit\('click'\);/);
+  assert.match(inputSource, /emit\('confirm', value\);/);
 
-  // <lang><zh-CN>UField 只组合默认插槽、帮助与独立消息，不能自己 emit 事件或接收 form model 输入。</zh-CN><en>UField composes only default slot, help, and independent message and cannot emit events or accept form-model input itself.</en></lang>
-  assert.match(fieldSource, /<slot \/>/);
+  // <lang><zh-CN>UField 必须以 default slot 存在性选择 caller-owned 或内建 UInput 分支；只有内建分支转发四项精确事件，并继承最近表单项 guard，但自身仍不拥有 form model。</zh-CN><en>UField must select caller-owned or built-in UInput branches by default-slot presence; only the built-in branch forwards four precise events and inherits nearest form-item guards, while the field itself still owns no form model.</en></lang>
+  assert.match(fieldSource, /const slots = useSlots\(\);/);
+  assert.match(fieldSource, /const hasDefaultControl = computed\(\(\) => typeof slots\.default === 'function'\);/);
+  assert.match(fieldSource, /<slot v-if="hasDefaultControl" \/>/);
+  assert.match(fieldSource, /<UInput\s+v-else/s);
+  assert.match(fieldSource, /const emit = defineEmits\(\['update:modelValue', 'input', 'confirm', 'click'\]\);/);
+  assert.match(fieldSource, /const formItemContext = inject\(U_FORM_ITEM_CONTEXT, null\);/);
+  assert.match(fieldSource, /emit\('update:modelValue', value\);/);
+  assert.match(fieldSource, /emit\('confirm', value\);/);
+  assert.match(fieldSource, /emit\('click'\);/);
   assert.match(fieldSource, /<UValidationMessage :state="validationState" :message="validationMessage" \/>/);
-  assert.doesNotMatch(fieldSource, /defineEmits/);
   assert.doesNotMatch(fieldSource, /\bformModel\b/);
 
   // <lang><zh-CN>独立消息只对两种非 idle 状态形成可见条件，并且首个契约没有事件或插槽。</zh-CN><en>The independent message forms visible condition only for two non-idle states and has no events or slots in the first contract.</en></lang>
