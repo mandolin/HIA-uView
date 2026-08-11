@@ -271,16 +271,16 @@
       "component": "u-checkbox",
       "itemId": "event:change",
       "priority": "P0",
-      "sourceFingerprint": "sha256:6b03ddac1650f29fbee3c53271c733610879207319a2215e092792623dc0c32e",
+      "sourceFingerprint": "sha256:100c34a00f3376bbc8ad60f5fdb517c2525f06158f03ab12699029bb9a258c30",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep the local listener and review the HIA value/checked payload before retaining any upstream handler logic.",
-        "zh-Hans": "保留本地监听器，并在保留任何上游处理逻辑前复核 HIA 的 value/checked payload。"
+        "en": "Adapt the caller from upstream u-checkbox event:change to HIA target change, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-checkbox event:change 适配到 HIA 目标 change，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "This is a caller-controlled intent only; it performs no form registration or business validation.",
-        "zh-Hans": "这只是调用方受控 intent；它不执行表单注册或业务校验。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/checkbox.md",
@@ -292,16 +292,16 @@
       "component": "u-checkbox",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:501826b17bb400a733f31ec606cf24411a9086d2ff5c0f4b5bc62e4177a39f5a",
+      "sourceFingerprint": "sha256:c527d8c83e4ab7be98aa45fce125a7182b5ebe8d1b73a829f62603124ee3fa87",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Write the emitted boolean back from the caller and retain existing business decisions outside the component.",
-        "zh-Hans": "由调用方写回 emit 的 boolean，并把既有业务决策保留在组件外。"
+        "en": "Adapt the caller from upstream u-checkbox event:update:modelValue to HIA target update:modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-checkbox event:update:modelValue 适配到 HIA 目标 update:modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "Independent and grouped modes have distinct local payload boundaries.",
-        "zh-Hans": "独立模式与 group 模式具有不同的本地 payload 边界。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/checkbox.md",
@@ -393,16 +393,16 @@
       "component": "u-checkbox",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:45aef952186bd8b0b1fc123dfc663f86bf56259c4d681ed0a375147116f239f1",
+      "sourceFingerprint": "sha256:a4e0ee060d33495d63661babfc06faf16a34a3456da77dc5a7a17ff0269c7360",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Use the default slot only to replace visible label content.",
-        "zh-Hans": "只用 default slot 替换可见 label 内容。"
+        "en": "Adapt the caller from upstream u-checkbox slot:default to HIA target default, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-checkbox slot:default 适配到 HIA 目标 default，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "The slot receives no option data, scoped value, or business context.",
-        "zh-Hans": "slot 不接收 option data、scoped value 或业务 context。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/checkbox.md",
@@ -414,16 +414,16 @@
       "component": "u-checkbox-group",
       "itemId": "event:change",
       "priority": "P0",
-      "sourceFingerprint": "sha256:db46e624e5ae2fc32882687a8ee6bda865b9c19739dfee59ed86f3390669a8e5",
+      "sourceFingerprint": "sha256:d1976c70941b7b3eb848a1649d860efb05e74264b0ae8bb42dd2de4ddd74d87f",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Replace caller state with the emitted next membership array.",
-        "zh-Hans": "用 emit 的下一成员数组替换调用方状态。"
+        "en": "Adapt the caller from upstream u-checkbox-group event:change to HIA target change, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-checkbox-group event:change 适配到 HIA 目标 change，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "The group performs no select-all, form submit, or business validation.",
-        "zh-Hans": "group 不执行全选、表单提交或业务校验。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/checkbox-group.md",
@@ -435,16 +435,16 @@
       "component": "u-checkbox-group",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:a8d4cd7e525593434c0c12a0d055df1fdb030f6434bc131507bd4eae07020624",
+      "sourceFingerprint": "sha256:2de75d9494f3e36266e21d33f132edecb9bb2cd2ad062cbab8704bd13a8a5e7a",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Write back the new array immutably from the caller.",
-        "zh-Hans": "由调用方以不可变方式写回新数组。"
+        "en": "Adapt the caller from upstream u-checkbox-group event:update:modelValue to HIA target update:modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-checkbox-group event:update:modelValue 适配到 HIA 目标 update:modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "Do not assume upstream option/name/control semantics from this event.",
-        "zh-Hans": "不要从此 event 推断上游 option/name/control 语义。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/checkbox-group.md",
@@ -476,16 +476,16 @@
       "component": "u-checkbox-group",
       "itemId": "prop:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:b9f851d175391e74517efcd41874cf9f72bc6176886f4d575ee2a31036ebd903",
+      "sourceFingerprint": "sha256:49f90a7a87581c0143a51a2b555115135d017f1ec9fb985ab72c27fbe71e6f10",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Supply a caller-owned array of local string or number values.",
-        "zh-Hans": "提供调用方拥有的本地 string 或 number value 数组。"
+        "en": "Adapt the caller from upstream u-checkbox-group prop:modelValue to HIA target modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-checkbox-group prop:modelValue 适配到 HIA 目标 modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "This surface is not an upstream group option or form-control contract.",
-        "zh-Hans": "此表面不是上游 group option 或 form-control contract。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/checkbox-group.md",
@@ -497,16 +497,16 @@
       "component": "u-checkbox-group",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:b5f295aab7914c6eb0f9c6284321185231ead85cc7e0fc7626baab856079cc0d",
+      "sourceFingerprint": "sha256:6681ef475a246e6ede9cb3d63dca396e82331ffefbb39553b255c518365953eb",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Place explicit local checkbox children in the default slot.",
-        "zh-Hans": "在 default slot 中放置显式的本地 checkbox child。"
+        "en": "Adapt the caller from upstream u-checkbox-group slot:default to HIA target default, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-checkbox-group slot:default 适配到 HIA 目标 default，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "The group discovers no external children or global registry.",
-        "zh-Hans": "group 不发现外部 child 或 global registry。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/checkbox-group.md",
@@ -1445,16 +1445,16 @@
       "component": "u-picker",
       "itemId": "event:cancel",
       "priority": "P0",
-      "sourceFingerprint": "sha256:ef9666a3a8fcc4ba314431fb045ce644d36fb05acec44b1f48de10a074c9f319",
+      "sourceFingerprint": "sha256:241ccc7c0ae5b471073d01535548a48058f60c77bac2b194bf8f1c15499a954c",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Treat cancel as a local draft-reset intent owned by the caller.",
-        "zh-Hans": "把 cancel 视为调用方拥有的本地草稿重置 intent。"
+        "en": "Adapt the caller from upstream u-picker event:cancel to HIA target cancel, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-picker event:cancel 适配到 HIA 目标 cancel，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "It does not close a popup or restore platform picker state.",
-        "zh-Hans": "它不关闭 popup，也不恢复平台 picker state。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1466,16 +1466,16 @@
       "component": "u-picker",
       "itemId": "event:confirm",
       "priority": "P0",
-      "sourceFingerprint": "sha256:a1559506cebf5b55e2ce89a506fc95685a1baf1b64678a768458a90bb277ec8d",
+      "sourceFingerprint": "sha256:04e0a1728e53b8c2807f96f31edf3324c62a86b707d3890ea42f71f4d1874a3b",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Use the confirmed single local value and keep follow-up behavior in the caller.",
-        "zh-Hans": "使用已确认的单个本地 value，并把后续行为保留在调用方。"
+        "en": "Adapt the caller from upstream u-picker event:confirm to HIA target confirm, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-picker event:confirm 适配到 HIA 目标 confirm，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "It is not a region, time, remote, or multi-column selection contract.",
-        "zh-Hans": "它不是地区、时间、远端或多列选择 contract。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1487,16 +1487,16 @@
       "component": "u-picker",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:5177c2411d7258231aa793111130db22a99fe29676bbc4059d806fd765e23ec1",
+      "sourceFingerprint": "sha256:0f6cd5828b04fc105aec1ffdad7779f583b4c7bc034dce8f046307a3c4221f42",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Write back the confirmed finite single-column value from the caller.",
-        "zh-Hans": "由调用方写回已确认的有限单列 value。"
+        "en": "Adapt the caller from upstream u-picker event:update:modelValue to HIA target update:modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-picker event:update:modelValue 适配到 HIA 目标 update:modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "Do not migrate upstream popup/region/time/column state unchanged.",
-        "zh-Hans": "不要原样迁移上游 popup/region/time/column state。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1508,16 +1508,16 @@
       "component": "u-picker",
       "itemId": "prop:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:2ef4f408fb7806a54451d94fe09b550bcf132157d6d5b6ced27705d862687490",
+      "sourceFingerprint": "sha256:b83f1d77a9d0032b64156d0ab503577d1805ef9f0e34f462965e1d14b169b775",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Use modelValue only as the caller-owned confirmed value of a finite single column.",
-        "zh-Hans": "只把 modelValue 用作有限单列的调用方拥有已确认 value。"
+        "en": "Adapt the caller from upstream u-picker prop:modelValue to HIA target modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-picker prop:modelValue 适配到 HIA 目标 modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "Its same name does not make it API-compatible with upstream picker state.",
-        "zh-Hans": "同名并不使它与上游 picker state API-compatible。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1634,16 +1634,16 @@
       "component": "u-radio",
       "itemId": "event:change",
       "priority": "P0",
-      "sourceFingerprint": "sha256:f3e5f125f2faebf539482878ca4ad70c5bbecafcc411e90a26970b4e5224886c",
+      "sourceFingerprint": "sha256:3be68e6f9692e274164cdb451c44e4fdcd62a0186b05f7d4f2c5e040d72c8084",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep the listener local and treat its value as a transparent selection intent.",
-        "zh-Hans": "保持 listener 本地化，并将 value 视为透明选择 intent。"
+        "en": "Adapt the caller from upstream u-radio event:change to HIA target change, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-radio event:change 适配到 HIA 目标 change，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "It does not open a picker, route, or acquire business choice authority.",
-        "zh-Hans": "它不打开 picker、route，也不取得业务选择 authority。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1715,16 +1715,16 @@
       "component": "u-radio",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:7f3eafeb2c9bf28c4cbb8646bc4070cb3bd3242afc62dd8e3d1f77024b6f6ddb",
+      "sourceFingerprint": "sha256:d67ed716f08593883354e10a36f695e79d80250e02ba1108d05349576badda8b",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Use the default slot only for replacement label content.",
-        "zh-Hans": "只使用 default slot 替换 label 内容。"
+        "en": "Adapt the caller from upstream u-radio slot:default to HIA target default, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-radio slot:default 适配到 HIA 目标 default，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "The slot receives no scoped choice data or business context.",
-        "zh-Hans": "slot 不接收 scoped choice data 或业务 context。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1736,16 +1736,16 @@
       "component": "u-radio-group",
       "itemId": "event:change",
       "priority": "P0",
-      "sourceFingerprint": "sha256:df57df29f1cdb897b1a0f67c3f6d5423a6d6adc225c6fa3f8f89dd19a36bbae4",
+      "sourceFingerprint": "sha256:45c88a71ca2775ff6ef91ba95a741608c0e80e48d2a08657ce2ad49830dd6eab",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Write the selected local value in the caller and retain follow-up decisions outside the group.",
-        "zh-Hans": "在调用方写入选中的本地 value，并把后续决策保留在 group 外。"
+        "en": "Adapt the caller from upstream u-radio-group event:change to HIA target change, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-radio-group event:change 适配到 HIA 目标 change，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "The group performs no picker, permission, route, or business flow.",
-        "zh-Hans": "group 不执行 picker、permission、route 或业务 flow。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1757,16 +1757,16 @@
       "component": "u-radio-group",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:2e0eeab618d22e024cd6c801b660e7a1073f8403be4fa68982b06ac5e78640ea",
+      "sourceFingerprint": "sha256:fa3fe068b0eeafedfa7e06c38b084082549409d767f4b41cd1e20fcb0b2e6cf5",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Write back the emitted local value from the caller.",
-        "zh-Hans": "由调用方写回 emit 的本地 value。"
+        "en": "Adapt the caller from upstream u-radio-group event:update:modelValue to HIA target update:modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-radio-group event:update:modelValue 适配到 HIA 目标 update:modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "Do not infer option-source or form-control behavior from this event.",
-        "zh-Hans": "不要从此 event 推断 option-source 或 form-control 行为。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1818,16 +1818,16 @@
       "component": "u-radio-group",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:767fc9fbedbbebf77e24184be909551be8084068b5823fa4acacca327e685976",
+      "sourceFingerprint": "sha256:fa4fe705763952b7819794e2da34952585270653123c45d3142545e6bd6d78e2",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Place explicit local radio children in the default slot.",
-        "zh-Hans": "在 default slot 中放置显式本地 radio child。"
+        "en": "Adapt the caller from upstream u-radio-group slot:default to HIA target default, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-radio-group slot:default 适配到 HIA 目标 default，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "The group has no external-child discovery or global selection service.",
-        "zh-Hans": "group 没有外部 child 发现或 global selection service。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -2132,16 +2132,16 @@
       "component": "u-switch",
       "itemId": "event:change",
       "priority": "P0",
-      "sourceFingerprint": "sha256:8ecef6449b9d41cec654adde2005c3546b60eb36e2a15625ae49e05dca626b6f",
+      "sourceFingerprint": "sha256:07c3612e28d8c7d2d53fc65daf5342445adceada154379f98c364e733e4fbca6",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Handle the emitted next boolean as a caller-owned local intent.",
-        "zh-Hans": "把 emit 的下一 boolean 作为调用方拥有的本地 intent 处理。"
+        "en": "Adapt the caller from upstream u-switch event:change to HIA target change, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-switch event:change 适配到 HIA 目标 change，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "It performs no persistence, authorization, or remote update.",
-        "zh-Hans": "它不执行持久化、授权或远端更新。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -2153,16 +2153,16 @@
       "component": "u-switch",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:ed3a2421278c5d940a68a153bd5be644023f20a54da38bdc1deff2412fd3ae99",
+      "sourceFingerprint": "sha256:701f4057142c37d65dbb480055ce4076a6edc92fd245f4cefc11f0f353cd1132",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Write back the boolean only after reviewing the HIA controlled-switch boundary.",
-        "zh-Hans": "只在复核 HIA 受控 switch 边界后写回 boolean。"
+        "en": "Adapt the caller from upstream u-switch event:update:modelValue to HIA target update:modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-switch event:update:modelValue 适配到 HIA 目标 update:modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "Same-name model behavior is not promoted to complete upstream equivalence.",
-        "zh-Hans": "同名 model 行为不提升为完整上游等价。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -2214,16 +2214,16 @@
       "component": "u-switch",
       "itemId": "prop:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:3ed3944be395c24cf31113dcba3ff9fe01bcaf9653f47638e22067ed01633505",
+      "sourceFingerprint": "sha256:e69155751db2158b21dfc7a6a300cc01d44cd26537b95a7fa803aa4ee4c3e62f",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Use a caller-owned boolean model and adapt any richer upstream state outside the component.",
-        "zh-Hans": "使用调用方拥有的 boolean model，并在组件外适配任何更丰富的上游 state。"
+        "en": "Adapt the caller from upstream u-switch prop:modelValue to HIA target modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-switch prop:modelValue 适配到 HIA 目标 modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "This switch accepts only the current constrained boolean surface.",
-        "zh-Hans": "此 switch 只接受当前受限 boolean 表面。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",

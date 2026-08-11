@@ -653,14 +653,13 @@
       "itemId": "event:change",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-checkbox-group/u-checkbox-group.vue",
-          "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue"
+          "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -703,14 +702,13 @@
       "itemId": "event:update:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-checkbox-group/u-checkbox-group.vue",
-          "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue"
+          "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -825,15 +823,14 @@
       "itemId": "prop:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-checkbox-group/types.ts",
           "comparison:src/uni_modules/uview-pro/components/u-checkbox-group/u-checkbox-group.vue",
-          "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue"
+          "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "prop",
@@ -897,14 +894,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-checkbox-group/u-checkbox-group.vue",
-          "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue"
+          "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -929,14 +925,13 @@
       "itemId": "event:change",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-checkbox/u-checkbox.vue",
-          "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue"
+          "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -979,14 +974,13 @@
       "itemId": "event:update:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-checkbox/u-checkbox.vue",
-          "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue"
+          "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -1325,14 +1319,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-checkbox/u-checkbox.vue",
-          "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue"
+          "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -3945,14 +3938,13 @@
       "itemId": "event:cancel",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-picker/u-picker.vue",
-          "local:HIA-uView-UI/src/components/u-picker/u-picker.vue"
+          "local:HIA-uView-UI/src/components/u-picker/u-picker.vue",
+          "test:tests/runtime/hia-uview-p67-picker-calendar-select.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -3974,7 +3966,12 @@
           "status": "delivered",
           "kind": "event",
           "trigger": "user-cancellation",
-          "parameters": [],
+          "parameters": [
+            {
+              "name": "result",
+              "shape": "value-values-indexes-options-cancel-snapshot"
+            }
+          ],
           "delivery": "synchronous-emit",
           "cancellable": false,
           "modelRelation": "none",
@@ -3990,14 +3987,13 @@
       "itemId": "event:confirm",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-picker/u-picker.vue",
-          "local:HIA-uView-UI/src/components/u-picker/u-picker.vue"
+          "local:HIA-uView-UI/src/components/u-picker/u-picker.vue",
+          "test:tests/runtime/hia-uview-p67-picker-calendar-select.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -4021,8 +4017,8 @@
           "trigger": "user-confirmation",
           "parameters": [
             {
-              "name": "value",
-              "shape": "selected-value"
+              "name": "result",
+              "shape": "value-values-indexes-options-confirm-result"
             }
           ],
           "delivery": "synchronous-emit",
@@ -4040,14 +4036,13 @@
       "itemId": "event:update:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-picker/u-picker.vue",
-          "local:HIA-uView-UI/src/components/u-picker/u-picker.vue"
+          "local:HIA-uView-UI/src/components/u-picker/u-picker.vue",
+          "test:tests/runtime/hia-uview-p67-picker-calendar-select.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -4072,7 +4067,7 @@
           "parameters": [
             {
               "name": "value",
-              "shape": "selected-value"
+              "shape": "selected-scalar-or-array"
             }
           ],
           "delivery": "synchronous-emit",
@@ -4090,15 +4085,14 @@
       "itemId": "prop:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-picker/types.ts",
           "comparison:src/uni_modules/uview-pro/components/u-picker/u-picker.vue",
-          "local:HIA-uView-UI/src/components/u-picker/u-picker.vue"
+          "local:HIA-uView-UI/src/components/u-picker/u-picker.vue",
+          "test:tests/runtime/hia-uview-p67-picker-calendar-select.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "prop",
@@ -4140,12 +4134,14 @@
           "kind": "prop",
           "valueDomain": {
             "typeKinds": [
+              "Array",
               "Number",
               "String"
             ],
             "typeOrder": [
               "String",
-              "Number"
+              "Number",
+              "Array"
             ],
             "default": {
               "kind": "literal",
@@ -4446,14 +4442,13 @@
       "itemId": "event:change",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-radio-group/u-radio-group.vue",
-          "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue"
+          "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -4496,14 +4491,13 @@
       "itemId": "event:update:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-radio-group/u-radio-group.vue",
-          "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue"
+          "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -4694,14 +4688,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-radio-group/u-radio-group.vue",
-          "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue"
+          "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -4726,14 +4719,13 @@
       "itemId": "event:change",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-radio/u-radio.vue",
-          "local:HIA-uView-UI/src/components/u-radio/u-radio.vue"
+          "local:HIA-uView-UI/src/components/u-radio/u-radio.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -5000,14 +4992,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-radio/u-radio.vue",
-          "local:HIA-uView-UI/src/components/u-radio/u-radio.vue"
+          "local:HIA-uView-UI/src/components/u-radio/u-radio.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -5821,14 +5812,13 @@
       "itemId": "event:change",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-switch/u-switch.vue",
-          "local:HIA-uView-UI/src/components/u-switch/u-switch.vue"
+          "local:HIA-uView-UI/src/components/u-switch/u-switch.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -5853,7 +5843,7 @@
           "parameters": [
             {
               "name": "value",
-              "shape": "boolean"
+              "shape": "configured-value"
             }
           ],
           "delivery": "synchronous-emit",
@@ -5871,14 +5861,13 @@
       "itemId": "event:update:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-switch/u-switch.vue",
-          "local:HIA-uView-UI/src/components/u-switch/u-switch.vue"
+          "local:HIA-uView-UI/src/components/u-switch/u-switch.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -5903,7 +5892,7 @@
           "parameters": [
             {
               "name": "value",
-              "shape": "boolean"
+              "shape": "configured-value"
             }
           ],
           "delivery": "synchronous-emit",
@@ -6065,15 +6054,14 @@
       "itemId": "prop:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-switch/types.ts",
           "comparison:src/uni_modules/uview-pro/components/u-switch/u-switch.vue",
-          "local:HIA-uView-UI/src/components/u-switch/u-switch.vue"
+          "local:HIA-uView-UI/src/components/u-switch/u-switch.vue",
+          "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "prop",
@@ -6111,10 +6099,14 @@
           "kind": "prop",
           "valueDomain": {
             "typeKinds": [
-              "Boolean"
+              "Boolean",
+              "Number",
+              "String"
             ],
             "typeOrder": [
-              "Boolean"
+              "Boolean",
+              "String",
+              "Number"
             ],
             "default": {
               "kind": "literal",

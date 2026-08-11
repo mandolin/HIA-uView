@@ -348,7 +348,7 @@ test('locks immutable provenance, declared-scope API counts, and local component
   assert.equal(manifest.issues.length, 4);
   assert.deepEqual(manifest.semanticReview, {
     path: 'HIA-uView-UI/hia-uview.api-semantic-review.json',
-    digest: 'sha256:7436a28df1dc368bdca75cf565370ddf1909cccfceeba07db8f68dcce957b2da',
+    digest: 'sha256:a4a177965bd30008381a6225ccaea35f4441da3175e424535e360a4d19ce57e3',
     itemCount: 127,
     serviceCount: 2
   });
@@ -359,9 +359,9 @@ test('locks immutable provenance, declared-scope API counts, and local component
   // <lang><zh-CN>证据层级和待补 runtime parity 分别计算，以锁定“已审计”不等于“已运行时等价”。</zh-CN><en>Count evidence levels and pending runtime parity separately, locking that “reviewed” does not mean “runtime equivalent.”</en></lang>
   assert.equal(p0Items.length, 127);
   assert.equal(p0Items.filter((item) => item.semantics.reviewState === 'complete').length, 127);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 71);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 56);
-  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 54);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 90);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 37);
+  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 35);
 
   // <lang><zh-CN>service 从 imperative API 中独立汇集；只有 useModal/useToast 两个已确认公开入口且均明确未由 HIA 交付。</zh-CN><en>Collect services separately from imperative APIs; only the confirmed public useModal/useToast entries exist and both are explicitly undelivered by HIA.</en></lang>
   const services = manifest.components.flatMap((component) => component.services.items
@@ -443,8 +443,8 @@ test('inspects the real matrix deterministically without host paths or source bo
     componentCount: 99,
     itemCount: 1740,
     priorities: { P0: 30, P1: 42, P2: 27 },
-    dispositions: { compatible: 47, mapped: 275, unsupported: 1418 },
-    p0Semantics: { itemCount: 127, reviewed: 127, sourceReviewed: 56, runtimeTested: 71, runtimeParityRemaining: 54 },
+    dispositions: { compatible: 47, mapped: 308, unsupported: 1385 },
+    p0Semantics: { itemCount: 127, reviewed: 127, sourceReviewed: 37, runtimeTested: 90, runtimeParityRemaining: 35 },
     services: { componentCount: 2, itemCount: 2, unsupported: 2 },
     unresolvedInventories: 0,
     issueCount: 4
@@ -471,7 +471,7 @@ test('inspects the real matrix deterministically without host paths or source bo
   assert.equal(secondTextOutput, firstTextOutput);
   assert.match(firstTextOutput, /uview-pro@0\.6\.15; bec4b39cd3195354d65c1fc8722745d72052bd8c/u);
   assert.match(firstTextOutput, /99 components; 1740 API items/u);
-  assert.match(firstTextOutput, /P0 semantics: 127\/127 reviewed; 71 runtime-tested; 56 source-reviewed; 54 require runtime parity/u);
+  assert.match(firstTextOutput, /P0 semantics: 127\/127 reviewed; 90 runtime-tested; 37 source-reviewed; 35 require runtime parity/u);
   assert.match(firstTextOutput, /services: 2 items across 2 components; 2 unsupported/u);
 
   // <lang><zh-CN>JSON 由同一已校验 report 格式化两次，防止 serializer 注入非确定字段。</zh-CN><en>Format JSON twice from the same validated report so the serializer cannot inject nondeterministic fields.</en></lang>

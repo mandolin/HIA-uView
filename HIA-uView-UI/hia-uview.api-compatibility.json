@@ -142,7 +142,7 @@
   },
   "semanticReview": {
     "path": "HIA-uView-UI/hia-uview.api-semantic-review.json",
-    "digest": "sha256:7436a28df1dc368bdca75cf565370ddf1909cccfceeba07db8f68dcce957b2da",
+    "digest": "sha256:a4a177965bd30008381a6225ccaea35f4441da3175e424535e360a4d19ce57e3",
     "itemCount": 127,
     "serviceCount": 2
   },
@@ -6453,12 +6453,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "readonly",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "readonly"
             }
           },
           {
@@ -6895,12 +6914,17 @@
               "name": "change"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "change"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "change"
             }
           },
           {
@@ -6909,12 +6933,17 @@
               "name": "input"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "input"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "input"
             }
           },
           {
@@ -7059,8 +7088,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 4,
-          "unsupported": 52,
+          "mapped": 7,
+          "unsupported": 49,
           "unresolved": 0
         }
       },
@@ -10316,12 +10345,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "labelDisabled",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "labelDisabled"
             }
           },
           {
@@ -10490,12 +10538,33 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "name",
+                  "typeKinds": [
+                    "Number",
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String",
+                    "Number"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "name"
             }
           },
           {
@@ -10705,14 +10774,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-checkbox/u-checkbox.vue",
-                "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue"
+                "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -10769,14 +10837,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-checkbox/u-checkbox.vue",
-                "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue"
+                "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -10840,14 +10907,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-checkbox/u-checkbox.vue",
-                "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue"
+                "local:HIA-uView-UI/src/components/u-checkbox/u-checkbox.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -11067,8 +11133,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 4,
-          "mapped": 3,
-          "unsupported": 17,
+          "mapped": 5,
+          "unsupported": 15,
           "unresolved": 0
         }
       },
@@ -11350,12 +11416,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "labelDisabled",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "labelDisabled"
             }
           },
           {
@@ -11378,12 +11463,33 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "max",
+                  "typeKinds": [
+                    "Number",
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "Number",
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "max"
             }
           },
           {
@@ -11433,15 +11539,14 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-checkbox-group/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-checkbox-group/u-checkbox-group.vue",
-                "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue"
+                "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "prop",
@@ -11670,14 +11775,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-checkbox-group/u-checkbox-group.vue",
-                "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue"
+                "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -11734,14 +11838,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-checkbox-group/u-checkbox-group.vue",
-                "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue"
+                "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -11805,14 +11908,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-checkbox-group/u-checkbox-group.vue",
-                "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue"
+                "local:HIA-uView-UI/src/components/u-checkbox-group/u-checkbox-group.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -12060,8 +12162,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 1,
-          "mapped": 4,
-          "unsupported": 21,
+          "mapped": 6,
+          "unsupported": 19,
           "unresolved": 0
         }
       },
@@ -18304,12 +18406,17 @@
               "name": "close"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "close"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "close"
             }
           },
           {
@@ -18379,12 +18486,17 @@
               "name": "close"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "close"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "close"
             }
           },
           {
@@ -18449,12 +18561,17 @@
               "name": "open"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "open"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "open"
             }
           },
           {
@@ -18553,8 +18670,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 1,
-          "unsupported": 28,
+          "mapped": 4,
+          "unsupported": 25,
           "unresolved": 0
         }
       },
@@ -18745,12 +18862,35 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "modelValue",
+                  "typeKinds": [
+                    "Array",
+                    "Number",
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String",
+                    "Number",
+                    "Array"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "modelValue"
             }
           },
           {
@@ -18772,12 +18912,30 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "options",
+                  "typeKinds": [
+                    "Array"
+                  ],
+                  "typeOrder": [
+                    "Array"
+                  ],
+                  "default": {
+                    "kind": "factory-array"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "options"
             }
           },
           {
@@ -18800,12 +18958,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "show",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "show"
             }
           },
           {
@@ -18851,12 +19028,17 @@
               "name": "change"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "change"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "change"
             }
           },
           {
@@ -18865,12 +19047,17 @@
               "name": "update:modelValue"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "update:modelValue"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "update:modelValue"
             }
           }
         ],
@@ -19030,8 +19217,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 2,
-          "unsupported": 12,
+          "mapped": 7,
+          "unsupported": 7,
           "unresolved": 0
         }
       },
@@ -39884,7 +40071,7 @@
                   ],
                   "default": {
                     "kind": "literal",
-                    "value": "Cancel / 取消"
+                    "value": ""
                   },
                   "required": false,
                   "validator": {
@@ -39896,7 +40083,7 @@
             "priority": "P1",
             "migration": {
               "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
               "target": "cancelText"
             }
           },
@@ -39959,7 +40146,7 @@
                   ],
                   "default": {
                     "kind": "literal",
-                    "value": "Confirm / 确定"
+                    "value": ""
                   },
                   "required": false,
                   "validator": {
@@ -39971,7 +40158,7 @@
             "priority": "P1",
             "migration": {
               "disposition": "mapped",
-              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
               "target": "confirmText"
             }
           },
@@ -40232,12 +40419,14 @@
                 {
                   "name": "modelValue",
                   "typeKinds": [
+                    "Array",
                     "Number",
                     "String"
                   ],
                   "typeOrder": [
                     "String",
-                    "Number"
+                    "Number",
+                    "Array"
                   ],
                   "default": {
                     "kind": "literal",
@@ -40258,15 +40447,14 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-picker/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-picker/u-picker.vue",
-                "local:HIA-uView-UI/src/components/u-picker/u-picker.vue"
+                "local:HIA-uView-UI/src/components/u-picker/u-picker.vue",
+                "test:tests/runtime/hia-uview-p67-picker-calendar-select.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "prop",
@@ -40308,12 +40496,14 @@
                 "kind": "prop",
                 "valueDomain": {
                   "typeKinds": [
+                    "Array",
                     "Number",
                     "String"
                   ],
                   "typeOrder": [
                     "String",
-                    "Number"
+                    "Number",
+                    "Array"
                   ],
                   "default": {
                     "kind": "literal",
@@ -40383,12 +40573,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "preserveSelection",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "preserveSelection"
             }
           },
           {
@@ -40410,12 +40619,30 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "range",
+                  "typeKinds": [
+                    "Array"
+                  ],
+                  "typeOrder": [
+                    "Array"
+                  ],
+                  "default": {
+                    "kind": "factory-array"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "range"
             }
           },
           {
@@ -40438,12 +40665,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "rangeKey",
+                  "typeKinds": [
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "rangeKey"
             }
           },
           {
@@ -40636,14 +40882,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-picker/u-picker.vue",
-                "local:HIA-uView-UI/src/components/u-picker/u-picker.vue"
+                "local:HIA-uView-UI/src/components/u-picker/u-picker.vue",
+                "test:tests/runtime/hia-uview-p67-picker-calendar-select.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -40665,7 +40910,12 @@
                 "status": "delivered",
                 "kind": "event",
                 "trigger": "user-cancellation",
-                "parameters": [],
+                "parameters": [
+                  {
+                    "name": "result",
+                    "shape": "value-values-indexes-options-cancel-snapshot"
+                  }
+                ],
                 "delivery": "synchronous-emit",
                 "cancellable": false,
                 "modelRelation": "none",
@@ -40681,12 +40931,17 @@
               "name": "columnchange"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "columnchange"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "columnchange"
             }
           },
           {
@@ -40709,14 +40964,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-picker/u-picker.vue",
-                "local:HIA-uView-UI/src/components/u-picker/u-picker.vue"
+                "local:HIA-uView-UI/src/components/u-picker/u-picker.vue",
+                "test:tests/runtime/hia-uview-p67-picker-calendar-select.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -40740,8 +40994,8 @@
                 "trigger": "user-confirmation",
                 "parameters": [
                   {
-                    "name": "value",
-                    "shape": "selected-value"
+                    "name": "result",
+                    "shape": "value-values-indexes-options-confirm-result"
                   }
                 ],
                 "delivery": "synchronous-emit",
@@ -40773,14 +41027,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-picker/u-picker.vue",
-                "local:HIA-uView-UI/src/components/u-picker/u-picker.vue"
+                "local:HIA-uView-UI/src/components/u-picker/u-picker.vue",
+                "test:tests/runtime/hia-uview-p67-picker-calendar-select.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -40805,7 +41058,7 @@
                 "parameters": [
                   {
                     "name": "value",
-                    "shape": "selected-value"
+                    "shape": "selected-scalar-or-array"
                   }
                 ],
                 "delivery": "synchronous-emit",
@@ -40830,12 +41083,17 @@
               "name": "title"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "title"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "title"
             }
           }
         ],
@@ -40926,8 +41184,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 7,
-          "unsupported": 21,
+          "mapped": 12,
+          "unsupported": 16,
           "unresolved": 0
         }
       },
@@ -42482,12 +42740,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "labelDisabled",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "labelDisabled"
             }
           },
           {
@@ -42542,12 +42819,33 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "name",
+                  "typeKinds": [
+                    "Number",
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String",
+                    "Number"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "name"
             }
           },
           {
@@ -42757,14 +43055,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-radio/u-radio.vue",
-                "local:HIA-uView-UI/src/components/u-radio/u-radio.vue"
+                "local:HIA-uView-UI/src/components/u-radio/u-radio.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -42828,14 +43125,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-radio/u-radio.vue",
-                "local:HIA-uView-UI/src/components/u-radio/u-radio.vue"
+                "local:HIA-uView-UI/src/components/u-radio/u-radio.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -42942,8 +43238,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 3,
-          "mapped": 2,
-          "unsupported": 9,
+          "mapped": 4,
+          "unsupported": 7,
           "unresolved": 0
         }
       },
@@ -43225,12 +43521,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "labelDisabled",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "labelDisabled"
             }
           },
           {
@@ -43498,14 +43813,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-radio-group/u-radio-group.vue",
-                "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue"
+                "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -43562,14 +43876,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-radio-group/u-radio-group.vue",
-                "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue"
+                "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -43633,14 +43946,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-radio-group/u-radio-group.vue",
-                "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue"
+                "local:HIA-uView-UI/src/components/u-radio-group/u-radio-group.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -43790,8 +44102,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 2,
-          "mapped": 3,
-          "unsupported": 12,
+          "mapped": 4,
+          "unsupported": 11,
           "unresolved": 0
         }
       },
@@ -44006,12 +44318,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "current",
+                  "typeKinds": [
+                    "Number"
+                  ],
+                  "typeOrder": [
+                    "Number"
+                  ],
+                  "default": {
+                    "kind": "expression",
+                    "digest": "sha256:eb045d78d273107348b0300c01d29b7552d622abbc6faf81b3ec55359aa9950c"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "current"
             }
           },
           {
@@ -44507,8 +44838,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 5,
-          "unsupported": 14,
+          "mapped": 6,
+          "unsupported": 13,
           "unresolved": 0
         }
       },
@@ -48480,12 +48811,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "cancelText",
+                  "typeKinds": [
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P2",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "cancelText"
             }
           },
           {
@@ -48564,12 +48914,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "confirmText",
+                  "typeKinds": [
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P2",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "confirmText"
             }
           },
           {
@@ -48971,12 +49340,17 @@
               "name": "cancel"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "cancel"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "cancel"
             }
           },
           {
@@ -48985,12 +49359,17 @@
               "name": "click"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "click"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "click"
             }
           },
           {
@@ -48999,12 +49378,17 @@
               "name": "confirm"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "confirm"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "confirm"
             }
           },
           {
@@ -49120,8 +49504,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 2,
-          "unsupported": 21,
+          "mapped": 7,
+          "unsupported": 16,
           "unresolved": 0
         }
       },
@@ -54559,12 +54943,35 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "activeValue",
+                  "typeKinds": [
+                    "Boolean",
+                    "Number",
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "Boolean",
+                    "String",
+                    "Number"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "activeValue"
             }
           },
           {
@@ -54790,12 +55197,35 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "inactiveValue",
+                  "typeKinds": [
+                    "Boolean",
+                    "Number",
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "Boolean",
+                    "String",
+                    "Number"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "inactiveValue"
             }
           },
           {
@@ -54940,10 +55370,14 @@
                 {
                   "name": "modelValue",
                   "typeKinds": [
-                    "Boolean"
+                    "Boolean",
+                    "Number",
+                    "String"
                   ],
                   "typeOrder": [
-                    "Boolean"
+                    "Boolean",
+                    "String",
+                    "Number"
                   ],
                   "default": {
                     "kind": "literal",
@@ -54964,15 +55398,14 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-switch/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-switch/u-switch.vue",
-                "local:HIA-uView-UI/src/components/u-switch/u-switch.vue"
+                "local:HIA-uView-UI/src/components/u-switch/u-switch.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "prop",
@@ -55010,10 +55443,14 @@
                 "kind": "prop",
                 "valueDomain": {
                   "typeKinds": [
-                    "Boolean"
+                    "Boolean",
+                    "Number",
+                    "String"
                   ],
                   "typeOrder": [
-                    "Boolean"
+                    "Boolean",
+                    "String",
+                    "Number"
                   ],
                   "default": {
                     "kind": "literal",
@@ -55120,14 +55557,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-switch/u-switch.vue",
-                "local:HIA-uView-UI/src/components/u-switch/u-switch.vue"
+                "local:HIA-uView-UI/src/components/u-switch/u-switch.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -55152,7 +55588,7 @@
                 "parameters": [
                   {
                     "name": "value",
-                    "shape": "boolean"
+                    "shape": "configured-value"
                   }
                 ],
                 "delivery": "synchronous-emit",
@@ -55184,14 +55620,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-switch/u-switch.vue",
-                "local:HIA-uView-UI/src/components/u-switch/u-switch.vue"
+                "local:HIA-uView-UI/src/components/u-switch/u-switch.vue",
+                "test:tests/runtime/hia-uview-p67-choice.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -55216,7 +55651,7 @@
                 "parameters": [
                   {
                     "name": "value",
-                    "shape": "boolean"
+                    "shape": "configured-value"
                   }
                 ],
                 "delivery": "synchronous-emit",
@@ -55322,8 +55757,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 2,
-          "mapped": 3,
-          "unsupported": 8,
+          "mapped": 5,
+          "unsupported": 6,
           "unresolved": 0
         }
       },
@@ -66255,12 +66690,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "modelValue",
+                  "typeKinds": [
+                    "Array"
+                  ],
+                  "typeOrder": [
+                    "Array"
+                  ],
+                  "default": {
+                    "kind": "expression",
+                    "digest": "sha256:eb045d78d273107348b0300c01d29b7552d622abbc6faf81b3ec55359aa9950c"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "modelValue"
             }
           },
           {
@@ -66878,12 +67332,17 @@
               "name": "update:modelValue"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "update:modelValue"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "update:modelValue"
             }
           }
         ],
@@ -67150,8 +67609,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 1,
-          "unsupported": 71,
+          "mapped": 3,
+          "unsupported": 69,
           "unresolved": 0
         }
       },
