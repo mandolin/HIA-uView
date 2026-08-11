@@ -3,13 +3,18 @@
  * @lang zh-CN 选择器样式只消费有限选项和主题 token，不决定外层弹层。
  * @lang en Select styles consume finite options and theme tokens only and do not decide outer popup behavior.
  */
-.u-select { background: var(--u-comp-select-surface); border: 1px solid var(--u-comp-select-border); border-radius: var(--u-comp-select-radius); color: var(--u-comp-select-foreground); padding: var(--u-comp-select-padding); }
+.u-select { background: var(--u-comp-select-surface); border: 1px solid var(--u-comp-select-border); border-radius: var(--u-comp-select-radius); color: var(--u-comp-select-foreground); overflow: hidden; }
 .u-select--disabled { opacity: var(--u-comp-select-disabled-opacity); }
+.u-select__trigger { align-items: center; background: transparent; border: 0; color: inherit; display: flex; min-height: var(--u-comp-select-option-height); padding: var(--u-comp-select-padding); text-align: start; width: 100%; }
 .u-select__placeholder { color: var(--u-comp-select-placeholder); }
 .u-select__value { color: var(--u-comp-select-value); }
-.u-select__options { display: flex; flex-direction: column; gap: var(--u-comp-select-option-gap); margin-block-start: var(--u-comp-select-gap); }
+.u-select__panel { border-block-start: 1px solid var(--u-comp-select-border); padding: var(--u-comp-select-padding); }
+.u-select__options { display: flex; flex-direction: column; gap: var(--u-comp-select-option-gap); }
 .u-select__option { background: transparent; border: 0; border-radius: var(--u-comp-select-radius); color: inherit; min-height: var(--u-comp-select-option-height); padding: 0 var(--u-comp-select-option-padding); text-align: start; }
 .u-select__option--selected { background: var(--u-comp-select-selected-background); color: var(--u-comp-select-selected-foreground); }
+.u-select__actions { display: flex; gap: var(--u-comp-select-gap); justify-content: flex-end; margin-block-start: var(--u-comp-select-gap); }
+.u-select__action { background: transparent; border: 1px solid var(--u-comp-select-border); border-radius: var(--u-comp-select-radius); color: inherit; min-height: var(--u-comp-select-option-height); padding: 0 var(--u-comp-select-option-padding); }
+.u-select__action--confirm { background: var(--u-comp-select-selected-foreground); border-color: var(--u-comp-select-selected-foreground); color: var(--u-comp-select-surface); }
 
 /* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
 /* #ifdef MP-WEIXIN */
@@ -19,11 +24,15 @@
   border: 1px solid #27364a;
   border-radius: 8px;
   color: #001b2e;
-  padding: 8px 12px;
 }
 
 .u-select--disabled {
   opacity: 0.6;
+}
+
+.u-select__trigger {
+  min-height: 40px;
+  padding: 8px 12px;
 }
 
 .u-select__placeholder {
@@ -34,9 +43,13 @@
   color: #001b2e;
 }
 
+.u-select__panel {
+  border-block-start: 1px solid #27364a;
+  padding: 8px 12px;
+}
+
 .u-select__options {
   gap: 4px;
-  margin-block-start: 8px;
 }
 
 .u-select__option {
@@ -48,6 +61,24 @@
 .u-select__option--selected {
   background: #f7f9fc;
   color: #0047ab;
+}
+
+.u-select__actions {
+  gap: 8px;
+  margin-block-start: 8px;
+}
+
+.u-select__action {
+  border: 1px solid #27364a;
+  border-radius: 8px;
+  min-height: 40px;
+  padding: 0 8px;
+}
+
+.u-select__action--confirm {
+  background: #0047ab;
+  border-color: #0047ab;
+  color: #ffffff;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
 /* #endif */

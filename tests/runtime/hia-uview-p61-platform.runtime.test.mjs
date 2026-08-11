@@ -56,10 +56,10 @@ describe('P61 bounded platform-adjacent runtime behavior', () => {
     await options[1].trigger('click');
     expect(picker.emitted('update:modelValue')).toBeUndefined();
 
-    // <lang><zh-CN>确认才报告 selected local value；渲染树没有 popup 组件或外层可见性 service。</zh-CN><en>Only confirmation reports selected local value; render tree has no popup component or outer visibility service.</en></lang>
+    // <lang><zh-CN>确认才报告 selected local value 与 P67 结构化快照；渲染树没有 popup 组件或外层可见性 service。</zh-CN><en>Only confirmation reports the selected local value and P67 structured snapshot; render tree has no popup component or outer visibility service.</en></lang>
     await picker.get('button.u-picker__action--confirm').trigger('click');
     expect(picker.emitted('update:modelValue')).toEqual([['second']]);
-    expect(picker.emitted('confirm')).toEqual([['second']]);
+    expect(picker.emitted('confirm')).toEqual([[{ value: 'second', values: ['second'], indexes: [1], options: [{ label: 'Second', value: 'second' }] }]]);
     expect(picker.find('.u-popup').exists()).toBe(false);
   });
 });

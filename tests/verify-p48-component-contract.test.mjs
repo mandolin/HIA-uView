@@ -86,7 +86,8 @@ test('keeps P48 source inside controlled UI boundaries', async () => {
   assert.match(componentSources[5], /GRID_CONTEXT/);
   assert.match(componentSources[6], /gridContext/);
   assert.match(componentSources[7], /handleClick/);
-  assert.match(componentSources[8], /safeOptions/);
+  // <lang><zh-CN>P67 picker 把旧单列 safeOptions 收紧为统一单/多列 safeColumns，静态门禁跟随真实状态机名称。</zh-CN><en>The P67 picker narrows the former single-column safeOptions into unified single-/multi-column safeColumns, so this static gate follows the real state-machine name.</en></lang>
+  assert.match(componentSources[8], /safeColumns/);
   assert.match(componentSources[9], /rowStyle/);
 });
 
