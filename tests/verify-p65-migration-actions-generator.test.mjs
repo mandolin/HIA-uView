@@ -63,7 +63,7 @@ test('generates one deterministic action for every reviewed P0 semantic item', (
   assert.equal(first.scope.components.length, 30);
   assert.deepEqual(first.scope.priorities, ['P0']);
   assert.equal(first.actions.length, 127);
-  assert.deepEqual(dispositions, { compatible: 43, mapped: 82, unsupported: 2 });
+  assert.deepEqual(dispositions, { compatible: 43, mapped: 84, unsupported: 0 });
   assert.ok(first.actions.every((action) => /^sha256:[0-9a-f]{64}$/u.test(action.sourceFingerprint)));
   assert.ok(first.actions.every((action) => !('apply' in action) && !('script' in action)));
 });

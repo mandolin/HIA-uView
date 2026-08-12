@@ -1135,7 +1135,7 @@
       "component": "u-modal",
       "itemId": "event:cancel",
       "priority": "P0",
-      "sourceFingerprint": "sha256:73e6b94aa6744185b55714eff36e6d7d57c8390a46e4e428db3ef407fc5375ae",
+      "sourceFingerprint": "sha256:2d6bdc754ded343f320ceea7ee9385efa4506a08d18312b15cc64a1a465407e9",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1156,7 +1156,7 @@
       "component": "u-modal",
       "itemId": "event:confirm",
       "priority": "P0",
-      "sourceFingerprint": "sha256:1e267cfc211113a2101b769621a9d009317535f15d095c6262da52ae3df2e34d",
+      "sourceFingerprint": "sha256:9d830898510abed2a42bae44fb152947952f9a8d76f1444b1fcf0a4f331b5f84",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1177,7 +1177,7 @@
       "component": "u-modal",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:0e94276590d030a25b08cbfa8f1e5720716d2667e5c9b1cca6358526fa4a4cd2",
+      "sourceFingerprint": "sha256:fd5cc3ef474b8f43ea5447f2226784b852723c002514a7a79a9ea5218ff35fe1",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1218,7 +1218,7 @@
       "component": "u-modal",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:31cae26025cc78ba6366b47390d5f9290df2685501f35a68c69cffd9c01d7941",
+      "sourceFingerprint": "sha256:efd8992e522cedc02404b87b3f5147f8a5226af200cf174dfac05188b72595f7",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1239,7 +1239,7 @@
       "component": "u-navbar",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:e9347d5e1c569d7f0693b6858bf4333136315a704a3f82b159d5ddb9b77364ae",
+      "sourceFingerprint": "sha256:eb64b38d2f4e1105f2b87011f7e8586d385a1302fd351dec62a540b6763e3455",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1260,16 +1260,16 @@
       "component": "u-notice-bar",
       "itemId": "event:click",
       "priority": "P0",
-      "sourceFingerprint": "sha256:6f9a0931d0a5a35956be1c92f948f99955a344024e5efea1d8be3ac5a03b52cd",
+      "sourceFingerprint": "sha256:0863b2270cc9e785ad6f31821b33f7d6fa3e3714c4d9814171cad1c67a8cc57a",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Handle the local banner click intent in the caller.",
-        "zh-Hans": "在调用方处理本地 banner click intent。"
+        "en": "Adapt the caller from upstream u-notice-bar event:click to HIA target click, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-notice-bar event:click 适配到 HIA 目标 click，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "No list index, route, timer, or global feedback queue is supplied.",
-        "zh-Hans": "不提供 list index、route、timer 或 global feedback queue。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1281,16 +1281,16 @@
       "component": "u-notice-bar",
       "itemId": "event:close",
       "priority": "P0",
-      "sourceFingerprint": "sha256:00352cf79f3c147669e13addf4ed7ed43c3c85b580c30209cc9d9cf7f5ac59a1",
+      "sourceFingerprint": "sha256:4abbbb9d9e75941c163431b451fb3a26a92f2afdd15e7d797038662ac1d8cf5b",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Let the caller decide whether and how to hide or replace the banner.",
-        "zh-Hans": "由调用方决定是否以及如何隐藏或替换 banner。"
+        "en": "Adapt the caller from upstream u-notice-bar event:close to HIA target close, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-notice-bar event:close 适配到 HIA 目标 close，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "Close does not write visible/show or manage a global queue.",
-        "zh-Hans": "close 不写入 visible/show，也不管理 global queue。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -1529,7 +1529,7 @@
       "component": "u-popup",
       "itemId": "event:close",
       "priority": "P0",
-      "sourceFingerprint": "sha256:a234cfd86f9543093682994fd2571b27b70f0e1c9de98d7e86f752e84d855922",
+      "sourceFingerprint": "sha256:f12f6b14f911de8a5dce06fb09e841e0b5ceb06183cb1b9e7ec99c4bee6833be",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1550,7 +1550,7 @@
       "component": "u-popup",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:a4b4f26736672acc1e0b38743cb819ccb24f010381195a5cb6ec0db887e78c58",
+      "sourceFingerprint": "sha256:ef0133a0fa26a56a2f35cb06d03e981512483ab67bf83a611f786f3f6f6158bc",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1571,7 +1571,7 @@
       "component": "u-popup",
       "itemId": "prop:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:e5fe918e47b7a3cb1f1d895ff96b874eb783be007cfe2d606162d06dc9940d4b",
+      "sourceFingerprint": "sha256:1b92a7208efdb3a8025fe917d493491cea7d47fc68ebc6bf2b435b773f4ece83",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1592,7 +1592,7 @@
       "component": "u-popup",
       "itemId": "prop:show",
       "priority": "P0",
-      "sourceFingerprint": "sha256:3b6162eebabfd215e2b92a985d25dc574ef2b2740a6e604edb1f189c07faee73",
+      "sourceFingerprint": "sha256:8d1d7858d30d2f938fb56aad9029233b37477b0f2851429c79df5c6b817a099c",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1613,7 +1613,7 @@
       "component": "u-popup",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:690ab752c908f6a5b218ffe17a7c81d503061a0d4a9089ed3e1b7a3a81f7fff4",
+      "sourceFingerprint": "sha256:98224ad749b0a674169ab30b348f961a0905255e53bcb2fd6c53aee54bc3960a",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -2235,16 +2235,16 @@
       "component": "u-tabbar",
       "itemId": "event:change",
       "priority": "P0",
-      "sourceFingerprint": "sha256:ca1a3acb92109d1cff0f05f4338098dc11432dca15a79b44f6d65f5eb8c23389",
+      "sourceFingerprint": "sha256:e6920034827ac481ab60dd6e105ddc46e7806b7bac6857d4b389475e61c73851",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Handle local selection change in the page or caller.",
-        "zh-Hans": "在页面或调用方处理本地选择变更。"
+        "en": "Adapt the caller from upstream u-tabbar event:change to HIA target change, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-tabbar event:change 适配到 HIA 目标 change，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "The component does not navigate or manage native tab-bar lifecycle.",
-        "zh-Hans": "组件不导航，也不管理 native tab-bar lifecycle。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -2256,16 +2256,16 @@
       "component": "u-tabbar",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:74ff9620c5c5b644df30237710a077584ce97c0700ce399b2eacb2151e60f9ad",
+      "sourceFingerprint": "sha256:b4eee95ca25b1c561044f2dec45d01c2dce33e4269e07b345968929693ee9ebc",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
-        "en": "Write the next local tab key from the caller and perform routing separately if needed.",
-        "zh-Hans": "由调用方写入下一本地 tab key，并在需要时单独执行 routing。"
+        "en": "Adapt the caller from upstream u-tabbar event:update:modelValue to HIA target update:modelValue, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-tabbar event:update:modelValue 适配到 HIA 目标 update:modelValue，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "This is not a substitute for official custom tabBar lifecycle.",
-        "zh-Hans": "这不能替代官方 custom tabBar lifecycle。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -2317,7 +2317,7 @@
       "component": "u-tabs",
       "itemId": "event:change",
       "priority": "P0",
-      "sourceFingerprint": "sha256:54977196c192852c1cd85b346b0370d32293c93f358452d524d69d807f76cacc",
+      "sourceFingerprint": "sha256:ea926f7400b789a88d2b0218a7a61d0aedae0b145bff9176612513602061dc70",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -2338,7 +2338,7 @@
       "component": "u-tabs",
       "itemId": "prop:current",
       "priority": "P0",
-      "sourceFingerprint": "sha256:c27b2f8029af9ee66b5f9f4eaf19f49e2c81ac69a5079c171825ee622bb2984e",
+      "sourceFingerprint": "sha256:1363555fe221e4631486524314b2f10c576f924bb07ba0fad86aba202f153c77",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -2608,16 +2608,16 @@
       "component": "u-toast",
       "itemId": "imperative:close",
       "priority": "P0",
-      "sourceFingerprint": "sha256:5f96c7b3f69fdaf000783f67a8106af83b59412111262cf3e3219aad8c0fc14c",
-      "disposition": "unsupported",
-      "operation": "keep-existing-or-compose",
+      "sourceFingerprint": "sha256:d8a798108707b6375900136da498ceee341d70249f867e36ddd995433801ac78",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep or explicitly compose the caller-side behavior for upstream u-toast imperative:close; HIA currently exposes no reviewed target.",
-        "zh-Hans": "为上游 u-toast imperative:close 保留或显式组合调用方行为；HIA 当前没有已审计目标。"
+        "en": "Adapt the caller from upstream u-toast imperative:close to HIA target close, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-toast imperative:close 适配到 HIA 目标 close，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "This records a current delivery gap only; it adds no runtime behavior, service, patch, script, or automatic migration.",
-        "zh-Hans": "这只记录当前交付缺口；不会增加 runtime 行为、service、patch、script 或自动迁移。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",
@@ -2629,16 +2629,16 @@
       "component": "u-toast",
       "itemId": "imperative:show",
       "priority": "P0",
-      "sourceFingerprint": "sha256:64aa1182181ffe5ce2931783299446bf19f752a520a1f0f3f9ac0486a6a41e2d",
-      "disposition": "unsupported",
-      "operation": "keep-existing-or-compose",
+      "sourceFingerprint": "sha256:c13996ef9c210119190613145d4fa442c5da086adc04e84de0072a3851d5b164",
+      "disposition": "mapped",
+      "operation": "adapt-call-site",
       "guidance": {
-        "en": "Keep or explicitly compose the caller-side behavior for upstream u-toast imperative:show; HIA currently exposes no reviewed target.",
-        "zh-Hans": "为上游 u-toast imperative:show 保留或显式组合调用方行为；HIA 当前没有已审计目标。"
+        "en": "Adapt the caller from upstream u-toast imperative:show to HIA target show, following the recorded payload, binding, ownership, and lifecycle facts.",
+        "zh-Hans": "把调用方从上游 u-toast imperative:show 适配到 HIA 目标 show，并遵循已记录的 payload、binding、ownership 与 lifecycle 事实。"
       },
       "limitations": {
-        "en": "This records a current delivery gap only; it adds no runtime behavior, service, patch, script, or automatic migration.",
-        "zh-Hans": "这只记录当前交付缺口；不会增加 runtime 行为、service、patch、script 或自动迁移。"
+        "en": "A shared name is not behavioral equivalence; retain no upstream handler, slot, parent-child, or service assumption without an explicit review.",
+        "zh-Hans": "同名不等于行为等价；未经明确审计，不得保留上游 handler、slot、父子关系或 service 假设。"
       },
       "docs": [
         "docs/migration-from-uview.md",

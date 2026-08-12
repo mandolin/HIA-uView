@@ -342,8 +342,8 @@ test('keeps P1 promotions structural and preserves deterministic matrix totals',
   assert.equal(PROMOTED_P1_IDS.length, 31);
   assert.equal(p1Entries.length, 536);
   assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'compatible').length, 4);
-  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'mapped').length, 138);
-  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'unsupported').length, 394);
+  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'mapped').length, 164);
+  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'unsupported').length, 368);
   assert.equal(controlledP1Entries.length, 108);
   assert.equal(controlledP1Entries.filter(([, item]) => item.migration.disposition === 'mapped').length, 54);
   assert.equal(controlledP1Entries.filter(([, item]) => item.migration.disposition === 'unsupported').length, 54);
@@ -366,8 +366,8 @@ test('keeps P1 promotions structural and preserves deterministic matrix totals',
 });
 
 /**
- * @lang zh-CN 单独披露两个 USelect P2 映射，并锁定完整矩阵的 47/308/1385 与 P0 90/37/35 证据事实。
- * @lang en Separately discloses the two USelect P2 mappings and locks whole-matrix 47/308/1385 plus P0 90/37/35 evidence facts.
+ * @lang zh-CN 单独披露两个 USelect P2 映射，并锁定完整矩阵的 47/336/1357 与 P0 108/19/19 证据事实；新增 feedback/navigation/overlay 映射不改变本批选择组件断言。
+ * @lang en Separately discloses the two USelect P2 mappings and locks whole-matrix 47/336/1357 plus P0 108/19/19 evidence facts; newly delivered feedback/navigation/overlay mappings do not change this selection-component batch assertion.
  */
 test('isolates the two select P2 mappings from P0 and P1 semantics', () => {
   // <lang><zh-CN>所有组件项现场按 disposition/P0 evidence 分类；service 不在复合索引中。</zh-CN><en>Classify all component items live by disposition and P0 evidence; services are absent from the composite index.</en></lang>
@@ -382,11 +382,11 @@ test('isolates the two select P2 mappings from P0 and P1 semantics', () => {
 
   assert.equal(allItems.length, 1740);
   assert.equal(allItems.filter((item) => item.migration.disposition === 'compatible').length, 47);
-  assert.equal(allItems.filter((item) => item.migration.disposition === 'mapped').length, 308);
-  assert.equal(allItems.filter((item) => item.migration.disposition === 'unsupported').length, 1385);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 90);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 37);
-  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 35);
+  assert.equal(allItems.filter((item) => item.migration.disposition === 'mapped').length, 336);
+  assert.equal(allItems.filter((item) => item.migration.disposition === 'unsupported').length, 1357);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 108);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 19);
+  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 19);
   assert.deepEqual(selectP2MappedIds, [...EXTRA_SELECT_P2_IDS].sort());
 
   // <lang><zh-CN>两个额外映射逐项保持 P2、无 semantics、具名同名 target 且不进入动作包。</zh-CN><en>Each extra mapping stays P2, carries no semantics, has a named same-name target, and stays outside the action packet.</en></lang>

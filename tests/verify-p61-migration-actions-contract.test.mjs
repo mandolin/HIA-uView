@@ -163,7 +163,7 @@ test('inspects scope-complete P0 migration actions without source discovery or r
   assert.equal(first.details.manifests.length, 1);
   assert.equal(packet.path, actionPath);
   assert.equal(packet.apiCompatibilityManifest, matrixPath);
-  assert.deepEqual(packet.summary, { actionCount: 127, dispositions: { compatible: 43, mapped: 82, unsupported: 2 } });
+  assert.deepEqual(packet.summary, { actionCount: 127, dispositions: { compatible: 43, mapped: 84, unsupported: 0 } });
   assert.equal(packet.actions[0].id, 'u-button/event:click');
   assert.equal(packet.actions.at(-1).id, 'u-toast/prop:loading');
   assert.equal(initialActions.length, 38);
@@ -172,7 +172,7 @@ test('inspects scope-complete P0 migration actions without source discovery or r
     { compatible: 15, mapped: 23, unsupported: 0 }
   );
   assert.match(textOutput, /inspect: passed/);
-  assert.match(textOutput, /127 actions; 43\/82\/2 compatible\/mapped\/unsupported/);
+  assert.match(textOutput, /127 actions; 43\/84\/0 compatible\/mapped\/unsupported/);
   assert.match(jsonOutput, /"kind": "migration-actions"/);
   assert.doesNotMatch(`${textOutput}\n${jsonOutput}`, new RegExp(escapeRegularExpression(process.cwd())));
   assert.doesNotMatch(`${textOutput}\n${jsonOutput}`, /<template|defineProps|readFile\(|git\s+|npm\s+(?:install|exec)/i);

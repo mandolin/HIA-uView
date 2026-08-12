@@ -8,7 +8,7 @@
   },
   "local": {
     "componentManifestDigest": "sha256:4f96155e6189f8b39b7f5c1113b679b149f557f7612f1b59c99797a556191728",
-    "runtimeEntryDigest": "sha256:a385f31a6ab268e2af33e4516015450e8a88df1deac48afecfee829cad147dfc"
+    "runtimeEntryDigest": "sha256:492e1f7d68dd6e486cc767f5408d97ae66ed734fa3670f877533e4b487f4481b"
   },
   "items": [
     {
@@ -3140,14 +3140,13 @@
       "itemId": "event:cancel",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-modal/u-modal.vue",
-          "local:HIA-uView-UI/src/components/u-modal/u-modal.vue"
+          "local:HIA-uView-UI/src/components/u-modal/u-modal.vue",
+          "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -3185,14 +3184,13 @@
       "itemId": "event:confirm",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-modal/u-modal.vue",
-          "local:HIA-uView-UI/src/components/u-modal/u-modal.vue"
+          "local:HIA-uView-UI/src/components/u-modal/u-modal.vue",
+          "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -3230,14 +3228,13 @@
       "itemId": "event:update:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-modal/u-modal.vue",
-          "local:HIA-uView-UI/src/components/u-modal/u-modal.vue"
+          "local:HIA-uView-UI/src/components/u-modal/u-modal.vue",
+          "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -3352,14 +3349,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-modal/u-modal.vue",
-          "local:HIA-uView-UI/src/components/u-modal/u-modal.vue"
+          "local:HIA-uView-UI/src/components/u-modal/u-modal.vue",
+          "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -3384,14 +3380,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-navbar/u-navbar.vue",
-          "local:HIA-uView-UI/src/components/u-navbar/u-navbar.vue"
+          "local:HIA-uView-UI/src/components/u-navbar/u-navbar.vue",
+          "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -3416,14 +3411,13 @@
       "itemId": "event:click",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-notice-bar/u-notice-bar.vue",
-          "local:HIA-uView-UI/src/components/u-notice-bar/u-notice-bar.vue"
+          "local:HIA-uView-UI/src/components/u-notice-bar/u-notice-bar.vue",
+          "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -3466,14 +3460,13 @@
       "itemId": "event:close",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-notice-bar/u-notice-bar.vue",
-          "local:HIA-uView-UI/src/components/u-notice-bar/u-notice-bar.vue"
+          "local:HIA-uView-UI/src/components/u-notice-bar/u-notice-bar.vue",
+          "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -4169,14 +4162,13 @@
       "itemId": "event:close",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-popup/u-popup.vue",
-          "local:HIA-uView-UI/src/components/u-popup/u-popup.vue"
+          "local:HIA-uView-UI/src/components/u-popup/u-popup.vue",
+          "test:tests/runtime/hia-uview-p68-overlay.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -4214,14 +4206,13 @@
       "itemId": "event:update:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-popup/u-popup.vue",
-          "local:HIA-uView-UI/src/components/u-popup/u-popup.vue"
+          "local:HIA-uView-UI/src/components/u-popup/u-popup.vue",
+          "test:tests/runtime/hia-uview-p68-overlay.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -4264,15 +4255,14 @@
       "itemId": "prop:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-popup/types.ts",
           "comparison:src/uni_modules/uview-pro/components/u-popup/u-popup.vue",
-          "local:HIA-uView-UI/src/components/u-popup/u-popup.vue"
+          "local:HIA-uView-UI/src/components/u-popup/u-popup.vue",
+          "test:tests/runtime/hia-uview-p68-overlay.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "prop",
@@ -4337,15 +4327,14 @@
       "itemId": "prop:show",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-popup/types.ts",
           "comparison:src/uni_modules/uview-pro/components/u-popup/u-popup.vue",
-          "local:HIA-uView-UI/src/components/u-popup/u-popup.vue"
+          "local:HIA-uView-UI/src/components/u-popup/u-popup.vue",
+          "test:tests/runtime/hia-uview-p68-overlay.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "prop",
@@ -4410,14 +4399,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-popup/u-popup.vue",
-          "local:HIA-uView-UI/src/components/u-popup/u-popup.vue"
+          "local:HIA-uView-UI/src/components/u-popup/u-popup.vue",
+          "test:tests/runtime/hia-uview-p68-overlay.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -6134,14 +6122,13 @@
       "itemId": "event:change",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-tabbar/u-tabbar.vue",
-          "local:HIA-uView-UI/src/components/u-tabbar/u-tabbar.vue"
+          "local:HIA-uView-UI/src/components/u-tabbar/u-tabbar.vue",
+          "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -6184,14 +6171,13 @@
       "itemId": "event:update:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-tabbar/u-tabbar.vue",
-          "local:HIA-uView-UI/src/components/u-tabbar/u-tabbar.vue"
+          "local:HIA-uView-UI/src/components/u-tabbar/u-tabbar.vue",
+          "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -6382,14 +6368,13 @@
       "itemId": "event:change",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-tabs/u-tabs.vue",
-          "local:HIA-uView-UI/src/components/u-tabs/u-tabs.vue"
+          "local:HIA-uView-UI/src/components/u-tabs/u-tabs.vue",
+          "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -6432,15 +6417,14 @@
       "itemId": "prop:current",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-tabs/types.ts",
           "comparison:src/uni_modules/uview-pro/components/u-tabs/u-tabs.vue",
-          "local:HIA-uView-UI/src/components/u-tabs/u-tabs.vue"
+          "local:HIA-uView-UI/src/components/u-tabs/u-tabs.vue",
+          "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "prop",
@@ -7187,10 +7171,11 @@
       "itemId": "imperative:close",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-toast/u-toast.vue",
-          "local:HIA-uView-UI/src/components/u-toast/u-toast.vue"
+          "local:HIA-uView-UI/src/components/u-toast/u-toast.vue",
+          "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
         ],
         "remainingEvidence": [],
         "upstream": {
@@ -7209,7 +7194,20 @@
           "failure": "no-declared-error-channel"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered",
+          "kind": "imperativeApi",
+          "entry": "component-ref",
+          "parameters": [],
+          "returns": "void",
+          "effects": [
+            "ends-current-imperative-session",
+            "cancels-active-timer",
+            "restores-controlled-fallback"
+          ],
+          "lifecycle": "mounted-instance",
+          "scope": "component-instance",
+          "concurrency": "idempotent-current-session-close",
+          "failure": "missing-session-is-a-safe-no-op"
         }
       }
     },
@@ -7219,10 +7217,11 @@
       "itemId": "imperative:show",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-toast/u-toast.vue",
-          "local:HIA-uView-UI/src/components/u-toast/u-toast.vue"
+          "local:HIA-uView-UI/src/components/u-toast/u-toast.vue",
+          "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
         ],
         "remainingEvidence": [],
         "upstream": {
@@ -7246,7 +7245,25 @@
           "failure": "no-declared-error-channel"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered",
+          "kind": "imperativeApi",
+          "entry": "component-ref",
+          "parameters": [
+            {
+              "name": "options",
+              "shape": "finite-toast-options-or-message"
+            }
+          ],
+          "returns": "void",
+          "effects": [
+            "shows-imperative-toast-session",
+            "replaces-active-timer",
+            "temporarily-overrides-controlled-presentation"
+          ],
+          "lifecycle": "mounted-instance",
+          "scope": "component-instance",
+          "concurrency": "last-show-wins-with-generation-guard",
+          "failure": "invalid-options-are-a-safe-no-op"
         }
       }
     },
@@ -7330,7 +7347,7 @@
       "itemId": "service:useModal",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-modal/service.ts",
           "comparison:src/uni_modules/uview-pro/components/u-modal/u-modal.vue",
@@ -7338,7 +7355,12 @@
           "comparison:src/uni_modules/uview-pro/libs/hooks/index.ts",
           "comparison:src/uni_modules/uview-pro/libs/hooks/useModal.ts",
           "local:HIA-uView-UI/package.json",
-          "local:HIA-uView-UI/src/index.mjs"
+          "local:HIA-uView-UI/src/components/u-modal/u-modal.vue",
+          "local:HIA-uView-UI/src/feedback-service-runtime.mjs",
+          "local:HIA-uView-UI/src/index.mjs",
+          "local:HIA-uView-UI/src/services.mjs",
+          "test:tests/runtime/hia-uview-p68-feedback-service.runtime.test.mjs",
+          "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
         ],
         "remainingEvidence": [],
         "upstream": {
@@ -7373,7 +7395,34 @@
           "failure": "silent-when-scope-or-host-is-unavailable"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered",
+          "kind": "service",
+          "entry": "useModal",
+          "parameters": [
+            {
+              "name": "scope",
+              "shape": "explicit-feedback-scope"
+            }
+          ],
+          "returns": {
+            "shape": "explicit-modal-controller",
+            "operations": [
+              "clearLoading",
+              "close",
+              "confirm",
+              "show"
+            ]
+          },
+          "scope": "caller-created-explicit-feedback-scope",
+          "host": "single-explicitly-opted-in-u-modal-per-scope",
+          "lifecycle": "scope-create-to-dispose-and-host-mount-to-unmount",
+          "effects": [
+            "show-dispatches-finite-presentation-without-callbacks",
+            "close-hides-and-settles-current-request",
+            "clearLoading-clears-current-confirm-loading"
+          ],
+          "concurrency": "single-host-last-show-wins-with-token-safe-replacement",
+          "failure": "returns-finite-invalid-scope-host-disposed-stale-or-options-reason"
         }
       }
     },
@@ -7383,7 +7432,7 @@
       "itemId": "service:useToast",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-toast/service.ts",
           "comparison:src/uni_modules/uview-pro/components/u-toast/u-toast.vue",
@@ -7391,7 +7440,12 @@
           "comparison:src/uni_modules/uview-pro/libs/hooks/index.ts",
           "comparison:src/uni_modules/uview-pro/libs/hooks/useToast.ts",
           "local:HIA-uView-UI/package.json",
-          "local:HIA-uView-UI/src/index.mjs"
+          "local:HIA-uView-UI/src/components/u-toast/u-toast.vue",
+          "local:HIA-uView-UI/src/feedback-service-runtime.mjs",
+          "local:HIA-uView-UI/src/index.mjs",
+          "local:HIA-uView-UI/src/services.mjs",
+          "test:tests/runtime/hia-uview-p68-feedback-service.runtime.test.mjs",
+          "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
         ],
         "remainingEvidence": [],
         "upstream": {
@@ -7429,7 +7483,37 @@
           "failure": "silent-when-scope-or-host-is-unavailable"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered",
+          "kind": "service",
+          "entry": "useToast",
+          "parameters": [
+            {
+              "name": "scope",
+              "shape": "explicit-feedback-scope"
+            }
+          ],
+          "returns": {
+            "shape": "explicit-toast-controller",
+            "operations": [
+              "close",
+              "error",
+              "info",
+              "loading",
+              "show",
+              "success",
+              "warning"
+            ]
+          },
+          "scope": "caller-created-explicit-feedback-scope",
+          "host": "single-explicitly-opted-in-u-toast-per-scope",
+          "lifecycle": "scope-create-to-dispose-and-host-mount-to-unmount",
+          "effects": [
+            "show-replaces-finite-session-and-generation-guarded-timer",
+            "close-hides-and-cancels-current-timer",
+            "typed-helpers-force-finite-tone-or-loading"
+          ],
+          "concurrency": "single-host-last-show-wins-with-token-safe-replacement",
+          "failure": "returns-finite-invalid-scope-host-disposed-stale-or-options-reason"
         }
       }
     }

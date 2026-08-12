@@ -115,7 +115,7 @@
       "name": "@hia-uview/ui",
       "version": "0.0.0",
       "path": "HIA-uView-UI/package.json",
-      "digest": "sha256:d45ae6b472d7bdcb865c11c7bb53a10f9352899eb0b74242fcce3e662574d73e"
+      "digest": "sha256:690ef7057039b61e0254a550beb5585f2c1922c355e4c86df416d28b5b0c4835"
     },
     "componentManifest": {
       "path": "HIA-uView-UI/hia-uview.components.json",
@@ -126,7 +126,7 @@
     },
     "runtimeEntry": {
       "path": "HIA-uView-UI/src/index.mjs",
-      "digest": "sha256:a385f31a6ab268e2af33e4516015450e8a88df1deac48afecfee829cad147dfc"
+      "digest": "sha256:492e1f7d68dd6e486cc767f5408d97ae66ed734fa3670f877533e4b487f4481b"
     },
     "styleEntry": {
       "path": "HIA-uView-UI/src/style.css",
@@ -142,7 +142,7 @@
   },
   "semanticReview": {
     "path": "HIA-uView-UI/hia-uview.api-semantic-review.json",
-    "digest": "sha256:a4a177965bd30008381a6225ccaea35f4441da3175e424535e360a4d19ce57e3",
+    "digest": "sha256:2c41744b7dd39d3e81ab85c3ad2f1fb3325a0ab45da3b5779cf6389b35645253",
     "itemCount": 127,
     "serviceCount": 2
   },
@@ -563,12 +563,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "modelValue",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "modelValue"
             }
           },
           {
@@ -669,12 +688,17 @@
               "name": "click"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "click"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "click"
             }
           },
           {
@@ -702,12 +726,17 @@
               "name": "update:modelValue"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "update:modelValue"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "update:modelValue"
             }
           }
         ],
@@ -723,12 +752,17 @@
               "name": "default"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "default"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "default"
             }
           }
         ],
@@ -744,12 +778,17 @@
               "name": "close"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "close"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "close"
             }
           },
           {
@@ -862,8 +901,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 2,
-          "unsupported": 19,
+          "mapped": 7,
+          "unsupported": 14,
           "unresolved": 0
         }
       },
@@ -33905,12 +33944,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "show",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "show"
             }
           },
           {
@@ -34010,12 +34068,17 @@
               "name": "default"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "default"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "default"
             }
           }
         ],
@@ -34106,8 +34169,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 1,
-          "unsupported": 8,
+          "mapped": 3,
+          "unsupported": 6,
           "unresolved": 0
         }
       },
@@ -34773,12 +34836,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "asyncClose",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "asyncClose"
             }
           },
           {
@@ -35035,12 +35117,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "content",
+                  "typeKinds": [
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "content"
             }
           },
           {
@@ -35175,12 +35276,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "maskCloseAble",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "maskCloseAble"
             }
           },
           {
@@ -35377,12 +35497,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "showCancelButton",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "expression",
+                    "digest": "sha256:eb045d78d273107348b0300c01d29b7552d622abbc6faf81b3ec55359aa9950c"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "showCancelButton"
             }
           },
           {
@@ -35405,12 +35544,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "showConfirmButton",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "expression",
+                    "digest": "sha256:eb045d78d273107348b0300c01d29b7552d622abbc6faf81b3ec55359aa9950c"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "showConfirmButton"
             }
           },
           {
@@ -35433,12 +35591,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "showTitle",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "showTitle"
             }
           },
           {
@@ -35630,14 +35807,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-modal/u-modal.vue",
-                "local:HIA-uView-UI/src/components/u-modal/u-modal.vue"
+                "local:HIA-uView-UI/src/components/u-modal/u-modal.vue",
+                "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -35689,14 +35865,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-modal/u-modal.vue",
-                "local:HIA-uView-UI/src/components/u-modal/u-modal.vue"
+                "local:HIA-uView-UI/src/components/u-modal/u-modal.vue",
+                "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -35748,14 +35923,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-modal/u-modal.vue",
-                "local:HIA-uView-UI/src/components/u-modal/u-modal.vue"
+                "local:HIA-uView-UI/src/components/u-modal/u-modal.vue",
+                "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -35805,12 +35979,17 @@
               "name": "confirm-button"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "confirm-button"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "confirm-button"
             }
           },
           {
@@ -35833,14 +36012,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-modal/u-modal.vue",
-                "local:HIA-uView-UI/src/components/u-modal/u-modal.vue"
+                "local:HIA-uView-UI/src/components/u-modal/u-modal.vue",
+                "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -35872,12 +36050,17 @@
               "name": "clearLoading"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "clearLoading"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "clearLoading"
             }
           }
         ],
@@ -35890,12 +36073,13 @@
           {
             "id": "service:useModal",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_SERVICE_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "useModal"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-modal/service.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-modal/u-modal.vue",
@@ -35903,7 +36087,12 @@
                 "comparison:src/uni_modules/uview-pro/libs/hooks/index.ts",
                 "comparison:src/uni_modules/uview-pro/libs/hooks/useModal.ts",
                 "local:HIA-uView-UI/package.json",
-                "local:HIA-uView-UI/src/index.mjs"
+                "local:HIA-uView-UI/src/components/u-modal/u-modal.vue",
+                "local:HIA-uView-UI/src/feedback-service-runtime.mjs",
+                "local:HIA-uView-UI/src/index.mjs",
+                "local:HIA-uView-UI/src/services.mjs",
+                "test:tests/runtime/hia-uview-p68-feedback-service.runtime.test.mjs",
+                "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -35938,7 +36127,34 @@
                 "failure": "silent-when-scope-or-host-is-unavailable"
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "service",
+                "entry": "useModal",
+                "parameters": [
+                  {
+                    "name": "scope",
+                    "shape": "explicit-feedback-scope"
+                  }
+                ],
+                "returns": {
+                  "shape": "explicit-modal-controller",
+                  "operations": [
+                    "clearLoading",
+                    "close",
+                    "confirm",
+                    "show"
+                  ]
+                },
+                "scope": "caller-created-explicit-feedback-scope",
+                "host": "single-explicitly-opted-in-u-modal-per-scope",
+                "lifecycle": "scope-create-to-dispose-and-host-mount-to-unmount",
+                "effects": [
+                  "show-dispatches-finite-presentation-without-callbacks",
+                  "close-hides-and-settles-current-request",
+                  "clearLoading-clears-current-confirm-loading"
+                ],
+                "concurrency": "single-host-last-show-wins-with-token-safe-replacement",
+                "failure": "returns-finite-invalid-scope-host-disposed-stale-or-options-reason"
               }
             }
           }
@@ -36018,8 +36234,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 1,
-          "mapped": 7,
-          "unsupported": 23,
+          "mapped": 15,
+          "unsupported": 15,
           "unresolved": 0
         }
       },
@@ -36158,12 +36374,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "backText",
+                  "typeKinds": [
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "backText"
             }
           },
           {
@@ -36356,12 +36591,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "isBack",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "isBack"
             }
           },
           {
@@ -36618,14 +36872,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-navbar/u-navbar.vue",
-                "local:HIA-uView-UI/src/components/u-navbar/u-navbar.vue"
+                "local:HIA-uView-UI/src/components/u-navbar/u-navbar.vue",
+                "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -36770,8 +37023,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 4,
-          "unsupported": 17,
+          "mapped": 6,
+          "unsupported": 15,
           "unresolved": 0
         }
       },
@@ -37364,12 +37617,30 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "list",
+                  "typeKinds": [
+                    "Array"
+                  ],
+                  "typeOrder": [
+                    "Array"
+                  ],
+                  "default": {
+                    "kind": "factory-array"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "list"
             }
           },
           {
@@ -37771,14 +38042,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-notice-bar/u-notice-bar.vue",
-                "local:HIA-uView-UI/src/components/u-notice-bar/u-notice-bar.vue"
+                "local:HIA-uView-UI/src/components/u-notice-bar/u-notice-bar.vue",
+                "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -37835,14 +38105,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-notice-bar/u-notice-bar.vue",
-                "local:HIA-uView-UI/src/components/u-notice-bar/u-notice-bar.vue"
+                "local:HIA-uView-UI/src/components/u-notice-bar/u-notice-bar.vue",
+                "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -37996,8 +38265,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 1,
-          "mapped": 2,
-          "unsupported": 21,
+          "mapped": 3,
+          "unsupported": 20,
           "unresolved": 0
         }
       },
@@ -41694,15 +41963,14 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-popup/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-popup/u-popup.vue",
-                "local:HIA-uView-UI/src/components/u-popup/u-popup.vue"
+                "local:HIA-uView-UI/src/components/u-popup/u-popup.vue",
+                "test:tests/runtime/hia-uview-p68-overlay.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "prop",
@@ -41895,15 +42163,14 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-popup/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-popup/u-popup.vue",
-                "local:HIA-uView-UI/src/components/u-popup/u-popup.vue"
+                "local:HIA-uView-UI/src/components/u-popup/u-popup.vue",
+                "test:tests/runtime/hia-uview-p68-overlay.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "prop",
@@ -42075,14 +42342,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-popup/u-popup.vue",
-                "local:HIA-uView-UI/src/components/u-popup/u-popup.vue"
+                "local:HIA-uView-UI/src/components/u-popup/u-popup.vue",
+                "test:tests/runtime/hia-uview-p68-overlay.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -42120,12 +42386,17 @@
               "name": "open"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "open"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "open"
             }
           },
           {
@@ -42148,14 +42419,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-popup/u-popup.vue",
-                "local:HIA-uView-UI/src/components/u-popup/u-popup.vue"
+                "local:HIA-uView-UI/src/components/u-popup/u-popup.vue",
+                "test:tests/runtime/hia-uview-p68-overlay.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -42219,14 +42489,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-popup/u-popup.vue",
-                "local:HIA-uView-UI/src/components/u-popup/u-popup.vue"
+                "local:HIA-uView-UI/src/components/u-popup/u-popup.vue",
+                "test:tests/runtime/hia-uview-p68-overlay.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -42333,8 +42602,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 5,
-          "unsupported": 22,
+          "mapped": 6,
+          "unsupported": 21,
           "unresolved": 0
         }
       },
@@ -56125,12 +56394,30 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "list",
+                  "typeKinds": [
+                    "Array"
+                  ],
+                  "typeOrder": [
+                    "Array"
+                  ],
+                  "default": {
+                    "kind": "factory-array"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "list"
             }
           },
           {
@@ -56514,14 +56801,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-tabbar/u-tabbar.vue",
-                "local:HIA-uView-UI/src/components/u-tabbar/u-tabbar.vue"
+                "local:HIA-uView-UI/src/components/u-tabbar/u-tabbar.vue",
+                "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -56578,14 +56864,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-tabbar/u-tabbar.vue",
-                "local:HIA-uView-UI/src/components/u-tabbar/u-tabbar.vue"
+                "local:HIA-uView-UI/src/components/u-tabbar/u-tabbar.vue",
+                "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -56716,8 +57001,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 2,
-          "mapped": 2,
-          "unsupported": 16,
+          "mapped": 3,
+          "unsupported": 15,
           "unresolved": 0
         }
       },
@@ -57465,15 +57750,14 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-tabs/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-tabs/u-tabs.vue",
-                "local:HIA-uView-UI/src/components/u-tabs/u-tabs.vue"
+                "local:HIA-uView-UI/src/components/u-tabs/u-tabs.vue",
+                "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "prop",
@@ -57982,14 +58266,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-tabs/u-tabs.vue",
-                "local:HIA-uView-UI/src/components/u-tabs/u-tabs.vue"
+                "local:HIA-uView-UI/src/components/u-tabs/u-tabs.vue",
+                "test:tests/runtime/hia-uview-p68-navigation.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -58045,12 +58328,17 @@
               "name": "clickTab"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "clickTab"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "clickTab"
             }
           },
           {
@@ -58163,8 +58451,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 3,
-          "unsupported": 24,
+          "mapped": 4,
+          "unsupported": 23,
           "unresolved": 0
         }
       },
@@ -64100,12 +64388,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "duration",
+                  "typeKinds": [
+                    "Number"
+                  ],
+                  "typeOrder": [
+                    "Number"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "duration"
             }
           },
           {
@@ -64383,12 +64690,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "position",
+                  "typeKinds": [
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": "center"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "position"
             }
           },
           {
@@ -64411,12 +64737,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "type",
+                  "typeKinds": [
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "expression",
+                    "digest": "sha256:eb045d78d273107348b0300c01d29b7552d622abbc6faf81b3ec55359aa9950c"
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "type"
             }
           },
           {
@@ -64502,19 +64847,25 @@
               "name": "close"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "close"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "close"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-toast/u-toast.vue",
-                "local:HIA-uView-UI/src/components/u-toast/u-toast.vue"
+                "local:HIA-uView-UI/src/components/u-toast/u-toast.vue",
+                "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -64533,7 +64884,20 @@
                 "failure": "no-declared-error-channel"
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "imperativeApi",
+                "entry": "component-ref",
+                "parameters": [],
+                "returns": "void",
+                "effects": [
+                  "ends-current-imperative-session",
+                  "cancels-active-timer",
+                  "restores-controlled-fallback"
+                ],
+                "lifecycle": "mounted-instance",
+                "scope": "component-instance",
+                "concurrency": "idempotent-current-session-close",
+                "failure": "missing-session-is-a-safe-no-op"
               }
             }
           },
@@ -64543,12 +64907,17 @@
               "name": "hide"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "hide"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "hide"
             }
           },
           {
@@ -64557,19 +64926,25 @@
               "name": "show"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "show"
+                }
+              ]
             },
             "priority": "P0",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "show"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-toast/u-toast.vue",
-                "local:HIA-uView-UI/src/components/u-toast/u-toast.vue"
+                "local:HIA-uView-UI/src/components/u-toast/u-toast.vue",
+                "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -64593,7 +64968,25 @@
                 "failure": "no-declared-error-channel"
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "imperativeApi",
+                "entry": "component-ref",
+                "parameters": [
+                  {
+                    "name": "options",
+                    "shape": "finite-toast-options-or-message"
+                  }
+                ],
+                "returns": "void",
+                "effects": [
+                  "shows-imperative-toast-session",
+                  "replaces-active-timer",
+                  "temporarily-overrides-controlled-presentation"
+                ],
+                "lifecycle": "mounted-instance",
+                "scope": "component-instance",
+                "concurrency": "last-show-wins-with-generation-guard",
+                "failure": "invalid-options-are-a-safe-no-op"
               }
             }
           }
@@ -64607,12 +65000,13 @@
           {
             "id": "service:useToast",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_SERVICE_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "useToast"
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-toast/service.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-toast/u-toast.vue",
@@ -64620,7 +65014,12 @@
                 "comparison:src/uni_modules/uview-pro/libs/hooks/index.ts",
                 "comparison:src/uni_modules/uview-pro/libs/hooks/useToast.ts",
                 "local:HIA-uView-UI/package.json",
-                "local:HIA-uView-UI/src/index.mjs"
+                "local:HIA-uView-UI/src/components/u-toast/u-toast.vue",
+                "local:HIA-uView-UI/src/feedback-service-runtime.mjs",
+                "local:HIA-uView-UI/src/index.mjs",
+                "local:HIA-uView-UI/src/services.mjs",
+                "test:tests/runtime/hia-uview-p68-feedback-service.runtime.test.mjs",
+                "test:tests/runtime/hia-uview-p68-modal-toast.runtime.test.mjs"
               ],
               "remainingEvidence": [],
               "upstream": {
@@ -64658,7 +65057,37 @@
                 "failure": "silent-when-scope-or-host-is-unavailable"
               },
               "hia": {
-                "status": "not-delivered"
+                "status": "delivered",
+                "kind": "service",
+                "entry": "useToast",
+                "parameters": [
+                  {
+                    "name": "scope",
+                    "shape": "explicit-feedback-scope"
+                  }
+                ],
+                "returns": {
+                  "shape": "explicit-toast-controller",
+                  "operations": [
+                    "close",
+                    "error",
+                    "info",
+                    "loading",
+                    "show",
+                    "success",
+                    "warning"
+                  ]
+                },
+                "scope": "caller-created-explicit-feedback-scope",
+                "host": "single-explicitly-opted-in-u-toast-per-scope",
+                "lifecycle": "scope-create-to-dispose-and-host-mount-to-unmount",
+                "effects": [
+                  "show-replaces-finite-session-and-generation-guarded-timer",
+                  "close-hides-and-cancels-current-timer",
+                  "typed-helpers-force-finite-tone-or-loading"
+                ],
+                "concurrency": "single-host-last-show-wins-with-token-safe-replacement",
+                "failure": "returns-finite-invalid-scope-host-disposed-stale-or-options-reason"
               }
             }
           }
@@ -64738,8 +65167,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 1,
-          "mapped": 0,
-          "unsupported": 17,
+          "mapped": 6,
+          "unsupported": 11,
           "unresolved": 0
         }
       },
@@ -65506,12 +65935,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "show",
+                  "typeKinds": [
+                    "Boolean"
+                  ],
+                  "typeOrder": [
+                    "Boolean"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "show"
             }
           },
           {
@@ -65775,8 +66223,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 3,
-          "unsupported": 15,
+          "mapped": 4,
+          "unsupported": 14,
           "unresolved": 0
         }
       },

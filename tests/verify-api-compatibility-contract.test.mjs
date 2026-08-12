@@ -348,7 +348,7 @@ test('locks immutable provenance, declared-scope API counts, and local component
   assert.equal(manifest.issues.length, 4);
   assert.deepEqual(manifest.semanticReview, {
     path: 'HIA-uView-UI/hia-uview.api-semantic-review.json',
-    digest: 'sha256:a4a177965bd30008381a6225ccaea35f4441da3175e424535e360a4d19ce57e3',
+    digest: 'sha256:2c41744b7dd39d3e81ab85c3ad2f1fb3325a0ab45da3b5779cf6389b35645253',
     itemCount: 127,
     serviceCount: 2
   });
@@ -359,20 +359,25 @@ test('locks immutable provenance, declared-scope API counts, and local component
   // <lang><zh-CN>证据层级和待补 runtime parity 分别计算，以锁定“已审计”不等于“已运行时等价”。</zh-CN><en>Count evidence levels and pending runtime parity separately, locking that “reviewed” does not mean “runtime equivalent.”</en></lang>
   assert.equal(p0Items.length, 127);
   assert.equal(p0Items.filter((item) => item.semantics.reviewState === 'complete').length, 127);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 90);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 37);
-  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 35);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 108);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 19);
+  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 19);
 
-  // <lang><zh-CN>service 从 imperative API 中独立汇集；只有 useModal/useToast 两个已确认公开入口且均明确未由 HIA 交付。</zh-CN><en>Collect services separately from imperative APIs; only the confirmed public useModal/useToast entries exist and both are explicitly undelivered by HIA.</en></lang>
+  // <lang><zh-CN>service 从 imperative API 中独立汇集；useModal/useToast 只映射到已运行时验证的显式 scope/host target，不进入 1,740 项分母或自动升级 compatible。</zh-CN><en>Collect services separately from imperative APIs; useModal/useToast map only to runtime-tested explicit scope/host targets, enter neither the 1,740-item denominator nor automatic compatible status.</en></lang>
   const services = manifest.components.flatMap((component) => component.services.items
     .map((item) => ({ component: component.name, ...item })));
   assert.deepEqual(services.map((item) => `${item.component}/${item.id}`), [
     'u-modal/service:useModal',
     'u-toast/service:useToast'
   ]);
-  assert.ok(services.every((item) => item.migration.disposition === 'unsupported'
-    && item.migration.reasonCode === 'HIA_SERVICE_NOT_DELIVERED'
-    && item.semantics.reviewState === 'complete'));
+  assert.deepEqual(services.map((item) => item.migration), [
+    { disposition: 'mapped', reasonCode: 'SAME_NAME_DIFFERENT_SHAPE', target: 'useModal' },
+    { disposition: 'mapped', reasonCode: 'SAME_NAME_DIFFERENT_SHAPE', target: 'useToast' }
+  ]);
+  assert.ok(services.every((item) => item.semantics.reviewState === 'complete'
+    && item.semantics.evidenceLevel === 'runtime-tested'
+    && item.semantics.remainingEvidence.length === 0
+    && item.semantics.hia.status === 'delivered'));
 
   // <lang><zh-CN>u-button 是能力级优先级校准 sentinel：常规 click 保持 P0，小程序开放能力、语言参数及其失败事件明确降至 P2。</zh-CN><en>u-button is the capability-level priority calibration sentinel: ordinary click remains P0 while Mini Program open capabilities, the language parameter, and their failure event are explicitly P2.</en></lang>
   const button = requireComponent(manifest, 'u-button');
@@ -443,9 +448,9 @@ test('inspects the real matrix deterministically without host paths or source bo
     componentCount: 99,
     itemCount: 1740,
     priorities: { P0: 30, P1: 42, P2: 27 },
-    dispositions: { compatible: 47, mapped: 308, unsupported: 1385 },
-    p0Semantics: { itemCount: 127, reviewed: 127, sourceReviewed: 37, runtimeTested: 90, runtimeParityRemaining: 35 },
-    services: { componentCount: 2, itemCount: 2, unsupported: 2 },
+    dispositions: { compatible: 47, mapped: 336, unsupported: 1357 },
+    p0Semantics: { itemCount: 127, reviewed: 127, sourceReviewed: 19, runtimeTested: 108, runtimeParityRemaining: 19 },
+    services: { componentCount: 2, itemCount: 2, compatible: 0, mapped: 2, unsupported: 0 },
     unresolvedInventories: 0,
     issueCount: 4
   });
@@ -471,8 +476,8 @@ test('inspects the real matrix deterministically without host paths or source bo
   assert.equal(secondTextOutput, firstTextOutput);
   assert.match(firstTextOutput, /uview-pro@0\.6\.15; bec4b39cd3195354d65c1fc8722745d72052bd8c/u);
   assert.match(firstTextOutput, /99 components; 1740 API items/u);
-  assert.match(firstTextOutput, /P0 semantics: 127\/127 reviewed; 90 runtime-tested; 37 source-reviewed; 35 require runtime parity/u);
-  assert.match(firstTextOutput, /services: 2 items across 2 components; 2 unsupported/u);
+  assert.match(firstTextOutput, /P0 semantics: 127\/127 reviewed; 108 runtime-tested; 19 source-reviewed; 19 require runtime parity/u);
+  assert.match(firstTextOutput, /services: 2 items across 2 components; 0 compatible; 2 mapped; 0 unsupported/u);
 
   // <lang><zh-CN>JSON 由同一已校验 report 格式化两次，防止 serializer 注入非确定字段。</zh-CN><en>Format JSON twice from the same validated report so the serializer cannot inject nondeterministic fields.</en></lang>
   const firstJsonOutput = formatReport(firstReport, 'json');
@@ -720,12 +725,12 @@ test('rejects malformed matrix facts through stable diagnostics', () => {
     clickEvent.semantics.remainingEvidence = [];
   }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
 
-  // <lang><zh-CN>unsupported 项只能保持 source-reviewed 且无 runtime-parity 待办；不存在的本地实现不能被 test 引用伪造为已运行时验证。</zh-CN><en>An unsupported item must remain source-reviewed with no runtime-parity remainder; a missing local implementation cannot be disguised as runtime-tested through a test reference.</en></lang>
+  // <lang><zh-CN>unsupported 项只能保持 source-reviewed 且无 runtime-parity 待办；把已交付的 runtime-tested 项突变为未交付 sentinel 也不能保留测试层级。</zh-CN><en>An unsupported item must remain source-reviewed with no runtime-parity remainder; mutating a delivered runtime-tested item to an undelivered sentinel cannot retain the tested level.</en></lang>
   assertMutationRejected('unsupported item claims runtime-tested evidence', (manifest) => {
-    // <lang><zh-CN>u-toast.show 是仍未交付的 P0 imperative sentinel；同时替换层级与引用以确认 disposition 约束优先成立。</zh-CN><en>u-toast.show is the still-undelivered P0 imperative sentinel; replace both level and reference so the disposition constraint is proven independently of the test-reference requirement.</en></lang>
+    // <lang><zh-CN>将已交付的 u-toast.show 同时改成 unsupported migration 与未交付语义，但故意保留真实 runtime evidence，以隔离矛盾 profile 门禁。</zh-CN><en>Change the delivered u-toast.show to an unsupported migration and undelivered semantics while deliberately retaining real runtime evidence, isolating the contradictory-profile gate.</en></lang>
     const showApi = requireComponent(manifest, 'u-toast').imperativeApis.items.find((item) => item.id === 'imperative:show');
-    showApi.semantics.evidenceLevel = 'runtime-tested';
-    showApi.semantics.evidenceRefs = [...showApi.semantics.evidenceRefs, 'test:tests/runtime/hia-uview-input.runtime.test.mjs'];
+    showApi.migration = { disposition: 'unsupported', reasonCode: 'HIA_API_NOT_DELIVERED' };
+    showApi.semantics.hia = { status: 'not-delivered' };
   }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
 
   // <lang><zh-CN>语义证据引用只能使用安全 comparison/local/test 前缀，不得以父目录片段逃逸。</zh-CN><en>Semantic evidence references must use safe comparison/local/test prefixes and may not escape through parent-directory segments.</en></lang>
@@ -740,6 +745,12 @@ test('rejects malformed matrix facts through stable diagnostics', () => {
     // <lang><zh-CN>只修改 ID，保留 useModal 语义事实与迁移结论作为可信对照。</zh-CN><en>Change only the ID while retaining the useModal semantic facts and migration conclusion as controls.</en></lang>
     requireComponent(manifest, 'u-modal').services.items[0].id = 'service:useDialog';
   }, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID');
+
+  // <lang><zh-CN>service mapped target 必须命中冻结公开 composable；仅改变 target 不能把显式 scope controller 重标为其他 service。</zh-CN><en>A mapped service target must match the frozen public composable; changing only the target cannot relabel an explicit-scope controller as another service.</en></lang>
+  assertMutationRejected('service target drift', (manifest) => {
+    // <lang><zh-CN>保持完整 runtime-tested 双侧语义，只把 useToast target 改为未声明名称，以隔离 migration target 门禁。</zh-CN><en>Retain complete runtime-tested semantics on both sides and change only the useToast target to an undeclared name, isolating the migration-target gate.</en></lang>
+    requireComponent(manifest, 'u-toast').services.items[0].migration.target = 'useNotifier';
+  }, 'API_COMPATIBILITY_MIGRATION_TARGET_INVALID');
 
   // <lang><zh-CN>semanticReview 数量必须由当前完整 P0 与 service records 现场校验，不能漂移为手写摘要。</zh-CN><en>SemanticReview counts must be checked live against complete P0 and service records and cannot drift into a hand-written summary.</en></lang>
   assertMutationRejected('semantic review count drift', (manifest) => {

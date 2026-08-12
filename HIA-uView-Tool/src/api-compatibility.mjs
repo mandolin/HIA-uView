@@ -75,6 +75,15 @@ const supportedPriorities = new Set(['P0', 'P1', 'P2']);
 const supportedDispositions = new Set(['compatible', 'mapped', 'unsupported']);
 
 /**
+ * @lang zh-CN 当前独立 service inventory 允许的 owner/item 与 HIA target 精确映射；固定表只验证 metadata，不导入或执行 service runtime。
+ * @lang en Exact owner/item-to-HIA-target mapping allowed by the current separate service inventory; the fixed table validates metadata only and neither imports nor executes the service runtime.
+ */
+const supportedServiceTargets = new Map([
+  ['u-modal/service:useModal', 'useModal'],
+  ['u-toast/service:useToast', 'useToast']
+]);
+
+/**
  * @lang zh-CN API inventory 的两种显式完成状态；unresolved 必须由组件 issue 引用解释，但本身不失败。
  * @lang en Two explicit API-inventory completion states; unresolved must be explained by component issue references but is not itself a failure.
  */
@@ -1783,8 +1792,8 @@ function countComponentMigration(component) {
 }
 
 /**
- * @lang zh-CN 校验 v2 独立 public composable service inventory；其 item 只记录 unsupported migration 与完整 service semantics。
- * @lang en Validates the separate v2 public-composable-service inventory; each item records only an unsupported migration and complete service semantics.
+ * @lang zh-CN 校验 v2 独立 public composable service inventory；当前两个入口只允许映射到已审计的显式 scope/host 等价能力，并继续独立于 1,740 项组件 API。
+ * @lang en Validates the separate v2 public-composable-service inventory; the current two entries may map only to their reviewed explicit scope/host equivalents and remain separate from the 1,740 component APIs.
  * @param {unknown} services <lang><zh-CN>service inventory container。</zh-CN><en>Service-inventory container.</en></lang>
  * @param {string} componentName <lang><zh-CN>拥有 service 的比较组件。</zh-CN><en>Comparison component owning the service.</en></lang>
  * @param {Array<object>} diagnostics <lang><zh-CN>诊断累积器。</zh-CN><en>Diagnostic accumulator.</en></lang>
@@ -1829,22 +1838,30 @@ function validateServices(services, componentName, diagnostics) {
       // <lang><zh-CN>只有合法 service ID 才进入最终唯一性与排序集合。</zh-CN><en>Only a valid service ID enters the final uniqueness and ordering set.</en></lang>
       itemIds.push(itemId);
     }
-    // <lang><zh-CN>复用统一 migration validator，并额外锁定“当前 HIA 未交付 service”的专用原因。</zh-CN><en>Reuse the common migration validator and additionally lock the dedicated reason for a service not currently delivered by HIA.</en></lang>
-    validateApiMigration(item.migration, [], `${itemContext}.migration`, diagnostics);
-    // <lang><zh-CN>通用迁移形状合法仍不够；service 必须使用专用未交付结论。</zh-CN><en>A valid common migration shape is insufficient; a service must use the dedicated undelivered conclusion.</en></lang>
-    if (item.migration?.disposition !== 'unsupported' || item.migration?.reasonCode !== 'HIA_SERVICE_NOT_DELIVERED') {
-      addDiagnostic(diagnostics, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID', `${itemContext}.migration must explicitly report the undelivered HIA service.`);
+    // <lang><zh-CN>公开 owner/ID 组合只允许两个冻结入口；该固定映射防止 manifest 自行声明第三个 service 或把 target 指向任意同名字符串。</zh-CN><en>The public owner/ID pair permits only the two frozen entries; this fixed mapping prevents a manifest from declaring a third service or targeting an arbitrary same-named string.</en></lang>
+    const expectedTarget = supportedServiceTargets.get(`${componentName}/${itemId}`);
+    // <lang><zh-CN>复用统一 migration validator；只有冻结 target 可成为 mapped 目标，未知 service 使用空 target 集并同时收到 inventory 诊断。</zh-CN><en>Reuse the common migration validator; only the frozen target may be mapped, while an unknown service uses an empty target set and also receives an inventory diagnostic.</en></lang>
+    validateApiMigration(item.migration, expectedTarget ? [expectedTarget] : [], `${itemContext}.migration`, diagnostics);
+    // <lang><zh-CN>通用迁移形状合法仍不够；service 必须使用保守的同名异形映射且 target 精确命中公开 composable。</zh-CN><en>A valid common migration shape is insufficient; a service must use the conservative same-name/different-shape mapping and target the exact public composable.</en></lang>
+    if (!expectedTarget || item.migration?.disposition !== 'mapped'
+      || item.migration?.reasonCode !== 'SAME_NAME_DIFFERENT_SHAPE'
+      || item.migration?.target !== expectedTarget) {
+      addDiagnostic(diagnostics, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID', `${itemContext}.migration must map the reviewed explicit-scope HIA service target.`);
     }
-    // <lang><zh-CN>service 语义仍需完整审阅上游入口，而 HIA 侧必须保持精确未交付 sentinel。</zh-CN><en>Service semantics still require a complete upstream review while the HIA side remains the exact undelivered sentinel.</en></lang>
+    // <lang><zh-CN>service 语义必须完整审阅上下游交付面；runtime-tested mapped 仍不等于无需迁移的 compatible。</zh-CN><en>Service semantics must completely review both delivered sides; runtime-tested mapped still does not mean no-migration compatibility.</en></lang>
     validateItemSemantics(item.semantics, {
       kind: 'service',
-      disposition: 'unsupported',
-      hiaDelivered: false
+      disposition: 'mapped',
+      hiaDelivered: true
     }, `${itemContext}.semantics`, diagnostics);
 
     // <lang><zh-CN>语义 entry 与结构 ID 必须同源，防止复用另一 composable 的审阅事实。</zh-CN><en>The semantic entry and structural ID must have the same identity so review facts from another composable cannot be reused.</en></lang>
     if (item.semantics?.upstream?.entry && itemId !== `service:${item.semantics.upstream.entry}`) {
       addDiagnostic(diagnostics, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID', `${itemContext}.id must match semantics.upstream.entry.`);
+    }
+    // <lang><zh-CN>HIA semantic entry 也必须与冻结 target 同源；仅修改 migration.target 或语义文字不能伪造另一项可交付服务。</zh-CN><en>The HIA semantic entry must share identity with the frozen target; changing only migration.target or semantic copy cannot fabricate another delivered service.</en></lang>
+    if (expectedTarget && item.semantics?.hia?.entry !== expectedTarget) {
+      addDiagnostic(diagnostics, 'API_COMPATIBILITY_SERVICE_INVENTORY_INVALID', `${itemContext}.migration target must match semantics.hia.entry.`);
     }
   }
 

@@ -3225,8 +3225,8 @@ function applySemanticReview(components, reviewSource, upstream, local) {
 
   // <lang><zh-CN>两个 service entrypoint 由包根 reachability 审计锁定，且不进入四类 API 或组件 migration 计数。</zh-CN><en>The two service entrypoints are locked by the package-root reachability audit and enter neither the four API dimensions nor component migration counts.</en></lang>
   const expectedServices = new Map([
-    ['u-modal/service:useModal', { component: 'u-modal', itemId: 'service:useModal' }],
-    ['u-toast/service:useToast', { component: 'u-toast', itemId: 'service:useToast' }]
+    ['u-modal/service:useModal', { component: 'u-modal', itemId: 'service:useModal', target: 'useModal' }],
+    ['u-toast/service:useToast', { component: 'u-toast', itemId: 'service:useToast', target: 'useToast' }]
   ]);
   // <lang><zh-CN>按 review 声明顺序收集 service ID，供精确集合门禁使用。</zh-CN><en>Collect service IDs in review declaration order for the exact-set gate.</en></lang>
   const reviewServiceIds = [];
@@ -3244,18 +3244,18 @@ function applySemanticReview(components, reviewSource, upstream, local) {
     if (!expectedService || entry.component !== expectedService.component || entry.itemId !== expectedService.itemId || id !== `${entry.component}/${entry.itemId}`) {
       throw new Error(`Semantic review service does not match the locked public service set: ${id}.`);
     }
-    // <lang><zh-CN>service 始终按上游已交付、本地未交付的 unsupported 事实验证。</zh-CN><en>Validate a service as an unsupported fact with upstream delivered and local undelivered.</en></lang>
-    validateSemanticEnvelope(entry.semantics, { kind: 'service', disposition: 'unsupported', hiaDelivered: false }, `Semantic review ${id}`);
+    // <lang><zh-CN>service 以已运行时验证的显式 scope/host 等价能力保守映射；同名入口不自动产生 compatible 结论。</zh-CN><en>Conservatively map the service to its runtime-tested explicit scope/host equivalent; the same-named entry never produces compatibility automatically.</en></lang>
+    validateSemanticEnvelope(entry.semantics, { kind: 'service', disposition: 'mapped', hiaDelivered: true }, `Semantic review ${id}`);
 
     // <lang><zh-CN>owner 必须已经存在于生成组件集合，service 不创建幽灵组件。</zh-CN><en>The owner must already exist in generated components; a service cannot create a phantom component.</en></lang>
     const owner = components.find((component) => component.name === entry.component);
 
     // <lang><zh-CN>找不到 owner 时立即阻断，避免随后对 undefined inventory 写入。</zh-CN><en>Abort immediately when the owner is absent so no write targets an undefined inventory.</en></lang>
     if (!owner) throw new Error(`Semantic review service owner is absent from the matrix: ${entry.component}.`);
-    // <lang><zh-CN>向独立 service inventory 追加受控 migration 与深复制语义，不污染四类 API。</zh-CN><en>Append controlled migration and deep-copied semantics to the separate service inventory without contaminating the four API dimensions.</en></lang>
+    // <lang><zh-CN>向独立 service inventory 追加显式 target、保守的同名异形映射与深复制语义，不污染四类 API。</zh-CN><en>Append the explicit target, conservative same-name/different-shape mapping, and deep-copied semantics to the separate service inventory without contaminating the four API dimensions.</en></lang>
     owner.services.items.push({
       id: entry.itemId,
-      migration: { disposition: 'unsupported', reasonCode: 'HIA_SERVICE_NOT_DELIVERED' },
+      migration: { disposition: 'mapped', reasonCode: 'SAME_NAME_DIFFERENT_SHAPE', target: expectedService.target },
       semantics: JSON.parse(JSON.stringify(entry.semantics))
     });
     // <lang><zh-CN>记录已应用 service ID，供最终二项精确覆盖检查。</zh-CN><en>Record the applied service ID for the final exact two-entry coverage check.</en></lang>

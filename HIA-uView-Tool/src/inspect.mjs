@@ -110,11 +110,11 @@ function createP0SemanticCounts() {
 /**
  * @lang zh-CN 创建独立 service 清单的零值计数器；service 不进入四类 API item 或迁移 disposition 总数。
  * @lang en Creates a zero-value counter for the separate service inventory; services enter neither the four API-item dimensions nor migration-disposition totals.
- * @returns {{itemCount:number,unsupported:number}} <lang><zh-CN>当前组件独占的 service 计数器。</zh-CN><en>A service counter owned by the current component summary.</en></lang>
+ * @returns {{itemCount:number,compatible:number,mapped:number,unsupported:number}} <lang><zh-CN>当前组件独占且与组件 API 总数分离的 service disposition 计数器。</zh-CN><en>A service-disposition counter owned by the current component summary and separate from component-API totals.</en></lang>
  */
 function createServiceCounts() {
-  // <lang><zh-CN>当前 v2 service 只允许明确 unsupported；保留独立 itemCount 以便未来受控扩展时发现统计漂移。</zh-CN><en>Version 2 services currently permit only explicit unsupported facts; the separate item count exposes drift during future controlled extension.</en></lang>
-  return { itemCount: 0, unsupported: 0 };
+  // <lang><zh-CN>固定三类 disposition 即使为零也完整输出；itemCount 继续证明 service 没有进入 1,740 项 API 分母。</zh-CN><en>All three fixed dispositions remain present even at zero; itemCount continues to prove services did not enter the 1,740-API denominator.</en></lang>
+  return { itemCount: 0, compatible: 0, mapped: 0, unsupported: 0 };
 }
 
 /**
@@ -163,9 +163,12 @@ function summarizeApiComponent(component) {
   const serviceItems = Array.isArray(component.services?.items) ? component.services.items : [];
   // <lang><zh-CN>service 计数与 API disposition 完全分离，防止 1740 项既有 API 基线被新维度悄然改变。</zh-CN><en>Service counts remain separate from API dispositions so the established 1,740-item API baseline cannot change silently.</en></lang>
   const services = createServiceCounts();
-  // <lang><zh-CN>实际数组长度是 service 分母；合法 v2 item 当前均为明确 unsupported。</zh-CN><en>The actual array length is the service denominator; every valid version 2 item is currently explicitly unsupported.</en></lang>
+  // <lang><zh-CN>实际数组长度是独立 service 分母；逐项 disposition 由已校验 migration 现场累计，不从总表摘要推断。</zh-CN><en>The actual array length is the separate service denominator; each disposition is accumulated live from validated migrations rather than inferred from a top-level summary.</en></lang>
   services.itemCount = serviceItems.length;
-  services.unsupported = serviceItems.filter((item) => item.migration.disposition === 'unsupported').length;
+  for (const item of serviceItems) {
+    // <lang><zh-CN>validator 已把 disposition 收束到固定三值，因此可安全累加对应稳定键。</zh-CN><en>The validator already constrains disposition to the fixed three values, so its stable key can be accumulated safely.</en></lang>
+    services[item.migration.disposition] += 1;
+  }
 
   // <lang><zh-CN>itemCount 是四个维度的真实和；显式 reduce 起点避免空容器组合产生非数字值。</zh-CN><en>Item count is the actual sum of the four dimensions; an explicit reduce seed prevents an all-empty inventory from producing a nonnumeric value.</en></lang>
   const itemCount = Object.values(dimensions).reduce((total, count) => total + count, 0);
@@ -214,9 +217,11 @@ function summarizeApiManifest(componentRecords, issueCount) {
     p0Semantics.sourceReviewed += record.summary.p0Semantics.sourceReviewed;
     p0Semantics.runtimeTested += record.summary.p0Semantics.runtimeTested;
     p0Semantics.runtimeParityRemaining += record.summary.p0Semantics.runtimeParityRemaining;
-    // <lang><zh-CN>只有非空 service inventory 才增加组件数；item 与 unsupported 仍按真实数组累计。</zh-CN><en>Only a nonempty service inventory increments the component count, while item and unsupported totals still use actual arrays.</en></lang>
+    // <lang><zh-CN>只有非空 service inventory 才增加组件数；item 与三类 disposition 仍按真实数组累计。</zh-CN><en>Only a nonempty service inventory increments the component count, while item and all three dispositions still use actual arrays.</en></lang>
     if (record.summary.services.itemCount > 0) services.componentCount += 1;
     services.itemCount += record.summary.services.itemCount;
+    services.compatible += record.summary.services.compatible;
+    services.mapped += record.summary.services.mapped;
     services.unsupported += record.summary.services.unsupported;
     // <lang><zh-CN>逐个固定 disposition 键相加，避免 Object iteration 接纳未来未审计分类。</zh-CN><en>Add each fixed disposition key explicitly, avoiding acceptance of a future unaudited category through object iteration.</en></lang>
     dispositions.compatible += record.summary.dispositions.compatible;
