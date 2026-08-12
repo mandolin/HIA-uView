@@ -1,23 +1,15 @@
 # UTabbar component contract / UTabbar 组件契约
 
-> Status / 状态：Private pre-release local bottom-tab projection.
-> 状态：私有预发布局部底部标签投影。
+> Status / 状态：Private pre-release local bottom-tab projection. / 私有预发布局部底部标签投影。
 
-`UTabbar` presents caller-declared finite `items` and controlled `modelValue`, emitting local `change` intent. `show` retains the familiar boolean default `true`; the existing HIA `visible` alias wins only when explicitly provided. Labels remain caller-owned; no router, permission, identity, global navigation service, icon font, badge source, native-tab-bar hiding, or safe-area promise is included.
+`UTabbar` presents controlled `modelValue` over caller-declared finite tab data. `items` has priority; migration `list` is used only when `items` is empty. `show` defaults to true, while an explicitly supplied HIA `visible` alias wins.
 
-`UTabbar` 呈现调用方声明的有限 `items` 和受控 `modelValue`，并 emit 本地 `change` 意图。`show` 保留熟悉的布尔默认值 `true`；既有 HIA `visible` alias 仅在显式提供时优先。标签文字仍由调用方拥有；不包含 router、权限、身份、全局导航服务、图标字体、徽标来源、原生 tabBar 隐藏或安全区承诺。
+`UTabbar` 在调用方声明的有限 tab 数据上呈现受控 `modelValue`。`items` 优先；只有 `items` 为空时才使用迁移 `list`。`show` 默认值为 true，而显式提供的 HIA `visible` 别名优先。
 
-| Prop / 属性 | Type / 类型 | Default / 默认值 | Boundary / 边界 |
-| --- | --- | --- | --- |
-| `show` | `boolean` | `true` | Controls this local component only / 只控制当前局部组件 |
-| `visible` | `boolean` | `undefined` | Explicit HIA alias that overrides `show` / 显式 HIA alias，覆盖 `show` |
-| `modelValue` | `string \| number` | `0` | Local selected key, never a route / 局部选中键，绝不代表路由 |
-| `items` | `unknown[]` | `[]` | Caller-owned finite labels and keys / 调用方拥有的有限标签和键 |
+An eligible non-current item emits `update:modelValue(value)` and then `change(value)`. Disabled, malformed, and already-current items emit nothing. Labels and values remain caller-owned; the component performs no routing, permission check, native-tab configuration, safe-area calculation, badge lookup, icon-font loading, or global navigation.
 
-When WeChat requires persistent primary navigation, use the official custom tabBar and let its application adapter own `switchTab` and lifecycle. `UTabbar` remains suitable for local in-page tabs or visual contracts, not as a substitute for that platform mechanism.
+符合条件且非当前的 item 会依次 emit `update:modelValue(value)` 与 `change(value)`。disabled、格式无效或已经活动的 item 不触发事件。标签和值仍由调用方拥有；组件不执行路由、权限判断、原生 tab 配置、安全区计算、徽标查询、图标字体加载或全局导航。
 
-当微信需要常驻主导航时，应使用官方 custom tabBar，并由应用 adapter 拥有 `switchTab` 与生命周期。`UTabbar` 仍适用于页面内局部标签或视觉契约，不替代该平台机制。
+For persistent WeChat primary navigation, the application should use the official custom tabBar and own `switchTab` itself. `UTabbar` remains a local in-page projection, not a platform-tab replacement.
 
-The root namespace is `u-tabbar` and consumes `--u-comp-tabbar-*`.
-
-根命名空间为 `u-tabbar`，消费 `--u-comp-tabbar-*`。
+对于微信常驻主导航，应用应使用官方 custom tabBar 并自行拥有 `switchTab`。`UTabbar` 仍是页面内局部投影，不替代平台 tab。

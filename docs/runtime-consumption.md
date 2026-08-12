@@ -73,6 +73,26 @@ The repository H5 fixture, the repository `mp-weixin` fixture, and the disposabl
 
 仓内 H5 fixture、仓内 `mp-weixin` fixture 与一次性安装包试验均使用调用方拥有的本地 model、有限 options 和 injected 本地 upload adapter 组合这十四个组件。这些只是受限消费与编译事实：named import 仍只用于 H5/jsdom，而两个小程序 consumer 仍通过显式 Easycom 配置解析 leaf SFC。三类 consumer 均不构成真机、无障碍、发布或完整上游等价证据。
 
+## Explicit local feedback scope / 显式局部反馈 scope
+
+Feedback controllers may be imported from the root or the pure service subpath. The application must retain one explicit scope and mount opted-in hosts using exactly that scope. This is local dependency wiring, not global plugin installation or page discovery.
+
+反馈 controller 可从根入口或纯 service 子路径导入。应用必须持有一个显式 scope，并使用完全相同的 scope 挂载 opt-in host。这是局部依赖接线，不是全局 plugin 安装或页面发现。
+
+```js
+import { createUFeedbackScope, useModal, useToast } from '@hia-uview/ui/services';
+
+const feedbackScope = createUFeedbackScope();
+const modal = useModal(feedbackScope);
+const toast = useToast(feedbackScope);
+
+void [feedbackScope, modal, toast];
+```
+
+Mount `<UModal :service-scope="feedbackScope" :service-host="true" />` and `<UToast :service-scope="feedbackScope" :service-host="true" />` in a caller-owned stable subtree. A missing host produces a deterministic result and is never queued. Scope isolation, replacement, disposal, invalid input, and stale request behavior are defined in [explicit feedback services](feedback-services.md).
+
+在调用方拥有的稳定子树中挂载 `<UModal :service-scope="feedbackScope" :service-host="true" />` 与 `<UToast :service-scope="feedbackScope" :service-host="true" />`。缺失 host 会产生确定性结果，且绝不排队。scope 隔离、替换、dispose、非法输入与陈旧 request 行为见[显式反馈服务](feedback-services.md)。
+
 ## Explicit style entry / 显式样式入口
 
 Import the HIA complete style entry from application-owned global style setup. It contains the default light-theme tokens and current component rules, including the global rules required by the WeChat Mini Program compilation path. The runtime module and plugin never inject it automatically.

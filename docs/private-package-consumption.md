@@ -13,6 +13,7 @@ The package exposes only these entries:
 | Entry | Boundary / 边界 |
 | --- | --- |
 | `@hia-uview/ui` | Named runtime imports and explicit `UView` plugin. Importing it registers nothing and injects no style. / 命名 runtime import 和显式 `UView` plugin；导入时不注册任何组件，也不注入样式。 |
+| `@hia-uview/ui/services` | Pure `createUFeedbackScope`, `useToast`, and `useModal` entry. Importing it creates no scope, host, global listener, or component barrel dependency. / 纯 `createUFeedbackScope`、`useToast` 与 `useModal` 入口；导入时不创建 scope、host、全局监听，也不依赖组件 barrel。 |
 | `@hia-uview/ui/style.css` | Explicit full style entry. The consumer owns global style setup. / 显式完整样式入口；消费者拥有全局样式设置。 |
 | `@hia-uview/ui/theme/hia-light.css` | Explicit default-light token entry. / 显式默认浅色 token 入口。 |
 | `@hia-uview/ui/global` | Optional TypeScript-only Vue template augmentation. It has a zero-side-effect runtime placeholder and registers nothing. / 可选、仅 TypeScript 的 Vue template 增强；它有零副作用 runtime 占位模块，不注册任何组件。 |
@@ -24,9 +25,9 @@ The package has a Vue peer range of `>=3.4.0 <4.0.0` and declares no UI runtime 
 
 ## Types / 类型
 
-`@hia-uview/ui` owns its `types/index.d.ts` entry and declares every current runtime component name. Precise public types now cover the audited choice/switch, picker/calendar/select, dropdown, numeric, controlled-upload, local-tabbar, banner, finite-display, and form/input surfaces. The form surface includes rule/error/validator types and imperative form methods; `UDropdown` adds exact `open`/`close` instance methods, and `UUpload` adds exact adapter context/result/failure/state unions without exposing an imperative transport method. Other component declarations intentionally use a generic component baseline. This is a discoverability and type-resolution guarantee, not a claim that every remaining prop, event payload, slot prop, expose signature, parent-child context, or global-bus interaction is fully typed or compatible with an upstream library.
+`@hia-uview/ui` owns its `types/index.d.ts` entry and declares every current runtime component name. Precise public types now cover the audited choice/switch, picker/calendar/select, dropdown, numeric, controlled-upload, form/input, and ten overlay/feedback/navigation surfaces (`UActionSheet`, `UMask`, `UModal`, `UNavbar`, `UNoticeBar`, `UPopup`, `UTabbar`, `UTabs`, `UToast`, and `UTransition`). They include exact component-ref methods, event metadata, the nominal feedback scope, finite service options/controllers, and discriminated command results; callback, URL, invalid enum, missing-scope, and invalid-expose calls have compile-time negative fixtures. Other component declarations intentionally use a generic component baseline. This is a discoverability and type-resolution guarantee, not a claim that every remaining prop, event payload, slot prop, expose signature, parent-child context, or global-bus interaction is fully typed or compatible with an upstream library.
 
-`@hia-uview/ui` 自己提供 `types/index.d.ts` 入口，并声明每个当前 runtime 组件名称。精确公开类型现已覆盖受审 choice/switch、picker/calendar/select、dropdown、numeric、controlled-upload、局部 tabbar、横幅、有限展示及 form/input 表面。表单表面包括 rule/error/validator 类型与 imperative form 方法；`UDropdown` 增加精确 `open`/`close` 实例方法，`UUpload` 增加精确 adapter context/result/failure/state union，但不暴露 imperative transport 方法。其他组件声明刻意采用通用组件基线。这保证可发现性和类型解析，但不声称其余每项 prop、event payload、slot prop、expose signature、父子 context 或 global-bus interaction 都已完整类型化或与上游库兼容。
+`@hia-uview/ui` 自己提供 `types/index.d.ts` 入口，并声明每个当前 runtime 组件名称。精确公开类型现已覆盖受审 choice/switch、picker/calendar/select、dropdown、numeric、controlled-upload、form/input，以及十个 overlay/feedback/navigation 表面（`UActionSheet`、`UMask`、`UModal`、`UNavbar`、`UNoticeBar`、`UPopup`、`UTabbar`、`UTabs`、`UToast` 与 `UTransition`）。这些类型包含精确组件 ref 方法、事件 metadata、nominal feedback scope、有限 service options/controller 和可判别命令结果；callback、URL、非法枚举、缺 scope 与错误 expose 调用均有编译期反例。其他组件声明刻意采用通用组件基线。这保证可发现性和类型解析，但不声称其余每项 prop、event payload、slot prop、expose signature、父子 context 或 global-bus interaction 都已完整类型化或与上游库兼容。
 
 Use the optional template augmentation only where its limited declared names are desired:
 
@@ -36,9 +37,9 @@ Use the optional template augmentation only where its limited declared names are
 import '@hia-uview/ui/global';
 ```
 
-It currently covers `UAlertTips`, `UCalendar`, `UCheckbox`, `UCheckboxGroup`, `UDropdown`, `UDropdownItem`, `UField`, `UForm`, `UFormItem`, `UInput`, `UNoticeBar`, `UNumberBox`, `UPicker`, `URadio`, `URadioGroup`, `URate`, `USearch`, `USelect`, `USlider`, `USwitch`, `UTabbar`, `UTag`, `UTextarea`, and `UUpload`. It is not a runtime install, an all-component global declaration, or an Easycom substitute.
+It currently covers `UActionSheet`, `UAlertTips`, `UCalendar`, `UCheckbox`, `UCheckboxGroup`, `UDropdown`, `UDropdownItem`, `UField`, `UForm`, `UFormItem`, `UInput`, `UMask`, `UModal`, `UNavbar`, `UNoticeBar`, `UNumberBox`, `UPicker`, `UPopup`, `URadio`, `URadioGroup`, `URate`, `USearch`, `USelect`, `USlider`, `USwitch`, `UTabbar`, `UTabs`, `UTag`, `UTextarea`, `UToast`, `UTransition`, and `UUpload`. It is not a runtime install, an all-component global declaration, or an Easycom substitute.
 
-它当前覆盖 `UAlertTips`、`UCalendar`、`UCheckbox`、`UCheckboxGroup`、`UDropdown`、`UDropdownItem`、`UField`、`UForm`、`UFormItem`、`UInput`、`UNoticeBar`、`UNumberBox`、`UPicker`、`URadio`、`URadioGroup`、`URate`、`USearch`、`USelect`、`USlider`、`USwitch`、`UTabbar`、`UTag`、`UTextarea` 与 `UUpload`。它不是 runtime install、全量组件 global declaration 或 Easycom 替代品。
+它当前覆盖 `UActionSheet`、`UAlertTips`、`UCalendar`、`UCheckbox`、`UCheckboxGroup`、`UDropdown`、`UDropdownItem`、`UField`、`UForm`、`UFormItem`、`UInput`、`UMask`、`UModal`、`UNavbar`、`UNoticeBar`、`UNumberBox`、`UPicker`、`UPopup`、`URadio`、`URadioGroup`、`URate`、`USearch`、`USelect`、`USlider`、`USwitch`、`UTabbar`、`UTabs`、`UTag`、`UTextarea`、`UToast`、`UTransition` 与 `UUpload`。它不是 runtime install、全量组件 global declaration 或 Easycom 替代品。
 
 ## Static Easycom fragment / 静态 Easycom 片段
 
@@ -67,9 +68,9 @@ The supported pre-release verification path is local: pack the UI workspace, ins
 
 支持的预发布验证路径是本地：打包 UI workspace、把 tarball 安装到一次性 consumer fixture、显式导入 style、合并静态 Easycom 片段并进行编译。不要发布 tarball、改变 package registry，也不要把一次本地 compiler 结果当作设备或跨端支持证据。
 
-Run the repeatable repository check with `mise exec -- npm run verify:package:trial`. It packs with scripts disabled, installs only the tarball in offline mode with scripts disabled, reuses the repository-locked local compiler toolchain through one-use temporary directory links, resolves the installed package declarations without a source-path alias, compiles the static Easycom page, and deletes the one-use temporary directory in all outcomes.
+Run the repeatable repository check with `mise exec -- npm run verify:package:trial`. It packs with scripts disabled, installs only the tarball in offline mode with scripts disabled, verifies the root and pure `./services` runtime/type exports without a source-path alias, reuses the repository-locked local compiler toolchain through one-use temporary directory links, compiles the static Easycom page, and deletes the one-use temporary directory in all outcomes.
 
-使用 `mise exec -- npm run verify:package:trial` 运行可重复的仓内检查。它会在禁用脚本的条件下打包，只在离线且禁用脚本的条件下安装 tarball，通过一次性临时目录链接复用仓内锁定的本地 compiler toolchain，在没有 source-path alias 的情况下解析已安装包的 declaration，编译静态 Easycom 页面，并在所有结果下删除一次性临时目录。
+使用 `mise exec -- npm run verify:package:trial` 运行可重复的仓内检查。它会在禁用脚本的条件下打包，只在离线且禁用脚本的条件下安装 tarball，在没有 source-path alias 的情况下验证根入口与纯 `./services` runtime/type export，通过一次性临时目录链接复用仓内锁定的本地 compiler toolchain，编译静态 Easycom 页面，并在所有结果下删除一次性临时目录。
 
 Rollback is simply removal of the consumer-owned tarball dependency and its copied Easycom mapping, followed by restoring the consumer's previous lockfile/configuration. The UI package has no install-time script, runtime global registration, storage, network, or application mutation to undo.
 

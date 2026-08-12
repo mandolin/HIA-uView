@@ -1,60 +1,56 @@
 # UModal component contract / UModal 组件契约
 
-> Status / 状态：Private pre-release contract. Independent implementation, Vue runtime behavior tests, and an `mp-weixin` compile fixture exist; `UModal` remains a private, unpublished package API.
-> 私有的预发布契约。独立实现、Vue runtime 行为测试和 `mp-weixin` 编译 fixture 已存在；`UModal` 仍是私有、未发布的包 API。
+> Status / 状态：Private pre-release controlled and explicitly scoped modal. / 私有预发布受控且显式作用域 modal。
 
-`UModal` is a proposed controlled local modal for the private UniApp Vue 3 and WeChat Mini Program (`mp-weixin`) profile. An application owns whether it is visible, what it says, and what happens after any intent. The component renders local mask/panel presentation and reports only confirm or cancel intent; it does not close itself or manage an application dialog lifecycle.
+`UModal` has two deliberately separate use modes. In controlled mode, an explicitly supplied `visible` wins over migration `modelValue`; the caller owns title/content, labeled controls, writeback, and every business result. In service-host mode, the caller supplies both `serviceScope` and `serviceHost=true`; the component then presents only finite text/options dispatched through that exact scope.
 
-`UModal` 是面向私有 UniApp Vue 3 与微信小程序（`mp-weixin`）配置的受控局部 modal 组件候选。应用拥有其是否可见、显示何种文字以及任一意图后的处理。组件只渲染局部 mask/panel 呈现并报告 confirm 或 cancel 意图；它不自行关闭，也不管理应用的对话框生命周期。
+`UModal` 有两种刻意分离的使用模式。受控模式中，显式提供的 `visible` 优先于迁移 `modelValue`；调用方拥有标题/正文、带标签控件、写回和全部业务结果。service host 模式中，调用方必须同时提供 `serviceScope` 与 `serviceHost=true`；组件随后只呈现由该精确 scope 派发的有限文字/options。
 
-## Public API / 公开 API
+## Controlled mode / 受控模式
 
-| Prop / 属性 | Type / 类型 | Default / 默认值 | Contract / 约定 |
-| --- | --- | --- | --- |
-| `visible` | `boolean` | `false` | Caller-owned rendering state. It controls whether the local modal surface exists; events never mutate it. / 调用方自有的渲染状态。它控制局部 modal 表面是否存在；事件绝不修改它。 |
-| `modelValue` | `boolean` | `false` | Controlled migration visibility. When `visible` is not supplied, it controls the local modal surface. Confirm/cancel first request `update:modelValue(false)` and then report their local intent; the caller may accept, reject, or defer the writeback. / 受控迁移可见状态。未提供 `visible` 时，它控制局部 modal 表面。confirm/cancel 会先请求 `update:modelValue(false)`，再报告本地意图；调用方可以接受、拒绝或延后写回。 |
-| `title` | `string` | `''` | Optional caller-owned visible title. Applications must provide meaningful title text whenever dialog context needs one. / 可选的调用方自有可见标题。对话框上下文需要标题时，应用必须提供有意义的文字。 |
-| `confirmText` | `string` | `''` | Optional caller-owned visible label for the confirm control. Empty text renders no confirm control. / confirm 控件的可选调用方自有可见标签。空文字不会渲染 confirm 控件。 |
-| `cancelText` | `string` | `''` | Optional caller-owned visible label for the cancel control. Empty text renders no cancel control. / cancel 控件的可选调用方自有可见标签。空文字不会渲染 cancel 控件。 |
+- `title`, `content`, and the default slot are caller-owned. `showTitle` may suppress the title. / `title`、`content` 与默认 slot 均由调用方拥有；`showTitle` 可抑制标题。
+- `confirmText`/`cancelText` name the built-in controls; `showConfirmButton`/`showCancelButton` may suppress them. An optional `confirm-button` slot names only the controlled confirm control. / `confirmText`/`cancelText` 为内建控件命名；`showConfirmButton`/`showCancelButton` 可抑制它们。可选 `confirm-button` slot 只为受控确认控件命名。
+- Normal confirm/cancel emits `update:modelValue(false)` before `confirm(rawEvent)` or `cancel(rawEvent)`. The component does not mutate either visibility prop. / 普通确认/取消会先 emit `update:modelValue(false)`，再 emit `confirm(rawEvent)` 或 `cancel(rawEvent)`；组件不修改任一可见性 prop。
+- `asyncClose=true` keeps confirmation locally loading and emits `confirm` without requesting close. Component-ref `clearLoading()` only clears that projection; it does not finish a task. / `asyncClose=true` 会让确认进入局部 loading，并 emit `confirm` 而不请求关闭。组件 ref `clearLoading()` 只清除该投影，不完成任务。
+- `maskCloseAble=true` permits mask cancellation and appends `{ source: 'controlled', reason: 'mask' }` as the second cancel argument. / `maskCloseAble=true` 允许遮罩取消，并把 `{ source: 'controlled', reason: 'mask' }` 作为 cancel 第二参数追加。
 
-`UModal` has one default slot for caller-owned panel content. The slot is responsible for its own values, nested component events, and business semantics. There are no header, footer, mask, or arbitrary-layout slots in this first contract.
+## Explicit service host / 显式 service host
 
-`UModal` 有一个用于调用方自有 panel 内容的默认插槽。该插槽自行负责其值、嵌套组件事件和业务语义。首个契约不提供 header、footer、mask 或任意布局插槽。
+Create one scope with `createUFeedbackScope()`, bind a controller with `useModal(scope)`, and mount one opted-in host with the same scope. Merely passing a scope does not register a host. Later registration replaces an earlier modal host in that scope; unmounting or disposing removes the current host deterministically.
 
-| Event / 事件 | Payload / 载荷 | Contract / 约定 |
-| --- | --- | --- |
-| `confirm` | native platform event | Emits once only when `visible` is true and a non-empty `confirmText` control is activated. It never changes `visible`. / 仅在 `visible` 为真且非空 `confirmText` 控件被激活时恰好触发一次；绝不改变 `visible`。 |
-| `cancel` | native platform event | Emits once only when `visible` is true and a non-empty `cancelText` control is activated. It never changes `visible`. / 仅在 `visible` 为真且非空 `cancelText` 控件被激活时恰好触发一次；绝不改变 `visible`。 |
-| `update:modelValue` | `false` | Requests a next controlled migration value before an eligible confirm/cancel intent. It is never a direct prop mutation or an automatic close guarantee. / 在符合条件的 confirm/cancel 意图前请求下一个受控迁移值。它绝不是直接 prop 修改或自动关闭保证。 |
+使用 `createUFeedbackScope()` 创建一个 scope，以 `useModal(scope)` 绑定 controller，并用同一 scope 挂载一个显式 opt-in host。只传 scope 不会注册 host。同一 scope 中后注册的 modal host 会替代先前 host；卸载或 dispose 会确定性移除当前 host。
 
-## Visibility and interaction boundary / 可见性与交互边界
+```vue
+<script setup>
+import { createUFeedbackScope, useModal } from '@hia-uview/ui/services';
 
-When an explicitly supplied `visible` is false, `UModal` renders no modal surface and emits neither event, including if a test or non-native caller invokes a handler directly. When `visible` is omitted, `modelValue` is the migration visibility entry. When the modal is true, the component may render caller-provided controls, but application code remains responsible for accepting any requested writeback, handling a request, routing, focus, retry, error recovery, or any other result.
+const feedbackScope = createUFeedbackScope();
+const modal = useModal(feedbackScope);
 
-当显式提供的 `visible` 为假时，`UModal` 不渲染 modal 表面，也不触发任一事件，包括测试或非原生调用方直接调用 handler 的情形。未提供 `visible` 时，`modelValue` 是迁移可见性入口。当 modal 可见时，组件可以渲染调用方提供的控件，但应用代码仍负责接受任何请求的写回、处理请求、路由、焦点、重试、错误恢复或任何其他结果。
+function showLocalDecision() {
+  return modal.confirm({
+    content: 'Continue this local action? / 是否继续此本地操作？',
+    confirmText: 'Continue / 继续',
+    cancelText: 'Cancel / 取消'
+  });
+}
+</script>
 
-The first contract deliberately excludes mask-click and escape dismissal, automatic close, native modal/popup APIs, `Teleport`/portal behavior, focus trap/restore, keyboard behavior, scroll locking, z-index configuration, global dialog services, queues, timers, transitions, routes, `open-type`, form behavior, network, storage, identity, and business commands.
+<template>
+  <UModal :service-scope="feedbackScope" :service-host="true" />
+</template>
+```
 
-首个契约有意排除 mask-click 和 escape 关闭、自动关闭、原生 modal/popup API、`Teleport`/portal 行为、焦点陷阱/恢复、键盘行为、滚动锁定、z-index 配置、全局 dialog service、队列、计时器、transition、路由、`open-type`、表单行为、网络、存储、身份和业务命令。
+Service confirmation/cancellation emits the raw event first and finite `{ source: 'service', requestId, reason? }` metadata second. `asyncClose` may retain the service modal in loading until `modal.clearLoading(requestId)` or `modal.close(requestId)`. Controller results only prove synchronous host acceptance or a stable rejection; they do not prove user confirmation or business completion. See [explicit feedback services](feedback-services.md).
 
-## Theme and customization / 主题与定制
+service 确认/取消保留原始事件为第一参数，并追加有限 `{ source: 'service', requestId, reason? }` metadata 为第二参数。`asyncClose` 可让 service modal 保持 loading，直到 `modal.clearLoading(requestId)` 或 `modal.close(requestId)`。controller 结果只证明同步 host 接收或稳定拒绝，不证明用户确认或业务完成。参见[显式反馈服务](feedback-services.md)。
 
-The root namespace is `u-modal`. The planned implementation consumes `--u-comp-modal-*` tokens for mask, panel surface, title, border, padding, constrained panel geometry, internal layer value, action gap, and future focus treatment. Consumers must use documented text props, slots, and tokens rather than raw colors, arbitrary inline styles, deep selectors, or an externally configurable layer stack.
+## Boundaries / 边界
 
-根命名空间为 `u-modal`。计划实现消费 `--u-comp-modal-*` token，用于 mask、panel 表面、标题、边界、内边距、受限 panel 几何、内部层级值、操作间距和后续焦点样式。使用者必须使用已文档化文字 prop、插槽和 token，而不是原始颜色、任意内联样式、深层选择器或外部可配置的层叠栈。
+The component and controller discover no page, global singleton, router, network, identity, credential, storage, or business store. They execute no callback supplied in options. The implementation does not claim focus trap/restore, escape handling, scroll locking, native modal stacking, screen-reader, DevTools, physical-device, App, or complete cross-platform certification.
 
-## Accessibility and platform disclosure / 无障碍与平台披露
+组件与 controller 不发现页面、全局 singleton、router、网络、身份、凭据、存储或业务 store，也不执行 options 中的 callback。实现不声明焦点陷阱/恢复、escape 处理、滚动锁定、原生 modal 层叠、读屏、DevTools、真机、App 或完整跨端认证。
 
-Visible title, default-slot text, and confirm/cancel labels are caller-owned text. Modal state must not rely on mask color alone. WCAG 2.2 AA remains the acceptance target for controllable visual behavior, not a product or mini-program conformance certification.
+The root namespace is `u-modal` and consumes `--u-comp-modal-*`.
 
-可见标题、默认插槽文字和 confirm/cancel 标签都是调用方自有文字。modal 状态不能只依赖 mask 颜色表达。WCAG 2.2 AA 仍是可控视觉行为的验收目标，不是产品或小程序符合性认证。
-
-The initial profile makes no claim about ARIA dialog semantics, focus trap or restoration, keyboard escape handling, screen-reader announcement, accessibility-tree behavior, true modal stacking, WeChat DevTools, physical devices, App, H5, or other mini-program targets.
-
-初始配置不承诺 ARIA dialog 语义、焦点陷阱或恢复、键盘 escape 处理、读屏播报、无障碍树行为、真实 modal 层叠、微信开发者工具、真机、App、H5 或其他小程序目标。
-
-## Required fixtures / 实现必需 fixture
-
-Before release, fixtures must expand to cover hidden zero output/events, visible title/slot content, confirm-only, cancel-only, both controls, zero events for missing controls, long Chinese/English text, and explicit caller control of `visible`. Static checks must confirm the absence of native popup, `Teleport`, timer, global-service, focus/scroll, route, request, storage, or native `open-type` behavior.
-
-发布前，fixture 必须扩展覆盖隐藏时零输出/零事件、可见标题/插槽内容、仅 confirm、仅 cancel、双控件、缺失控件时零事件、较长中英文文字以及调用方对 `visible` 的显式控制。静态检查必须确认不存在原生 popup、`Teleport`、计时器、全局 service、焦点/滚动、路由、请求、存储或原生 `open-type` 行为。
+根命名空间为 `u-modal`，消费 `--u-comp-modal-*`。

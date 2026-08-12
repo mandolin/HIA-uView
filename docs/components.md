@@ -4,6 +4,10 @@ HIA-uView currently exposes the following **private, pre-release** UniApp Vue 3 
 
 HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 UniApp Vue 3 组件契约。此表只是导航索引，并非已发布 npm API，也不承诺自动注册、真机行为、无障碍树支持、App/H5 支持或对任何上游的完全兼容。
 
+`UToast` and `UModal` may additionally act as explicitly opted-in hosts for caller-owned [feedback scopes](feedback-services.md). Those composable services are not extra components, global singletons, page discovery, or business-framework APIs.
+
+`UToast` 与 `UModal` 还可作为调用方拥有的[反馈 scope](feedback-services.md) 的显式 opt-in host。这些 composable service 不是额外组件、全局 singleton、页面发现或业务框架 API。
+
 | Template name / 模板名称 | Named export / 命名导出 | Contract / 契约 | Bounded role / 受限职责 |
 | --- | --- | --- | --- |
 | `u-button` | `UButton` | [UButton](button.md) | Caller-controlled local action intent / 调用方受控的本地操作意图 |
