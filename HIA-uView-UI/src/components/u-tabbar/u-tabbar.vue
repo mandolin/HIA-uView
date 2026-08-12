@@ -41,7 +41,9 @@ const props = defineProps({
   // <lang><zh-CN>modelValue 保留上游默认索引 0；字符串 key 仍可由调用方用于本地、非路由式 tab 标识。</zh-CN><en>ModelValue retains the upstream default index 0; callers may still use string keys for local non-routing tab identity.</en></lang>
   modelValue: { type: [String, Number], default: 0 },
   // <lang><zh-CN>items 仅接收调用方有限静态数组；组件不发现页面、图标、徽标或远端导航配置。</zh-CN><en>Items accepts only a caller finite static array; the component discovers no pages, icons, badges, or remote navigation configuration.</en></lang>
-  items: { type: Array, default: () => [] }
+  items: { type: Array, default: () => [] },
+  // <lang><zh-CN>熟悉的 list alias 仅在 items 为空时成为有限条目来源；它同样不承载页面或原生 tab 配置。</zh-CN><en>The familiar list alias becomes the finite item source only while items is empty; it likewise carries no page or native-tab configuration.</en></lang>
+  list: { type: Array, default: () => [] }
 });
 
 // <lang><zh-CN>两个事件都只是页面拥有的下一 local key；不会导航、写权限或修改身份。</zh-CN><en>Both events are merely the page-owned next local key; they neither navigate nor write authorization or identity.</en></lang>
@@ -50,8 +52,11 @@ const emit = defineEmits(['update:modelValue', 'change']);
 // <lang><zh-CN>解析后的可见性只采用显式 alias 或 show，不推断设备、页面路由或原生 tabBar 状态。</zh-CN><en>Resolved visibility uses only explicit alias or show and infers neither device, page route, nor native-tab-bar state.</en></lang>
 const isVisible = computed(() => (props.visible === undefined ? props.show : props.visible));
 
+// <lang><zh-CN>非空 items 保持既有 HIA 数据源优先；只有空 items 才采用 list alias，二者都只是调用方有限数组。</zh-CN><en>Nonempty items retain the existing HIA data-source precedence; only empty items adopts the list alias, and both remain caller finite arrays.</en></lang>
+const sourceItems = computed(() => (props.items.length > 0 ? props.items : props.list));
+
 // <lang><zh-CN>把有限调用方 item 投影为只含 label/value/disabled/key 的本地记录，避免 mutation 或保留任意附带字段。</zh-CN><en>Projects finite caller items into local records containing only label/value/disabled/key, avoiding mutation or retaining arbitrary attached fields.</en></lang>
-const safeItems = computed(() => props.items
+const safeItems = computed(() => sourceItems.value
   .map((item, index) => {
     // <lang><zh-CN>字符串 item 是 label/value 同值的简写；其他非对象输入收束为空对象。</zh-CN><en>A string item abbreviates equal label/value; every other non-object input is constrained to an empty object.</en></lang>
     const source = typeof item === 'string' ? { label: item, value: item } : (item && typeof item === 'object' ? item : {});

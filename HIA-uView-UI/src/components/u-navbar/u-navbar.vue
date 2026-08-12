@@ -10,10 +10,10 @@
   <view v-if="visible" class="u-navbar">
     <!-- @lang zh-CN 受控左侧结构说明如下。
     @lang en Controlled left-side structure explanation follows.
-    <lang><zh-CN>左侧优先接受调用方插槽；缺少插槽时，只有非空 leftText 才形成带可见标签的本地 intent control。</zh-CN><en>The left side prioritizes a caller slot; without that slot, only non-empty leftText forms a local intent control with a visible label.</en></lang> -->
+    <lang><zh-CN>左侧优先接受调用方插槽；缺少插槽时，isBack 只决定是否呈现由 leftText/backText 解析出的本地 intent control。</zh-CN><en>The left side prioritizes a caller slot; without that slot, isBack only decides whether to render the local intent control resolved from leftText/backText.</en></lang> -->
     <view class="u-navbar__side u-navbar__side--left">
       <slot name="left">
-        <button v-if="hasLeftText" class="u-navbar__control" type="button" :disabled="disabled" @click="emitLeftClick"><text>{{ leftText }}</text></button>
+        <button v-if="hasLeftText" class="u-navbar__control" type="button" :disabled="disabled" @click="emitLeftClick"><text>{{ resolvedLeftText }}</text></button>
       </slot>
     </view>
 
@@ -52,6 +52,10 @@ const props = defineProps({
   title: { type: String, default: '' },
   // <lang><zh-CN>左侧内建 control 的 caller-owned 可见文字；空值不创建无标签按钮。</zh-CN><en>Caller-owned visible text for the built-in left control; an empty value creates no unlabeled button.</en></lang>
   leftText: { type: String, default: '' },
+  // <lang><zh-CN>熟悉的 backText alias 只在 leftText 为空时提供内建左侧文字；它不执行返回或读取页面栈。</zh-CN><en>The familiar backText alias supplies built-in left copy only while leftText is empty; it neither navigates back nor reads a page stack.</en></lang>
+  backText: { type: String, default: '' },
+  // <lang><zh-CN>isBack 只开关内建左侧文字 control；显式 left slot 始终由调用方拥有且不受此 prop 抑制。</zh-CN><en>IsBack toggles only the built-in left text control; an explicit left slot always remains caller-owned and is not suppressed by this prop.</en></lang>
+  isBack: { type: Boolean, default: true },
   // <lang><zh-CN>右侧内建 control 的 caller-owned 可见文字；空值不创建无标签按钮。</zh-CN><en>Caller-owned visible text for the built-in right control; an empty value creates no unlabeled button.</en></lang>
   rightText: { type: String, default: '' },
   // <lang><zh-CN>禁用状态仅抑制内建 control 的原生点击，不更改插槽内容或应用状态。</zh-CN><en>The disabled state suppresses native clicks on built-in controls only and changes neither slot content nor application state.</en></lang>
@@ -61,8 +65,11 @@ const props = defineProps({
 // <lang><zh-CN>两个事件只表达用户意图；调用方决定返回、路由、保存或任何副作用。</zh-CN><en>The two events express user intent only; the caller decides back navigation, routing, saving, or any side effect.</en></lang>
 const emit = defineEmits(['left-click', 'right-click']);
 
-// <lang><zh-CN>左侧 control 资格要求非空的可见文字，使触控入口对阅读者可发现。</zh-CN><en>Left-control eligibility requires non-empty visible text, keeping the touch entry discoverable to readers.</en></lang>
-const hasLeftText = computed(() => props.leftText.trim().length > 0);
+// <lang><zh-CN>leftText 非空时保持既有入口优先；否则采用熟悉的 backText alias，但不从语言或页面状态生成默认文案。</zh-CN><en>A nonempty leftText retains precedence for the existing entry; otherwise the familiar backText alias applies without generating default copy from locale or page state.</en></lang>
+const resolvedLeftText = computed(() => (props.leftText.trim().length > 0 ? props.leftText : props.backText));
+
+// <lang><zh-CN>左侧内建 control 同时要求 isBack 和非空解析文字；显式 left slot 不经过此资格判断。</zh-CN><en>The built-in left control requires both isBack and nonempty resolved copy; an explicit left slot does not pass through this eligibility check.</en></lang>
+const hasLeftText = computed(() => props.isBack && resolvedLeftText.value.trim().length > 0);
 
 // <lang><zh-CN>右侧 control 资格与左侧对称，不从 title、slot 或业务状态猜测可执行动作。</zh-CN><en>Right-control eligibility is symmetric with the left and infers no executable action from title, slot, or business state.</en></lang>
 const hasRightText = computed(() => props.rightText.trim().length > 0);

@@ -51,7 +51,6 @@ test('keeps P43 source inside overlay and navigation boundaries', async () => {
   const styleSources = await Promise.all(p43ComponentRecords.map((componentRecord) => readFile(resolve(componentRecord.style), 'utf8')));
   const combinedSource = [...componentSources, ...styleSources].join('\n');
   const forbiddenPatterns = [
-    /\bset(?:Timeout|Interval)\s*\(/,
     /\brequestAnimationFrame\s*\(/,
     /\bfetch\s*\(/,
     /\buni\.[A-Za-z]/,
@@ -66,6 +65,16 @@ test('keeps P43 source inside overlay and navigation boundaries', async () => {
   for (const forbiddenPattern of forbiddenPatterns) {
     assert.doesNotMatch(combinedSource, forbiddenPattern);
   }
+  // <lang><zh-CN>P68 只允许 toast 使用一个实例局部 auto-close timer；其余七组件仍不得取得 timer，toast 也不得使用 interval。</zh-CN><en>P68 permits only toast to use one instance-local auto-close timer; the other seven components still acquire no timer, and toast may not use an interval.</en></lang>
+  const toastSourceIndex = p43ComponentRecords.findIndex((componentRecord) => componentRecord.name === 'u-toast');
+  // <lang><zh-CN>从稳定组件记录定位 toast，避免依赖数组尾部这一偶然位置。</zh-CN><en>Locates toast from the stable component record rather than relying on its accidental position at the array tail.</en></lang>
+  assert.notEqual(toastSourceIndex, -1);
+  // <lang><zh-CN>非 toast 源码继续保持无 JavaScript timer；该检查不把 CSS transition 当作计时器。</zh-CN><en>Non-toast sources remain free of JavaScript timers; this check does not mistake CSS transitions for timers.</en></lang>
+  const nonToastSources = componentSources.filter((_, index) => index !== toastSourceIndex).join('\n');
+  assert.doesNotMatch(nonToastSources, /\bset(?:Timeout|Interval)\s*\(/);
+  // <lang><zh-CN>toast 的有限 timeout 是 last-show-wins 生命周期的一部分，但不得升级为持续 interval。</zh-CN><en>Toast's finite timeout is part of last-show-wins lifecycle but must not expand into a persistent interval.</en></lang>
+  assert.match(componentSources[toastSourceIndex], /activeTimer = setTimeout\(\(\) =>/);
+  assert.doesNotMatch(componentSources[toastSourceIndex], /\bsetInterval\s*\(/);
   for (const [index, componentSource] of componentSources.entries()) {
     assert.match(componentSource, /@lang zh-CN/, p43ComponentRecords[index].name);
     assert.match(componentSource, /@lang en/, p43ComponentRecords[index].name);

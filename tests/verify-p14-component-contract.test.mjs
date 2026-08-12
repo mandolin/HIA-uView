@@ -87,12 +87,14 @@ test('keeps P14 source inside controlled feedback and ROP boundaries', async () 
     assert.match(componentSource, /<lang><zh-CN>/);
   }
 
-  // <lang><zh-CN>UModal 只能有受控 isVisible guard、confirm/cancel 和可拒绝 modelValue 请求，不应出现自动关闭或 portal 机制。</zh-CN><en>UModal may have only a controlled isVisible guard, confirm/cancel, and a rejectable modelValue request and must contain no automatic-close or portal mechanism.</en></lang>
+  // <lang><zh-CN>UModal 必须把 caller-controlled 可见性与显式 service session 分层，并保留 confirm/cancel、可拒绝 modelValue 请求和具名 control guards。</zh-CN><en>UModal must layer caller-controlled visibility and an explicit service session while retaining confirm/cancel, rejectable modelValue requests, and named-control guards.</en></lang>
   assert.match(modalSource, /v-if="isVisible"/);
   assert.match(modalSource, /defineEmits\(\['confirm', 'cancel', 'update:modelValue'\]\)/);
-  assert.match(modalSource, /const isVisible = computed\(\(\) => props\.visible \?\? props\.modelValue\);/);
-  assert.match(modalSource, /if \(!isVisible\.value \|\| !hasConfirmControl\.value\)/);
+  assert.match(modalSource, /const controlledVisible = computed\(\(\) => props\.visible \?\? props\.modelValue\);/);
+  assert.match(modalSource, /const isVisible = computed\(\(\) => hasServiceSession\.value \|\| controlledVisible\.value\);/);
+  assert.match(modalSource, /if \(!isVisible\.value \|\| !hasConfirmControl\.value \|\| isConfirmLoading\.value\)/);
   assert.match(modalSource, /if \(!isVisible\.value \|\| !hasCancelControl\.value\)/);
+  assert.match(modalSource, /serviceHost: \{ type: Boolean, default: false \}/);
   assert.match(modalSource, /emit\('update:modelValue', false\);/);
 
   // <lang><zh-CN>UNotice 必须将未知 tone 规范化为有限 info 类，并以 visible 加非空 message 形成展示/事件 guard。</zh-CN><en>UNotice must normalize unknown tone to finite info class and form display/event guard from visible plus non-empty message.</en></lang>

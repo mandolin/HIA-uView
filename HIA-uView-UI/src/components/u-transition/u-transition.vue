@@ -1,13 +1,13 @@
 <!--
 @component UTransition
-@lang zh-CN 提供 caller-controlled 的有限 CSS transition 包装面；调用方拥有 visible、mode、duration 与内容，组件不使用 JavaScript timer、测量、全局生命周期或异步动画服务。
-@lang en Provides a caller-controlled finite CSS-transition wrapper; the caller owns visible, mode, duration, and content, while the component uses no JavaScript timer, measurement, global lifecycle, or async animation service.
+@lang zh-CN 提供带 visible/show 优先级的 caller-controlled 有限 CSS transition 包装面；调用方拥有可见性、mode、duration 与内容，组件不使用 JavaScript timer、测量、全局生命周期或异步动画服务。
+@lang en Provides a caller-controlled finite CSS-transition wrapper with visible/show precedence; the caller owns visibility, mode, duration, and content, while the component uses no JavaScript timer, measurement, global lifecycle, or async animation service.
 -->
 <template>
   <!-- @lang zh-CN 受控模板呈现说明如下。
   @lang en Controlled template-presentation explanation follows.
-  <lang><zh-CN>visible 直接控制 slot 是否在树中；class/style 只投影已规范化的 mode/duration。</zh-CN><en>Visible directly controls whether the slot is in the tree; class/style project normalized mode/duration only.</en></lang> -->
-  <view v-if="visible" :class="transitionClasses" :style="transitionStyle"><slot /></view>
+  <lang><zh-CN>解析后的受控值直接控制 slot 是否在树中；class/style 只投影已规范化的 mode/duration。</zh-CN><en>The resolved controlled value directly controls whether the slot is in the tree; class/style project normalized mode/duration only.</en></lang> -->
+  <view v-if="isVisible" :class="transitionClasses" :style="transitionStyle"><slot /></view>
 </template>
 
 <script setup>
@@ -19,8 +19,20 @@ defineOptions({ name: 'u-transition' });
 // <lang><zh-CN>有限 mode 集合避免任意 caller 字符串成为 CSS class；每个 mode 只是 CSS 呈现选择。</zh-CN><en>The finite mode set prevents arbitrary caller strings from becoming CSS classes; every mode is a CSS presentation choice only.</en></lang>
 const supportedModes = Object.freeze(['fade', 'slide-up', 'slide-down', 'zoom']);
 
-// <lang><zh-CN>调用方拥有可见性、mode 与 duration；duration 单位为毫秒，0 允许关闭 CSS transition。</zh-CN><en>The caller owns visibility, mode, and duration; duration is milliseconds and zero permits disabling CSS transition.</en></lang>
-const props = defineProps({ visible: { type: Boolean, default: false }, mode: { type: String, default: 'fade' }, duration: { type: Number, default: 180 } });
+// <lang><zh-CN>调用方拥有可见性、mode 与 duration；visible 明确值优先于 show，duration 单位为毫秒，0 允许关闭 CSS transition。</zh-CN><en>The caller owns visibility, mode, and duration; an explicit visible value precedes show, duration is milliseconds, and zero permits disabling CSS transition.</en></lang>
+const props = defineProps({
+  // <lang><zh-CN>undefined 表示调用方省略 HIA 入口，只有此时才读取迁移别名 show。</zh-CN><en>Undefined means the caller omitted the HIA entry, and only then is the show migration alias read.</en></lang>
+  visible: { type: Boolean, default: undefined },
+  // <lang><zh-CN>show 只作为受控布尔别名，不启动 JavaScript 动画或计时器。</zh-CN><en>Show serves only as a controlled Boolean alias and starts no JavaScript animation or timer.</en></lang>
+  show: { type: Boolean, default: false },
+  // <lang><zh-CN>mode 只选择四种有限 CSS 呈现 class；当前不承诺完整 enter/leave lifecycle。</zh-CN><en>Mode selects only four finite CSS presentation classes; it currently promises no complete enter/leave lifecycle.</en></lang>
+  mode: { type: String, default: 'fade' },
+  // <lang><zh-CN>duration 以毫秒输入并收束为 0–1000 的整数，只投影到组件私有 CSS property。</zh-CN><en>Duration is supplied in milliseconds, constrained to an integer from 0–1000, and projected only into a component-private CSS property.</en></lang>
+  duration: { type: Number, default: 180 }
+});
+
+// <lang><zh-CN>显式 visible 决定本地树；省略时才回退 show，避免冲突输入改变既有优先级。</zh-CN><en>Explicit visible determines the local tree; only omission falls back to show, preventing conflicting input from changing existing precedence.</en></lang>
+const isVisible = computed(() => props.visible ?? props.show);
 
 // <lang><zh-CN>未知 mode 回退 fade，保持 class 受限。</zh-CN><en>An unknown mode falls back to fade, keeping classes constrained.</en></lang>
 const safeMode = computed(() => supportedModes.includes(props.mode) ? props.mode : 'fade');

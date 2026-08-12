@@ -106,6 +106,50 @@ function handleSelect(item) {
   emit('update:modelValue', item.value);
   emit('change', item.value);
 }
+
+/**
+ * @lang zh-CN 将显式 clickTab 候选解析到当前有限 tab：有效数字只按索引解释，其他类型只按 value 严格匹配。
+ * @lang en Resolves an explicit clickTab candidate against the current finite tabs: a valid number is interpreted only as an index, while other types strictly match value only.
+ * @param {unknown} candidate <lang><zh-CN>调用方显式提供的有限索引或 value。</zh-CN><en>Caller-explicit finite index or value.</en></lang>
+ * @returns {{key:string,label:string,value:string|number,disabled:boolean}|undefined} <lang><zh-CN>匹配的规范化 tab；无效数字或未知 value 返回 undefined。</zh-CN><en>Matched normalized tab, or undefined for an invalid number or unknown value.</en></lang>
+ */
+function resolveClickTabCandidate(candidate) {
+  // <lang><zh-CN>数字候选只允许当前列表内的整数索引；无效数字不会退化为 value 匹配。</zh-CN><en>A numeric candidate permits only an integer index inside the current list; an invalid number does not fall through to value matching.</en></lang>
+  if (typeof candidate === 'number') {
+    // <lang><zh-CN>越界、负数和非整数都保持零匹配，避免猜测调用方本意。</zh-CN><en>Out-of-range, negative, and non-integer numbers retain zero matches, avoiding guesses about caller intent.</en></lang>
+    if (!Number.isInteger(candidate) || candidate < 0 || candidate >= safeItems.value.length) {
+      return undefined;
+    }
+
+    // <lang><zh-CN>合法索引直接映射当前规范化 item；数据源优先级仍由 items/list contract 决定。</zh-CN><en>A valid index maps directly to the current normalized item; the items/list contract still determines data-source precedence.</en></lang>
+    return safeItems.value[candidate];
+  }
+
+  // <lang><zh-CN>非数字候选只以严格相等匹配 value，不字符串化、解析或读取 DOM 标识。</zh-CN><en>A nonnumeric candidate matches value by strict equality only, without stringification, parsing, or DOM-identity reads.</en></lang>
+  return safeItems.value.find((item) => item.value === candidate);
+}
+
+/**
+ * @lang zh-CN 为迁移调用方提供显式、实例局部的 tab 选择入口；它与点击共享 guard 与 update→change 顺序，不滚动、不导航且不管理隐藏内容。
+ * @lang en Provides migration callers an explicit instance-local tab-selection entry; it shares click guards and update→change order and performs no scrolling, navigation, or hidden-content management.
+ * @param {unknown} candidate <lang><zh-CN>有效数字索引或需要严格匹配的非数字 value。</zh-CN><en>Valid numeric index or nonnumeric value to match strictly.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；无效、禁用或当前项保持零事件。</zh-CN><en>No return value; invalid, disabled, or current items retain zero events.</en></lang>
+ */
+function clickTab(candidate) {
+  // <lang><zh-CN>解析只观察当前 caller-owned 有限数组，不读取 scroll、router、页面或全局 tab 状态。</zh-CN><en>Resolution observes only the current caller-owned finite array and reads no scroll, router, page, or global-tab state.</en></lang>
+  const item = resolveClickTabCandidate(candidate);
+
+  // <lang><zh-CN>未知候选立即停止；禁用和当前项由共享 handleSelect guard 保持零事件。</zh-CN><en>An unknown candidate stops immediately; the shared handleSelect guard keeps disabled and current items at zero events.</en></lang>
+  if (!item) {
+    return;
+  }
+
+  // <lang><zh-CN>复用唯一选择路径以固定 update:modelValue 先于 change，避免 imperative 与模板点击语义分叉。</zh-CN><en>Reuse the sole selection path to keep update:modelValue before change and avoid semantic divergence between imperative and template clicks.</en></lang>
+  handleSelect(item);
+}
+
+// <lang><zh-CN>仅暴露 bounded clickTab；组件实例不暴露 DOM、scroll、router 或内部规范化集合。</zh-CN><en>Expose only bounded clickTab; the component instance exposes no DOM, scroll, router, or internal normalized collection.</en></lang>
+defineExpose({ clickTab });
 </script>
 
 <style src="./u-tabs.css"></style>

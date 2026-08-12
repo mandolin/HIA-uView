@@ -59,21 +59,29 @@ function requireMatrixComponent(componentName) {
   return component;
 }
 
-test('keeps feedback migration implementations caller-controlled and service-free', () => {
-  // <lang><zh-CN>modal/popup 都必须将迁移可见值转为可拒绝的 update 请求，而不是直接写 prop、自动关闭或创建 global service。</zh-CN><en>Modal/popup must convert migration visibility into a rejectable update request rather than directly writing props, auto-closing, or creating a global service.</en></lang>
+test('keeps feedback migration implementations controlled and explicitly scoped', () => {
+  // <lang><zh-CN>modal/popup 都必须将受控可见值转为可拒绝的 update 请求；modal 仅允许由调用方显式提供 scope 与 host opt-in，不得发现 global service。</zh-CN><en>Modal/popup must convert controlled visibility into a rejectable update request; modal permits only caller-supplied scope and explicit host opt-in and must discover no global service.</en></lang>
   assert.match(modalSource, /modelValue: \{\s*type: Boolean,\s*default: false\s*\}/su);
-  assert.match(modalSource, /const isVisible = computed\(\(\) => props\.visible \?\? props\.modelValue\);/u);
+  assert.match(modalSource, /const controlledVisible = computed\(\(\) => props\.visible \?\? props\.modelValue\);/u);
+  assert.match(modalSource, /serviceScope: \{ type: Object, default: null \}/u);
+  assert.match(modalSource, /serviceHost: \{ type: Boolean, default: false \}/u);
+  assert.match(modalSource, /registerUFeedbackHost\(props\.serviceScope, 'modal', serviceHost\)/u);
   assert.match(modalSource, /emit\('update:modelValue', false\);/u);
+  assert.doesNotMatch(modalSource, /getCurrentPages\(|\buni\.(?:request|navigate|redirect|switchTab)|globalThis\.|props\.callback/u);
   assert.match(popupSource, /modelValue: \{ type: Boolean, default: false \}/u);
   assert.match(popupSource, /show: \{ type: Boolean, default: false \}/u);
-  assert.match(popupSource, /function requestClose\(event\)/u);
+  assert.match(popupSource, /function requestClose\(event, reason\)/u);
 
-  // <lang><zh-CN>loading/toast 只能投影静态 indicator；toast 不得获得命令式 service surface。</zh-CN><en>Loading/toast may project only a static indicator; toast must not acquire an imperative service surface.</en></lang>
+  // <lang><zh-CN>loading 保持静态 indicator；toast 的命令式 surface 必须同时支持组件 ref 与显式 scope host，并排除回调、URL、路由或页面发现。</zh-CN><en>Loading remains a static indicator; toast's imperative surface must support both component refs and explicit scoped hosts while excluding callbacks, URLs, routing, or page discovery.</en></lang>
   assert.match(loadingSource, /show: \{ type: Boolean, default: true \}/u);
   assert.match(loadingSource, /const isVisible = computed\(\(\) => props\.visible \?\? props\.show\);/u);
   assert.match(toastSource, /loading: \{ type: Boolean, default: false \}/u);
-  assert.match(toastSource, /<ULoading v-if="loading"/u);
-  assert.doesNotMatch(toastSource, /defineExpose\(/u);
+  assert.match(toastSource, /<ULoading v-if="resolvedLoading"/u);
+  assert.match(toastSource, /serviceScope: \{ type: Object, default: null \}/u);
+  assert.match(toastSource, /serviceHost: \{ type: Boolean, default: false \}/u);
+  assert.match(toastSource, /registerUFeedbackHost\(props\.serviceScope, 'toast', serviceHost\)/u);
+  assert.match(toastSource, /defineExpose\(\{ show, close, hide: close \}\);/u);
+  assert.doesNotMatch(toastSource, /getCurrentPages\(|\buni\.(?:request|navigate|redirect|switchTab)|globalThis\.|props\.(?:callback|url)/u);
 
   // <lang><zh-CN>swipe-action 必须以 show/options 作为受控迁移入口，归一 text/label 并保持无原生手势或数据操作边界。</zh-CN><en>Swipe-action must use show/options as controlled migration entries, normalize text/label, and retain no-native-gesture or data-operation boundaries.</en></lang>
   assert.match(swipeActionSource, /show: \{ type: Boolean, default: false \}/u);
@@ -86,7 +94,7 @@ test('keeps feedback migration implementations caller-controlled and service-fre
 test('keeps public explanation and compiler fixture aligned with the bounded migration surface', () => {
   // <lang><zh-CN>公开文档必须说明 alias 优先级、可拒绝写回和静态 indicator/service 边界，避免调用方误读为自动关闭或全局能力。</zh-CN><en>Public documentation must explain alias precedence, rejectable writeback, and static-indicator/service boundaries, avoiding callers mistaking them for automatic close or global capability.</en></lang>
   assert.match(modalDocumentation, /`modelValue`/u);
-  assert.match(popupDocumentation, /`modelValue` and `show`/u);
+  assert.match(popupDocumentation, /`modelValue` and `show` are combined/u);
   assert.match(loadingDocumentation, /migration `show`/u);
   assert.match(toastDocumentation, /imperative `show\(\)`\/`close\(\)` command/u);
   assert.match(swipeActionDocumentation, /migration `show`/u);
@@ -118,10 +126,10 @@ test('marks only explicit audited feedback props compatible and retains bounded 
     }
   }
 
-  // <lang><zh-CN>alias/options/click/update 仍处于受限名字或 item-shape scope，必须保持 mapped；toast service 命令明确保持 unsupported。</zh-CN><en>Alias/options/click/update remain within bounded name or item-shape scope and must remain mapped; toast service commands explicitly remain unsupported.</en></lang>
+  // <lang><zh-CN>alias/options/click/update 与 toast component-ref 命令仍处于受限名字、item-shape 或语义差异 scope，必须保守保持 mapped。</zh-CN><en>Aliases/options/click/update and toast component-ref commands remain within bounded name, item-shape, or semantically different scopes and must conservatively stay mapped.</en></lang>
   assert.equal(requireMatrixComponent('u-popup').props.items.find((item) => item.id === 'prop:modelValue').migration.disposition, 'mapped');
   assert.equal(requireMatrixComponent('u-popup').events.items.find((item) => item.id === 'event:update:modelValue').migration.disposition, 'mapped');
   assert.equal(requireMatrixComponent('u-swipe-action').props.items.find((item) => item.id === 'prop:options').migration.disposition, 'mapped');
   assert.equal(requireMatrixComponent('u-swipe-action').events.items.find((item) => item.id === 'event:click').migration.disposition, 'mapped');
-  assert.equal(requireMatrixComponent('u-toast').imperativeApis.items.find((item) => item.id === 'imperative:show').migration.disposition, 'unsupported');
+  assert.equal(requireMatrixComponent('u-toast').imperativeApis.items.find((item) => item.id === 'imperative:show').migration.disposition, 'mapped');
 });

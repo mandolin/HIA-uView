@@ -178,7 +178,7 @@ export const UVIEW_COMPONENTS = Object.freeze([
   Object.freeze({ name: 'u-input', component: UInput }),
   // <lang><zh-CN>链接只呈现文字并报告 click，不接受 href 或导航协议。</zh-CN><en>The link presents text and reports click only; it accepts no href or navigation protocol.</en></lang>
   Object.freeze({ name: 'u-link', component: ULink }),
-  // <lang><zh-CN>modal 只呈现调用方 visible/内容与 confirm/cancel 意图，不自动关闭或管理焦点。</zh-CN><en>The modal presents caller visible/content and confirm/cancel intent only and neither auto-closes nor manages focus.</en></lang>
+  // <lang><zh-CN>modal 呈现调用方受控内容，或显式承接局部 feedback scope；两条路径都不发现页面、不执行回调/路由或管理焦点。</zh-CN><en>The modal presents caller-controlled content or explicitly hosts a local feedback scope; neither path discovers pages, executes callbacks/routes, or manages focus.</en></lang>
   Object.freeze({ name: 'u-modal', component: UModal }),
   // <lang><zh-CN>导航栏只展示标题/文字 control 并 emit back/action 意图。</zh-CN><en>The navigation bar displays title/text controls only and emits back/action intent.</en></lang>
   Object.freeze({ name: 'u-nav-bar', component: UNavBar }),
@@ -261,7 +261,7 @@ export const UVIEW_COMPONENTS = Object.freeze([
   // <lang><zh-CN>timeline 与 item 只由 caller slot/字段组合，不排序事件或解析时间。</zh-CN><en>Timeline and item compose only from caller slots/fields and neither sort events nor parse time.</en></lang>
   Object.freeze({ name: 'u-time-line', component: UTimeLine }),
   Object.freeze({ name: 'u-time-line-item', component: UTimeLineItem }),
-  // <lang><zh-CN>toast 只呈现调用方受控反馈，不使用 timer、队列或全局 service。</zh-CN><en>The toast presents caller-controlled feedback only and uses no timer, queue, or global service.</en></lang>
+  // <lang><zh-CN>toast 支持受控反馈、局部 component-ref timer 与显式 feedback scope host；不建立队列、全局 service、回调或路由。</zh-CN><en>The toast supports controlled feedback, a local component-ref timer, and an explicit feedback-scope host; it creates no queue, global service, callback, or route.</en></lang>
   Object.freeze({ name: 'u-toast', component: UToast }),
   // <lang><zh-CN>独立校验消息只呈现应用声明的状态和文字，不推断结果或启动异步工作。</zh-CN><en>The independent validation message presents application-declared state and text only and infers no result or starts no asynchronous work.</en></lang>
   Object.freeze({ name: 'u-validation-message', component: UValidationMessage }),
@@ -362,4 +362,6 @@ export { UIndexAnchor, UIndexList, ULazyLoad, USubsection, UTabsSwiper, UWaterfa
 // <lang><zh-CN>本批命名导出保持 view table 与局部 locale 的最小边界；table 不拥有数据，locale helper 不读取系统或持久化。</zh-CN><en>These batch named exports retain minimal boundaries for view tables and local locale; tables own no data and locale helpers read no system state or persistence.</en></lang>
 export { UTable, UTr, UTh, UTd };
 export { normalizeULocale, U_SUPPORTED_LOCALES, useULocale } from './config-locale.mjs';
+// <lang><zh-CN>显式 feedback service 工厂与 controller 也可从 root 发现；纯 service consumer 应优先使用 `@hia-uview/ui/services`，避免加载组件 barrel。</zh-CN><en>Explicit feedback-service factories and controllers are also discoverable from the root; pure service consumers should prefer `@hia-uview/ui/services` to avoid loading the component barrel.</en></lang>
+export { createUFeedbackScope, useModal, useToast } from './services.mjs';
 export default UView;
