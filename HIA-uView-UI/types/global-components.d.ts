@@ -5,6 +5,7 @@
  */
 
 import type {
+  UActionSheet,
   UAlertTips,
   UCalendar,
   UCheckbox,
@@ -15,9 +16,13 @@ import type {
   UForm,
   UFormItem,
   UInput,
+  UMask,
+  UModal,
+  UNavbar,
   UNoticeBar,
   UNumberBox,
   UPicker,
+  UPopup,
   URadio,
   URadioGroup,
   URate,
@@ -26,17 +31,22 @@ import type {
   USlider,
   USwitch,
   UTabbar,
+  UTabs,
   UTag,
   UTextarea,
+  UToast,
+  UTransition,
   UUpload
 } from './index';
 
 /**
- * @lang zh-CN 仅声明当前已审计的 choice、picker/date、dropdown、numeric、controlled upload、local tabbar、banner、有限展示与 form/input 名称。其余组件必须继续采用显式 named import，直到具备逐项类型 contract。
- * @lang en Declares only currently audited choice, picker/date, dropdown, numeric, controlled-upload, local-tabbar, banner, finite-display, and form/input names. Remaining components must continue using explicit named imports until per-item type contracts exist.
+ * @lang zh-CN 仅声明当前已审计的 choice、picker/date、dropdown、numeric、controlled upload、局部 overlay/feedback/navigation、有限展示与 form/input 名称。其余组件必须继续采用显式 named import，直到具备逐项类型 contract。
+ * @lang en Declares only currently audited choice, picker/date, dropdown, numeric, controlled-upload, local overlay/feedback/navigation, finite-display, and form/input names. Remaining components must continue using explicit named imports until per-item type contracts exist.
  */
 declare module 'vue' {
   interface GlobalComponents {
+    /** 中文：caller-controlled 有限 action-sheet。English: Caller-controlled finite action sheet. */
+    UActionSheet: typeof UActionSheet;
     /** 中文：caller-controlled 局部提示条。English: Caller-controlled local alert strip. */
     UAlertTips: typeof UAlertTips;
     /** 中文：受控单月 Gregorian 日历。English: Controlled single-month Gregorian calendar. */
@@ -57,12 +67,20 @@ declare module 'vue' {
     UFormItem: typeof UFormItem;
     /** 中文：受控单行输入。English: Controlled single-line input. */
     UInput: typeof UInput;
+    /** 中文：caller-controlled 局部 mask。English: Caller-controlled local mask. */
+    UMask: typeof UMask;
+    /** 中文：caller-controlled 与显式 scoped-service modal。English: Caller-controlled and explicit scoped-service modal. */
+    UModal: typeof UModal;
+    /** 中文：纯展示、非路由 navbar。English: Presentation-only non-routing navbar. */
+    UNavbar: typeof UNavbar;
     /** 中文：受控横幅。English: Controlled banner. */
     UNoticeBar: typeof UNoticeBar;
     /** 中文：十进制定点受控 number-box。English: Decimal fixed-point controlled number box. */
     UNumberBox: typeof UNumberBox;
     /** 中文：有限单列/多列 picker。English: Finite single-/multi-column picker. */
     UPicker: typeof UPicker;
+    /** 中文：caller-controlled 局部 popup。English: Caller-controlled local popup. */
+    UPopup: typeof UPopup;
     /** 中文：受控 radio。English: Controlled radio. */
     URadio: typeof URadio;
     /** 中文：受控 radio group。English: Controlled radio group. */
@@ -79,10 +97,16 @@ declare module 'vue' {
     USwitch: typeof USwitch;
     /** 中文：局部、非路由 tabbar。English: Local non-routing tabbar. */
     UTabbar: typeof UTabbar;
+    /** 中文：有限、非路由 tabs。English: Finite non-routing tabs. */
+    UTabs: typeof UTabs;
     /** 中文：有限 token 化文字标签。English: Finite tokenized text tag. */
     UTag: typeof UTag;
     /** 中文：受控多行输入。English: Controlled multiline input. */
     UTextarea: typeof UTextarea;
+    /** 中文：受控、component-ref 与显式 scoped-service toast。English: Controlled, component-ref, and explicit scoped-service toast. */
+    UToast: typeof UToast;
+    /** 中文：有限 CSS transition wrapper。English: Finite CSS-transition wrapper. */
+    UTransition: typeof UTransition;
     /** 中文：caller-owned 文件状态与 injected adapter 编排组件。English: Caller-owned file-state and injected-adapter orchestration component. */
     UUpload: typeof UUpload;
   }

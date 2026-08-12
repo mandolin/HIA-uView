@@ -130,6 +130,60 @@ assert.equal(P67_REQUIRED_PACKAGE_PATHS.length, 31, 'P67 tarball closure must co
 assert.equal(new Set(P67_REQUIRED_PACKAGE_PATHS).size, 31, 'P67 tarball closure paths must be unique.');
 
 /**
+ * @lang zh-CN 临时 tarball consumer 必须在统一 marker 下真实组合的十个 overlay、feedback 与 navigation 组件名。
+ * @lang en Ten overlay, feedback, and navigation component names that the temporary tarball consumer must actually compose under one unified marker.
+ */
+const P68_SURFACE_COMPONENT_NAMES = Object.freeze([
+  'u-popup',
+  'u-mask',
+  'u-transition',
+  'u-action-sheet',
+  'u-modal',
+  'u-toast',
+  'u-navbar',
+  'u-tabbar',
+  'u-tabs',
+  'u-notice-bar'
+]);
+
+/**
+ * @lang zh-CN P68 十组件与 service 的精确直接 tarball 闭包：十个 leaf SFC/CSS、两个 service runtime 文件，以及 modal/toast 的 UButton/ULoading 直接依赖。
+ * @lang en Exact direct tarball closure for the P68 ten-component and service surface: ten leaf SFC/CSS pairs, two service-runtime files, and the direct UButton/ULoading dependencies of modal/toast.
+ */
+const P68_REQUIRED_PACKAGE_PATHS = Object.freeze([
+  'src/components/u-popup/u-popup.vue',
+  'src/components/u-popup/u-popup.css',
+  'src/components/u-mask/u-mask.vue',
+  'src/components/u-mask/u-mask.css',
+  'src/components/u-transition/u-transition.vue',
+  'src/components/u-transition/u-transition.css',
+  'src/components/u-action-sheet/u-action-sheet.vue',
+  'src/components/u-action-sheet/u-action-sheet.css',
+  'src/components/u-modal/u-modal.vue',
+  'src/components/u-modal/u-modal.css',
+  'src/components/u-toast/u-toast.vue',
+  'src/components/u-toast/u-toast.css',
+  'src/components/u-navbar/u-navbar.vue',
+  'src/components/u-navbar/u-navbar.css',
+  'src/components/u-tabbar/u-tabbar.vue',
+  'src/components/u-tabbar/u-tabbar.css',
+  'src/components/u-tabs/u-tabs.vue',
+  'src/components/u-tabs/u-tabs.css',
+  'src/components/u-notice-bar/u-notice-bar.vue',
+  'src/components/u-notice-bar/u-notice-bar.css',
+  'src/components/u-button/u-button.vue',
+  'src/components/u-button/u-button.css',
+  'src/components/u-loading/u-loading.vue',
+  'src/components/u-loading/u-loading.css',
+  'src/feedback-service-runtime.mjs',
+  'src/services.mjs'
+]);
+
+// <lang><zh-CN>闭包大小与唯一性保持硬断言，使 service/component 直接依赖变更必须显式更新试验。</zh-CN><en>Hard assertions on closure size and uniqueness require explicit trial updates whenever direct service/component dependencies change.</en></lang>
+assert.equal(P68_REQUIRED_PACKAGE_PATHS.length, 26, 'P68 tarball closure must contain exactly 26 paths.');
+assert.equal(new Set(P68_REQUIRED_PACKAGE_PATHS).size, 26, 'P68 tarball closure paths must be unique.');
+
+/**
  * @lang zh-CN 以固定参数执行一个本地进程并收集 stdout/stderr。该 helper 不允许 shell、网络命令或调用方插入的可执行文件。
  * @lang en Runs one local process with fixed arguments and collects stdout/stderr. This helper permits neither a shell nor network commands or caller-injected executables.
  * @param {string} command <lang><zh-CN>受控可执行文件或 Node binary。</zh-CN><en>Controlled executable or Node binary.</en></lang>
@@ -330,6 +384,29 @@ async function writeConsumerFixture(consumerDirectory, tarballPath, easycomFragm
  <template>
    <view class="package-trial">
     <!--
+    @lang zh-CN 本段从已安装 tarball 的 Easycom 真实组合十个 overlay、feedback 与 navigation 组件，并通过纯 service subpath 使用显式 scope/host。
+    @lang en This section actually composes ten overlay, feedback, and navigation components through Easycom from the installed tarball and uses an explicit scope/host through the pure service subpath.
+    <lang><zh-CN>所有状态与集合都位于临时页面；不使用 router、网络、storage、平台 page stack 或业务 payload。</zh-CN><en>All state and collections stay in the temporary page; no router, network, storage, platform page stack, or business payload is used.</en></lang>
+    -->
+    <view class="package-trial__overlay-feedback-navigation" data-smoke="overlay-feedback-navigation">
+      <u-navbar title="Local surface" :is-back="true" back-text="Back" right-text="Observe" @left-click="recordFeedbackIntent('navbar-left')" />
+      <u-notice-bar :list="navigationNoticeItems" :current="1" close-text="Dismiss" @click="recordNoticeClick" />
+      <u-tabs :list="navigationTabItems" :current="navigationTabIndex" @update:model-value="updateNavigationTab" />
+      <u-tabbar v-model="navigationTabbarValue" :list="navigationTabbarItems" />
+      <button @click="showOverlayPopup">Show local popup</button>
+      <button @click="showOverlayActionSheet">Show local actions</button>
+      <button @click="showScopedToast">Show scoped toast</button>
+      <button @click="showScopedModal">Show scoped modal</button>
+      <u-transition :show="overlayTransitionVisible" mode="fade" :duration="120"><text>Finite transition</text></u-transition>
+      <u-mask :show="overlayMaskVisible" :clickable="true" @click="hideOverlayMask"><text>Local mask slot</text></u-mask>
+      <u-popup v-model="overlayPopupVisible" title="Local popup" close-text="Close" :mask-closable="true"><text>Caller popup slot</text></u-popup>
+      <u-action-sheet v-model="overlayActionSheetVisible" title="Local actions" :items="overlayActionItems" cancel-text="Cancel" :mask-closable="true"><text>Caller action slot</text></u-action-sheet>
+      <u-modal :service-scope="feedbackScope" :service-host="true" @confirm="recordFeedbackIntent('modal-confirm')" @cancel="recordFeedbackIntent('modal-cancel')" />
+      <u-toast :service-scope="feedbackScope" :service-host="true" @close="recordFeedbackIntent('toast-close')" />
+      <text data-smoke="feedback-service-result">{{ feedbackIntent }}</text>
+      <text data-smoke="root-service-export">{{ rootFactoryMatches ? 'root-service-ready' : 'root-service-mismatch' }}</text>
+    </view>
+    <!--
     @lang zh-CN 统一 marker 内的十四个组件全部由临时页面持有 model、有限 options 与 upload adapter；它们只形成安装包编译证据。
     @lang en All fourteen components inside the unified marker receive their models, finite options, and upload adapter from the temporary page; they form installed-package compilation evidence only.
     <lang><zh-CN>dropdown 使用显式 name/options 模式，upload adapter 仅追加匿名本地记录，不打开 chooser、不读取文件、不访问网络或持久化。</zh-CN><en>Dropdown uses explicit name/options mode, while the upload adapter only appends an anonymous local record and opens no chooser, reads no file, accesses no network, and persists nothing.</en></lang>
@@ -392,7 +469,125 @@ async function writeConsumerFixture(consumerDirectory, tarballPath, easycomFragm
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { onBeforeUnmount, reactive, ref } from 'vue';
+// <lang><zh-CN>root factory import 只验证 tarball 根出口可由真实 consumer 解析；页面 scope 仍由下方纯 services 子出口创建。</zh-CN><en>The root-factory import only proves a real consumer can resolve the tarball root export; the page scope is still created through the pure services subpath below.</en></lang>
+import { createUFeedbackScope as createRootFeedbackScope } from '@hia-uview/ui';
+// <lang><zh-CN>三个纯 service 入口从 package exports 的 services 子路径解析，不回退仓内 paths 或未打包源码。</zh-CN><en>The three pure service entries resolve through the package exports services subpath with no fallback to repository paths or unpackaged source.</en></lang>
+import { createUFeedbackScope, useModal, useToast } from '@hia-uview/ui/services';
+
+// <lang><zh-CN>临时页面显式拥有唯一 scope 和两个 controller；它们只能与模板中的显式 host 交互。</zh-CN><en>The temporary page explicitly owns its sole scope and two controllers; they can interact only with the explicit hosts in the template.</en></lang>
+const feedbackScope = createUFeedbackScope();
+const modalController = useModal(feedbackScope);
+const toastController = useToast(feedbackScope);
+// <lang><zh-CN>root 与 subpath 应转发同一个纯工厂；布尔 marker 证明两个 package export 都进入编译输入。</zh-CN><en>The root and subpath should forward the same pure factory; the Boolean marker proves both package exports enter compiler input.</en></lang>
+const rootFactoryMatches = createRootFeedbackScope === createUFeedbackScope;
+// <lang><zh-CN>有限 marker 只保留 intent/request id，不保存 event、options 或异常。</zh-CN><en>The finite marker retains only an intent/request ID and stores no event, options, or exception.</en></lang>
+const feedbackIntent = ref('idle');
+// <lang><zh-CN>overlay 可见性由临时页面拥有并初始隐藏，避免编译试验启动即遮挡其他组合。</zh-CN><en>The temporary page owns overlay visibility, which starts hidden so the compile trial does not initially obscure other compositions.</en></lang>
+const overlayPopupVisible = ref(false);
+const overlayActionSheetVisible = ref(false);
+const overlayMaskVisible = ref(false);
+const overlayTransitionVisible = ref(true);
+// <lang><zh-CN>tabs 与 tabbar 模型仅为页面局部投影，不含 route 或平台 tab 信息。</zh-CN><en>The tabs and tabbar models are page-local projections only and contain no route or platform-tab information.</en></lang>
+const navigationTabIndex = ref(0);
+const navigationTabbarValue = ref('first');
+// <lang><zh-CN>四个集合均冻结且仅含有限可见文字、透明值与 disabled；不携带 callback 或命令。</zh-CN><en>All four collections are frozen and contain only finite visible copy, transparent values, and disabled flags, with no callback or command.</en></lang>
+const navigationNoticeItems = Object.freeze(['First local notice', 'Second local notice']);
+const navigationTabItems = Object.freeze([Object.freeze({ label: 'First', value: 'first' }), Object.freeze({ label: 'Second', value: 'second' })]);
+const navigationTabbarItems = Object.freeze([Object.freeze({ label: 'First', value: 'first' }), Object.freeze({ label: 'Second', value: 'second' })]);
+const overlayActionItems = Object.freeze([Object.freeze({ label: 'Observe', value: 'observe' }), Object.freeze({ label: 'Disabled', value: 'disabled', disabled: true })]);
+
+/**
+ * @lang zh-CN 写入临时页面有限 feedback/navigation intent，不解释为导航或业务完成。
+ * @lang en Writes a finite feedback/navigation intent into the temporary page without interpreting it as navigation or business completion.
+ * @param {string} intent <lang><zh-CN>源码声明的有限操作名。</zh-CN><en>Finite operation name declared in source.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写局部 marker。</zh-CN><en>No return value; writes only the local marker.</en></lang>
+ */
+function recordFeedbackIntent(intent) {
+  feedbackIntent.value = intent;
+}
+
+/**
+ * @lang zh-CN 记录当前 notice 索引并丢弃 raw event。
+ * @lang en Records the current notice index and discards the raw event.
+ * @param {unknown} _event <lang><zh-CN>组件保留的原始本地事件。</zh-CN><en>Original local event retained by the component.</en></lang>
+ * @param {number} index <lang><zh-CN>当前有限索引。</zh-CN><en>Current finite index.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写 marker。</zh-CN><en>No return value; writes the marker only.</en></lang>
+ */
+function recordNoticeClick(_event, index) {
+  feedbackIntent.value = 'notice-' + index;
+}
+
+/**
+ * @lang zh-CN 将 tabs 透明值映射为受控 current 索引。
+ * @lang en Maps a transparent tabs value into the controlled current index.
+ * @param {unknown} value <lang><zh-CN>组件报告的候选值。</zh-CN><en>Candidate value reported by the component.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；未知值不改变状态。</zh-CN><en>No return value; an unknown value changes no state.</en></lang>
+ */
+function updateNavigationTab(value) {
+  // <lang><zh-CN>只检查页面冻结集合，不读取 router 或全局 registry。</zh-CN><en>Checks only the page-frozen collection and reads no router or global registry.</en></lang>
+  const nextIndex = navigationTabItems.findIndex((item) => item.value === value);
+  if (nextIndex < 0) return;
+  navigationTabIndex.value = nextIndex;
+  feedbackIntent.value = 'tab-' + nextIndex;
+}
+
+/**
+ * @lang zh-CN 显示临时页面受控 popup。
+ * @lang en Shows the temporary page's controlled popup.
+ * @returns {void} <lang><zh-CN>无返回值；只写页面 refs。</zh-CN><en>No return value; writes page refs only.</en></lang>
+ */
+function showOverlayPopup() {
+  overlayPopupVisible.value = true;
+  feedbackIntent.value = 'popup-open';
+}
+
+/**
+ * @lang zh-CN 显示临时页面受控 action sheet。
+ * @lang en Shows the temporary page's controlled action sheet.
+ * @returns {void} <lang><zh-CN>无返回值；只写页面 refs。</zh-CN><en>No return value; writes page refs only.</en></lang>
+ */
+function showOverlayActionSheet() {
+  overlayActionSheetVisible.value = true;
+  feedbackIntent.value = 'action-sheet-open';
+}
+
+/**
+ * @lang zh-CN 隐藏临时页面 mask，不关闭其他 overlay。
+ * @lang en Hides the temporary page mask without closing another overlay.
+ * @returns {void} <lang><zh-CN>无返回值；只写页面 refs。</zh-CN><en>No return value; writes page refs only.</en></lang>
+ */
+function hideOverlayMask() {
+  overlayMaskVisible.value = false;
+  feedbackIntent.value = 'mask-click';
+}
+
+/**
+ * @lang zh-CN 通过显式 scope/host 请求有限 toast 并投影同步结果。
+ * @lang en Requests a finite toast through the explicit scope/host and projects its synchronous result.
+ * @returns {void} <lang><zh-CN>无返回值；只改变局部呈现与 marker。</zh-CN><en>No return value; changes only local presentation and the marker.</en></lang>
+ */
+function showScopedToast() {
+  // <lang><zh-CN>固定 options 只含可见文字、有限 tone 与 duration。</zh-CN><en>Fixed options contain visible copy, a finite tone, and duration only.</en></lang>
+  const result = toastController.success({ message: 'Local scoped toast', duration: 1200, closeText: 'Close' });
+  feedbackIntent.value = result.accepted ? 'toast-' + result.requestId : 'toast-' + result.reason;
+}
+
+/**
+ * @lang zh-CN 通过显式 scope/host 请求有限双 control modal 并投影同步结果。
+ * @lang en Requests a finite dual-control modal through the explicit scope/host and projects its synchronous result.
+ * @returns {void} <lang><zh-CN>无返回值；只改变局部呈现与 marker。</zh-CN><en>No return value; changes only local presentation and the marker.</en></lang>
+ */
+function showScopedModal() {
+  // <lang><zh-CN>固定 options 只含可见文字；组件事件仍决定后续本地 marker。</zh-CN><en>Fixed options contain visible copy only; component events still decide subsequent local markers.</en></lang>
+  const result = modalController.confirm({ title: 'Local scoped modal', content: 'No remote action', confirmText: 'Observe', cancelText: 'Cancel' });
+  feedbackIntent.value = result.accepted ? 'modal-' + result.requestId : 'modal-' + result.reason;
+}
+
+// <lang><zh-CN>页面卸载时释放唯一 scope；dispose 不访问页面栈、网络或 storage。</zh-CN><en>Page unmount disposes the sole scope; disposal accesses no page stack, network, or storage.</en></lang>
+onBeforeUnmount(() => {
+  feedbackScope.dispose();
+});
 
 // <lang><zh-CN>checkbox group 的透明键数组由临时页面拥有，子项不能直接修改数组。</zh-CN><en>The temporary page owns the checkbox group's transparent-key array, and children cannot directly mutate it.</en></lang>
 const p67CheckboxValues = ref(['alpha']);
@@ -556,6 +751,19 @@ function recordP66SearchIntent(value) {
 .package-trial__p66-form { margin-block-start: 12px; }
 </style>
 `;
+  // <lang><zh-CN>统一 P68 marker、逐标签、root/subpath import 与显式 host 绑定证明临时 consumer 真正消费 package service 和十组件。</zh-CN><en>The unified P68 marker, tag-by-tag checks, root/subpath imports, and explicit host bindings prove the temporary consumer actually consumes package services and all ten components.</en></lang>
+  assert.match(pageSource, /data-smoke="overlay-feedback-navigation"/u, 'Installed-package trial source must retain the unified P68 composition marker.');
+  assert.match(pageSource, /data-smoke="feedback-service-result"/u, 'Installed-package trial source must retain the visible P68 service-result marker.');
+  assert.match(pageSource, /data-smoke="root-service-export"/u, 'Installed-package trial source must retain the root-service export marker.');
+  for (const componentName of P68_SURFACE_COMPONENT_NAMES) {
+    assert.match(pageSource, new RegExp('<' + componentName + '(?:\\s|>)', 'u'), 'Installed-package trial source must compose ' + componentName + '.');
+  }
+  assert.match(pageSource, /from '@hia-uview\/ui';/u, 'Installed-package trial source must resolve the package root export.');
+  assert.match(pageSource, /from '@hia-uview\/ui\/services';/u, 'Installed-package trial source must resolve the pure services subpath.');
+  assert.match(pageSource, /<u-modal\s+:service-scope="feedbackScope"\s+:service-host="true"/u, 'Installed-package trial source must mount an explicit modal host.');
+  assert.match(pageSource, /<u-toast\s+:service-scope="feedbackScope"\s+:service-host="true"/u, 'Installed-package trial source must mount an explicit toast host.');
+  assert.doesNotMatch(pageSource, /getCurrentPages|uni\.(?:navigate|redirect|reLaunch|switchTab|request|setStorage|getStorage)|wx\.(?:navigate|redirect|reLaunch|switchTab|request)/u);
+
   // <lang><zh-CN>写入临时目录前先验证生成页源码，确保 trial 输入本身包含中性 marker、六组件、调用方 model/rules 和三个显式 form API。</zh-CN><en>Before writing the temporary directory, validates generated page source so the trial input itself contains neutral markers, all six components, caller-owned model/rules, and three explicit form APIs.</en></lang>
   assert.match(pageSource, /data-smoke="p66-form-composition"/u, 'Installed-package trial source must retain the neutral P66 composition marker.');
   assert.match(pageSource, /data-smoke="p66-form-result"/u, 'Installed-package trial source must retain the visible P66 result marker.');
@@ -634,8 +842,25 @@ import UView, {
   type UUploadFile,
   type UUploadProps
 } from '@hia-uview/ui';
+// <lang><zh-CN>service 值与类型必须通过已安装 tarball 的纯 subpath 解析；本 trial 不使用仓内 paths fallback。</zh-CN><en>Service values and types must resolve through the installed tarball's pure subpath; this trial uses no in-repository paths fallback.</en></lang>
+import {
+  createUFeedbackScope,
+  useModal,
+  useToast,
+  type UFeedbackCommandResult,
+  type UFeedbackScope,
+  type UModalController,
+  type UToastController
+} from '@hia-uview/ui/services';
 import '@hia-uview/ui/global';
 import type { GlobalComponents, Plugin } from 'vue';
+
+// <lang><zh-CN>显式 scope/controller 类型证明 subpath 同时交付 runtime 值与精确 declaration；静态文件不会实际挂载 host 或显示反馈。</zh-CN><en>Explicit scope/controller types prove the subpath ships both runtime values and precise declarations; this static file mounts no host and displays no feedback.</en></lang>
+const feedbackScope: UFeedbackScope = createUFeedbackScope();
+const modalController: UModalController = useModal(feedbackScope);
+const toastController: UToastController = useToast(feedbackScope);
+// <lang><zh-CN>可判别结果类型接受 controller 的同步返回，但不将 accepted 解释为用户确认或业务完成。</zh-CN><en>The discriminated result type accepts a controller's synchronous return without interpreting acceptance as user confirmation or business completion.</en></lang>
+const feedbackResult: UFeedbackCommandResult = toastController.show('Local type trial');
 
 // <lang><zh-CN>checkbox leaf 类型证明透明键与受控布尔 model 从 tarball declaration 解析。</zh-CN><en>The checkbox leaf type proves transparent keys and the controlled Boolean model resolve from tarball declarations.</en></lang>
 const checkboxProps: UCheckboxProps = { value: 'trial', modelValue: false };
@@ -728,6 +953,10 @@ const globalUpload: GlobalComponents['UUpload'] = UUpload;
 
 // <lang><zh-CN>收集静态引用，避免 TypeScript 将本 trial 退化为只解析 import 的空文件。</zh-CN><en>Collects static references so TypeScript cannot reduce this trial to an empty file that only resolves imports.</en></lang>
 void [
+  feedbackResult,
+  feedbackScope,
+  modalController,
+  toastController,
   checkboxProps,
   checkboxGroupProps,
   calendarProps,
@@ -879,11 +1108,13 @@ try {
     'src/index.mjs',
     'src/style.css',
     'types/index.d.ts',
+    'types/services.d.ts',
     'types/global-components.d.ts',
     'types/global-components.mjs',
     'easycom/mp-weixin.json',
     ...P66_REQUIRED_PACKAGE_PATHS,
-    ...P67_REQUIRED_PACKAGE_PATHS
+    ...P67_REQUIRED_PACKAGE_PATHS,
+    ...P68_REQUIRED_PACKAGE_PATHS
   ]) {
     assert.ok(packedPaths.has(requiredPath), `Package tarball must contain ${requiredPath}.`);
   }
@@ -928,7 +1159,15 @@ try {
   const installedPackage = JSON.parse(await readFile(join(installedPackageDirectory, 'package.json'), 'utf8'));
   assert.equal(installedPackage.name, '@hia-uview/ui');
   assert.equal(installedPackage.types, './types/index.d.ts');
+  // <lang><zh-CN>根与 services subpath 必须同时声明 runtime/type 出口，且所有目标均位于已安装 tarball 内。</zh-CN><en>The root and services subpath must both declare runtime/type exports, with every target located inside the installed tarball.</en></lang>
+  assert.equal(installedPackage.exports?.['.']?.default, './src/index.mjs');
+  assert.equal(installedPackage.exports?.['.']?.types, './types/index.d.ts');
+  assert.equal(installedPackage.exports?.['./services']?.default, './src/services.mjs');
+  assert.equal(installedPackage.exports?.['./services']?.types, './types/services.d.ts');
   await readFile(join(installedPackageDirectory, 'types', 'index.d.ts'), 'utf8');
+  await readFile(join(installedPackageDirectory, 'types', 'services.d.ts'), 'utf8');
+  await readFile(join(installedPackageDirectory, 'src', 'services.mjs'), 'utf8');
+  await readFile(join(installedPackageDirectory, 'src', 'feedback-service-runtime.mjs'), 'utf8');
   await readFile(join(installedPackageDirectory, 'easycom', 'mp-weixin.json'), 'utf8');
 
   // <lang><zh-CN>临时 consumer 使用其自身安装的 TypeScript 解析包 export；没有 paths fallback，失败即可暴露 tarball declaration/exports 问题。</zh-CN><en>The temporary consumer uses its own installed TypeScript to resolve package exports with no paths fallback, so failure exposes tarball declaration/export issues.</en></lang>
@@ -965,6 +1204,13 @@ try {
 
   // <lang><zh-CN>页面 WXML 必须同时保留中性 marker 与六个标签，排除“包里有组件但临时 consumer 未真实使用”的假阳性。</zh-CN><en>Page WXML must retain both neutral markers and all six tags, excluding a false positive where components exist in the package but the temporary consumer never actually uses them.</en></lang>
   const trialPageMarkup = await readFile(join(compilerOutputDirectory, trialPageMarkupPath), 'utf8');
+  // <lang><zh-CN>统一 P68 marker、root export marker 与十个标签证明安装包 consumer 实际组合组件并保留 service 调用观察位。</zh-CN><en>The unified P68 marker, root-export marker, and ten tags prove the installed-package consumer actually composes components and retains service-call observation points.</en></lang>
+  assert.match(trialPageMarkup, /data-smoke="overlay-feedback-navigation"/, 'Installed-package trial page must retain the unified P68 composition marker.');
+  assert.match(trialPageMarkup, /data-smoke="feedback-service-result"/, 'Installed-package trial page must retain the visible P68 service-result marker.');
+  assert.match(trialPageMarkup, /data-smoke="root-service-export"/, 'Installed-package trial page must retain the root-service export marker.');
+  for (const componentName of P68_SURFACE_COMPONENT_NAMES) {
+    assert.match(trialPageMarkup, new RegExp('<' + componentName + '(?:\\s|>)', 'u'), 'Installed-package trial page must compose ' + componentName + '.');
+  }
   assert.match(trialPageMarkup, /data-smoke="p66-form-composition"/, 'Installed-package trial page must retain the neutral P66 composition marker.');
   assert.match(trialPageMarkup, /data-smoke="p66-form-result"/, 'Installed-package trial page must retain the visible P66 result marker.');
   for (const componentName of P66_FORM_COMPONENT_NAMES) {
@@ -996,6 +1242,14 @@ try {
     assert.ok(componentMapping.replaceAll('\\', '/').endsWith(`/src/components/${componentName}/${componentName}`), `Installed-package trial mapping for ${componentName} must end at its package leaf SFC.`);
   }
 
+  // <lang><zh-CN>十个 P68 mapping 必须终止于安装 tarball 内对应 leaf SFC；路径前缀仍由临时 compiler 决定。</zh-CN><en>All ten P68 mappings must end at matching leaf SFCs inside the installed tarball; the temporary compiler still determines path prefixes.</en></lang>
+  for (const componentName of P68_SURFACE_COMPONENT_NAMES) {
+    // <lang><zh-CN>只验证稳定 package leaf 后缀，不记录临时绝对路径。</zh-CN><en>Verifies only the stable package-leaf suffix and records no temporary absolute path.</en></lang>
+    const componentMapping = trialPageConfiguration.usingComponents?.[componentName];
+    assert.equal(typeof componentMapping, 'string', 'Installed-package trial page must map ' + componentName + '.');
+    assert.ok(componentMapping.replaceAll('\\', '/').endsWith('/src/components/' + componentName + '/' + componentName), 'Installed-package trial mapping for ' + componentName + ' must end at its package leaf SFC.');
+  }
+
   // <lang><zh-CN>每个目标组件必须从 tarball 经 Easycom 编译出 JS/JSON/WXML/WXSS；只出现 page tag 或单个模板文件均不足。</zh-CN><en>Each target component must compile from the tarball through Easycom into JS/JSON/WXML/WXSS; a page tag or one template file alone is insufficient.</en></lang>
   for (const componentName of P66_FORM_COMPONENT_NAMES) {
     for (const extension of ['js', 'json', 'wxml', 'wxss']) {
@@ -1012,6 +1266,15 @@ try {
       // <lang><zh-CN>稳定后缀允许 compiler 自选 node-modules 前缀，但仍要求精确 leaf 文件名。</zh-CN><en>The stable suffix lets the compiler choose its node-modules prefix while still requiring the exact leaf filename.</en></lang>
       const expectedSuffix = join(componentName, `${componentName}.${extension}`);
       assert.ok(findOutputFileBySuffix(compilerOutputFiles, expectedSuffix), `Installed-package compiler must emit ${componentName}.${extension}.`);
+    }
+  }
+
+  // <lang><zh-CN>十个 P68 组件也必须从 tarball 输出 JS/JSON/WXML/WXSS 四件套；静态 page tag 或 package file inventory 均不能替代。</zh-CN><en>All ten P68 components must also emit the JS/JSON/WXML/WXSS quartet from the tarball; neither a static page tag nor package-file inventory can substitute.</en></lang>
+  for (const componentName of P68_SURFACE_COMPONENT_NAMES) {
+    for (const extension of ['js', 'json', 'wxml', 'wxss']) {
+      // <lang><zh-CN>稳定后缀允许 compiler 选择临时 node-modules 前缀，同时严格要求 leaf 文件名。</zh-CN><en>The stable suffix lets the compiler select a temporary node-modules prefix while strictly requiring the leaf filename.</en></lang>
+      const expectedSuffix = join(componentName, componentName + '.' + extension);
+      assert.ok(findOutputFileBySuffix(compilerOutputFiles, expectedSuffix), 'Installed-package compiler must emit ' + componentName + '.' + extension + '.');
     }
   }
 

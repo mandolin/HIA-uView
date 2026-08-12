@@ -25,6 +25,10 @@
       "types": "./types/index.d.ts",
       "default": "./src/index.mjs"
     },
+    "./services": {
+      "types": "./types/services.d.ts",
+      "default": "./src/services.mjs"
+    },
     "./global": {
       "types": "./types/global-components.d.ts",
       "default": "./types/global-components.mjs"

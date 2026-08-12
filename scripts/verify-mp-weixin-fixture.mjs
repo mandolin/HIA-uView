@@ -63,6 +63,23 @@ const P67_CONTROL_COMPONENT_NAMES = Object.freeze([
 ]);
 
 /**
+ * @lang zh-CN 仓内 fixture 必须在统一 marker 下真实组合、映射并输出的十个 overlay、feedback 与 navigation 组件名。
+ * @lang en Ten overlay, feedback, and navigation component names that the in-repository fixture must actually compose, map, and emit under one unified marker.
+ */
+const P68_SURFACE_COMPONENT_NAMES = Object.freeze([
+  'u-popup',
+  'u-mask',
+  'u-transition',
+  'u-action-sheet',
+  'u-modal',
+  'u-toast',
+  'u-navbar',
+  'u-tabbar',
+  'u-tabs',
+  'u-notice-bar'
+]);
+
+/**
  * @lang zh-CN 从临时微信小程序产物读取并解析一个 JSON 配置文件；读取范围仅限本函数创建的输出目录。
  * @lang en Reads and parses one JSON configuration file from the temporary WeChat Mini Program output; read scope is limited to the output directory created by this function.
  * @param {string} outputDirectory <lang><zh-CN>本次校验创建的绝对临时输出目录。</zh-CN><en>Absolute temporary output directory created by this validation run.</en></lang>
@@ -83,6 +100,17 @@ async function readGeneratedJson(outputDirectory, fileName) {
 async function verifyMpWeixinFixture() {
   // <lang><zh-CN>先读取仓内 fixture 首页源码，证明编译输入本身声明了中性 marker、真实六组件组合、调用方 model/rules 与三个显式动作。</zh-CN><en>First reads the in-repository fixture home-page source, proving that compiler input itself declares neutral markers, actual six-component composition, caller-owned model/rules, and three explicit actions.</en></lang>
   const fixturePageSource = await readFile(resolve(fixtureDirectory, 'src/pages/index/index.vue'), 'utf8');
+  // <lang><zh-CN>统一 P68 marker、逐标签和显式 scope/host 绑定证明 service 与十组件实际进入页面，而非闲置 Easycom 或 import。</zh-CN><en>The unified P68 marker, tag-by-tag checks, and explicit scope/host bindings prove that services and all ten components actually enter the page rather than remaining idle Easycom mappings or imports.</en></lang>
+  assert.match(fixturePageSource, /data-smoke="overlay-feedback-navigation"/u, 'The fixture source must retain the unified P68 composition marker.');
+  assert.match(fixturePageSource, /data-smoke="feedback-service-result"/u, 'The fixture source must retain the visible P68 service-result marker.');
+  for (const componentName of P68_SURFACE_COMPONENT_NAMES) {
+    assert.match(fixturePageSource, new RegExp('<' + componentName + '(?:\\s|>)', 'u'), 'The fixture source must compose ' + componentName + '.');
+  }
+  assert.match(fixturePageSource, /const fixtureFeedbackScope = createUFeedbackScope\(\)/u, 'The fixture source must create one explicit feedback scope.');
+  assert.match(fixturePageSource, /<u-modal\s+:service-scope="fixtureFeedbackScope"\s+:service-host="true"/u, 'The fixture source must mount an explicit modal host.');
+  assert.match(fixturePageSource, /<u-toast\s+:service-scope="fixtureFeedbackScope"\s+:service-host="true"/u, 'The fixture source must mount an explicit toast host.');
+  // <lang><zh-CN>fixture 源码不得通过平台 page stack、路由、网络或 storage 为局部服务建立隐式依赖。</zh-CN><en>Fixture source must not establish implicit local-service dependencies through a platform page stack, routing, network, or storage.</en></lang>
+  assert.doesNotMatch(fixturePageSource, /getCurrentPages|uni\.(?:navigate|redirect|reLaunch|switchTab|request|setStorage|getStorage)|wx\.(?:navigate|redirect|reLaunch|switchTab|request)/u);
   assert.match(fixturePageSource, /data-smoke="p66-form-composition"/u, 'The fixture source must retain the neutral P66 form-composition marker.');
   assert.match(fixturePageSource, /data-smoke="p66-form-result"/u, 'The fixture source must retain the visible P66 form-result marker.');
   assert.match(fixturePageSource, /<u-form\s+ref="fixtureP66FormReference"\s+:model="fixtureP66FormModel"\s+:rules="fixtureP66FormRules"/u, 'The fixture source must bind UForm to its page-local ref, model, and rules.');
@@ -165,8 +193,21 @@ async function verifyMpWeixinFixture() {
       assert.equal(usingComponents?.[componentName], expectedComponentPath, `The fixture page must statically resolve ${componentName} to its leaf SFC output.`);
     }
 
+    // <lang><zh-CN>十个 P68 组件必须各自通过受限 Easycom 映射到仓内 leaf SFC；service 仍由页面 JavaScript 的显式 submodule import 提供。</zh-CN><en>All ten P68 components must map to in-repository leaf SFCs through bounded Easycom; services remain supplied by the page JavaScript's explicit submodule import.</en></lang>
+    for (const componentName of P68_SURFACE_COMPONENT_NAMES) {
+      // <lang><zh-CN>路径仅由冻结组件名与固定 source 根拼接，不读取 package registry 或动态 manifest。</zh-CN><en>The path joins only a frozen component name with the fixed source root and reads no package registry or dynamic manifest.</en></lang>
+      const expectedComponentPath = '../../../../../src/components/' + componentName + '/' + componentName;
+      assert.equal(usingComponents?.[componentName], expectedComponentPath, 'The fixture page must statically resolve ' + componentName + ' to its leaf SFC output.');
+    }
+
     // <lang><zh-CN>首页 WXML 中的中性 data marker 与六个标签证明目标组件真实位于页面组合，而不仅是 page JSON 的闲置映射。</zh-CN><en>The neutral data marker and six tags in home-page WXML prove the target components are actually in page composition rather than idle mappings in page JSON.</en></lang>
     const fixtureHomeMarkup = await readFile(resolve(outputDirectory, `${fixtureHomePage}.wxml`), 'utf8');
+    // <lang><zh-CN>统一 P68 marker、service 结果 marker 与十个 WXML 标签排除仅映射或仅导入而未渲染的假阳性。</zh-CN><en>The unified P68 marker, service-result marker, and ten WXML tags exclude false positives where a surface is only mapped or imported without rendering.</en></lang>
+    assert.match(fixtureHomeMarkup, /data-smoke="overlay-feedback-navigation"/, 'The generated fixture page must retain the unified P68 composition marker.');
+    assert.match(fixtureHomeMarkup, /data-smoke="feedback-service-result"/, 'The generated fixture page must retain the visible P68 service-result marker.');
+    for (const componentName of P68_SURFACE_COMPONENT_NAMES) {
+      assert.match(fixtureHomeMarkup, new RegExp('<' + componentName + '(?:\\s|>)', 'u'), 'The generated fixture page must compose ' + componentName + '.');
+    }
     assert.match(fixtureHomeMarkup, /data-smoke="p66-form-composition"/, 'The generated fixture page must retain the neutral P66 form-composition marker.');
     assert.match(fixtureHomeMarkup, /data-smoke="p66-form-result"/, 'The generated fixture page must retain the visible P66 form-result marker.');
     for (const componentName of P66_FORM_COMPONENT_NAMES) {
@@ -215,6 +256,19 @@ async function verifyMpWeixinFixture() {
     }
     await Promise.all(p67ArtifactChecks);
 
+    // <lang><zh-CN>十个 P68 leaf 也必须各自产出 JS/JSON/WXML/WXSS 四件套；这仍只证明静态 compiler 可消费，不代表 DevTools 或真机运行。</zh-CN><en>Each of the ten P68 leaves must also emit the JS/JSON/WXML/WXSS quartet; this proves static compiler consumption only and does not represent DevTools or device execution.</en></lang>
+    const p68ArtifactChecks = [];
+    for (const componentName of P68_SURFACE_COMPONENT_NAMES) {
+      // <lang><zh-CN>四个扩展名来自固定集合，路径始终落在本轮唯一临时输出中。</zh-CN><en>The four extensions come from a fixed collection and paths always remain inside this run's sole temporary output.</en></lang>
+      for (const extension of ['js', 'json', 'wxml', 'wxss']) {
+        p68ArtifactChecks.push(access(resolve(
+          outputDirectory,
+          'src/components/' + componentName + '/' + componentName + '.' + extension
+        )));
+      }
+    }
+    await Promise.all(p68ArtifactChecks);
+
     // <lang><zh-CN>读取两个内部组合根的生成 JSON，确认 UField 的内建 UInput 和 UFormItem 的校验消息不是只存在于源码注释。</zh-CN><en>Reads generated JSON for the two internal composition roots, confirming that UField's built-in UInput and UFormItem's validation message do not exist only in source comments.</en></lang>
     const [fieldConfiguration, formItemConfiguration] = await Promise.all([
       readGeneratedJson(outputDirectory, 'src/components/u-field/u-field.json'),
@@ -243,6 +297,10 @@ async function verifyMpWeixinFixture() {
     // <lang><zh-CN>应用级样式入口也必须包含十四组件根规则；结合 WXML、mapping 与 leaf 四件套可排除仅 H5 有样式。</zh-CN><en>The application-level style entry must also include root rules for all fourteen components; together with WXML, mappings, and leaf quartets this excludes H5-only styling.</en></lang>
     for (const componentName of P67_CONTROL_COMPONENT_NAMES) {
       assert.match(applicationStyles, new RegExp(`\\.${componentName}\\{`, 'u'), `The generated app WXSS must include ${componentName} rules from the explicit style entry.`);
+    }
+    // <lang><zh-CN>应用级样式入口必须包含十个 P68 根规则；结合 mapping、WXML 与 leaf 四件套可证小程序静态消费闭包完整。</zh-CN><en>The application-level style entry must contain root rules for all ten P68 components; together with mappings, WXML, and leaf quartets this proves a complete Mini Program static-consumption closure.</en></lang>
+    for (const componentName of P68_SURFACE_COMPONENT_NAMES) {
+      assert.match(applicationStyles, new RegExp('\\.' + componentName + '\\{', 'u'), 'The generated app WXSS must include ' + componentName + ' rules from the explicit style entry.');
     }
   } finally {
     // <lang><zh-CN>无论编译或断言成功与否，都删除本函数刚创建的唯一临时目录；不遍历或删除仓库、用户目录或外部路径。</zh-CN><en>Deletes the unique temporary directory created by this function whether compilation or assertions succeed; never traverses or deletes repository, user, or external paths.</en></lang>

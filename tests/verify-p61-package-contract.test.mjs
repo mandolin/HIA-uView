@@ -1,7 +1,7 @@
 /**
  * @module verify-private-ui-package-contract
- * @lang zh-CN 锁定私有 UI 包的 types、静态 Easycom 与发布边界。测试只读取固定公开仓内文件，不打包、不安装、不联网、不扫描 consumer 项目，也不执行 Vue 或小程序 runtime。
- * @lang en Locks types, static Easycom, and distribution boundaries of the private UI package. The test reads only fixed public repository files; it neither packs, installs, nor accesses the network, scans consumer projects, or runs Vue/Mini Program runtime.
+ * @lang zh-CN 锁定私有 UI 包的根 runtime、显式局部 service subpath、精确 types、静态 Easycom 与发布边界。测试只读取固定公开仓内文件，不打包、不安装、不联网、不扫描 consumer 项目，也不执行 Vue 或小程序 runtime。
+ * @lang en Locks the root runtime, explicit-local service subpath, precise types, static Easycom, and distribution boundaries of the private UI package. The test reads only fixed public repository files; it neither packs, installs, nor accesses the network, scans consumer projects, or runs Vue/Mini Program runtime.
  */
 
 import assert from 'node:assert/strict';
@@ -9,10 +9,12 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 // <lang><zh-CN>并行读取固定 package、runtime、declaration、Easycom 与消费 fixture 输入，避免测试通过目录发现扩大读取边界。</zh-CN><en>Reads fixed package, runtime, declaration, Easycom, and consumer-fixture inputs in parallel, avoiding boundary expansion through directory discovery.</en></lang>
-const [packageSource, runtimeSource, declarationSource, globalDeclarationSource, easycomSource, consumerSource, typeConfigSource] = await Promise.all([
+const [packageSource, runtimeSource, serviceRuntimeSource, declarationSource, serviceDeclarationSource, globalDeclarationSource, easycomSource, consumerSource, typeConfigSource] = await Promise.all([
   readFile('HIA-uView-UI/package.json', 'utf8'),
   readFile('HIA-uView-UI/src/index.mjs', 'utf8'),
+  readFile('HIA-uView-UI/src/services.mjs', 'utf8'),
   readFile('HIA-uView-UI/types/index.d.ts', 'utf8'),
+  readFile('HIA-uView-UI/types/services.d.ts', 'utf8'),
   readFile('HIA-uView-UI/types/global-components.d.ts', 'utf8'),
   readFile('HIA-uView-UI/easycom/mp-weixin.json', 'utf8'),
   readFile('tests/fixtures/ui-package-types/consumer.ts', 'utf8'),
@@ -62,19 +64,35 @@ test('keeps the private package entry explicit, typed, and dependency-light', ()
   assert.deepEqual(packageJson.peerDependencies, { vue: '>=3.4.0 <4.0.0' });
   assert.deepEqual(packageJson.dependencies ?? {}, {});
 
-  // <lang><zh-CN>export map 只允许 runtime、类型、显式 style 和静态 Easycom；不会暴露 manifest、fixture 或自动注册入口。</zh-CN><en>The export map allows only runtime, types, explicit style, and static Easycom; it exposes no manifest, fixture, or auto-registration entry.</en></lang>
-  assert.deepEqual(Object.keys(packageJson.exports), ['.', './global', './style.css', './theme/hia-light.css', './easycom/mp-weixin.json']);
+  // <lang><zh-CN>export map 只允许根 runtime、显式局部 service、类型、显式 style 和静态 Easycom；不会暴露 manifest、fixture 或自动注册入口。</zh-CN><en>The export map allows only the root runtime, explicit-local service, types, explicit style, and static Easycom; it exposes no manifest, fixture, or auto-registration entry.</en></lang>
+  assert.deepEqual(Object.keys(packageJson.exports), ['.', './services', './global', './style.css', './theme/hia-light.css', './easycom/mp-weixin.json']);
   assert.deepEqual(packageJson.exports['.'], { default: './src/index.mjs', types: './types/index.d.ts' });
+  assert.deepEqual(packageJson.exports['./services'], { default: './src/services.mjs', types: './types/services.d.ts' });
   assert.deepEqual(packageJson.exports['./global'], { default: './types/global-components.mjs', types: './types/global-components.d.ts' });
+
+  // <lang><zh-CN>纯 service runtime/type 入口只转发三个显式 scope API；它们不公开 host 注册、settlement、normalizer 或默认全局 service。</zh-CN><en>The pure service runtime/type entries forward only three explicit-scope APIs and expose no host registration, settlement, normalizer, or default global service.</en></lang>
+  for (const publicName of ['createUFeedbackScope', 'useModal', 'useToast']) {
+    assert.match(serviceRuntimeSource, new RegExp('(?:^|\\s)' + publicName + '(?:,|\\s|$)', 'u'));
+    assert.match(serviceDeclarationSource, new RegExp('(?:^|\\s)' + publicName + '(?:,|\\s|$)', 'u'));
+  }
+  assert.ok(runtimeSource.includes("export { createUFeedbackScope, useModal, useToast } from './services.mjs';"));
+  assert.doesNotMatch(serviceRuntimeSource, /registerUFeedbackHost|settleUFeedbackRequest|normalizeU(?:Toast|Modal)Options|globalThis|getCurrentPages/u);
+  assert.doesNotMatch(serviceDeclarationSource, /registerUFeedbackHost|settleUFeedbackRequest|normalizeU(?:Toast|Modal)Options/u);
 });
 
 test('declares every current runtime component exactly once without overclaiming precision', () => {
   // <lang><zh-CN>运行时/声明名称集合必须精确相同；这个静态比较不会加载 component implementation 或执行任何 Vue code。</zh-CN><en>Runtime/declaration name sets must be exactly equal; this static comparison loads no component implementation or executes Vue code.</en></lang>
   assert.deepEqual(readDeclarationComponentNames(declarationSource), readRuntimeComponentNames(runtimeSource));
 
-  // <lang><zh-CN>既有十个审计表面继续保持精确 props，不因 P66 实例类型扩展而退化。</zh-CN><en>The existing ten audited surfaces retain precise props and do not regress because P66 adds instance-aware types.</en></lang>
-  for (const componentName of ['UAlertTips', 'UCheckbox', 'UCheckboxGroup', 'UNoticeBar', 'UPicker', 'URadio', 'URadioGroup', 'USwitch', 'UTabbar', 'UTag']) {
+  // <lang><zh-CN>仍采用直接 DefineComponent 的八个既有审计表面继续保持精确 props；已升级到 instance/event helper 的 notice-bar 与 tabbar 在下方门禁覆盖。</zh-CN><en>The eight existing audited surfaces that still use direct DefineComponent retain precise props; notice-bar and tabbar, upgraded to the instance/event helper, are covered by the gate below.</en></lang>
+  for (const componentName of ['UAlertTips', 'UCheckbox', 'UCheckboxGroup', 'UPicker', 'URadio', 'URadioGroup', 'USwitch', 'UTag']) {
     assert.match(declarationSource, new RegExp(`export declare const ${componentName}: DefineComponent<`, 'u'));
+  }
+
+  // <lang><zh-CN>十个 overlay/feedback/navigation 组件必须全部升级为 UViewTypedComponent，以同时锁定 props、公开实例与 emits payload；generic UViewComponent 或仅 props DefineComponent 均不能通过。</zh-CN><en>All ten overlay/feedback/navigation components must use UViewTypedComponent to lock props, public instances, and emit payloads together; neither generic UViewComponent nor props-only DefineComponent can pass.</en></lang>
+  for (const componentName of ['UActionSheet', 'UMask', 'UModal', 'UNavbar', 'UNoticeBar', 'UPopup', 'UTabbar', 'UTabs', 'UToast', 'UTransition']) {
+    assert.match(declarationSource, new RegExp('export declare const ' + componentName + ': UViewTypedComponent<', 'u'));
+    assert.doesNotMatch(declarationSource, new RegExp('export declare const ' + componentName + ': (?:UViewComponent|DefineComponent<)', 'u'));
   }
 
   // <lang><zh-CN>P66 六组件必须使用带 RawBindings 与 emits 的精确 helper，使 public instance 和 payload 同时可检查。</zh-CN><en>The six P66 components must use the precise RawBindings/emits helper so public instances and payloads are both checkable.</en></lang>
@@ -90,6 +108,11 @@ test('declares every current runtime component exactly once without overclaiming
   // <lang><zh-CN>可选 global augmentation 必须同步覆盖全部六个 P66 精确组件。</zh-CN><en>The optional global augmentation must cover all six precise P66 components in sync.</en></lang>
   for (const componentName of ['UField', 'UForm', 'UFormItem', 'UInput', 'USearch', 'UTextarea']) {
     assert.match(globalDeclarationSource, new RegExp(`${componentName}: typeof ${componentName}`, 'u'));
+  }
+
+  // <lang><zh-CN>可选 global augmentation 也必须同步引用十个精确 overlay/feedback/navigation 组件值，避免模板类型退回 generic。</zh-CN><en>The optional global augmentation must also reference all ten precise overlay/feedback/navigation component values so template types cannot regress to generic declarations.</en></lang>
+  for (const componentName of ['UActionSheet', 'UMask', 'UModal', 'UNavbar', 'UNoticeBar', 'UPopup', 'UTabbar', 'UTabs', 'UToast', 'UTransition']) {
+    assert.match(globalDeclarationSource, new RegExp(componentName + ': typeof ' + componentName, 'u'));
   }
 });
 
@@ -111,6 +134,11 @@ test('keeps Easycom static, consumer-owned, and compiler-testable', () => {
   // <lang><zh-CN>fixture 同时锁定 expose InstanceType 与负类型门禁，避免精确声明退回 generic/any 仍然通过。</zh-CN><en>The fixture also locks exposed InstanceType and negative type gates so a regression to generic/any cannot still pass.</en></lang>
   assert.match(consumerSource, /type UFormInstance/u);
   assert.match(consumerSource, /asyncValidator: async \(value, context\)/u);
+  assert.match(consumerSource, /from '@hia-uview\/ui\/services';/u);
+  assert.match(consumerSource, /const feedbackScope: Readonly<UFeedbackScope> = createUFeedbackScope\(\)/u);
+  assert.match(consumerSource, /const popupProps: UPopupProps/u);
+  assert.match(consumerSource, /const toastController: Readonly<UToastController>/u);
   assert.match(consumerSource, /@ts-expect-error/u);
   assert.equal(typeConfig.compilerOptions.paths['@hia-uview/ui'][0], 'HIA-uView-UI/types/index.d.ts');
+  assert.equal(typeConfig.compilerOptions.paths['@hia-uview/ui/services'][0], 'HIA-uView-UI/types/services.d.ts');
 });

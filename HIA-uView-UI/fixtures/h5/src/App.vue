@@ -1,7 +1,7 @@
 <!--
 @component H5FixtureApp
-@lang zh-CN 以本地声明数据展示现有 HIA-uView 组件，并提供表单/输入族与十四组件受控选择族的 H5 组合证据；fixture 不连接 API、router、storage、业务 store、平台 chooser 或外部脚本。
-@lang en Displays current HIA-uView components with local declarative data and provides H5 composition evidence for the form/input family and the fourteen-component controlled-selection family; the fixture connects to no API, router, storage, business store, platform chooser, or external script.
+@lang zh-CN 以本地声明数据展示现有 HIA-uView 组件，并提供覆盖层/反馈/导航、表单/输入族与十四组件受控选择族的 H5 组合证据；fixture 不连接 API、router、storage、业务 store、平台 chooser 或外部脚本。
+@lang en Displays current HIA-uView components with local declarative data and provides H5 composition evidence for overlay/feedback/navigation, the form/input family, and the fourteen-component controlled-selection family; the fixture connects to no API, router, storage, business store, platform chooser, or external script.
 -->
 <template>
   <main class="fixture-page">
@@ -9,6 +9,32 @@
     <USection title="Local availability / 本地可用性" sub-title="H5 build and smoke evidence / H5 构建与 smoke 证据" />
     <UText text="u- naming remains available on H5 / H5 仍保持 u- 代码命名" type="secondary" />
     <UButton label="Local action / 本地操作" />
+    <!--
+    @lang zh-CN 本段在单一明确边界内真实组合十个 overlay、feedback 与 navigation 组件，并以页面局部状态呈现或触发迁移入口。
+    @lang en This section actually composes ten overlay, feedback, and navigation components inside one explicit boundary and presents or triggers their migration entries with page-local state.
+    <lang><zh-CN>Feedback service 使用页面显式创建的 scope 与显式 modal/toast host；所有操作只更新本地 marker，不发现页面、不路由、不请求也不持久化。</zh-CN><en>The feedback service uses a page-explicit scope and explicit modal/toast hosts; every operation updates only a local marker and discovers no page, routes nowhere, requests nothing, and persists nothing.</en></lang>
+    -->
+    <section class="fixture-overlay-feedback-navigation" data-smoke="overlay-feedback-navigation">
+      <h2>Local overlay, feedback, and navigation / 本地覆盖层、反馈与导航</h2>
+      <UNavbar title="Local surface / 本地界面" :is-back="true" back-text="Back / 返回" right-text="Observe / 观察" @left-click="recordFeedbackIntent('navbar-left')" @right-click="recordFeedbackIntent('navbar-right')" />
+      <UNoticeBar :list="navigationNoticeItems" :current="1" close-text="Dismiss / 关闭" @click="recordNoticeClick" @close="recordFeedbackIntent('notice-close')" />
+      <UTabs :list="navigationTabItems" :current="navigationTabIndex" @update:model-value="updateNavigationTab" />
+      <UTabbar v-model="navigationTabbarValue" :list="navigationTabbarItems" />
+      <!-- <lang><zh-CN>按钮只设置有限布尔状态或调用已绑定 scope 的 controller；它们不执行远程、页面或业务动作。</zh-CN><en>The buttons only set finite Boolean state or call controllers bound to the explicit scope; they execute no remote, page, or business action.</en></lang> -->
+      <div class="fixture-overlay-feedback-navigation__actions">
+        <UButton label="Show popup / 显示弹层" @click="showOverlayPopup" />
+        <UButton variant="secondary" label="Show actions / 显示操作表" @click="showOverlayActionSheet" />
+        <UButton variant="secondary" label="Scoped toast / 局部提示" @click="showScopedToast" />
+        <UButton variant="secondary" label="Scoped modal / 局部对话框" @click="showScopedModal" />
+      </div>
+      <UTransition :show="overlayTransitionVisible" mode="fade" :duration="120"><UText text="Finite transition / 有限过渡" /></UTransition>
+      <UMask :show="overlayMaskVisible" :clickable="true" @click="hideOverlayMask"><UText text="Local mask slot / 本地遮罩 slot" /></UMask>
+      <UPopup v-model="overlayPopupVisible" title="Local popup / 本地弹层" close-text="Close / 关闭" :mask-closable="true" @close="recordPopupClose"><UText text="Caller-owned popup slot / 调用方拥有的弹层 slot" /></UPopup>
+      <UActionSheet v-model="overlayActionSheetVisible" title="Local actions / 本地操作" :items="overlayActionItems" cancel-text="Cancel / 取消" :mask-closable="true" @select="recordFeedbackIntent('action-select')" @close="recordActionSheetClose"><UText text="Caller-owned action slot / 调用方拥有的操作 slot" /></UActionSheet>
+      <UModal :service-scope="feedbackScope" :service-host="true" @confirm="recordFeedbackIntent('modal-confirm')" @cancel="recordFeedbackIntent('modal-cancel')" />
+      <UToast :service-scope="feedbackScope" :service-host="true" @close="recordFeedbackIntent('toast-close')" />
+      <p data-smoke="feedback-service-result">{{ feedbackIntent }}</p>
+    </section>
     <!--
     @lang zh-CN 本段在一个稳定 marker 下真实组合十四个受控选择、日期、数值与上传组件；每个 model、有限 option 和 adapter 均由当前页面拥有。
     @lang en This section actually composes all fourteen controlled choice, date, numeric, and upload components under one stable marker; the current page owns every model, finite option collection, and adapter.
@@ -153,7 +179,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { onBeforeUnmount, reactive, ref } from 'vue';
 import { UActionSheetItem, UAvatarCropper, UBackTop, UButton, UCarKeyboard, UCellItem, UCitySelect, UConfigProvider, UFab, UKeyboard, ULoading, ULoadingPopup, UMask, UMessageInput, UNavbar, UNoNetwork, UNoticeBar, UNumberKeyboard, URootPortal, USafeBottom, USection, UStatusBar, UText, UTopTips, UTransition, UVerificationCode } from '../../../src/index.mjs';
 // <lang><zh-CN>本批具名导入只把受控 P56.2 表面提供给 H5 fixture；导入本身不注册组件、启动 timer 或写入全局状态。</zh-CN><en>These named imports provide controlled P56.2 surfaces to the H5 fixture only; importing registers no component, starts no timer, and writes no global state.</en></lang>
 import { UCircleProgress, UColumnNotice, UCountDown, UFullScreen, UIndexAnchor, UIndexList, ULazyLoad, URowNotice, UStep, USubsection, UTable, UTabsSwiper, UTd, UTh, UTimeLine, UTimeLineItem, UTr, UWaterfall } from '../../../src/index.mjs';
@@ -161,6 +187,159 @@ import { UCircleProgress, UColumnNotice, UCountDown, UFullScreen, UIndexAnchor, 
 import { UField, UForm, UFormItem, UInput, USearch, UTextarea } from '../../../src/index.mjs';
 // <lang><zh-CN>十四个受控组件通过同一具名入口进入页面局部组合；该导入不注册全局组件、不提供 adapter，也不启动平台能力。</zh-CN><en>The fourteen controlled components enter the page-local composition through the same named entry; this import registers no global component, supplies no adapter, and starts no platform capability.</en></lang>
 import { UCalendar, UCheckbox, UCheckboxGroup, UDropdown, UDropdownItem, UNumberBox, UPicker, URadio, URadioGroup, URate, USelect, USlider, USwitch, UUpload } from '../../../src/index.mjs';
+// <lang><zh-CN>十个 overlay/feedback/navigation 组件与三个 feedback service 工厂从同一 package root 进入 H5 fixture；导入不创建默认 scope、host、页面发现或全局注册。</zh-CN><en>The ten overlay/feedback/navigation components and three feedback-service factories enter the H5 fixture through the same package root; importing creates no default scope, host, page discovery, or global registration.</en></lang>
+import { UActionSheet, UModal, UPopup, UTabbar, UTabs, UToast, createUFeedbackScope, useModal, useToast } from '../../../src/index.mjs';
+
+// <lang><zh-CN>本 fixture 显式拥有唯一 feedback scope，并在卸载时释放；它不与其他页面或测试共享。</zh-CN><en>This fixture explicitly owns its sole feedback scope and disposes it on unmount; it is shared with no other page or test.</en></lang>
+const feedbackScope = createUFeedbackScope();
+// <lang><zh-CN>两个 controller 都绑定同一显式 scope，且只能由模板中对应显式 host 接收。</zh-CN><en>Both controllers bind to the same explicit scope and can be received only by their matching explicit hosts in the template.</en></lang>
+const feedbackModalController = useModal(feedbackScope);
+const feedbackToastController = useToast(feedbackScope);
+// <lang><zh-CN>可见 marker 只保存有限操作名或稳定 request id，不保存 event、options、页面或异常。</zh-CN><en>The visible marker stores only a finite operation name or stable request ID and retains no event, options, page, or exception.</en></lang>
+const feedbackIntent = ref('idle');
+// <lang><zh-CN>popup 与 action-sheet 的受控可见性由当前页面独立拥有，初始隐藏避免遮挡其他 fixture 表面。</zh-CN><en>The current page independently owns controlled popup and action-sheet visibility; both start hidden to avoid obscuring other fixture surfaces.</en></lang>
+const overlayPopupVisible = ref(false);
+const overlayActionSheetVisible = ref(false);
+// <lang><zh-CN>mask 默认隐藏而 transition 默认可见，以同时验证 show alias 的两个布尔方向。</zh-CN><en>The mask starts hidden while the transition starts visible, exercising both Boolean directions of the show alias.</en></lang>
+const overlayMaskVisible = ref(false);
+const overlayTransitionVisible = ref(true);
+// <lang><zh-CN>tabs current 使用页面索引，tabbar model 使用透明字符串值；二者不表示 router 状态。</zh-CN><en>Tabs current uses a page-owned index while the tabbar model uses a transparent string value; neither represents router state.</en></lang>
+const navigationTabIndex = ref(0);
+const navigationTabbarValue = ref('first');
+// <lang><zh-CN>三个有限集合都被冻结且只包含可见文字与透明值，不携带 URL、页面路径、命令或 callback。</zh-CN><en>All three finite collections are frozen and contain only visible copy and transparent values, carrying no URL, page path, command, or callback.</en></lang>
+const navigationNoticeItems = Object.freeze(['First local notice / 第一条本地提示', 'Second local notice / 第二条本地提示']);
+const navigationTabItems = Object.freeze([
+  Object.freeze({ label: 'First / 第一项', value: 'first' }),
+  Object.freeze({ label: 'Second / 第二项', value: 'second' })
+]);
+const navigationTabbarItems = Object.freeze([
+  Object.freeze({ label: 'First / 第一项', value: 'first' }),
+  Object.freeze({ label: 'Second / 第二项', value: 'second' })
+]);
+// <lang><zh-CN>action-sheet items 仅作为本地选择投影；组件不会执行其 value。</zh-CN><en>Action-sheet items are local selection projections only; the component never executes their values.</en></lang>
+const overlayActionItems = Object.freeze([
+  Object.freeze({ label: 'Observe / 观察', value: 'observe' }),
+  Object.freeze({ label: 'Disabled / 已禁用', value: 'disabled', disabled: true })
+]);
+
+/**
+ * @lang zh-CN 把有限 feedback/navigation 交互名写入可见 marker；不解释事件为导航、业务完成或持久化。
+ * @lang en Writes a finite feedback/navigation interaction name into the visible marker; it does not interpret an event as navigation, business completion, or persistence.
+ * @param {string} intent <lang><zh-CN>fixture 内声明的有限操作名。</zh-CN><en>Finite operation name declared inside the fixture.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写页面局部 ref。</zh-CN><en>No return value; writes only the page-local ref.</en></lang>
+ */
+function recordFeedbackIntent(intent) {
+  feedbackIntent.value = intent;
+}
+
+/**
+ * @lang zh-CN 记录 notice 当前投影索引，同时丢弃 raw event；页面不导航或轮播。
+ * @lang en Records the notice's current projected index while discarding the raw event; the page neither navigates nor rotates.
+ * @param {unknown} _event <lang><zh-CN>组件保留首参的原始本地事件，本 fixture 不保存。</zh-CN><en>Original local event preserved as the first argument and not retained by this fixture.</en></lang>
+ * @param {number} index <lang><zh-CN>组件报告的当前有限索引。</zh-CN><en>Current finite index reported by the component.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写有限 marker。</zh-CN><en>No return value; writes only a finite marker.</en></lang>
+ */
+function recordNoticeClick(_event, index) {
+  feedbackIntent.value = 'notice-' + index;
+}
+
+/**
+ * @lang zh-CN 将 tabs 报告的透明值映射回本地有限索引，使受控 current 与可见选择保持一致。
+ * @lang en Maps the transparent value reported by tabs back to a local finite index so controlled current stays aligned with the visible selection.
+ * @param {unknown} value <lang><zh-CN>组件报告的候选透明值。</zh-CN><en>Candidate transparent value reported by the component.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；有效值只更新本地索引与 marker。</zh-CN><en>No return value; a valid value updates only the local index and marker.</en></lang>
+ */
+function updateNavigationTab(value) {
+  // <lang><zh-CN>严格匹配当前冻结集合，未知值不会改变受控索引。</zh-CN><en>Strictly matches the current frozen collection; an unknown value cannot change the controlled index.</en></lang>
+  const nextIndex = navigationTabItems.findIndex((item) => item.value === value);
+  if (nextIndex < 0) return;
+  navigationTabIndex.value = nextIndex;
+  feedbackIntent.value = 'tab-' + nextIndex;
+}
+
+/**
+ * @lang zh-CN 显示调用方拥有的 popup，并记录本地触发。
+ * @lang en Shows the caller-owned popup and records the local trigger.
+ * @returns {void} <lang><zh-CN>无返回值；只更新两个页面 ref。</zh-CN><en>No return value; updates two page refs only.</en></lang>
+ */
+function showOverlayPopup() {
+  overlayPopupVisible.value = true;
+  feedbackIntent.value = 'popup-open';
+}
+
+/**
+ * @lang zh-CN 显示调用方拥有的 action sheet，并记录本地触发。
+ * @lang en Shows the caller-owned action sheet and records the local trigger.
+ * @returns {void} <lang><zh-CN>无返回值；只更新两个页面 ref。</zh-CN><en>No return value; updates two page refs only.</en></lang>
+ */
+function showOverlayActionSheet() {
+  overlayActionSheetVisible.value = true;
+  feedbackIntent.value = 'action-sheet-open';
+}
+
+/**
+ * @lang zh-CN 记录 popup 的有限关闭原因；raw event 不被保存或序列化。
+ * @lang en Records the popup's finite close reason; the raw event is neither retained nor serialized.
+ * @param {unknown} _event <lang><zh-CN>组件转发的原始本地事件。</zh-CN><en>Original local event forwarded by the component.</en></lang>
+ * @param {string} reason <lang><zh-CN>组件报告的有限关闭原因。</zh-CN><en>Finite close reason reported by the component.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写 marker。</zh-CN><en>No return value; writes the marker only.</en></lang>
+ */
+function recordPopupClose(_event, reason) {
+  feedbackIntent.value = 'popup-' + reason;
+}
+
+/**
+ * @lang zh-CN 记录 action sheet 的有限关闭原因；raw event 不进入页面状态。
+ * @lang en Records the action sheet's finite close reason; the raw event does not enter page state.
+ * @param {unknown} _event <lang><zh-CN>组件转发的原始本地事件。</zh-CN><en>Original local event forwarded by the component.</en></lang>
+ * @param {string} reason <lang><zh-CN>组件报告的有限关闭原因。</zh-CN><en>Finite close reason reported by the component.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写 marker。</zh-CN><en>No return value; writes the marker only.</en></lang>
+ */
+function recordActionSheetClose(_event, reason) {
+  feedbackIntent.value = 'action-sheet-' + reason;
+}
+
+/**
+ * @lang zh-CN 隐藏本地 mask；点击不传播为关闭其他 overlay 的命令。
+ * @lang en Hides the local mask; the click does not propagate as a command to close another overlay.
+ * @returns {void} <lang><zh-CN>无返回值；只更新 mask ref 与 marker。</zh-CN><en>No return value; updates only the mask ref and marker.</en></lang>
+ */
+function hideOverlayMask() {
+  overlayMaskVisible.value = false;
+  feedbackIntent.value = 'mask-click';
+}
+
+/**
+ * @lang zh-CN 通过显式 scope 的 toast controller 请求一个有限本地提示，并公开同步接收结果。
+ * @lang en Requests a finite local toast through the explicit-scope controller and exposes its synchronous acceptance result.
+ * @returns {void} <lang><zh-CN>无返回值；host 可用时只更新局部呈现与 marker。</zh-CN><en>No return value; when a host is available, only local presentation and the marker update.</en></lang>
+ */
+function showScopedToast() {
+  // <lang><zh-CN>固定 options 只有双语文字、有限 tone 与 duration；没有 callback、URL 或 payload。</zh-CN><en>The fixed options contain only bilingual copy, a finite tone, and duration, with no callback, URL, or payload.</en></lang>
+  const result = feedbackToastController.success({ message: 'Local scoped toast / 本地局部提示', duration: 1200, closeText: 'Close / 关闭' });
+  feedbackIntent.value = result.accepted ? 'toast-' + result.requestId : 'toast-' + result.reason;
+}
+
+/**
+ * @lang zh-CN 通过显式 scope 的 modal controller 请求一个双 control 本地对话框，并公开同步接收结果。
+ * @lang en Requests a dual-control local modal through the explicit-scope controller and exposes its synchronous acceptance result.
+ * @returns {void} <lang><zh-CN>无返回值；host 可用时只更新局部呈现与 marker。</zh-CN><en>No return value; when a host is available, only local presentation and the marker update.</en></lang>
+ */
+function showScopedModal() {
+  // <lang><zh-CN>固定 options 只包含可见双语文字；确认/取消后果仍由上方组件事件决定。</zh-CN><en>The fixed options contain visible bilingual copy only; confirm/cancel consequences remain decided by the component events above.</en></lang>
+  const result = feedbackModalController.confirm({
+    title: 'Local scoped modal / 本地局部对话框',
+    content: 'No remote action / 不执行远程动作',
+    confirmText: 'Observe / 观察',
+    cancelText: 'Cancel / 取消'
+  });
+  feedbackIntent.value = result.accepted ? 'modal-' + result.requestId : 'modal-' + result.reason;
+}
+
+// <lang><zh-CN>页面卸载永久释放显式 scope；dispose 幂等且不访问平台 page stack。</zh-CN><en>Page unmount permanently disposes the explicit scope; disposal is idempotent and accesses no platform page stack.</en></lang>
+onBeforeUnmount(() => {
+  feedbackScope.dispose();
+});
 
 // <lang><zh-CN>checkbox group 的透明键数组由当前页面拥有，子项不能直接修改数组。</zh-CN><en>The current page owns the checkbox group's transparent-key array, and children cannot directly mutate it.</en></lang>
 const p67CheckboxValues = ref(['alpha']);

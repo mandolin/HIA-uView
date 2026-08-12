@@ -12,6 +12,32 @@
       @action="resetCatalogQuery"
     />
 
+    <!--
+    @lang zh-CN 本段在统一 marker 内真实组合十个 overlay、feedback 与 navigation 组件；页面局部状态显式拥有每个受控值、有限集合与 intent。
+    @lang en This section actually composes ten overlay, feedback, and navigation components under one marker; page-local state explicitly owns every controlled value, finite collection, and intent.
+    <lang><zh-CN>Modal/toast service 必须经过本页面显式 scope 与两个显式 host；入口不查找 page stack、不路由、不请求、不读写 storage 或平台状态。</zh-CN><en>Modal/toast services must pass through this page's explicit scope and two explicit hosts; the entry discovers no page stack, routes nowhere, requests nothing, and reads or writes no storage or platform state.</en></lang>
+    -->
+    <view class="fixture-overlay-feedback-navigation" data-smoke="overlay-feedback-navigation">
+      <u-navbar title="本地界面 / Local surface" :is-back="true" back-text="返回 / Back" right-text="观察 / Observe" @left-click="recordFixtureFeedbackIntent('navbar-left')" @right-click="recordFixtureFeedbackIntent('navbar-right')" />
+      <u-notice-bar :list="fixtureNavigationNoticeItems" :current="1" close-text="关闭 / Dismiss" @click="recordFixtureNoticeClick" @close="recordFixtureFeedbackIntent('notice-close')" />
+      <u-tabs :list="fixtureNavigationTabItems" :current="fixtureNavigationTabIndex" @update:model-value="updateFixtureNavigationTab" />
+      <u-tabbar v-model="fixtureNavigationTabbarValue" :list="fixtureNavigationTabbarItems" />
+      <!-- <lang><zh-CN>四个按钮只改变本地布尔值或调用绑定显式 scope 的 controller；不执行任何领域操作。</zh-CN><en>The four buttons only change local Booleans or call controllers bound to the explicit scope; they perform no domain action.</en></lang> -->
+      <u-stack direction="horizontal" gap="sm" wrap>
+        <u-button label="显示弹层 / Show popup" @click="showFixtureOverlayPopup" />
+        <u-button variant="secondary" label="显示操作表 / Show actions" @click="showFixtureOverlayActionSheet" />
+        <u-button variant="secondary" label="局部提示 / Scoped toast" @click="showFixtureScopedToast" />
+        <u-button variant="secondary" label="局部对话框 / Scoped modal" @click="showFixtureScopedModal" />
+      </u-stack>
+      <u-transition :show="fixtureOverlayTransitionVisible" mode="fade" :duration="120"><text>有限过渡 / Finite transition</text></u-transition>
+      <u-mask :show="fixtureOverlayMaskVisible" :clickable="true" @click="hideFixtureOverlayMask"><text>本地遮罩 slot / Local mask slot</text></u-mask>
+      <u-popup v-model="fixtureOverlayPopupVisible" title="本地弹层 / Local popup" close-text="关闭 / Close" :mask-closable="true" @close="recordFixturePopupClose"><text>调用方弹层 slot / Caller popup slot</text></u-popup>
+      <u-action-sheet v-model="fixtureOverlayActionSheetVisible" title="本地操作 / Local actions" :items="fixtureOverlayActionItems" cancel-text="取消 / Cancel" :mask-closable="true" @select="recordFixtureFeedbackIntent('action-select')" @close="recordFixtureActionSheetClose"><text>调用方操作 slot / Caller action slot</text></u-action-sheet>
+      <u-modal :service-scope="fixtureFeedbackScope" :service-host="true" @confirm="recordFixtureFeedbackIntent('modal-confirm')" @cancel="recordFixtureFeedbackIntent('modal-cancel')" />
+      <u-toast :service-scope="fixtureFeedbackScope" :service-host="true" @close="recordFixtureFeedbackIntent('toast-close')" />
+      <text data-smoke="feedback-service-result">{{ fixtureFeedbackIntent }}</text>
+    </view>
+
     <!-- <lang><zh-CN>P54 组合以调用方声明的文字、尺寸和可见性验证新导航、间距、反馈与同树 overlay 表面能够被小程序编译器解析；它不引入平台读取、路由、滚动、网络或全局 service。</zh-CN><en>The P54 composition uses caller-declared copy, dimensions, and visibility to verify that the Mini Program compiler resolves the new navigation, spacing, feedback, and same-tree overlay surfaces; it introduces no platform read, router, scrolling, network, or global service.</en></lang> -->
     <u-config-provider density="compact" locale="en">
       <u-status-bar :height="18" />
@@ -378,14 +404,166 @@
 
 <script setup>
 // <lang><zh-CN>导入 Vue 的局部 ref/computed 与固定本地目录 helper；页面不导入全局 store、Tool、平台 API 或外部数据访问库。</zh-CN><en>Imports Vue local ref/computed and fixed local catalog helpers; the page imports no global store, Tool, platform API, or external data-access library.</en></lang>
-import { computed, reactive, ref } from 'vue';
+import { computed, onBeforeUnmount, reactive, ref } from 'vue';
 // <lang><zh-CN>页面的 u-* 标签由输入根 pages.json 的受限 easycom 表静态解析到同仓 SFC；这避免经公共 barrel 转发导致小程序编译器遗漏组件 JS/WXML/WXSS。</zh-CN><en>The page's u-* tags are statically resolved to in-repository SFCs by the bounded easycom table in the input-root pages.json; this avoids Mini Program compiler omissions of component JS/WXML/WXSS caused by public-barrel forwarding.</en></lang>
 // <lang><zh-CN>导入固定匿名 mock 集合与纯同步 helper；它们位于 fixture 内而非 UI runtime 或 Biz package。</zh-CN><en>Imports the fixed anonymous mock collection and pure synchronous helpers; they reside inside the fixture rather than UI runtime or a Biz package.</en></lang>
 import { LOCAL_CATALOG_RECORDS, filterLocalCatalogRecords, findLocalCatalogRecord } from './local-catalog.mjs';
+// <lang><zh-CN>三个 feedback service 入口来自同一 UI package 的纯服务子模块；导入不创建默认 scope、host 或页面副作用。</zh-CN><en>The three feedback-service entries come from the same UI package's pure service submodule; importing creates no default scope, host, or page side effect.</en></lang>
+import { createUFeedbackScope, useModal, useToast } from '../../../../../src/services.mjs';
 
 // <lang><zh-CN>声明稳定页面组件名，便于 compiler/runtime 诊断定位当前 fixture，而不形成可公开消费的应用 API。</zh-CN><en>Declares a stable page component name so compiler/runtime diagnostics can locate this fixture without forming a publicly consumable application API.</en></lang>
 defineOptions({
   name: 'fixture-local-catalog-page'
+});
+
+// <lang><zh-CN>页面显式拥有唯一 feedback scope，并把 modal/toast controller 限制在同一局部 host 边界。</zh-CN><en>The page explicitly owns its sole feedback scope and confines modal/toast controllers to the same local host boundary.</en></lang>
+const fixtureFeedbackScope = createUFeedbackScope();
+const fixtureModalController = useModal(fixtureFeedbackScope);
+const fixtureToastController = useToast(fixtureFeedbackScope);
+// <lang><zh-CN>可见 marker 只保存有限 intent 或稳定 request id，不保存 event、options、页面或平台对象。</zh-CN><en>The visible marker stores only a finite intent or stable request ID and retains no event, options, page, or platform object.</en></lang>
+const fixtureFeedbackIntent = ref('idle');
+// <lang><zh-CN>两个 overlay 的受控可见性归当前页面所有，初始隐藏避免遮挡既有目录组合。</zh-CN><en>The current page owns controlled visibility for both overlays; they start hidden to avoid obscuring the existing catalog composition.</en></lang>
+const fixtureOverlayPopupVisible = ref(false);
+const fixtureOverlayActionSheetVisible = ref(false);
+// <lang><zh-CN>mask 初始隐藏而 transition 初始可见，以静态编译两个 show alias 方向。</zh-CN><en>The mask starts hidden while the transition starts visible, statically compiling both directions of the show alias.</en></lang>
+const fixtureOverlayMaskVisible = ref(false);
+const fixtureOverlayTransitionVisible = ref(true);
+// <lang><zh-CN>tabs current 与 tabbar model 都是页面局部导航投影，不表示 route 或原生 tab 状态。</zh-CN><en>Tabs current and the tabbar model are page-local navigation projections and represent neither a route nor native-tab state.</en></lang>
+const fixtureNavigationTabIndex = ref(0);
+const fixtureNavigationTabbarValue = ref('first');
+// <lang><zh-CN>notice、tabs 与 tabbar 集合都由页面冻结，条目只携带双语文字及透明值。</zh-CN><en>The page freezes the notice, tabs, and tabbar collections; entries carry only bilingual copy and transparent values.</en></lang>
+const fixtureNavigationNoticeItems = Object.freeze(['第一条本地提示 / First local notice', '第二条本地提示 / Second local notice']);
+const fixtureNavigationTabItems = Object.freeze([
+  Object.freeze({ label: '第一项 / First', value: 'first' }),
+  Object.freeze({ label: '第二项 / Second', value: 'second' })
+]);
+const fixtureNavigationTabbarItems = Object.freeze([
+  Object.freeze({ label: '第一项 / First', value: 'first' }),
+  Object.freeze({ label: '第二项 / Second', value: 'second' })
+]);
+// <lang><zh-CN>action sheet 的有限 items 不携带 handler、URL、权限或业务命令。</zh-CN><en>The action sheet's finite items carry no handler, URL, authorization, or business command.</en></lang>
+const fixtureOverlayActionItems = Object.freeze([
+  Object.freeze({ label: '观察 / Observe', value: 'observe' }),
+  Object.freeze({ label: '已禁用 / Disabled', value: 'disabled', disabled: true })
+]);
+
+/**
+ * @lang zh-CN 把有限 feedback/navigation intent 写入页面 marker，不把点击解释为导航或业务完成。
+ * @lang en Writes a finite feedback/navigation intent into the page marker without interpreting a click as navigation or business completion.
+ * @param {string} intent <lang><zh-CN>fixture 源码声明的有限操作名。</zh-CN><en>Finite operation name declared in fixture source.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写局部 ref。</zh-CN><en>No return value; writes only the local ref.</en></lang>
+ */
+function recordFixtureFeedbackIntent(intent) {
+  fixtureFeedbackIntent.value = intent;
+}
+
+/**
+ * @lang zh-CN 记录 notice 当前投影索引并丢弃 raw event；页面不轮播或导航。
+ * @lang en Records the current notice-projection index and discards the raw event; the page neither rotates nor navigates.
+ * @param {unknown} _event <lang><zh-CN>组件保留首参的原始事件，本 fixture 不保存。</zh-CN><en>Original event retained as the component's first argument and not stored by this fixture.</en></lang>
+ * @param {number} index <lang><zh-CN>当前有限通知索引。</zh-CN><en>Current finite notice index.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写稳定 marker。</zh-CN><en>No return value; writes a stable marker only.</en></lang>
+ */
+function recordFixtureNoticeClick(_event, index) {
+  fixtureFeedbackIntent.value = 'notice-' + index;
+}
+
+/**
+ * @lang zh-CN 将 tabs 报告的透明值严格映射为受控 current 索引。
+ * @lang en Strictly maps the transparent value reported by tabs into the controlled current index.
+ * @param {unknown} value <lang><zh-CN>组件报告的候选值。</zh-CN><en>Candidate value reported by the component.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；未知值保持当前状态。</zh-CN><en>No return value; an unknown value retains current state.</en></lang>
+ */
+function updateFixtureNavigationTab(value) {
+  // <lang><zh-CN>只搜索当前冻结集合，绝不查询 route、page stack 或外部 registry。</zh-CN><en>Searches only the current frozen collection and never queries a route, page stack, or external registry.</en></lang>
+  const nextIndex = fixtureNavigationTabItems.findIndex((item) => item.value === value);
+  if (nextIndex < 0) return;
+  fixtureNavigationTabIndex.value = nextIndex;
+  fixtureFeedbackIntent.value = 'tab-' + nextIndex;
+}
+
+/**
+ * @lang zh-CN 显示本地受控 popup 并记录有限 intent。
+ * @lang en Shows the local controlled popup and records a finite intent.
+ * @returns {void} <lang><zh-CN>无返回值；只更新页面 refs。</zh-CN><en>No return value; updates page refs only.</en></lang>
+ */
+function showFixtureOverlayPopup() {
+  fixtureOverlayPopupVisible.value = true;
+  fixtureFeedbackIntent.value = 'popup-open';
+}
+
+/**
+ * @lang zh-CN 显示本地受控 action sheet 并记录有限 intent。
+ * @lang en Shows the local controlled action sheet and records a finite intent.
+ * @returns {void} <lang><zh-CN>无返回值；只更新页面 refs。</zh-CN><en>No return value; updates page refs only.</en></lang>
+ */
+function showFixtureOverlayActionSheet() {
+  fixtureOverlayActionSheetVisible.value = true;
+  fixtureFeedbackIntent.value = 'action-sheet-open';
+}
+
+/**
+ * @lang zh-CN 记录 popup 有限关闭原因，不保存 raw event。
+ * @lang en Records the popup's finite close reason without storing the raw event.
+ * @param {unknown} _event <lang><zh-CN>组件转发的原始本地事件。</zh-CN><en>Original local event forwarded by the component.</en></lang>
+ * @param {string} reason <lang><zh-CN>有限关闭原因。</zh-CN><en>Finite close reason.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写 marker。</zh-CN><en>No return value; writes the marker only.</en></lang>
+ */
+function recordFixturePopupClose(_event, reason) {
+  fixtureFeedbackIntent.value = 'popup-' + reason;
+}
+
+/**
+ * @lang zh-CN 记录 action sheet 有限关闭原因，不保存 raw event。
+ * @lang en Records the action sheet's finite close reason without storing the raw event.
+ * @param {unknown} _event <lang><zh-CN>组件转发的原始本地事件。</zh-CN><en>Original local event forwarded by the component.</en></lang>
+ * @param {string} reason <lang><zh-CN>有限关闭原因。</zh-CN><en>Finite close reason.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只写 marker。</zh-CN><en>No return value; writes the marker only.</en></lang>
+ */
+function recordFixtureActionSheetClose(_event, reason) {
+  fixtureFeedbackIntent.value = 'action-sheet-' + reason;
+}
+
+/**
+ * @lang zh-CN 隐藏局部 mask；该 intent 不关闭其他 overlay。
+ * @lang en Hides the local mask; this intent closes no other overlay.
+ * @returns {void} <lang><zh-CN>无返回值；只更新页面 refs。</zh-CN><en>No return value; updates page refs only.</en></lang>
+ */
+function hideFixtureOverlayMask() {
+  fixtureOverlayMaskVisible.value = false;
+  fixtureFeedbackIntent.value = 'mask-click';
+}
+
+/**
+ * @lang zh-CN 通过显式 scope/host 请求有限 toast，并把同步接收结果投影到本地 marker。
+ * @lang en Requests a finite toast through the explicit scope/host and projects its synchronous acceptance result into the local marker.
+ * @returns {void} <lang><zh-CN>无返回值；只改变局部呈现和 marker。</zh-CN><en>No return value; changes only local presentation and the marker.</en></lang>
+ */
+function showFixtureScopedToast() {
+  // <lang><zh-CN>固定 options 仅包含双语文字、有限 tone 和 duration，不含 callback、URL 或 payload。</zh-CN><en>Fixed options contain only bilingual copy, a finite tone, and duration, with no callback, URL, or payload.</en></lang>
+  const result = fixtureToastController.success({ message: '本地局部提示 / Local scoped toast', duration: 1200, closeText: '关闭 / Close' });
+  fixtureFeedbackIntent.value = result.accepted ? 'toast-' + result.requestId : 'toast-' + result.reason;
+}
+
+/**
+ * @lang zh-CN 通过显式 scope/host 请求有限双 control modal，并投影同步接收结果。
+ * @lang en Requests a finite dual-control modal through the explicit scope/host and projects its synchronous acceptance result.
+ * @returns {void} <lang><zh-CN>无返回值；只改变局部呈现和 marker。</zh-CN><en>No return value; changes only local presentation and the marker.</en></lang>
+ */
+function showFixtureScopedModal() {
+  // <lang><zh-CN>固定 options 只有可见双语文字；组件事件仍决定确认或取消后的页面 marker。</zh-CN><en>Fixed options contain visible bilingual copy only; component events still decide the page marker after confirm or cancel.</en></lang>
+  const result = fixtureModalController.confirm({
+    title: '本地局部对话框 / Local scoped modal',
+    content: '不执行远程动作 / No remote action',
+    confirmText: '观察 / Observe',
+    cancelText: '取消 / Cancel'
+  });
+  fixtureFeedbackIntent.value = result.accepted ? 'modal-' + result.requestId : 'modal-' + result.reason;
+}
+
+// <lang><zh-CN>页面卸载时幂等释放显式 scope；释放不读取平台 page stack 或全局状态。</zh-CN><en>Page unmount idempotently disposes the explicit scope; disposal reads no platform page stack or global state.</en></lang>
+onBeforeUnmount(() => {
+  fixtureFeedbackScope.dispose();
 });
 
 // <lang><zh-CN>调用方拥有的受控查询字符串；它只在当前页面实例存活，不写入 storage、URL 或共享状态。</zh-CN><en>Caller-owned controlled query string; it lives only for the current page instance and writes to no storage, URL, or shared state.</en></lang>

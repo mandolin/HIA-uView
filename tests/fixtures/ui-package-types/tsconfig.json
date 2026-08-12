@@ -12,6 +12,9 @@
       ],
       "@hia-uview/ui/global": [
         "HIA-uView-UI/types/global-components.d.ts"
+      ],
+      "@hia-uview/ui/services": [
+        "HIA-uView-UI/types/services.d.ts"
       ]
     }
   },

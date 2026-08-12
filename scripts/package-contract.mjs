@@ -29,13 +29,17 @@ const expectedPackageMetadata = [
 const packagesWithoutRuntimeDependencies = new Set(['@hia-uview/ui', '@hia-uview/tool']);
 
 /**
- * @lang zh-CN UI 私有预发布包必须公开的显式 export 映射；这些映射不是已发布的 semver 兼容性承诺。
- * @lang en Explicit export mappings that the private pre-release UI package must expose; these mappings are not a published semver compatibility commitment.
+ * @lang zh-CN UI 私有预发布包必须公开的显式 runtime、局部 service、type、style 与 Easycom export 映射；这些映射不是已发布的 semver 兼容性承诺。
+ * @lang en Explicit runtime, local-service, type, style, and Easycom export mappings that the private pre-release UI package must expose; these mappings are not a published semver compatibility commitment.
  */
 const expectedUiExports = {
   '.': {
     types: './types/index.d.ts',
     default: './src/index.mjs'
+  },
+  './services': {
+    types: './types/services.d.ts',
+    default: './src/services.mjs'
   },
   './global': {
     types: './types/global-components.d.ts',
@@ -182,7 +186,7 @@ export async function validatePackageContracts(rootDirectory = process.cwd()) {
     }
 
     if (packageJson.name === '@hia-uview/ui' && JSON.stringify(packageJson.exports) !== JSON.stringify(expectedUiExports)) {
-      issues.push('HIA-uView-UI must expose only the documented private runtime, type, static Easycom, and explicit style entries.');
+      issues.push('HIA-uView-UI must expose only the documented private runtime, explicit-local service, type, static Easycom, and explicit style entries.');
     }
 
     if (packageJson.name === '@hia-uview/ui' && packageJson.types !== './types/index.d.ts') {

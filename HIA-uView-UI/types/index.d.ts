@@ -578,51 +578,672 @@ export type USwitchEmits = {
 };
 
 /**
- * @lang zh-CN 描述 `UTabbar` 的有限、非路由 tab 项；没有图标、徽标、页面或原生 tabBar 生命周期语义。
- * @lang en Describes a finite, non-routing `UTabbar` item; it has no icon, badge, page, or native-tab-bar lifecycle semantics.
+ * @lang zh-CN 为 feedback scope 提供不可伪造的声明级身份；该 symbol 不导出，普通对象不能冒充由工厂创建的 scope。
+ * @lang en Gives feedback scopes an unforgeable declaration-level identity; this symbol is not exported, so an ordinary object cannot impersonate a factory-created scope.
+ */
+declare const U_FEEDBACK_SCOPE_BRAND: unique symbol;
+
+/**
+ * @lang zh-CN 描述调用方显式创建、拥有并释放的局部 feedback scope；它不代表全局单例、页面或路由。
+ * @lang en Describes a local feedback scope explicitly created, owned, and disposed by the caller; it represents no global singleton, page, or router.
+ */
+export interface UFeedbackScope {
+  /** 中文：仅用于声明级 nominal identity，不存在可写业务数据。English: Declaration-only nominal identity with no writable business data. */
+  readonly [U_FEEDBACK_SCOPE_BRAND]: true;
+  /** 中文：幂等释放当前 toast/modal host，并永久使本 scope 失效。English: Idempotently releases current toast/modal hosts and permanently invalidates this scope. */
+  dispose(): void;
+}
+
+/**
+ * @lang zh-CN 表示 feedback 命令可公开返回的有限失败原因。
+ * @lang en Represents the finite failure reasons publicly returned by a feedback command.
+ */
+export type UFeedbackRejectionReason =
+  | 'invalid-scope'
+  | 'host-unavailable'
+  | 'scope-disposed'
+  | 'stale-request'
+  | 'invalid-options';
+
+/**
+ * @lang zh-CN 描述同步被当前 scope host 接收的命令；它不证明用户已看到、确认或完成业务。
+ * @lang en Describes a command synchronously accepted by the current scoped host; it does not prove that a user saw, confirmed, or completed business work.
+ */
+export interface UFeedbackAcceptedResult {
+  /** 中文：成功判别值。English: Success discriminant. */
+  readonly accepted: true;
+  /** 中文：scope 内单调请求编号；首次 show 前的幂等 close/clear 可返回 0。English: Scope-monotonic request ID; idempotent close/clear before the first show may return 0. */
+  readonly requestId: number;
+}
+
+/**
+ * @lang zh-CN 描述没有派发或没有完成预期宿主操作的同步命令结果。
+ * @lang en Describes a synchronous command result that was not dispatched or did not complete the expected host operation.
+ */
+export interface UFeedbackRejectedResult {
+  /** 中文：失败判别值。English: Failure discriminant. */
+  readonly accepted: false;
+  /** 中文：不泄漏异常、平台或宿主细节的稳定原因。English: Stable reason that leaks no exception, platform, or host detail. */
+  readonly reason: UFeedbackRejectionReason;
+}
+
+/**
+ * @lang zh-CN 表示所有公开 feedback controller 操作的可判别同步结果。
+ * @lang en Represents the discriminated synchronous result of every public feedback-controller operation.
+ */
+export type UFeedbackCommandResult = UFeedbackAcceptedResult | UFeedbackRejectedResult;
+
+/**
+ * @lang zh-CN 表示 toast 可选择的有限视觉语气；它不编码业务结果。
+ * @lang en Represents the finite visual tones selectable by a toast; it encodes no business outcome.
+ */
+export type UToastTone = 'info' | 'success' | 'warning' | 'error';
+
+/**
+ * @lang zh-CN 表示 toast 在局部 host 内的有限呈现位置。
+ * @lang en Represents the finite presentation positions of a toast inside its local host.
+ */
+export type UToastPosition = 'top' | 'center' | 'bottom';
+
+/**
+ * @lang zh-CN 描述 toast 文字以外的有限呈现字段；该基础类型不接受 callback、URL、路由、请求或业务 payload。
+ * @lang en Describes finite toast-presentation fields other than copy; this base type accepts no callback, URL, routing, request, or business payload.
+ */
+export interface UToastPresentationOptions {
+  /** 中文：有限视觉语气。English: Finite visual tone. */
+  tone?: UToastTone;
+  /** 中文：tone 缺失时使用的迁移 alias。English: Migration alias used when tone is absent. */
+  type?: UToastTone;
+  /** 中文：是否组合静态 loading indicator；不表示异步任务存在。English: Whether to compose a static loading indicator; it does not imply an asynchronous task. */
+  loading?: boolean;
+  /** 中文：局部 host 内的有限位置。English: Finite position inside the local host. */
+  position?: UToastPosition;
+  /** 中文：0 表示保持到显式关闭，正值限制为 runtime 接受的有限毫秒数。English: Zero persists until explicit close; positive values are bounded milliseconds accepted by runtime. */
+  duration?: number;
+  /** 中文：非空时创建文字关闭 control。English: Creates a textual close control when nonempty. */
+  closeText?: string;
+}
+
+/**
+ * @lang zh-CN 描述 component-ref 与 service 共用的有限 toast 数据；类型层要求 `message` 或迁移 `title` 至少一个存在，runtime 继续拒绝空白文字。
+ * @lang en Describes finite toast data shared by component-ref and service entries; the type layer requires either `message` or migration `title`, while runtime still rejects blank copy.
+ */
+export type UToastOptions = UToastPresentationOptions & (
+  | {
+      /** 中文：优先的非空可见文字。English: Preferred nonempty visible copy. */
+      message: string;
+      /** 中文：message 已存在时可保留的迁移文字 alias。English: Migration copy alias that may remain when message exists. */
+      title?: string;
+    }
+  | {
+      /** 中文：此分支省略 message，使 title 成为必填迁移文字。English: This branch omits message so title becomes required migration copy. */
+      message?: never;
+      /** 中文：message 缺失时必填的迁移文字 alias。English: Required migration copy when message is absent. */
+      title: string;
+    }
+);
+
+/**
+ * @lang zh-CN 表示 toast 命令可接受的纯文字或有限 options。
+ * @lang en Represents plain copy or finite options accepted by a toast command.
+ */
+export type UToastInput = string | UToastOptions;
+
+/**
+ * @lang zh-CN 描述绑定单个显式 scope 的不可变 toast controller。
+ * @lang en Describes an immutable toast controller bound to one explicit scope.
+ */
+export interface UToastController {
+  /** 中文：显示普通有限 toast。English: Shows an ordinary finite toast. */
+  show(input: UToastInput): UFeedbackCommandResult;
+  /** 中文：关闭当前 toast；expected ID 可阻止陈旧路径关闭新请求。English: Closes the current toast; an expected ID can prevent a stale path from closing a newer request. */
+  close(expectedRequestId?: number): UFeedbackCommandResult;
+  /** 中文：以固定 success tone 显示。English: Shows with the fixed success tone. */
+  success(input: UToastInput): UFeedbackCommandResult;
+  /** 中文：以固定 error tone 显示。English: Shows with the fixed error tone. */
+  error(input: UToastInput): UFeedbackCommandResult;
+  /** 中文：以固定 warning tone 显示。English: Shows with the fixed warning tone. */
+  warning(input: UToastInput): UFeedbackCommandResult;
+  /** 中文：以固定 info tone 显示。English: Shows with the fixed info tone. */
+  info(input: UToastInput): UFeedbackCommandResult;
+  /** 中文：强制 loading 呈现，并在未指定 duration 时保持到显式关闭。English: Forces loading presentation and persists until explicit close when duration is omitted. */
+  loading(input: UToastInput): UFeedbackCommandResult;
+}
+
+/**
+ * @lang zh-CN 描述 modal 文字主体以外的有限 control 与 loading 呈现字段；它们不执行异步任务或业务回调。
+ * @lang en Describes finite control and loading-presentation fields other than modal body copy; they execute no asynchronous task or business callback.
+ */
+export interface UModalPresentationOptions {
+  /** 中文：确认 control 的调用方文字。English: Caller copy for the confirm control. */
+  confirmText?: string;
+  /** 中文：取消 control 的调用方文字。English: Caller copy for the cancel control. */
+  cancelText?: string;
+  /** 中文：是否显示有名称的确认 control。English: Whether to show a named confirm control. */
+  showConfirmButton?: boolean;
+  /** 中文：是否显示有名称的取消 control。English: Whether to show a named cancel control. */
+  showCancelButton?: boolean;
+  /** 中文：确认后是否保留 modal 并进入局部 loading，等待 clearLoading/close。English: Whether confirmation retains the modal in local loading until clearLoading/close. */
+  asyncClose?: boolean;
+  /** 中文：初始确认 loading 呈现；不启动任务。English: Initial confirmation-loading presentation; it starts no task. */
+  loading?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 modal service 可接收的有限纯文字呈现配置；类型层要求 title/content 至少一项存在，runtime 继续拒绝两项均为空白。
+ * @lang en Describes finite text-only presentation options accepted by the modal service; the type layer requires title or content, while runtime still rejects two blank values.
+ */
+export type UModalOptions = UModalPresentationOptions & (
+  | {
+      /** 中文：主本地化标题。English: Primary localized title. */
+      title: string;
+      /** 中文：可选本地化正文。English: Optional localized body. */
+      content?: string;
+    }
+  | {
+      /** 中文：此分支省略标题。English: This branch omits the title. */
+      title?: never;
+      /** 中文：标题缺失时必填的本地化正文。English: Required localized body when the title is absent. */
+      content: string;
+    }
+);
+
+/**
+ * @lang zh-CN 描述 `confirm` helper 必须提供的双 control 文本配置。
+ * @lang en Describes the dual-control copy required by the `confirm` helper.
+ */
+export type UModalConfirmOptions = UModalOptions & {
+  /** 中文：必需的非空确认文字。English: Required nonempty confirmation copy. */
+  confirmText: string;
+  /** 中文：必需的非空取消文字。English: Required nonempty cancellation copy. */
+  cancelText: string;
+};
+
+/**
+ * @lang zh-CN 描述绑定单个显式 scope 的不可变 modal controller。
+ * @lang en Describes an immutable modal controller bound to one explicit scope.
+ */
+export interface UModalController {
+  /** 中文：显示无 control 文字或有限 modal options。English: Shows control-free copy or finite modal options. */
+  show(input: string | UModalOptions): UFeedbackCommandResult;
+  /** 中文：显示具有调用方双标签的确认 modal。English: Shows a confirmation modal with two caller-supplied labels. */
+  confirm(input: UModalConfirmOptions): UFeedbackCommandResult;
+  /** 中文：关闭当前 modal，并可用 expected ID 防陈旧关闭。English: Closes the current modal with an optional expected-ID stale guard. */
+  close(expectedRequestId?: number): UFeedbackCommandResult;
+  /** 中文：清除当前确认 loading 而不结束请求。English: Clears current confirmation loading without ending the request. */
+  clearLoading(expectedRequestId?: number): UFeedbackCommandResult;
+}
+
+/**
+ * @lang zh-CN 创建独立、无默认全局注册的 feedback scope。
+ * @lang en Creates an independent feedback scope with no default global registration.
+ */
+export declare function createUFeedbackScope(): Readonly<UFeedbackScope>;
+
+/**
+ * @lang zh-CN 创建绑定必填显式 scope 的 toast controller；缺少 scope 在类型层即失败。
+ * @lang en Creates a toast controller bound to a required explicit scope; omitting the scope fails at the type layer.
+ */
+export declare function useToast(scope: UFeedbackScope): Readonly<UToastController>;
+
+/**
+ * @lang zh-CN 创建绑定必填显式 scope 的 modal controller；它不发现页面或执行 callback。
+ * @lang en Creates a modal controller bound to a required explicit scope; it discovers no page and executes no callback.
+ */
+export declare function useModal(scope: UFeedbackScope): Readonly<UModalController>;
+
+/**
+ * @lang zh-CN 表示 popup 的有限关闭来源。
+ * @lang en Represents the finite close sources of a popup.
+ */
+export type UPopupCloseReason = 'mask' | 'control' | 'programmatic';
+
+/**
+ * @lang zh-CN 描述 `UPopup` 的 caller-controlled 可见性、局部 placement 与文字 control。
+ * @lang en Describes caller-controlled visibility, local placement, and textual control of `UPopup`.
+ */
+export interface UPopupProps {
+  /** 中文：显式 HIA 可见性，存在时优先于两个迁移入口。English: Explicit HIA visibility, taking precedence over both migration entries when supplied. */
+  visible?: boolean;
+  /** 中文：受控迁移可见值。English: Controlled migration visibility value. */
+  modelValue?: boolean;
+  /** 中文：第二受控迁移可见别名。English: Second controlled migration visibility alias. */
+  show?: boolean;
+  /** 中文：有限局部 panel placement。English: Finite local panel placement. */
+  placement?: 'top' | 'bottom' | 'left' | 'right' | 'center';
+  /** 中文：可选调用方标题。English: Optional caller title. */
+  title?: string;
+  /** 中文：非空时创建显式关闭 control。English: Creates an explicit close control when nonempty. */
+  closeText?: string;
+  /** 中文：是否允许遮罩产生关闭意图。English: Whether the mask may produce close intent. */
+  maskClosable?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 popup 的有序受控更新、打开转换与带原因关闭事件。
+ * @lang en Describes ordered controlled updates, open transitions, and reasoned close events of a popup.
+ */
+export type UPopupEmits = {
+  /** 中文：请求调用方把受控可见值改为 false。English: Requests the caller to change controlled visibility to false. */
+  'update:modelValue': (value: boolean) => void;
+  /** 中文：仅报告挂载后的 false→true 转换。English: Reports only a post-mount false-to-true transition. */
+  open: () => void;
+  /** 中文：保留原始事件并追加有限关闭原因。English: Preserves the raw event and appends a finite close reason. */
+  close: (event: unknown, reason: UPopupCloseReason) => void;
+};
+
+/**
+ * @lang zh-CN 描述 `UPopup` 通过组件 ref 暴露的局部关闭意图。
+ * @lang en Describes the local close intent exposed by `UPopup` through a component ref.
+ */
+export interface UPopupExposed {
+  /** 中文：在当前可见时报告 programmatic 关闭，不直接改写 prop。English: Reports a programmatic close while currently visible without mutating a prop. */
+  close(): void;
+}
+
+/**
+ * @lang zh-CN 描述 caller-controlled 局部遮罩的有限外观与交互资格。
+ * @lang en Describes the finite appearance and interaction eligibility of a caller-controlled local mask.
+ */
+export interface UMaskProps {
+  /** 中文：显式可见性，存在时优先于 show。English: Explicit visibility, taking precedence over show when supplied. */
+  visible?: boolean;
+  /** 中文：迁移可见别名。English: Migration visibility alias. */
+  show?: boolean;
+  /** 中文：runtime 会收束的遮罩透明度。English: Mask opacity constrained by runtime. */
+  opacity?: number;
+  /** 中文：runtime 会收束的局部层级。English: Local layer constrained by runtime. */
+  layer?: number;
+  /** 中文：是否允许报告 click intent。English: Whether click intent may be reported. */
+  clickable?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 mask 唯一的原始点击意图事件。
+ * @lang en Describes the mask's sole raw click-intent event.
+ */
+export type UMaskEmits = {
+  /** 中文：调用方显式允许时的原始遮罩事件。English: Raw mask event when explicitly enabled by the caller. */
+  click: (event: unknown) => void;
+};
+
+/**
+ * @lang zh-CN 表示 transition 支持的有限 CSS 呈现模式。
+ * @lang en Represents finite CSS presentation modes supported by a transition.
+ */
+export type UTransitionMode = 'fade' | 'slide-up' | 'slide-down' | 'zoom';
+
+/**
+ * @lang zh-CN 描述无 timer、测量或全局生命周期的受控 CSS transition wrapper。
+ * @lang en Describes a controlled CSS-transition wrapper with no timer, measurement, or global lifecycle.
+ */
+export interface UTransitionProps {
+  /** 中文：显式可见性，存在时优先于 show。English: Explicit visibility, taking precedence over show when supplied. */
+  visible?: boolean;
+  /** 中文：受控迁移可见别名。English: Controlled migration visibility alias. */
+  show?: boolean;
+  /** 中文：有限 CSS 呈现模式。English: Finite CSS presentation mode. */
+  mode?: UTransitionMode;
+  /** 中文：runtime 收束为 0–1000ms 的持续时间。English: Duration constrained by runtime to 0–1000ms. */
+  duration?: number;
+}
+
+/**
+ * @lang zh-CN 描述 action-sheet 可读取的有限声明式条目。
+ * @lang en Describes a finite declarative item readable by an action sheet.
+ */
+export interface UActionSheetItem {
+  /** 中文：首选可见标签。English: Preferred visible label. */
+  label?: string;
+  /** 中文：label 的有限迁移别名。English: Finite migration alias for label. */
+  text?: string;
+  /** 中文：原样交还调用方的透明值。English: Transparent value returned unchanged to the caller. */
+  value?: unknown;
+  /** 中文：是否阻止该项产生选择事件。English: Whether the item is prevented from producing selection events. */
+  disabled?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 action-sheet 选择事件的稳定结构化 payload。
+ * @lang en Describes the stable structured payload of an action-sheet selection event.
+ */
+export interface UActionSheetSelectDetail {
+  /** 中文：条目的透明调用方值。English: Transparent caller value of the item. */
+  value: unknown;
+  /** 中文：规范化可见列表中的零基索引。English: Zero-based index in the normalized visible list. */
+  index: number;
+}
+
+/**
+ * @lang zh-CN 表示 action-sheet 的有限关闭来源。
+ * @lang en Represents finite close sources of an action sheet.
+ */
+export type UActionSheetCloseReason = 'mask' | 'cancel' | 'programmatic';
+
+/**
+ * @lang zh-CN 描述 caller-controlled action-sheet 的有限文字、条目与遮罩许可。
+ * @lang en Describes finite copy, items, and mask permission of a caller-controlled action sheet.
+ */
+export interface UActionSheetProps {
+  /** 中文：显式可见性，存在时优先于 modelValue。English: Explicit visibility, taking precedence over modelValue when supplied. */
+  visible?: boolean;
+  /** 中文：受控迁移可见值。English: Controlled migration visibility value. */
+  modelValue?: boolean;
+  /** 中文：可选调用方标题。English: Optional caller title. */
+  title?: string;
+  /** 中文：有限字符串或结构化 action 条目。English: Finite string or structured action items. */
+  items?: ReadonlyArray<string | UActionSheetItem>;
+  /** 中文：非空时创建取消 control。English: Creates a cancel control when nonempty. */
+  cancelText?: string;
+  /** 中文：是否允许遮罩请求关闭。English: Whether the mask may request closure. */
+  maskClosable?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 action-sheet 的有序选择、迁移点击和带原因关闭事件。
+ * @lang en Describes ordered selection, migration click, and reasoned close events of an action sheet.
+ */
+export type UActionSheetEmits = {
+  /** 中文：请求受控可见值变为 false。English: Requests controlled visibility to become false. */
+  'update:modelValue': (value: boolean) => void;
+  /** 中文：保留 raw event 并追加有限关闭来源。English: Preserves the raw event and appends a finite close source. */
+  close: (event: unknown, reason: UActionSheetCloseReason) => void;
+  /** 中文：首先发出的结构化透明选择值。English: Structured transparent selection value emitted first. */
+  select: (detail: UActionSheetSelectDetail) => void;
+  /** 中文：随后发出的上游熟悉可见项索引。English: Upstream-familiar visible-item index emitted afterward. */
+  click: (index: number) => void;
+};
+
+/**
+ * @lang zh-CN 描述 action-sheet 组件 ref 的有限 programmatic close。
+ * @lang en Describes finite programmatic close on an action-sheet component ref.
+ */
+export interface UActionSheetExposed {
+  /** 中文：只报告受控关闭意图，不执行条目或路由。English: Reports controlled close intent only and executes no item or routing. */
+  close(): void;
+}
+
+/**
+ * @lang zh-CN 描述 service 触发 modal 确认时追加的不可执行 metadata。
+ * @lang en Describes non-executable metadata appended when a service-triggered modal is confirmed.
+ */
+export interface UModalConfirmMetadata {
+  /** 中文：固定 service 来源。English: Fixed service source. */
+  readonly source: 'service';
+  /** 中文：当前 scope request ID。English: Current scoped request ID. */
+  readonly requestId: number;
+}
+
+/**
+ * @lang zh-CN 描述 modal 取消来源；service 事件包含 request ID，受控 mask 事件不包含。
+ * @lang en Describes modal cancellation sources; service events include a request ID, while a controlled mask event does not.
+ */
+export type UModalCancelMetadata =
+  | Readonly<{ source: 'service'; requestId: number; reason: 'cancel' | 'mask' }>
+  | Readonly<{ source: 'controlled'; reason: 'mask' }>;
+
+/**
+ * @lang zh-CN 描述 caller-controlled modal 与显式 opt-in service host 的完整 props。
+ * @lang en Describes complete props of a caller-controlled modal and explicit opt-in service host.
+ */
+export interface UModalProps {
+  /** 中文：显式可见性，存在时优先于 modelValue。English: Explicit visibility, taking precedence over modelValue when supplied. */
+  visible?: boolean;
+  /** 中文：受控迁移可见值。English: Controlled migration visibility value. */
+  modelValue?: boolean;
+  /** 中文：调用方本地化标题。English: Caller-localized title. */
+  title?: string;
+  /** 中文：default slot 缺失时的纯文字正文。English: Plain-text body used when a default slot is absent. */
+  content?: string;
+  /** 中文：是否呈现非空标题。English: Whether to present a nonempty title. */
+  showTitle?: boolean;
+  /** 中文：确认 control 文字。English: Confirmation-control copy. */
+  confirmText?: string;
+  /** 中文：取消 control 文字。English: Cancellation-control copy. */
+  cancelText?: string;
+  /** 中文：显式抑制或允许有名称的确认 control。English: Explicitly suppresses or permits a named confirmation control. */
+  showConfirmButton?: boolean;
+  /** 中文：显式抑制或允许有名称的取消 control。English: Explicitly suppresses or permits a named cancellation control. */
+  showCancelButton?: boolean;
+  /** 中文：确认时进入局部 loading，等待 clearLoading/关闭。English: Enters local loading on confirmation until clearLoading/closure. */
+  asyncClose?: boolean;
+  /** 中文：是否允许 mask 产生取消意图；保留上游熟悉拼写。English: Whether the mask may produce cancellation intent; retains familiar upstream spelling. */
+  maskCloseAble?: boolean;
+  /** 中文：由 createUFeedbackScope 创建的显式局部 scope。English: Explicit local scope created by createUFeedbackScope. */
+  serviceScope?: UFeedbackScope | null;
+  /** 中文：是否把当前实例注册为该 scope 的 modal host。English: Whether to register this instance as the modal host of that scope. */
+  serviceHost?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 modal 的受控写回与确认/取消 intent；service metadata 只作为可选第二参数追加。
+ * @lang en Describes controlled writeback and confirm/cancel intent of a modal; service metadata is appended only as an optional second argument.
+ */
+export type UModalEmits = {
+  /** 中文：请求受控可见值变为 false。English: Requests controlled visibility to become false. */
+  'update:modelValue': (value: boolean) => void;
+  /** 中文：确认原始事件与可选 service metadata。English: Confirmation raw event and optional service metadata. */
+  confirm: (event: unknown, metadata?: UModalConfirmMetadata) => void;
+  /** 中文：取消原始事件与可选有限来源 metadata。English: Cancellation raw event and optional finite source metadata. */
+  cancel: (event: unknown, metadata?: UModalCancelMetadata) => void;
+};
+
+/**
+ * @lang zh-CN 描述 modal ref 唯一公开的局部 loading 清理能力。
+ * @lang en Describes the sole public local-loading cleanup capability of a modal ref.
+ */
+export interface UModalExposed {
+  /** 中文：清除当前确认 loading，不关闭 modal 或完成任务。English: Clears current confirmation loading without closing the modal or completing a task. */
+  clearLoading(): void;
+}
+
+/**
+ * @lang zh-CN 描述 toast control 关闭命令式 session 时追加的有限 metadata。
+ * @lang en Describes finite metadata appended when a toast control closes an imperative session.
+ */
+export interface UToastCloseMetadata {
+  /** 中文：命令来自 component ref 或显式 service。English: Command originated from a component ref or explicit service. */
+  readonly source: 'component-ref' | 'service';
+  /** 中文：对应来源内的 request ID。English: Request ID within the corresponding source. */
+  readonly requestId: number;
+  /** 中文：当前唯一可见 control 关闭原因。English: Sole current visible-control close reason. */
+  readonly reason: 'control';
+}
+
+/**
+ * @lang zh-CN 描述 caller-controlled toast fallback、component-ref 默认值与显式 service host。
+ * @lang en Describes caller-controlled toast fallback, component-ref defaults, and an explicit service host.
+ */
+export interface UToastProps {
+  /** 中文：受控 fallback 是否可见。English: Whether the controlled fallback is visible. */
+  visible?: boolean;
+  /** 中文：受控 fallback 可见文字。English: Visible copy of the controlled fallback. */
+  message?: string;
+  /** 中文：是否组合静态 loading indicator。English: Whether to compose a static loading indicator. */
+  loading?: boolean;
+  /** 中文：优先有限视觉语气。English: Preferred finite visual tone. */
+  tone?: UToastTone;
+  /** 中文：tone 缺失时的迁移 alias。English: Migration alias used when tone is absent. */
+  type?: UToastTone;
+  /** 中文：局部 host 内有限位置。English: Finite position inside the local host. */
+  position?: UToastPosition;
+  /** 中文：component-ref show 的默认生命周期披露；受控 fallback 不自动关闭。English: Default lifecycle disclosure for component-ref show; controlled fallback does not auto-close. */
+  duration?: number;
+  /** 中文：非空时创建文字关闭 control。English: Creates a textual close control when nonempty. */
+  closeText?: string;
+  /** 中文：由 createUFeedbackScope 创建的显式局部 scope。English: Explicit local scope created by createUFeedbackScope. */
+  serviceScope?: UFeedbackScope | null;
+  /** 中文：是否把当前实例注册为该 scope 的 toast host。English: Whether to register this instance as the toast host of that scope. */
+  serviceHost?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 toast 唯一公开事件；受控路径仅有 raw event，命令式路径追加 metadata。
+ * @lang en Describes the sole public toast event; the controlled path has only a raw event, while the imperative path appends metadata.
+ */
+export type UToastEmits = {
+  /** 中文：有名称 control 的关闭 intent。English: Close intent from a named control. */
+  close: (event: unknown, metadata?: UToastCloseMetadata) => void;
+};
+
+/**
+ * @lang zh-CN 描述 mounted toast ref 的有限 imperative API；它与 scoped service controller 分层。
+ * @lang en Describes the finite imperative API of a mounted toast ref; it remains layered separately from the scoped service controller.
+ */
+export interface UToastExposed {
+  /** 中文：显示有限文字/options；非法输入在 runtime 安全 no-op。English: Shows finite copy/options; invalid runtime input is a safe no-op. */
+  show(options: UToastInput): void;
+  /** 中文：幂等关闭当前命令式 session。English: Idempotently closes the current imperative session. */
+  close(): void;
+  /** 中文：close 的同一幂等 alias。English: Same idempotent alias as close. */
+  hide(): void;
+}
+
+/**
+ * @lang zh-CN 描述纯展示、非路由 navbar 的 caller-owned 文本和可用性。
+ * @lang en Describes caller-owned copy and availability of a presentation-only, non-routing navbar.
+ */
+export interface UNavbarProps {
+  /** 中文：是否呈现局部导航结构。English: Whether to present the local navigation structure. */
+  visible?: boolean;
+  /** 中文：调用方标题。English: Caller title. */
+  title?: string;
+  /** 中文：优先左侧 control 文字。English: Preferred left-control copy. */
+  leftText?: string;
+  /** 中文：leftText 为空时的迁移 alias。English: Migration alias used when leftText is empty. */
+  backText?: string;
+  /** 中文：是否允许内建左侧文字 control；它不执行返回。English: Whether to allow the built-in left text control; it performs no back navigation. */
+  isBack?: boolean;
+  /** 中文：右侧 control 文字。English: Right-control copy. */
+  rightText?: string;
+  /** 中文：是否阻止两个内建 control 的点击 intent。English: Whether to block click intent from both built-in controls. */
+  disabled?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 navbar 左右两侧的原始、无路由点击意图。
+ * @lang en Describes raw, non-routing click intents from both navbar sides.
+ */
+export type UNavbarEmits = {
+  /** 中文：内建左侧 control 原始事件。English: Raw event from the built-in left control. */
+  'left-click': (event: unknown) => void;
+  /** 中文：内建右侧 control 原始事件。English: Raw event from the built-in right control. */
+  'right-click': (event: unknown) => void;
+};
+
+/**
+ * @lang zh-CN 描述 `UTabbar` 的有限、非路由 tab 项；没有页面或原生 tabBar 生命周期语义。
+ * @lang en Describes a finite, non-routing `UTabbar` item with no page or native-tab-bar lifecycle semantics.
  */
 export interface UTabbarItem {
   /** 中文：可见标签。English: Visible label. */
   label?: string;
-  /** 中文：`label` 的既有文本 alias。English: Existing text alias for `label`. */
+  /** 中文：`label` 的有限文本 alias。English: Finite text alias for `label`. */
   text?: string;
-  /** 中文：本地选中键；未提供时组件回退到 label/text/index。English: Local selected key; the component falls back to label/text/index when absent. */
+  /** 中文：本地选中键；未提供时回退到 label/index。English: Local selected key; falls back to label/index when absent. */
   value?: UChoiceValue;
   /** 中文：是否阻止该本地项的选择。English: Whether to prevent selection of this local item. */
   disabled?: boolean;
 }
 
 /**
- * @lang zh-CN 描述 `UTabbar` 的局部可见性和受控本地选择；`visible` 显式提供时优先于 `show`。
- * @lang en Describes local visibility and controlled local selection of `UTabbar`; explicit `visible` takes precedence over `show`.
+ * @lang zh-CN 描述 `UTabbar` 的局部可见性和受控本地选择；它不操作 router 或 native tabBar。
+ * @lang en Describes local visibility and controlled local selection of `UTabbar`; it manipulates neither router nor native tab bar.
  */
 export interface UTabbarProps {
-  /** 中文：既有 HIA 显式可见性 alias。English: Existing explicit HIA visibility alias. */
+  /** 中文：显式 HIA 可见性，存在时优先于 show。English: Explicit HIA visibility, taking precedence over show when supplied. */
   visible?: boolean;
-  /** 中文：本地输出的上游熟悉可见性开关；不调用 native tabBar API。English: Upstream-familiar visibility control for local output; it calls no native tab-bar API. */
+  /** 中文：本地输出的迁移可见性开关。English: Migration visibility control for local output. */
   show?: boolean;
-  /** 中文：调用方拥有的局部选中值，默认运行时值为 0。English: Caller-owned local selected value, with runtime default 0. */
+  /** 中文：调用方拥有的局部选中值。English: Caller-owned local selected value. */
   modelValue?: UChoiceValue;
-  /** 中文：调用方声明的有限静态 tab 项。English: Finite static tab items declared by the caller. */
+  /** 中文：优先有限静态 tab 项。English: Preferred finite static tab items. */
   items?: ReadonlyArray<string | UTabbarItem>;
+  /** 中文：items 为空时使用的有限迁移列表。English: Finite migration list used when items is empty. */
+  list?: ReadonlyArray<string | UTabbarItem>;
 }
 
 /**
- * @lang zh-CN 描述 `UNoticeBar` 的 caller-controlled 横幅表面；它不是全局消息队列或自动滚动服务。
- * @lang en Describes the caller-controlled banner surface of `UNoticeBar`; it is neither a global message queue nor an auto-scrolling service.
+ * @lang zh-CN 描述 tabbar 严格 update→change 的透明局部值事件。
+ * @lang en Describes transparent local-value events of a tabbar in strict update-to-change order.
+ */
+export type UTabbarEmits = {
+  /** 中文：下一 caller-owned 本地值。English: Next caller-owned local value. */
+  'update:modelValue': (value: UChoiceValue) => void;
+  /** 中文：与受控更新相同的下一值。English: Same next value as the controlled update. */
+  change: (value: UChoiceValue) => void;
+};
+
+/**
+ * @lang zh-CN 描述 tabs 可读取的有限、非路由条目。
+ * @lang en Describes a finite non-routing item readable by tabs.
+ */
+export interface UTabsItem extends UTabbarItem {
+  /** 中文：label/text 为空时使用的熟悉名称 alias。English: Familiar name alias used when label/text is empty. */
+  name?: string;
+}
+
+/**
+ * @lang zh-CN 描述受控 tabs 的首选/迁移列表与 current 选择入口。
+ * @lang en Describes preferred/migration lists and the current-selection entry of controlled tabs.
+ */
+export interface UTabsProps {
+  /** 中文：current 未提供时使用的受控选中值。English: Controlled selected value used when current is absent. */
+  modelValue?: UChoiceValue;
+  /** 中文：优先有限静态 tabs。English: Preferred finite static tabs. */
+  items?: ReadonlyArray<string | UTabsItem>;
+  /** 中文：items 为空时使用的迁移列表。English: Migration list used when items is empty. */
+  list?: ReadonlyArray<string | UTabsItem>;
+  /** 中文：迁移索引或透明标识值；存在时优先决定活动项。English: Migration index or transparent identity value; when supplied, it determines the active item first. */
+  current?: UChoiceValue;
+}
+
+/**
+ * @lang zh-CN 描述 tabs 严格 update→change 的透明局部值事件。
+ * @lang en Describes transparent local-value events of tabs in strict update-to-change order.
+ */
+export type UTabsEmits = UTabbarEmits;
+
+/**
+ * @lang zh-CN 描述 tabs ref 的有限、实例局部选择命令。
+ * @lang en Describes the finite instance-local selection command of a tabs ref.
+ */
+export interface UTabsExposed {
+  /** 中文：按有效数字索引或严格字符串值请求选择；无效/禁用/当前项无事件。English: Requests selection by a valid numeric index or strict string value; invalid, disabled, or current items emit nothing. */
+  clickTab(candidate: UChoiceValue): void;
+}
+
+/**
+ * @lang zh-CN 描述 `UNoticeBar` 的 caller-controlled 非滚动横幅表面。
+ * @lang en Describes the caller-controlled non-scrolling banner surface of `UNoticeBar`.
  */
 export interface UNoticeBarProps {
-  /** 中文：既有 HIA 显式可见性 alias。English: Existing explicit HIA visibility alias. */
+  /** 中文：显式 HIA 可见性，存在时优先于 show。English: Explicit HIA visibility, taking precedence over show when supplied. */
   visible?: boolean;
-  /** 中文：本地输出的上游熟悉可见性开关。English: Upstream-familiar visibility control for local output. */
+  /** 中文：本地输出的迁移可见性开关。English: Migration visibility control for local output. */
   show?: boolean;
-  /** 中文：调用方拥有的横幅正文。English: Caller-owned banner body. */
+  /** 中文：list 为空时使用的调用方正文。English: Caller body copy used when list is empty. */
   text?: string;
-  /** 中文：有限展示 tone；未知值回退到 info。English: Finite presentation tone; unknown values fall back to info. */
-  tone?: 'info' | 'success' | 'warning' | 'error' | string;
-  /** 中文：非空时显示 close control；组件不生成默认本地化文字。English: Shows a close control when nonempty; the component generates no default localized copy. */
+  /** 中文：调用方拥有且不会自动轮播的有限文字列表。English: Caller-owned finite copy list that is never auto-rotated. */
+  list?: ReadonlyArray<string | number>;
+  /** 中文：当前列表索引或数字字符串；runtime 对无效值回退 0。English: Current list index or numeric string; runtime falls back to 0 for invalid values. */
+  current?: UChoiceValue;
+  /** 中文：有限展示 tone。English: Finite presentation tone. */
+  tone?: UToastTone;
+  /** 中文：非空时显示 close control。English: Shows a close control when nonempty. */
   closeText?: string;
 }
+
+/**
+ * @lang zh-CN 描述 notice-bar 正文点击的稳定索引与无写回关闭 intent。
+ * @lang en Describes stable-index body clicks and non-writeback close intent of a notice bar.
+ */
+export type UNoticeBarEmits = {
+  /** 中文：原始正文点击事件与当前投影索引。English: Raw body-click event and current projected index. */
+  click: (event: unknown, index: number) => void;
+  /** 中文：原始关闭 control 事件。English: Raw close-control event. */
+  close: (event: unknown) => void;
+};
 
 /**
  * @lang zh-CN 描述 `UPicker` 可读取的 option 结构；额外字段保持调用方拥有，并且 `rangeKey` 只读取一个浅层自有字段。
@@ -1424,10 +2045,46 @@ export type URadioGroupInstance = InstanceType<typeof URadioGroup>;
 export declare const USwitch: DefineComponent<USwitchProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, USwitchEmits>;
 /** @lang zh-CN USwitch 的公开组件实例类型。 @lang en Public component-instance type of USwitch. */
 export type USwitchInstance = InstanceType<typeof USwitch>;
+/** @lang zh-CN caller-controlled 局部 popup 组件。 @lang en Caller-controlled local popup component. */
+export declare const UPopup: UViewTypedComponent<UPopupProps, UPopupExposed, UPopupEmits>;
+/** @lang zh-CN UPopup 的公开实例类型，包含 programmatic close。 @lang en Public UPopup instance type including programmatic close. */
+export type UPopupInstance = InstanceType<typeof UPopup>;
+/** @lang zh-CN caller-controlled 局部 mask 组件。 @lang en Caller-controlled local mask component. */
+export declare const UMask: UViewTypedComponent<UMaskProps, {}, UMaskEmits>;
+/** @lang zh-CN UMask 的公开组件实例类型。 @lang en Public component-instance type of UMask. */
+export type UMaskInstance = InstanceType<typeof UMask>;
+/** @lang zh-CN 有限 CSS transition wrapper。 @lang en Finite CSS-transition wrapper. */
+export declare const UTransition: UViewTypedComponent<UTransitionProps>;
+/** @lang zh-CN UTransition 的公开组件实例类型。 @lang en Public component-instance type of UTransition. */
+export type UTransitionInstance = InstanceType<typeof UTransition>;
+/** @lang zh-CN caller-controlled 有限 action-sheet。 @lang en Caller-controlled finite action sheet. */
+export declare const UActionSheet: UViewTypedComponent<UActionSheetProps, UActionSheetExposed, UActionSheetEmits>;
+/** @lang zh-CN UActionSheet 的公开实例类型，包含 programmatic close。 @lang en Public UActionSheet instance type including programmatic close. */
+export type UActionSheetInstance = InstanceType<typeof UActionSheet>;
+/** @lang zh-CN caller-controlled 且可显式承接 scoped service 的 modal。 @lang en Caller-controlled modal that may explicitly host a scoped service. */
+export declare const UModal: UViewTypedComponent<UModalProps, UModalExposed, UModalEmits>;
+/** @lang zh-CN UModal 的公开实例类型，包含 clearLoading。 @lang en Public UModal instance type including clearLoading. */
+export type UModalInstance = InstanceType<typeof UModal>;
+/** @lang zh-CN caller-controlled、component-ref 与显式 scoped service toast。 @lang en Caller-controlled, component-ref, and explicit scoped-service toast. */
+export declare const UToast: UViewTypedComponent<UToastProps, UToastExposed, UToastEmits>;
+/** @lang zh-CN UToast 的公开实例类型，包含 show/close/hide。 @lang en Public UToast instance type including show/close/hide. */
+export type UToastInstance = InstanceType<typeof UToast>;
+/** @lang zh-CN 纯展示、非路由 navbar。 @lang en Presentation-only non-routing navbar. */
+export declare const UNavbar: UViewTypedComponent<UNavbarProps, {}, UNavbarEmits>;
+/** @lang zh-CN UNavbar 的公开组件实例类型。 @lang en Public component-instance type of UNavbar. */
+export type UNavbarInstance = InstanceType<typeof UNavbar>;
 /** @lang zh-CN 局部、非路由 tabbar 组件。 @lang en Local non-routing tabbar component. */
-export declare const UTabbar: DefineComponent<UTabbarProps>;
+export declare const UTabbar: UViewTypedComponent<UTabbarProps, {}, UTabbarEmits>;
+/** @lang zh-CN UTabbar 的公开组件实例类型。 @lang en Public component-instance type of UTabbar. */
+export type UTabbarInstance = InstanceType<typeof UTabbar>;
+/** @lang zh-CN 有限、非路由 tabs 组件。 @lang en Finite non-routing tabs component. */
+export declare const UTabs: UViewTypedComponent<UTabsProps, UTabsExposed, UTabsEmits>;
+/** @lang zh-CN UTabs 的公开实例类型，包含 clickTab。 @lang en Public UTabs instance type including clickTab. */
+export type UTabsInstance = InstanceType<typeof UTabs>;
 /** @lang zh-CN caller-controlled 非滚动横幅组件。 @lang en Caller-controlled non-scrolling banner component. */
-export declare const UNoticeBar: DefineComponent<UNoticeBarProps>;
+export declare const UNoticeBar: UViewTypedComponent<UNoticeBarProps, {}, UNoticeBarEmits>;
+/** @lang zh-CN UNoticeBar 的公开组件实例类型。 @lang en Public component-instance type of UNoticeBar. */
+export type UNoticeBarInstance = InstanceType<typeof UNoticeBar>;
 /** @lang zh-CN 有限单列/多列本地 picker 组件。 @lang en Finite single-/multi-column local picker component. */
 export declare const UPicker: DefineComponent<UPickerProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, UPickerEmits>;
 /** @lang zh-CN UPicker 的公开组件实例类型。 @lang en Public component-instance type of UPicker. */
@@ -1473,7 +2130,6 @@ export declare const UTag: DefineComponent<UTagProps>;
  * @lang zh-CN 以下运行时命名导出均已存在，但尚未承诺逐 prop、事件 payload、slot props、expose signature、父子 context 或全局 bus 的完整 TypeScript 形状。
  * @lang en The following runtime named exports already exist, but do not yet promise complete TypeScript shapes for every prop, event payload, slot prop, expose signature, parent-child context, or global bus.
  */
-export declare const UActionSheet: UViewComponent;
 export declare const UActionSheetItem: UViewComponent;
 export declare const UAvatar: UViewComponent;
 export declare const UAvatarCropper: UViewComponent;
@@ -1515,16 +2171,12 @@ export declare const ULoading: UViewComponent;
 export declare const ULoadingPage: UViewComponent;
 export declare const ULoadingPopup: UViewComponent;
 export declare const ULoadmore: UViewComponent;
-export declare const UMask: UViewComponent;
 export declare const UMessageInput: UViewComponent;
-export declare const UModal: UViewComponent;
 export declare const UNavBar: UViewComponent;
-export declare const UNavbar: UViewComponent;
 export declare const UNoNetwork: UViewComponent;
 export declare const UNotice: UViewComponent;
 export declare const UNumberKeyboard: UViewComponent;
 export declare const UPagination: UViewComponent;
-export declare const UPopup: UViewComponent;
 export declare const UReadMore: UViewComponent;
 export declare const URootPortal: UViewComponent;
 export declare const URow: UViewComponent;
@@ -1542,17 +2194,14 @@ export declare const USubsection: UViewComponent;
 export declare const USwipeAction: UViewComponent;
 export declare const USwiper: UViewComponent;
 export declare const UTable: UViewComponent;
-export declare const UTabs: UViewComponent;
 export declare const UTabsSwiper: UViewComponent;
 export declare const UTd: UViewComponent;
 export declare const UText: UViewComponent;
 export declare const UTh: UViewComponent;
 export declare const UTimeLine: UViewComponent;
 export declare const UTimeLineItem: UViewComponent;
-export declare const UToast: UViewComponent;
 export declare const UTopTips: UViewComponent;
 export declare const UTr: UViewComponent;
-export declare const UTransition: UViewComponent;
 export declare const UValidationMessage: UViewComponent;
 export declare const UVerificationCode: UViewComponent;
 export declare const UWaterfall: UViewComponent;

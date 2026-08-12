@@ -5,6 +5,7 @@
  */
 
 import UView, {
+  UActionSheet,
   UCalendar,
   UCheckbox,
   UCheckboxGroup,
@@ -15,9 +16,13 @@ import UView, {
   UFormItem,
   UInput,
   UAlertTips,
+  UMask,
+  UModal,
+  UNavbar,
   UNoticeBar,
   UNumberBox,
   UPicker,
+  UPopup,
   URadio,
   URadioGroup,
   URate,
@@ -26,11 +31,21 @@ import UView, {
   USlider,
   USwitch,
   UTabbar,
+  UTabs,
   UTag,
   UTextarea,
+  UToast,
+  UTransition,
   UUpload,
+  createUFeedbackScope,
   normalizeULocale,
+  useModal,
+  useToast,
   useULocale,
+  type UActionSheetInstance,
+  type UActionSheetItem,
+  type UActionSheetProps,
+  type UActionSheetSelectDetail,
   type UCalendarChangeDetail,
   type UCalendarInstance,
   type UCalendarProps,
@@ -56,6 +71,20 @@ import UView, {
   type UFormValidationError,
   type UInputInstance,
   type UInputProps,
+  type UFeedbackCommandResult,
+  type UFeedbackScope,
+  type UMaskInstance,
+  type UMaskProps,
+  type UModalConfirmMetadata,
+  type UModalConfirmOptions,
+  type UModalController,
+  type UModalInstance,
+  type UModalOptions,
+  type UModalProps,
+  type UNavbarInstance,
+  type UNavbarProps,
+  type UNoticeBarInstance,
+  type UNoticeBarProps,
   type UNumberBoxInstance,
   type UNumberBoxProps,
   type UPickerCancelDetail,
@@ -64,6 +93,8 @@ import UView, {
   type UPickerInstance,
   type UPickerOption,
   type UPickerProps,
+  type UPopupInstance,
+  type UPopupProps,
   type URadioGroupInstance,
   type URadioGroupProps,
   type URadioInstance,
@@ -81,16 +112,34 @@ import UView, {
   type USwitchInstance,
   type USwitchProps,
   type UTabbarItem,
+  type UTabbarInstance,
+  type UTabbarProps,
+  type UTabsInstance,
+  type UTabsItem,
+  type UTabsProps,
   type UAlertTipsProps,
   type UTagProps,
   type UTextareaInstance,
   type UTextareaProps,
+  type UToastController,
+  type UToastInstance,
+  type UToastOptions,
+  type UToastProps,
+  type UTransitionInstance,
+  type UTransitionProps,
   type UUploadAdapter,
   type UUploadAdapterState,
   type UUploadFile,
   type UUploadInstance,
   type UUploadProps
 } from '@hia-uview/ui';
+// <lang><zh-CN>纯 service 子路径必须解析为与根入口相同的显式 scope API；别名避免把两条入口误当作两个实现。</zh-CN><en>The pure service subpath must resolve to the same explicit-scope API as the root entry; aliases avoid mistaking the two entries for separate implementations.</en></lang>
+import {
+  createUFeedbackScope as createSubpathFeedbackScope,
+  useModal as useSubpathModal,
+  useToast as useSubpathToast,
+  type UFeedbackCommandResult as SubpathFeedbackCommandResult
+} from '@hia-uview/ui/services';
 import '@hia-uview/ui/global';
 import type { GlobalComponents, Plugin } from 'vue';
 
@@ -116,6 +165,46 @@ const tabItems: ReadonlyArray<UTabbarItem> = [
   { label: 'Home', value: 0 },
   { disabled: true, text: 'Profile', value: 'profile' }
 ];
+
+// <lang><zh-CN>P68 overlay/navigation 正例覆盖 caller-controlled alias、有限值和透明条目，不引入路由、页面或业务 command。</zh-CN><en>P68 overlay/navigation positives cover caller-controlled aliases, finite values, and transparent items without introducing a router, page, or business command.</en></lang>
+const popupProps: UPopupProps = { closeText: 'Close', maskClosable: true, modelValue: true, placement: 'bottom', show: false, title: 'Details' };
+const maskProps: UMaskProps = { clickable: true, layer: 1000, opacity: 0.56, show: true };
+const transitionProps: UTransitionProps = { duration: 180, mode: 'slide-up', visible: true };
+const actionSheetItems: ReadonlyArray<string | UActionSheetItem> = [
+  'Default action',
+  { disabled: false, label: 'Local action', value: { id: 'caller-owned' } }
+];
+const actionSheetProps: UActionSheetProps = { cancelText: 'Cancel', items: actionSheetItems, maskClosable: true, modelValue: true, title: 'Actions' };
+const actionSheetSelection: UActionSheetSelectDetail = { index: 1, value: { id: 'caller-owned' } };
+const navbarProps: UNavbarProps = { backText: 'Back', disabled: false, isBack: true, rightText: 'Done', title: 'Local page', visible: true };
+const tabbarProps: UTabbarProps = { items: tabItems, list: [{ label: 'Fallback', value: 'fallback' }], modelValue: 0, show: true };
+const tabsItems: ReadonlyArray<string | UTabsItem> = ['Overview', { disabled: false, name: 'Details', value: 'details' }];
+const tabsProps: UTabsProps = { current: 0, items: tabsItems, modelValue: 'details' };
+const noticeBarProps: UNoticeBarProps = { closeText: 'Dismiss', current: '1', list: ['First', 'Second'], show: true, tone: 'info' };
+
+// <lang><zh-CN>显式 feedback scope 同时服务 component host props 与两个 controller；它不是自动全局 singleton。</zh-CN><en>The explicit feedback scope serves both component-host props and both controllers; it is not an automatic global singleton.</en></lang>
+const feedbackScope: Readonly<UFeedbackScope> = createUFeedbackScope();
+// <lang><zh-CN>子路径创建的 scope 必须可被根入口 controller 消费，证明类型表面没有分裂。</zh-CN><en>A scope created through the subpath must be consumable by root-entry controllers, proving that the type surface is not split.</en></lang>
+const subpathFeedbackScope: Readonly<UFeedbackScope> = createSubpathFeedbackScope();
+const toastProps: UToastProps = { closeText: 'Dismiss', duration: 0, message: 'Saved', position: 'bottom', serviceHost: true, serviceScope: feedbackScope, tone: 'success', visible: true };
+const modalProps: UModalProps = { asyncClose: true, cancelText: 'Cancel', confirmText: 'Continue', content: 'Review this action', maskCloseAble: true, modelValue: true, serviceHost: true, serviceScope: feedbackScope, showTitle: true, title: 'Confirm' };
+const toastOptions: UToastOptions = { closeText: 'Dismiss', duration: 3000, loading: false, message: 'Saved', position: 'center', tone: 'success' };
+const modalOptions: UModalOptions = { cancelText: 'Cancel', confirmText: 'Continue', content: 'Review this action', showCancelButton: true, showConfirmButton: true, title: 'Confirm' };
+const modalConfirmOptions: UModalConfirmOptions = { cancelText: 'Cancel', confirmText: 'Continue', content: 'Review this action' };
+const toastController: Readonly<UToastController> = useToast(feedbackScope);
+const modalController: Readonly<UModalController> = useModal(feedbackScope);
+// <lang><zh-CN>子路径 controller 仍绑定调用方显式 scope，并返回同一可判别结果 union。</zh-CN><en>Subpath controllers remain bound to a caller-explicit scope and return the same discriminated result union.</en></lang>
+const subpathToastResult: SubpathFeedbackCommandResult = useSubpathToast(subpathFeedbackScope).show('Subpath toast');
+const subpathModalResult: SubpathFeedbackCommandResult = useSubpathModal(subpathFeedbackScope).show('Subpath modal');
+
+// <lang><zh-CN>Controller 正例锁定有限 helper、expected request guard 与可判别同步结果，不把 accepted 误作用户完成。</zh-CN><en>Controller positives lock finite helpers, expected-request guards, and discriminated synchronous results without mistaking accepted for user completion.</en></lang>
+const toastShowResult: UFeedbackCommandResult = toastController.show(toastOptions);
+const toastLoadingResult: UFeedbackCommandResult = toastController.loading({ message: 'Working' });
+const toastCloseResult: UFeedbackCommandResult = toastController.close(toastShowResult.accepted ? toastShowResult.requestId : undefined);
+const modalShowResult: UFeedbackCommandResult = modalController.show(modalOptions);
+const modalConfirmResult: UFeedbackCommandResult = modalController.confirm(modalConfirmOptions);
+const modalClearResult: UFeedbackCommandResult = modalController.clearLoading(modalConfirmResult.accepted ? modalConfirmResult.requestId : undefined);
+const modalCloseResult: UFeedbackCommandResult = modalController.close(modalShowResult.accepted ? modalShowResult.requestId : undefined);
 
 // <lang><zh-CN>验证单列 picker option 是受限的 local value/label/disabled 数据，而非日期或地区模型。</zh-CN><en>Verifies that a single-column picker option is constrained local value/label/disabled data rather than a date or region model.</en></lang>
 const pickerOptions: ReadonlyArray<UPickerOption> = [
@@ -286,6 +375,16 @@ declare const numberBoxRef: UNumberBoxInstance;
 declare const rateRef: URateInstance;
 declare const sliderRef: USliderInstance;
 declare const uploadRef: UUploadInstance;
+declare const popupRef: UPopupInstance;
+declare const maskRef: UMaskInstance;
+declare const transitionRef: UTransitionInstance;
+declare const actionSheetRef: UActionSheetInstance;
+declare const modalRef: UModalInstance;
+declare const toastRef: UToastInstance;
+declare const navbarRef: UNavbarInstance;
+declare const tabbarRef: UTabbarInstance;
+declare const tabsRef: UTabsInstance;
+declare const noticeBarRef: UNoticeBarInstance;
 
 // <lang><zh-CN>UForm InstanceType 必须暴露七个精确方法，并保持 validate/validateField 始终返回 Promise<boolean>。</zh-CN><en>UForm InstanceType must expose seven precise methods while validate/validateField always return Promise<boolean>.</en></lang>
 const allValidationResult: Promise<boolean> = formRef.validate((valid, errors) => {
@@ -355,6 +454,37 @@ uploadRef.$emit('select', { event: { type: 'click' }, remainingSlots: 2 });
 uploadRef.$emit('preview', { event: { type: 'click' }, file: uploadFiles[0] });
 uploadRef.$emit('update:modelValue', [...uploadFiles]);
 uploadRef.$emit('adapter-state', uploadPendingState);
+
+// <lang><zh-CN>P68 实例正例锁定 raw event 首参、有限第二参、update→intent payload 与 component-ref exposed 方法。</zh-CN><en>P68 instance positives lock raw-event first arguments, finite second arguments, update-to-intent payloads, and component-ref exposed methods.</en></lang>
+const localClickEvent: unknown = { type: 'click' };
+popupRef.$emit('update:modelValue', false);
+popupRef.$emit('open');
+popupRef.$emit('close', localClickEvent, 'mask');
+popupRef.close();
+maskRef.$emit('click', localClickEvent);
+actionSheetRef.$emit('select', actionSheetSelection);
+actionSheetRef.$emit('click', 1);
+actionSheetRef.$emit('close', localClickEvent, 'cancel');
+actionSheetRef.close();
+const modalConfirmMetadata: UModalConfirmMetadata = { requestId: 7, source: 'service' };
+modalRef.$emit('update:modelValue', false);
+modalRef.$emit('confirm', localClickEvent, modalConfirmMetadata);
+modalRef.$emit('cancel', localClickEvent, { reason: 'mask', source: 'controlled' });
+modalRef.clearLoading();
+toastRef.$emit('close', localClickEvent, { reason: 'control', requestId: 8, source: 'component-ref' });
+toastRef.show(toastOptions);
+toastRef.close();
+toastRef.hide();
+navbarRef.$emit('left-click', localClickEvent);
+navbarRef.$emit('right-click', localClickEvent);
+tabbarRef.$emit('update:modelValue', 'profile');
+tabbarRef.$emit('change', 'profile');
+tabsRef.$emit('update:modelValue', 'details');
+tabsRef.$emit('change', 'details');
+tabsRef.clickTab(0);
+tabsRef.clickTab('details');
+noticeBarRef.$emit('click', localClickEvent, 1);
+noticeBarRef.$emit('close', localClickEvent);
 
 // <lang><zh-CN>invalid-rule 是 runtime 对非法 pattern 配置返回的公开代码，必须可由消费方穷举处理。</zh-CN><en>invalid-rule is the public code returned by runtime for an invalid pattern configuration and must be available for exhaustive consumer handling.</en></lang>
 const invalidRuleError: UFormValidationError = {
@@ -449,6 +579,64 @@ const invalidUploadFile: UUploadFile = true;
 // @ts-expect-error <lang><zh-CN>UUpload 没有公开 chooser、adapter 或文件操作 expose 方法。</zh-CN><en>UUpload exposes no chooser, adapter, or file-operation method.</en></lang>
 uploadRef.select();
 
+// @ts-expect-error <lang><zh-CN>useToast 必须绑定调用方显式创建的 scope，不存在隐式全局默认值。</zh-CN><en>UseToast must bind a caller-explicit scope; there is no implicit global default.</en></lang>
+useToast();
+// @ts-expect-error <lang><zh-CN>useModal 同样要求显式 scope，不自动发现页面 host。</zh-CN><en>UseModal likewise requires an explicit scope and does not discover a page host.</en></lang>
+useModal();
+const forgedFeedbackScopeProps: UModalProps = {
+  // @ts-expect-error <lang><zh-CN>只有 createUFeedbackScope 返回值具备未导出的 nominal identity。</zh-CN><en>Only a createUFeedbackScope result has the unexported nominal identity.</en></lang>
+  serviceScope: { dispose: () => undefined }
+};
+const invalidToastCallback: UToastOptions = {
+  // @ts-expect-error <lang><zh-CN>toast options 不接受或执行 callback。</zh-CN><en>Toast options neither accept nor execute a callback.</en></lang>
+  callback: () => undefined,
+  message: 'Unsafe extension'
+};
+const invalidModalCallback: UModalOptions = {
+  // @ts-expect-error <lang><zh-CN>modal options 不承载业务 callback。</zh-CN><en>Modal options do not carry a business callback.</en></lang>
+  callback: () => undefined,
+  content: 'Unsafe extension'
+};
+const invalidToastTone: UToastProps = {
+  // @ts-expect-error <lang><zh-CN>neutral 不属于 toast 的四种有限 tone。</zh-CN><en>Neutral is outside the four finite toast tones.</en></lang>
+  tone: 'neutral'
+};
+const invalidToastPosition: UToastOptions = {
+  message: 'Invalid position',
+  // @ts-expect-error <lang><zh-CN>toast position 只能是 top/center/bottom。</zh-CN><en>Toast position is limited to top/center/bottom.</en></lang>
+  position: 'viewport'
+};
+const invalidNoticeTone: UNoticeBarProps = {
+  // @ts-expect-error <lang><zh-CN>notice-bar 使用与 feedback token 对齐的有限 tone。</zh-CN><en>Notice-bar uses finite tones aligned with feedback tokens.</en></lang>
+  tone: 'brand'
+};
+// @ts-expect-error <lang><zh-CN>popup close 第二参数必须是有限关闭原因。</zh-CN><en>The second popup-close argument must be a finite close reason.</en></lang>
+popupRef.$emit('close', localClickEvent, 'outside');
+// @ts-expect-error <lang><zh-CN>action-sheet select 需要结构化 value/index，不接受裸索引。</zh-CN><en>Action-sheet selection requires structured value/index and does not accept a bare index.</en></lang>
+actionSheetRef.$emit('select', 1);
+// @ts-expect-error <lang><zh-CN>modal service confirm metadata 必须包含数值 requestId。</zh-CN><en>Modal service-confirm metadata must include a numeric request ID.</en></lang>
+modalRef.$emit('confirm', localClickEvent, { source: 'service' });
+// @ts-expect-error <lang><zh-CN>toast close metadata 的 reason 只能为 control。</zh-CN><en>The reason in toast-close metadata can only be control.</en></lang>
+toastRef.$emit('close', localClickEvent, { reason: 'timeout', requestId: 1, source: 'service' });
+// @ts-expect-error <lang><zh-CN>notice-bar click 必须同时携带当前投影索引。</zh-CN><en>A notice-bar click must also carry the current projected index.</en></lang>
+noticeBarRef.$emit('click', localClickEvent);
+// @ts-expect-error <lang><zh-CN>mask ref 没有 close expose；关闭决定仍由调用方拥有。</zh-CN><en>A mask ref has no close expose; the caller still owns the close decision.</en></lang>
+maskRef.close();
+// @ts-expect-error <lang><zh-CN>modal component ref 不公开 service show；必须通过 useModal(scope)。</zh-CN><en>A modal component ref does not expose service show; useModal(scope) is required.</en></lang>
+modalRef.show(modalOptions);
+// @ts-expect-error <lang><zh-CN>tabs ref 不取得路由能力。</zh-CN><en>A tabs ref acquires no routing capability.</en></lang>
+tabsRef.navigate('details');
+// @ts-expect-error <lang><zh-CN>confirm helper 必须同时获得调用方确认与取消标签。</zh-CN><en>The confirm helper must receive both caller confirmation and cancellation labels.</en></lang>
+modalController.confirm({ confirmText: 'Continue', content: 'Missing cancel label' });
+// @ts-expect-error <lang><zh-CN>service toast 输入也拒绝 URL/导航扩展。</zh-CN><en>Service toast input also rejects URL/navigation extensions.</en></lang>
+toastController.show({ message: 'Unsafe URL', url: '/pages/private' });
+// @ts-expect-error <lang><zh-CN>toast options 必须在类型层提供 message 或 title，不能只给生命周期字段。</zh-CN><en>Toast options must provide message or title at the type layer, not lifecycle fields alone.</en></lang>
+toastController.show({ duration: 100 });
+// @ts-expect-error <lang><zh-CN>modal options 必须在类型层提供 title 或 content，不能创建无语义遮罩。</zh-CN><en>Modal options must provide title or content at the type layer and cannot create a semantic-free mask.</en></lang>
+modalController.show({ confirmText: 'Continue' });
+// @ts-expect-error <lang><zh-CN>confirm helper 除双 control 标签外仍必须提供 title 或 content。</zh-CN><en>The confirm helper still requires title or content in addition to both control labels.</en></lang>
+modalController.confirm({ confirmText: 'Continue', cancelText: 'Cancel' });
+
 // <lang><zh-CN>验证显式 runtime export、plugin、可选 global declaration 与 locale helper 的静态形状；没有产生 import-time 副作用。</zh-CN><en>Verifies the static shapes of explicit runtime exports, plugin, optional global declaration, and locale helper; no import-time side effect occurs.</en></lang>
 const plugin: Plugin = UView;
 const globalCheckbox: GlobalComponents['UCheckbox'] = UCheckbox;
@@ -463,6 +651,7 @@ const globalSwitch: GlobalComponents['USwitch'] = USwitch;
 // <lang><zh-CN>picker 的可选 global 映射与具名导出保持同一组件类型。</zh-CN><en>The optional picker global mapping retains the same component type as the named export.</en></lang>
 const globalPicker: GlobalComponents['UPicker'] = UPicker;
 // <lang><zh-CN>可选 global augmentation 中的展示与表单/输入组件只检查类型映射，不执行组件注册。</zh-CN><en>Display and form/input components in optional global augmentation check only type mappings and execute no component registration.</en></lang>
+const globalActionSheet: GlobalComponents['UActionSheet'] = UActionSheet;
 const globalAlertTips: GlobalComponents['UAlertTips'] = UAlertTips;
 const globalCalendar: GlobalComponents['UCalendar'] = UCalendar;
 const globalDropdown: GlobalComponents['UDropdown'] = UDropdown;
@@ -471,18 +660,30 @@ const globalField: GlobalComponents['UField'] = UField;
 const globalForm: GlobalComponents['UForm'] = UForm;
 const globalFormItem: GlobalComponents['UFormItem'] = UFormItem;
 const globalInput: GlobalComponents['UInput'] = UInput;
+const globalMask: GlobalComponents['UMask'] = UMask;
+const globalModal: GlobalComponents['UModal'] = UModal;
+const globalNavbar: GlobalComponents['UNavbar'] = UNavbar;
+const globalNoticeBar: GlobalComponents['UNoticeBar'] = UNoticeBar;
 const globalNumberBox: GlobalComponents['UNumberBox'] = UNumberBox;
+const globalPopup: GlobalComponents['UPopup'] = UPopup;
 const globalRate: GlobalComponents['URate'] = URate;
 const globalSearch: GlobalComponents['USearch'] = USearch;
 const globalSelect: GlobalComponents['USelect'] = USelect;
 const globalSlider: GlobalComponents['USlider'] = USlider;
+const globalTabbar: GlobalComponents['UTabbar'] = UTabbar;
+const globalTabs: GlobalComponents['UTabs'] = UTabs;
 const globalTag: GlobalComponents['UTag'] = UTag;
 const globalTextarea: GlobalComponents['UTextarea'] = UTextarea;
+const globalToast: GlobalComponents['UToast'] = UToast;
+const globalTransition: GlobalComponents['UTransition'] = UTransition;
 const globalUpload: GlobalComponents['UUpload'] = UUpload;
 const locale = useULocale(normalizeULocale('en'));
 
 // <lang><zh-CN>收集引用以防止编译器把 fixture 的 package-consumption 断言优化成未使用的声明。</zh-CN><en>Collects references so the compiler cannot reduce this fixture's package-consumption assertions to unused declarations.</en></lang>
 void [
+  actionSheetItems,
+  actionSheetProps,
+  actionSheetSelection,
   actionNarrowingUploadAdapter,
   alertTipsProps,
   allValidationResult,
@@ -495,6 +696,9 @@ void [
   dropdownOpened,
   dropdownProps,
   fieldProps,
+  feedbackScope,
+  forgedFeedbackScopeProps,
+  globalActionSheet,
   globalAlertTips,
   globalCalendar,
   globalCheckbox,
@@ -505,17 +709,26 @@ void [
   globalForm,
   globalFormItem,
   globalInput,
+  globalMask,
+  globalModal,
+  globalNavbar,
+  globalNoticeBar,
   globalNumberBox,
   globalPicker,
   globalRadio,
   globalRadioGroup,
   globalRate,
+  globalPopup,
   globalSearch,
   globalSelect,
   globalSlider,
   globalSwitch,
+  globalTabbar,
+  globalTabs,
   globalTag,
   globalTextarea,
+  globalToast,
+  globalTransition,
   globalUpload,
   formModel,
   formProps,
@@ -524,6 +737,8 @@ void [
   inputProps,
   invalidCalendarChange,
   invalidFormProps,
+  invalidModalCallback,
+  invalidNoticeTone,
   invalidPatternRule,
   invalidPickerConfirm,
   invalidRuleError,
@@ -533,17 +748,32 @@ void [
   invalidUploadFile,
   invalidUploadState,
   invalidValidatorResultRule,
+  invalidToastCallback,
+  invalidToastPosition,
+  invalidToastTone,
   itemValidationResult,
   legacyValidatorRule,
   locale.value,
+  maskProps,
+  modalClearResult,
+  modalCloseResult,
+  modalConfirmMetadata,
+  modalConfirmOptions,
+  modalConfirmResult,
+  modalOptions,
+  modalProps,
+  modalShowResult,
+  navbarProps,
   nestedRules,
   numberBoxProps,
+  noticeBarProps,
   pickerCancel,
   pickerColumnChange,
   pickerConfirm,
   pickerOptions,
   pickerProps,
   plugin,
+  popupProps,
   radioGroupProps,
   radioProps,
   rateProps,
@@ -554,7 +784,21 @@ void [
   selectedValidationResult,
   sliderProps,
   switchProps,
+  subpathFeedbackScope,
+  subpathModalResult,
+  subpathToastResult,
+  tabbarProps,
+  tabsItems,
+  tabsProps,
   textareaProps,
+  toastCloseResult,
+  toastLoadingResult,
+  toastOptions,
+  toastProps,
+  toastShowResult,
+  transitionProps,
+  transitionRef,
+  UActionSheet,
   UCalendar,
   UCheckboxGroup,
   UDropdown,
@@ -563,9 +807,13 @@ void [
   UForm,
   UFormItem,
   UInput,
+  UMask,
+  UModal,
+  UNavbar,
   UNoticeBar,
   UNumberBox,
   UPicker,
+  UPopup,
   URadio,
   URadioGroup,
   URate,
@@ -574,9 +822,12 @@ void [
   USlider,
   USwitch,
   UTabbar,
+  UTabs,
   tabItems,
   tagProps,
   UTextarea,
+  UToast,
+  UTransition,
   uploadAdapter,
   uploadFailedState,
   uploadFiles,
