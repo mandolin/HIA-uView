@@ -44,9 +44,14 @@ describe('local catalog composition runtime behavior', () => {
     expect(fixture.text()).toContain('当前本地查询没有匹配项');
 
     // <lang><zh-CN>空态 action 只要求页面复位本地 query；复位后恢复固定三项目录且不请求或追加数据。</zh-CN><en>Empty-state action only asks the page to reset local query; after reset the fixed three-item directory returns without requesting or appending data.</en></lang>
-    await fixture.get('.u-empty .u-button').trigger('click');
+    // <lang><zh-CN>P69 fixture 还包含独立的 13 组件消费区，因此 selector 必须命中目录专属空态，不能误触另一空态的观察按钮。</zh-CN><en>The P69 fixture also contains a separate 13-component consumer section, so the selector must target the catalog-specific empty state instead of activating the other empty state's observation button.</en></lang>
+    const resetAction = fixture.get('.fixture-catalog__empty .u-button');
+    resetAction.element.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    // <lang><zh-CN>等待 Vue 把页面拥有的 query 写回受控 input，再读取 DOM 投影。</zh-CN><en>Waits for Vue to project the page-owned query writeback into the controlled input before reading the DOM.</en></lang>
+    await fixture.vm.$nextTick();
 
-    expect(queryInput.element.value).toBe('');
+    // <lang><zh-CN>空态分支切换会重建目录子树，因此重新取得当前受控 input，不从已卸载的旧 wrapper 读取陈旧 DOM 值。</zh-CN><en>The empty-state branch transition rebuilds the catalog subtree, so reacquire the current controlled input instead of reading a stale DOM value from the unmounted wrapper.</en></lang>
+    expect(fixture.get('.fixture-catalog__query').element.value).toBe('');
     expect(fixture.findAll('.fixture-catalog__entry')).toHaveLength(3);
 
     // <lang><zh-CN>点击固定第二行只写本地 selected identifier 并切换详情投影，不创建 route、数据读取或页面外状态。</zh-CN><en>Clicking fixed second row writes only local selected identifier and switches detail projection, creating no route, data read, or state outside the page.</en></lang>

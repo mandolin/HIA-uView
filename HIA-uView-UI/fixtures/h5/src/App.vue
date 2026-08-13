@@ -76,6 +76,43 @@
       <p data-smoke="p67-adapter-state">{{ p67UploadAdapterState }}</p>
     </section>
     <!--
+    @lang zh-CN 本段通过 package root 的具名入口真实组合展示、媒体与列表批次的十三个组件；所有文字、页码、图片来源、slot 与意图状态均由当前 fixture 拥有。
+    @lang en This section actually composes all thirteen display, media, and list components through named exports from the package root; the current fixture owns every copy value, page number, image source, slot, and intent state.
+    <lang><zh-CN>空图片来源不会触发网络，分页不发起查询，swipe action 不执行 callback，空态 action 只更新下方可见 marker。</zh-CN><en>The empty image source starts no network access, pagination starts no query, the swipe action executes no callback, and the empty-state action only updates the visible marker below.</en></lang>
+    -->
+    <section class="fixture-display-media-list" data-smoke="display-media-list">
+      <h2>Display, media, and list / 展示、媒体与列表</h2>
+      <UAlertTips :show="true" title="Local alert / 本地提示" :closable="true" @click="recordDisplayMediaListIntent('alert-click')" @close="recordDisplayMediaListIntent('alert-close')">
+        Caller-owned alert slot / 调用方拥有的提示 slot
+      </UAlertTips>
+      <UCellGroup title="Local rows / 本地信息行" :bordered="true">
+        <UCell label="Facade row / Facade 信息行" description="Caller-owned copy / 调用方文字" value="Ready / 就绪" :clickable="true" @click="recordDisplayMediaListIntent('cell')" />
+        <UCellItem title="Migration row / 迁移信息行" label="Local label / 本地标签" :clickable="true" @click="recordDisplayMediaListIntent('cell-item')">
+          Caller-owned trailing slot / 调用方尾部 slot
+        </UCellItem>
+      </UCellGroup>
+      <div class="fixture-display-media-list__row">
+        <UIcon name="•" label="Local symbol / 本地符号" @click="recordDisplayMediaListIntent('icon')">◇</UIcon>
+        <UImage src="" alt="Empty local image source / 空本地图片来源" error-text="Local fallback / 本地回退" @click="recordDisplayMediaListIntent('image')" />
+        <UText type="secondary" @click="recordDisplayMediaListIntent('text')">Caller-owned text slot / 调用方文字 slot</UText>
+        <UTag :show="true" :visible="true" :closable="true" @click="recordDisplayMediaListIntent('tag-click')" @close="recordDisplayMediaListIntent('tag-close')">Local tag slot / 本地标签 slot</UTag>
+      </div>
+      <UButton @click="recordDisplayMediaListIntent('button')">Caller-owned button slot / 调用方按钮 slot</UButton>
+      <USkeleton :loading="false" :rows="2" :show-title="true">
+        <UText text="Caller-owned skeleton result / 调用方骨架结果" />
+      </USkeleton>
+      <UPagination :current="displayMediaListPage" :page-count="3" @update:current="updateDisplayMediaListPage">
+        <template #default>Local page summary / 本地页码摘要</template>
+      </UPagination>
+      <USwipeAction :show="true" :options="displayMediaListSwipeOptions" @click="recordDisplayMediaListIntent('swipe-action')" @close="recordDisplayMediaListIntent('swipe-close')">
+        <UText text="Caller-owned swipe content / 调用方 swipe 内容" />
+      </USwipeAction>
+      <UEmpty :show="true" title="Local empty state / 本地空态" description="Caller decides the data state / 调用方决定数据状态" action-text="Observe locally / 本地观察" @action="recordDisplayMediaListIntent('empty-action')">
+        <template #bottom><UText text="Caller-owned bottom slot / 调用方 bottom slot" type="secondary" /></template>
+      </UEmpty>
+      <p data-smoke="display-media-list-intent">{{ displayMediaListIntent }}</p>
+    </section>
+    <!--
     @lang zh-CN 本段以中性页面本地模型真实组合 UForm、UFormItem、UField、UInput、UTextarea 与 USearch，并提供显式 validate/clear/reset 观察入口。
     @lang en This section composes UForm, UFormItem, UField, UInput, UTextarea, and USearch over a neutral page-local model and provides explicit validate/clear/reset observation entries.
     <lang><zh-CN>所有规则、文字和结果 marker 均属于 fixture；搜索只记录本地 intent，不筛选目录、不请求网络，也不表示提交或持久化完成。</zh-CN><en>All rules, copy, and result markers belong to the fixture; search records only a local intent, filters no catalog, requests no network, and represents no completed submission or persistence.</en></lang>
@@ -189,6 +226,46 @@ import { UField, UForm, UFormItem, UInput, USearch, UTextarea } from '../../../s
 import { UCalendar, UCheckbox, UCheckboxGroup, UDropdown, UDropdownItem, UNumberBox, UPicker, URadio, URadioGroup, URate, USelect, USlider, USwitch, UUpload } from '../../../src/index.mjs';
 // <lang><zh-CN>十个 overlay/feedback/navigation 组件与三个 feedback service 工厂从同一 package root 进入 H5 fixture；导入不创建默认 scope、host、页面发现或全局注册。</zh-CN><en>The ten overlay/feedback/navigation components and three feedback-service factories enter the H5 fixture through the same package root; importing creates no default scope, host, page discovery, or global registration.</en></lang>
 import { UActionSheet, UModal, UPopup, UTabbar, UTabs, UToast, createUFeedbackScope, useModal, useToast } from '../../../src/index.mjs';
+// <lang><zh-CN>其余十个 P69 展示、媒体与列表组件从同一 package root 具名入口进入本地组合；UButton、UCellItem 与 UText 已由上方既有根入口导入。</zh-CN><en>The remaining ten P69 display, media, and list components enter the local composition through the same named package-root entry; UButton, UCellItem, and UText are already imported from the existing root entry above.</en></lang>
+import { UAlertTips, UCell, UCellGroup, UEmpty, UIcon, UImage, UPagination, USkeleton, USwipeAction, UTag } from '../../../src/index.mjs';
+
+// <lang><zh-CN>展示/媒体/列表可见 marker 只保存 fixture 内声明的有限意图名称，不保存平台事件、业务记录或异常。</zh-CN><en>The visible display/media/list marker stores only finite intent names declared by the fixture and retains no platform event, business record, or exception.</en></lang>
+const displayMediaListIntent = ref('idle');
+// <lang><zh-CN>当前页由 H5 fixture 明确拥有，并限制在本地三页投影内；它不连接查询、缓存或 URL。</zh-CN><en>The H5 fixture explicitly owns the current page and bounds it to a local three-page projection; it connects to no query, cache, or URL.</en></lang>
+const displayMediaListPage = ref(1);
+// <lang><zh-CN>swipe 选项是冻结的透明标量记录，不含 getter、callback、命令、URL 或业务对象。</zh-CN><en>The swipe options are frozen transparent-scalar records containing no getter, callback, command, URL, or business object.</en></lang>
+const displayMediaListSwipeOptions = Object.freeze([
+  Object.freeze({ value: 'observe', label: 'Observe / 观察', type: 'primary' }),
+  Object.freeze({ value: 2, label: 'Second / 第二项', type: 'warning' })
+]);
+
+/**
+ * @lang zh-CN 把十三组件报告的有限本地意图写入可见 marker；不解释为导航、查询、删除或业务完成。
+ * @lang en Writes a finite local intent reported by the thirteen components into the visible marker; it is not interpreted as routing, querying, deletion, or business completion.
+ * @param {string} intent <lang><zh-CN>模板中声明的有限观察名称。</zh-CN><en>Finite observation name declared in the template.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只更新页面局部 ref。</zh-CN><en>No return value; updates only the page-local ref.</en></lang>
+ */
+function recordDisplayMediaListIntent(intent) {
+  // <lang><zh-CN>赋值保留调用方对观察状态的所有权，不触发任何组件外副作用。</zh-CN><en>The assignment preserves caller ownership of observation state and triggers no effect outside the component.</en></lang>
+  displayMediaListIntent.value = intent;
+}
+
+/**
+ * @lang zh-CN 接受分页组件报告的有限整数并显式写回本地当前页；非法候选保持现状且不触发查询。
+ * @lang en Accepts a finite integer reported by pagination and explicitly writes it back to the local current page; an invalid candidate preserves state and starts no query.
+ * @param {number} page <lang><zh-CN>候选本地页码。</zh-CN><en>Candidate local page number.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；有效值只更新两个本地 refs。</zh-CN><en>No return value; a valid value updates only two local refs.</en></lang>
+ */
+function updateDisplayMediaListPage(page) {
+  // <lang><zh-CN>显式 guard 与三页 fixture 边界一致，防止未来模板漂移把任意数写入页面状态。</zh-CN><en>The explicit guard matches the three-page fixture boundary and prevents future template drift from writing arbitrary numbers into page state.</en></lang>
+  if (!Number.isInteger(page) || page < 1 || page > 3) {
+    return;
+  }
+
+  // <lang><zh-CN>合法页码先写回受控值，再记录可见意图；没有请求、路由或持久化。</zh-CN><en>A valid page first writes back the controlled value and then records a visible intent; there is no request, route, or persistence.</en></lang>
+  displayMediaListPage.value = page;
+  displayMediaListIntent.value = `page-${page}`;
+}
 
 // <lang><zh-CN>本 fixture 显式拥有唯一 feedback scope，并在卸载时释放；它不与其他页面或测试共享。</zh-CN><en>This fixture explicitly owns its sole feedback scope and disposes it on unmount; it is shared with no other page or test.</en></lang>
 const feedbackScope = createUFeedbackScope();
@@ -625,4 +702,7 @@ function recordP54Intent(intent) {
 <style>
 .fixture-page { color: var(--u-sys-color-text); font-family: system-ui, sans-serif; margin: 0 auto; max-width: 720px; padding: 24px; }
 .fixture-page > * { margin-block-end: 16px; }
+/* @lang zh-CN P69 组合只提供可读的本地排列，不覆盖任何组件 token、尺寸或交互状态。 @lang en The P69 composition provides readable local arrangement only and overrides no component token, geometry, or interaction state. */
+.fixture-display-media-list { display: grid; gap: 12px; }
+.fixture-display-media-list__row { align-items: center; display: flex; flex-wrap: wrap; gap: 12px; }
 </style>

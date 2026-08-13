@@ -184,6 +184,90 @@ assert.equal(P68_REQUIRED_PACKAGE_PATHS.length, 26, 'P68 tarball closure must co
 assert.equal(new Set(P68_REQUIRED_PACKAGE_PATHS).size, 26, 'P68 tarball closure paths must be unique.');
 
 /**
+ * @lang zh-CN 临时 tarball consumer 必须在统一 marker 下通过静态 Easycom 真实组合的十三个展示、媒体与列表组件名。
+ * @lang en Thirteen display, media, and list component names that the temporary tarball consumer must actually compose through static Easycom under one unified marker.
+ */
+const P69_DISPLAY_COMPONENT_NAMES = Object.freeze([
+  'u-button',
+  'u-cell',
+  'u-cell-group',
+  'u-cell-item',
+  'u-icon',
+  'u-image',
+  'u-pagination',
+  'u-skeleton',
+  'u-swipe-action',
+  'u-text',
+  'u-empty',
+  'u-tag',
+  'u-alert-tips'
+]);
+
+/**
+ * @lang zh-CN 与十三个 Easycom 标签逐项对应的 package 根具名导出；临时 TypeScript consumer 和 `./global` augmentation 必须同时解析这些名称。
+ * @lang en Package-root named exports corresponding one-to-one with the thirteen Easycom tags; the temporary TypeScript consumer and `./global` augmentation must both resolve these names.
+ */
+const P69_ROOT_COMPONENT_NAMES = Object.freeze([
+  'UButton',
+  'UCell',
+  'UCellGroup',
+  'UCellItem',
+  'UIcon',
+  'UImage',
+  'UPagination',
+  'USkeleton',
+  'USwipeAction',
+  'UText',
+  'UEmpty',
+  'UTag',
+  'UAlertTips'
+]);
+
+// <lang><zh-CN>根导出清单必须与 Easycom 标签清单同为十三项且各自唯一，避免 trial 只覆盖其中一种消费路径。</zh-CN><en>The root-export and Easycom-tag inventories must each contain thirteen unique entries so the trial cannot cover only one consumption path.</en></lang>
+assert.equal(P69_DISPLAY_COMPONENT_NAMES.length, 13, 'P69 Easycom component inventory must contain exactly 13 names.');
+assert.equal(new Set(P69_DISPLAY_COMPONENT_NAMES).size, 13, 'P69 Easycom component names must be unique.');
+assert.equal(P69_ROOT_COMPONENT_NAMES.length, 13, 'P69 root component inventory must contain exactly 13 names.');
+assert.equal(new Set(P69_ROOT_COMPONENT_NAMES).size, 13, 'P69 root component names must be unique.');
+
+/**
+ * @lang zh-CN 十三个展示组件的精确直接 tarball 闭包：十三个 leaf SFC/CSS 对，以及 `UButton` 唯一直接使用的本地化 helper，共且仅共二十七条路径。
+ * @lang en Exact direct tarball closure for the thirteen display components: thirteen leaf SFC/CSS pairs plus the sole localization helper directly used by `UButton`, totaling exactly twenty-seven paths.
+ */
+const P69_REQUIRED_PACKAGE_PATHS = Object.freeze([
+  'src/components/u-button/u-button.vue',
+  'src/components/u-button/u-button.css',
+  'src/components/u-cell/u-cell.vue',
+  'src/components/u-cell/u-cell.css',
+  'src/components/u-cell-group/u-cell-group.vue',
+  'src/components/u-cell-group/u-cell-group.css',
+  'src/components/u-cell-item/u-cell-item.vue',
+  'src/components/u-cell-item/u-cell-item.css',
+  'src/components/u-icon/u-icon.vue',
+  'src/components/u-icon/u-icon.css',
+  'src/components/u-image/u-image.vue',
+  'src/components/u-image/u-image.css',
+  'src/components/u-pagination/u-pagination.vue',
+  'src/components/u-pagination/u-pagination.css',
+  'src/components/u-skeleton/u-skeleton.vue',
+  'src/components/u-skeleton/u-skeleton.css',
+  'src/components/u-swipe-action/u-swipe-action.vue',
+  'src/components/u-swipe-action/u-swipe-action.css',
+  'src/components/u-text/u-text.vue',
+  'src/components/u-text/u-text.css',
+  'src/components/u-empty/u-empty.vue',
+  'src/components/u-empty/u-empty.css',
+  'src/components/u-tag/u-tag.vue',
+  'src/components/u-tag/u-tag.css',
+  'src/components/u-alert-tips/u-alert-tips.vue',
+  'src/components/u-alert-tips/u-alert-tips.css',
+  'src/localization/button-messages.mjs'
+]);
+
+// <lang><zh-CN>闭包大小与唯一性是硬断言；任何新增直接依赖都必须经审阅后显式进入清单。</zh-CN><en>Closure size and uniqueness are hard assertions; every new direct dependency must be reviewed and explicitly added to the inventory.</en></lang>
+assert.equal(P69_REQUIRED_PACKAGE_PATHS.length, 27, 'P69 tarball closure must contain exactly 27 paths.');
+assert.equal(new Set(P69_REQUIRED_PACKAGE_PATHS).size, 27, 'P69 tarball closure paths must be unique.');
+
+/**
  * @lang zh-CN 以固定参数执行一个本地进程并收集 stdout/stderr。该 helper 不允许 shell、网络命令或调用方插入的可执行文件。
  * @lang en Runs one local process with fixed arguments and collects stdout/stderr. This helper permits neither a shell nor network commands or caller-injected executables.
  * @param {string} command <lang><zh-CN>受控可执行文件或 Node binary。</zh-CN><en>Controlled executable or Node binary.</en></lang>
@@ -375,11 +459,11 @@ async function writeConsumerFixture(consumerDirectory, tarballPath, easycomFragm
   const indexHtml = "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /><title>Private UI package trial</title></head><body><div id=\"app\"></div><script type=\"module\" src=\"/main.js\"></script></body></html>\n";
   // <lang><zh-CN>根 App 只提供页面 slot 与显式包 style import；它不注册 runtime global components，证明 Easycom 是编译期解析。</zh-CN><en>The root App provides only a page slot and explicit package-style import; it registers no runtime global components, proving Easycom is compile-time resolution.</en></lang>
   const appSource = "<script>export default { onLaunch() {} };</script>\n<style>@import '@hia-uview/ui/style.css';</style>\n";
-  // <lang><zh-CN>临时页面新增独立中性 P66 表单组合与统一 P67 十四组件组合；全部状态、options、规则和 adapter 位于页面内，不携带 business data、remote option、平台 lifecycle、chooser 或动态代码。</zh-CN><en>The temporary page adds an independent neutral P66 form composition and a unified P67 fourteen-component composition; all state, options, rules, and adapters stay in the page and carry no business data, remote option, platform lifecycle, chooser, or dynamic code.</en></lang>
+  // <lang><zh-CN>临时页面组合中性 P66 表单、P67 controls、P68 surfaces 与 P69 展示组件；全部状态、options、规则和 adapter 位于页面内，不携带 business data、remote option、平台 lifecycle、chooser 或动态代码。</zh-CN><en>The temporary page composes neutral P66 forms, P67 controls, P68 surfaces, and P69 display components; all state, options, rules, and adapters stay in the page and carry no business data, remote option, platform lifecycle, chooser, or dynamic code.</en></lang>
   const pageSource = `<!--
  @component PrivatePackageTrialPage
- @lang zh-CN 通过已安装 tarball 的 Easycom 组合 P66 表单与 P67 十四组件；页面只使用中性本地状态，不连接网络、业务、storage、router、身份或文件 chooser。
- @lang en Composes the P66 form and P67 fourteen-component family through Easycom from the installed tarball; the page uses only neutral local state and connects to no network, business, storage, router, identity, or file chooser.
+ @lang zh-CN 通过已安装 tarball 的 Easycom 组合受审组件族；页面只使用中性本地状态，不连接网络、业务、storage、router、身份或文件 chooser。
+ @lang en Composes the audited component families through Easycom from the installed tarball; the page uses only neutral local state and connects to no network, business, storage, router, identity, or file chooser.
  -->
  <template>
    <view class="package-trial">
@@ -437,6 +521,29 @@ async function writeConsumerFixture(consumerDirectory, tarballPath, easycomFragm
       />
       <text data-smoke="p67-adapter-state">{{ p67UploadAdapterState }}</text>
     </view>
+    <!--
+    @lang zh-CN 统一 marker 内的十三个展示、媒体与列表组件全部从已安装 tarball 通过静态 Easycom 解析；页面只持有有限页码、操作和观察 marker。
+    @lang en All thirteen display, media, and list components inside the unified marker resolve from the installed tarball through static Easycom; the page owns only finite page, action, and observation markers.
+    <lang><zh-CN>该组合不获取图片、不执行 action callback、不触发路由或业务写入，也不把 compiler 结果表述为设备运行证据。</zh-CN><en>This composition fetches no image, executes no action callback, triggers no routing or business write, and does not present compiler output as device-runtime evidence.</en></lang>
+    -->
+    <view class="package-trial__display-media-list" data-smoke="display-media-list">
+      <u-alert-tips :show="true" title="Local alert" description="Fallback alert copy" :closable="true" @click="recordP69Intent('alert-click')" @close="recordP69Intent('alert-close')">Caller alert slot</u-alert-tips>
+      <u-button variant="primary" size="md" @click="recordP69Intent('button-click')"><text>Caller button slot</text></u-button>
+      <u-cell label="Local cell" description="HIA facade" value="Ready" :clickable="true" @click="recordP69Intent('cell-click')" />
+      <u-cell-group title="Local rows" :bordered="true">
+        <u-cell-item title="Local item" label="Caller-owned row" :clickable="true" @click="recordP69Intent('cell-item-click')"><text>Caller item slot</text></u-cell-item>
+      </u-cell-group>
+      <u-icon name="local-symbol" label="Local icon" size="medium" tone="primary" @click="recordP69Intent('icon-click')">◇</u-icon>
+      <u-image src="" alt="No remote source" mode="aspectFit" shape="rounded" size="small" @click="recordP69Intent('image-click')" />
+      <u-pagination :current="p69Page" :page-count="3" prev-text="Previous" next-text="Next" @update:current="updateP69Page"><text>Page {{ p69Page }}</text></u-pagination>
+      <u-skeleton :loading="false" :rows="2" :show-title="true"><text>Caller skeleton slot</text></u-skeleton>
+      <u-swipe-action :open="p69SwipeOpen" :actions="p69SwipeActions" close-text="Close" @action="recordP69Action" @update:open="updateP69SwipeOpen" @close="recordP69Intent('swipe-close')"><text>Caller swipe slot</text></u-swipe-action>
+      <u-text :show="true" text="Fallback text" type="primary" size="md" @click="recordP69Intent('text-click')">Caller text slot</u-text>
+      <u-empty :show="true" title="Local empty state" description="Caller-owned description" action-text="Observe" @action="recordP69Intent('empty-action')">
+        <template #bottom><u-tag text="Fallback tag" tone="primary" :closable="true" @click="recordP69Intent('tag-click')" @close="recordP69Intent('tag-close')">Caller tag slot</u-tag></template>
+      </u-empty>
+      <text data-smoke="display-media-list-result">{{ p69Intent }}</text>
+    </view>
     <u-notice-bar :show="true" text="Local package trial" />
     <u-tabbar v-model="tab" :items="tabItems" />
 
@@ -483,6 +590,61 @@ const toastController = useToast(feedbackScope);
 const rootFactoryMatches = createRootFeedbackScope === createUFeedbackScope;
 // <lang><zh-CN>有限 marker 只保留 intent/request id，不保存 event、options 或异常。</zh-CN><en>The finite marker retains only an intent/request ID and stores no event, options, or exception.</en></lang>
 const feedbackIntent = ref('idle');
+// <lang><zh-CN>P69 页码由临时页面持有，且只允许下方 handler 接受 1–3 的有限整数。</zh-CN><en>The temporary page owns the P69 page number, and only the handler below accepts finite integers from 1 through 3.</en></lang>
+const p69Page = ref(1);
+// <lang><zh-CN>显式操作投影的打开状态仍由 consumer 拥有；组件只能报告写回意图。</zh-CN><en>The consumer continues to own the explicit-action projection's open state; the component can only report a writeback intent.</en></lang>
+const p69SwipeOpen = ref(true);
+// <lang><zh-CN>有限操作数组被冻结且只含透明 scalar、可见文字和 token type，不携带 callback、getter 或命令。</zh-CN><en>The finite action array is frozen and contains only a transparent scalar, visible copy, and a token type, with no callback, getter, or command.</en></lang>
+const p69SwipeActions = Object.freeze([Object.freeze({ value: 'observe', label: 'Observe', type: 'primary' })]);
+// <lang><zh-CN>展示组合的唯一观察 marker 只保存有限字符串，不保留平台 event 或组件内部对象。</zh-CN><en>The display composition's sole observation marker stores only a finite string and retains no platform event or component-internal object.</en></lang>
+const p69Intent = ref('idle');
+
+/**
+ * @lang zh-CN 将源码声明的有限展示意图写入本地 marker，不解释为业务动作或完成状态。
+ * @lang en Writes a source-declared finite display intent to the local marker without interpreting it as a business action or completion state.
+ * @param {string} intent <lang><zh-CN>模板或固定 handler 提供的有限观察文字。</zh-CN><en>Finite observation copy supplied by the template or a fixed handler.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只更新本地 marker。</zh-CN><en>No return value; updates only the local marker.</en></lang>
+ */
+function recordP69Intent(intent) {
+  // <lang><zh-CN>模板只传固定 literal，其他 handler 只拼接已验证 scalar；不会保存原始事件。</zh-CN><en>The template passes fixed literals only, while other handlers append only validated scalars; no original event is retained.</en></lang>
+  p69Intent.value = intent;
+}
+
+/**
+ * @lang zh-CN 接受 pagination 报告的有限合法页码并同步 consumer-owned 页码与观察 marker。
+ * @lang en Accepts a finite valid page number reported by pagination and synchronizes the consumer-owned page and observation marker.
+ * @param {number} page <lang><zh-CN>组件报告的候选页码。</zh-CN><en>Candidate page number reported by the component.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；非法候选不改变状态。</zh-CN><en>No return value; an invalid candidate changes no state.</en></lang>
+ */
+function updateP69Page(page) {
+  // <lang><zh-CN>显式 guard 防止 compiler trial 源码暗示可接受无界或非整数页码。</zh-CN><en>The explicit guard prevents the compiler-trial source from implying acceptance of unbounded or noninteger page numbers.</en></lang>
+  if (!Number.isInteger(page) || page < 1 || page > 3) return;
+  p69Page.value = page;
+  recordP69Intent('page-' + page);
+}
+
+/**
+ * @lang zh-CN 记录 swipe-action 已收束的透明 scalar，不执行 action 对象或 callback。
+ * @lang en Records the swipe action's already-bounded transparent scalar without executing an action object or callback.
+ * @param {string | number} value <lang><zh-CN>组件报告的有限字符串或数值。</zh-CN><en>Finite string or number reported by the component.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；只更新观察 marker。</zh-CN><en>No return value; updates only the observation marker.</en></lang>
+ */
+function recordP69Action(value) {
+  recordP69Intent('action-' + String(value));
+}
+
+/**
+ * @lang zh-CN 响应 swipe-action 的受控写回意图；只有严格布尔值能改变 consumer-owned 状态。
+ * @lang en Responds to the swipe action's controlled writeback intent; only a strict Boolean may change consumer-owned state.
+ * @param {boolean} open <lang><zh-CN>组件报告的候选打开状态。</zh-CN><en>Candidate open state reported by the component.</en></lang>
+ * @returns {void} <lang><zh-CN>无返回值；非法候选不改变状态。</zh-CN><en>No return value; an invalid candidate changes no state.</en></lang>
+ */
+function updateP69SwipeOpen(open) {
+  // <lang><zh-CN>严格类型检查保持 caller-owned 布尔模型，不对 truthy 值做隐式 coercion。</zh-CN><en>The strict type check preserves the caller-owned Boolean model without coercing truthy values.</en></lang>
+  if (typeof open !== 'boolean') return;
+  p69SwipeOpen.value = open;
+  recordP69Intent(open ? 'swipe-open' : 'swipe-closed');
+}
 // <lang><zh-CN>overlay 可见性由临时页面拥有并初始隐藏，避免编译试验启动即遮挡其他组合。</zh-CN><en>The temporary page owns overlay visibility, which starts hidden so the compile trial does not initially obscure other compositions.</en></lang>
 const overlayPopupVisible = ref(false);
 const overlayActionSheetVisible = ref(false);
@@ -789,6 +951,18 @@ function recordP66SearchIntent(value) {
   assert.match(pageSource, /<u-dropdown-item\s+v-model="p67DropdownValue"\s+name="scope"[^>]+:options="p67DropdownOptions"/u, 'Installed-package trial source must use UDropdownItem options mode.');
   assert.match(pageSource, /<u-upload[\s\S]+:adapter="p67UploadAdapter"[\s\S]+@adapter-state="recordP67UploadAdapterState"/u, 'Installed-package trial source must inject and observe its page-local UUpload adapter.');
 
+  // <lang><zh-CN>统一展示 marker、观察 marker 与十三个源码标签共同证明临时 consumer 真实组合目标组件，而非只检查 tarball 文件存在。</zh-CN><en>The unified display marker, observation marker, and thirteen source tags together prove that the temporary consumer actually composes the target components rather than merely checking tarball-file presence.</en></lang>
+  assert.match(pageSource, /data-smoke="display-media-list"/u, 'Installed-package trial source must retain the unified display/media/list marker.');
+  assert.match(pageSource, /data-smoke="display-media-list-result"/u, 'Installed-package trial source must retain the display/media/list observation marker.');
+  for (const componentName of P69_DISPLAY_COMPONENT_NAMES) {
+    // <lang><zh-CN>逐项标签断言使用冻结名称，不进行目录扫描或模糊组件发现。</zh-CN><en>The tag-by-tag assertion uses frozen names and performs no directory scan or fuzzy component discovery.</en></lang>
+    assert.match(pageSource, new RegExp('<' + componentName + '(?:\\s|>)', 'u'), 'Installed-package trial source must compose ' + componentName + '.');
+  }
+  // <lang><zh-CN>精确绑定证明页码、有限 action、consumer-owned open 和 UEmpty bottom slot 都进入真实编译输入。</zh-CN><en>Exact bindings prove that page state, finite actions, consumer-owned open state, and the UEmpty bottom slot all enter the real compiler input.</en></lang>
+  assert.match(pageSource, /<u-pagination\s+:current="p69Page"\s+:page-count="3"[\s\S]+@update:current="updateP69Page"/u, 'Installed-package trial source must bind finite consumer-owned pagination state.');
+  assert.match(pageSource, /<u-swipe-action\s+:open="p69SwipeOpen"\s+:actions="p69SwipeActions"[\s\S]+@update:open="updateP69SwipeOpen"/u, 'Installed-package trial source must bind finite consumer-owned swipe-action state.');
+  assert.match(pageSource, /<u-empty[\s\S]+<template #bottom><u-tag/u, 'Installed-package trial source must compose the UEmpty bottom slot with UTag.');
+
   // <lang><zh-CN>TypeScript consumer 显式导入六组件精确类型与 global 映射，证明 tarball export resolver 而非仓内 paths 映射提供 declaration。</zh-CN><en>The TypeScript consumer explicitly imports precise six-component types and global mappings, proving the tarball export resolver rather than in-repository path mappings supplies declarations.</en></lang>
   const typeConsumerSource = `/**
  * @module private-package-type-trial
@@ -796,16 +970,25 @@ function recordP66SearchIntent(value) {
  * @lang en Verifies components, props, rules, instances, and global declarations from the one-use installed tarball; the file is only type-checked by TypeScript and runs no UI.
  */
 import UView, {
+  UAlertTips,
+  UButton,
   UCalendar,
+  UCell,
+  UCellGroup,
+  UCellItem,
   UCheckbox,
   UCheckboxGroup,
   UDropdown,
   UDropdownItem,
+  UEmpty,
   UField,
   UForm,
   UFormItem,
+  UIcon,
+  UImage,
   UInput,
   UNumberBox,
+  UPagination,
   UPicker,
   URadio,
   URadioGroup,
@@ -813,21 +996,34 @@ import UView, {
   USearch,
   USelect,
   USlider,
+  USkeleton,
   USwitch,
+  USwipeAction,
+  UTag,
+  UText,
   UTextarea,
   UUpload,
+  type UAlertTipsProps,
+  type UButtonProps,
   type UCalendarProps,
+  type UCellGroupProps,
+  type UCellItemProps,
+  type UCellProps,
   type UCheckboxGroupProps,
   type UCheckboxProps,
   type UDropdownItemProps,
   type UDropdownProps,
+  type UEmptyProps,
   type UFieldProps,
   type UFormInstance,
   type UFormItemProps,
   type UFormProps,
   type UFormRules,
+  type UIconProps,
+  type UImageProps,
   type UInputProps,
   type UNumberBoxProps,
+  type UPaginationProps,
   type UPickerProps,
   type URadioGroupProps,
   type URadioProps,
@@ -835,7 +1031,11 @@ import UView, {
   type USearchProps,
   type USelectProps,
   type USliderProps,
+  type USkeletonProps,
   type USwitchProps,
+  type USwipeActionProps,
+  type UTagProps,
+  type UTextProps,
   type UTextareaProps,
   type UUploadAdapter,
   type UUploadAdapterState,
@@ -861,6 +1061,33 @@ const modalController: UModalController = useModal(feedbackScope);
 const toastController: UToastController = useToast(feedbackScope);
 // <lang><zh-CN>可判别结果类型接受 controller 的同步返回，但不将 accepted 解释为用户确认或业务完成。</zh-CN><en>The discriminated result type accepts a controller's synchronous return without interpreting acceptance as user confirmation or business completion.</en></lang>
 const feedbackResult: UFeedbackCommandResult = toastController.show('Local type trial');
+
+// <lang><zh-CN>alert props 验证有限类型、调用方可见性与文字通过 tarball 根 declaration 解析。</zh-CN><en>Alert props verify that finite type, caller visibility, and copy resolve through the tarball root declaration.</en></lang>
+const p69AlertTipsProps: UAlertTipsProps = { show: true, type: 'warning', title: 'Local alert', closable: true };
+// <lang><zh-CN>button props 验证有限 variant/size 与 caller-owned 标签。</zh-CN><en>Button props verify finite variant/size and a caller-owned label.</en></lang>
+const p69ButtonProps: UButtonProps = { variant: 'primary', size: 'md', label: 'Observe' };
+// <lang><zh-CN>HIA cell facade props 验证显式 clickable 与有限文字字段。</zh-CN><en>HIA cell-facade props verify explicit clickable state and finite copy fields.</en></lang>
+const p69CellProps: UCellProps = { label: 'Local cell', description: 'Local row', value: 'Ready', clickable: true };
+// <lang><zh-CN>cell-group props 只验证本地标题与 token 化边界。</zh-CN><en>Cell-group props verify only a local title and tokenized boundary.</en></lang>
+const p69CellGroupProps: UCellGroupProps = { title: 'Local rows', bordered: true };
+// <lang><zh-CN>cell-item props 验证 caller-owned row copy 和本地交互 guard。</zh-CN><en>Cell-item props verify caller-owned row copy and the local interaction guard.</en></lang>
+const p69CellItemProps: UCellItemProps = { title: 'Local item', label: 'Caller row', clickable: true, disabled: false };
+// <lang><zh-CN>icon props 验证无字体 registry 的有限 size/tone 表面。</zh-CN><en>Icon props verify the finite size/tone surface with no font registry.</en></lang>
+const p69IconProps: UIconProps = { name: 'local-symbol', label: 'Local icon', size: 'medium', tone: 'primary' };
+// <lang><zh-CN>image props 验证 caller-owned source、原生 mode 与有限 shape/size。</zh-CN><en>Image props verify a caller-owned source, native mode, and finite shape/size.</en></lang>
+const p69ImageProps: UImageProps = { src: '', alt: 'No remote source', mode: 'aspectFit', shape: 'rounded', size: 'small' };
+// <lang><zh-CN>pagination props 验证有限当前页和本地页数，不包含查询或远端 total。</zh-CN><en>Pagination props verify a finite current page and local page count, with no query or remote total.</en></lang>
+const p69PaginationProps: UPaginationProps = { current: 1, pageCount: 3, prevText: 'Previous', nextText: 'Next' };
+// <lang><zh-CN>skeleton props 验证 caller-owned loading 与受运行时收束的行数候选。</zh-CN><en>Skeleton props verify caller-owned loading and a row-count candidate bounded at runtime.</en></lang>
+const p69SkeletonProps: USkeletonProps = { loading: false, rows: 2, showTitle: true };
+// <lang><zh-CN>swipe-action props 只包含有限 scalar/action record 与 consumer-owned open。</zh-CN><en>Swipe-action props contain only a finite scalar/action record and consumer-owned open state.</en></lang>
+const p69SwipeActionProps: USwipeActionProps = { open: true, actions: [{ value: 'observe', label: 'Observe', type: 'primary' }], closeText: 'Close' };
+// <lang><zh-CN>text props 验证有限 tone/size 与 caller-owned fallback。</zh-CN><en>Text props verify finite tone/size and a caller-owned fallback.</en></lang>
+const p69TextProps: UTextProps = { show: true, text: 'Local text', type: 'primary', size: 'md' };
+// <lang><zh-CN>empty props 验证调用方显式决定空态、说明与 action label。</zh-CN><en>Empty props verify that the caller explicitly decides empty state, description, and action label.</en></lang>
+const p69EmptyProps: UEmptyProps = { show: true, title: 'Local empty state', description: 'No remote data', actionText: 'Observe' };
+// <lang><zh-CN>tag props 验证有限 token 表面、双可见性输入和本地 close intent 开关。</zh-CN><en>Tag props verify a finite token surface, dual visibility inputs, and the local close-intent switch.</en></lang>
+const p69TagProps: UTagProps = { text: 'Local tag', tone: 'primary', size: 'medium', appearance: 'outline', visible: true, show: true, closable: true };
 
 // <lang><zh-CN>checkbox leaf 类型证明透明键与受控布尔 model 从 tarball declaration 解析。</zh-CN><en>The checkbox leaf type proves transparent keys and the controlled Boolean model resolve from tarball declarations.</en></lang>
 const checkboxProps: UCheckboxProps = { value: 'trial', modelValue: false };
@@ -914,8 +1141,34 @@ const searchProps: USearchProps = { modelValue: 'Local query', showAction: true,
 type FormValidationMethod = UFormInstance['validateField'];
 const formValidationMethod: FormValidationMethod | undefined = undefined;
 
-// <lang><zh-CN>plugin、P66 六组件及 P67 十四组件 global 映射只做静态赋值，不注册 Vue 应用。</zh-CN><en>The plugin plus P66 six-component and P67 fourteen-component global mappings perform static assignment only and register no Vue application.</en></lang>
+// <lang><zh-CN>plugin 与受审组件 global 映射只做静态赋值，不注册 Vue 应用。</zh-CN><en>The plugin and audited-component global mappings perform static assignment only and register no Vue application.</en></lang>
 const plugin: Plugin = UView;
+// <lang><zh-CN>alert global 映射必须与根具名导出保持同一精确类型。</zh-CN><en>The alert global mapping must retain the same precise type as the root named export.</en></lang>
+const globalP69AlertTips: GlobalComponents['UAlertTips'] = UAlertTips;
+// <lang><zh-CN>button global 映射证明 template augmentation 不退回 generic。</zh-CN><en>The button global mapping proves template augmentation does not regress to generic.</en></lang>
+const globalP69Button: GlobalComponents['UButton'] = UButton;
+// <lang><zh-CN>HIA cell facade global 映射必须由安装包 global 子入口提供。</zh-CN><en>The HIA cell-facade global mapping must come from the installed package's global subpath.</en></lang>
+const globalP69Cell: GlobalComponents['UCell'] = UCell;
+// <lang><zh-CN>cell-group global 映射验证容器类型未遗漏。</zh-CN><en>The cell-group global mapping verifies the container type is not omitted.</en></lang>
+const globalP69CellGroup: GlobalComponents['UCellGroup'] = UCellGroup;
+// <lang><zh-CN>cell-item global 映射验证 row 类型未遗漏。</zh-CN><en>The cell-item global mapping verifies the row type is not omitted.</en></lang>
+const globalP69CellItem: GlobalComponents['UCellItem'] = UCellItem;
+// <lang><zh-CN>icon global 映射验证有限 text-symbol 表面。</zh-CN><en>The icon global mapping verifies the finite text-symbol surface.</en></lang>
+const globalP69Icon: GlobalComponents['UIcon'] = UIcon;
+// <lang><zh-CN>image global 映射验证 caller-owned native projection 表面。</zh-CN><en>The image global mapping verifies the caller-owned native-projection surface.</en></lang>
+const globalP69Image: GlobalComponents['UImage'] = UImage;
+// <lang><zh-CN>pagination global 映射验证有限页码 intent 表面。</zh-CN><en>The pagination global mapping verifies the finite page-intent surface.</en></lang>
+const globalP69Pagination: GlobalComponents['UPagination'] = UPagination;
+// <lang><zh-CN>skeleton global 映射验证 caller-owned placeholder 投影。</zh-CN><en>The skeleton global mapping verifies the caller-owned placeholder projection.</en></lang>
+const globalP69Skeleton: GlobalComponents['USkeleton'] = USkeleton;
+// <lang><zh-CN>swipe-action global 映射验证显式非手势操作表面。</zh-CN><en>The swipe-action global mapping verifies the explicit nongesture action surface.</en></lang>
+const globalP69SwipeAction: GlobalComponents['USwipeAction'] = USwipeAction;
+// <lang><zh-CN>text global 映射验证有限文字投影。</zh-CN><en>The text global mapping verifies the finite text projection.</en></lang>
+const globalP69Text: GlobalComponents['UText'] = UText;
+// <lang><zh-CN>empty global 映射验证 caller-controlled empty projection。</zh-CN><en>The empty global mapping verifies the caller-controlled empty projection.</en></lang>
+const globalP69Empty: GlobalComponents['UEmpty'] = UEmpty;
+// <lang><zh-CN>tag global 映射验证有限 token 标签表面。</zh-CN><en>The tag global mapping verifies the finite token-tag surface.</en></lang>
+const globalP69Tag: GlobalComponents['UTag'] = UTag;
 const globalForm: GlobalComponents['UForm'] = UForm;
 const globalFormItem: GlobalComponents['UFormItem'] = UFormItem;
 const globalField: GlobalComponents['UField'] = UField;
@@ -957,6 +1210,19 @@ void [
   feedbackScope,
   modalController,
   toastController,
+  p69AlertTipsProps,
+  p69ButtonProps,
+  p69CellGroupProps,
+  p69CellItemProps,
+  p69CellProps,
+  p69EmptyProps,
+  p69IconProps,
+  p69ImageProps,
+  p69PaginationProps,
+  p69SkeletonProps,
+  p69SwipeActionProps,
+  p69TagProps,
+  p69TextProps,
   checkboxProps,
   checkboxGroupProps,
   calendarProps,
@@ -970,6 +1236,19 @@ void [
   globalForm,
   globalFormItem,
   globalInput,
+  globalP69AlertTips,
+  globalP69Button,
+  globalP69Cell,
+  globalP69CellGroup,
+  globalP69CellItem,
+  globalP69Empty,
+  globalP69Icon,
+  globalP69Image,
+  globalP69Pagination,
+  globalP69Skeleton,
+  globalP69SwipeAction,
+  globalP69Tag,
+  globalP69Text,
   globalCalendar,
   globalCheckbox,
   globalCheckboxGroup,
@@ -1002,22 +1281,43 @@ void [
   uploadFile,
   uploadProps,
   uploadState,
+  UAlertTips,
+  UButton,
   UCalendar,
+  UCell,
+  UCellGroup,
+  UCellItem,
   UCheckbox,
   UCheckboxGroup,
   UDropdown,
   UDropdownItem,
+  UEmpty,
+  UIcon,
+  UImage,
   UNumberBox,
+  UPagination,
   UPicker,
   URadio,
   URadioGroup,
   URate,
   USelect,
   USlider,
+  USkeleton,
   USwitch,
+  USwipeAction,
+  UTag,
+  UText,
   UUpload
 ];
 `;
+  // <lang><zh-CN>每个冻结名称必须同时出现在根具名 import 与 `GlobalComponents` 赋值中；随后真实 TypeScript run 会从安装 tarball 解析并校验两条路径。</zh-CN><en>Every frozen name must appear in both the root named import and a `GlobalComponents` assignment; the subsequent real TypeScript run resolves and checks both paths from the installed tarball.</en></lang>
+  assert.match(typeConsumerSource, /import '@hia-uview\/ui\/global';/u, 'Installed-package type trial must import the package global augmentation.');
+  for (const componentName of P69_ROOT_COMPONENT_NAMES) {
+    // <lang><zh-CN>root import 断言限定在 package import block，防止仅有后续类型文字时产生假阳性。</zh-CN><en>The root-import assertion is limited to the package import block, preventing a false positive from later type text alone.</en></lang>
+    assert.match(typeConsumerSource, new RegExp("import UView, \\{[\\s\\S]*?\\b" + componentName + "(?:,|\\n)[\\s\\S]*?\\} from '@hia-uview/ui';", 'u'), 'Installed-package type trial must import root component ' + componentName + '.');
+    // <lang><zh-CN>global 断言要求同一个值赋给同名 augmentation key，不能以无关组件或 generic cast 代替。</zh-CN><en>The global assertion requires the same value to be assigned to the matching augmentation key and permits no unrelated component or generic cast as a substitute.</en></lang>
+    assert.match(typeConsumerSource, new RegExp("GlobalComponents\\['" + componentName + "'\\] = " + componentName, 'u'), 'Installed-package type trial must bind global component ' + componentName + '.');
+  }
   // <lang><zh-CN>临时 tsconfig 使用 package resolver，不声明 paths；这样类型通过只能来自已安装 tarball 的 package metadata。</zh-CN><en>The temporary tsconfig uses the package resolver and declares no paths, so a type pass can come only from installed-tarball package metadata.</en></lang>
   const typeConfig = {
     compilerOptions: {
@@ -1114,7 +1414,8 @@ try {
     'easycom/mp-weixin.json',
     ...P66_REQUIRED_PACKAGE_PATHS,
     ...P67_REQUIRED_PACKAGE_PATHS,
-    ...P68_REQUIRED_PACKAGE_PATHS
+    ...P68_REQUIRED_PACKAGE_PATHS,
+    ...P69_REQUIRED_PACKAGE_PATHS
   ]) {
     assert.ok(packedPaths.has(requiredPath), `Package tarball must contain ${requiredPath}.`);
   }
@@ -1159,13 +1460,17 @@ try {
   const installedPackage = JSON.parse(await readFile(join(installedPackageDirectory, 'package.json'), 'utf8'));
   assert.equal(installedPackage.name, '@hia-uview/ui');
   assert.equal(installedPackage.types, './types/index.d.ts');
-  // <lang><zh-CN>根与 services subpath 必须同时声明 runtime/type 出口，且所有目标均位于已安装 tarball 内。</zh-CN><en>The root and services subpath must both declare runtime/type exports, with every target located inside the installed tarball.</en></lang>
+  // <lang><zh-CN>根、services 与 global subpath 必须声明各自 runtime/type 出口，且所有目标均位于已安装 tarball 内。</zh-CN><en>The root, services, and global subpaths must declare their respective runtime/type exports, with every target located inside the installed tarball.</en></lang>
   assert.equal(installedPackage.exports?.['.']?.default, './src/index.mjs');
   assert.equal(installedPackage.exports?.['.']?.types, './types/index.d.ts');
   assert.equal(installedPackage.exports?.['./services']?.default, './src/services.mjs');
   assert.equal(installedPackage.exports?.['./services']?.types, './types/services.d.ts');
+  assert.equal(installedPackage.exports?.['./global']?.default, './types/global-components.mjs');
+  assert.equal(installedPackage.exports?.['./global']?.types, './types/global-components.d.ts');
   await readFile(join(installedPackageDirectory, 'types', 'index.d.ts'), 'utf8');
   await readFile(join(installedPackageDirectory, 'types', 'services.d.ts'), 'utf8');
+  await readFile(join(installedPackageDirectory, 'types', 'global-components.d.ts'), 'utf8');
+  await readFile(join(installedPackageDirectory, 'types', 'global-components.mjs'), 'utf8');
   await readFile(join(installedPackageDirectory, 'src', 'services.mjs'), 'utf8');
   await readFile(join(installedPackageDirectory, 'src', 'feedback-service-runtime.mjs'), 'utf8');
   await readFile(join(installedPackageDirectory, 'easycom', 'mp-weixin.json'), 'utf8');
@@ -1224,6 +1529,14 @@ try {
     assert.match(trialPageMarkup, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `Installed-package trial page must compose ${componentName}.`);
   }
 
+  // <lang><zh-CN>生成 WXML 必须保留统一展示 marker、观察 marker 与十三个组件标签，排除“已打包或已声明类型但未进入小程序页面”的假阳性。</zh-CN><en>Generated WXML must retain the unified display marker, observation marker, and all thirteen component tags, excluding a false positive where components are packaged or typed but never enter the Mini Program page.</en></lang>
+  assert.match(trialPageMarkup, /data-smoke="display-media-list"/, 'Installed-package trial page must retain the unified display/media/list marker.');
+  assert.match(trialPageMarkup, /data-smoke="display-media-list-result"/, 'Installed-package trial page must retain the display/media/list observation marker.');
+  for (const componentName of P69_DISPLAY_COMPONENT_NAMES) {
+    // <lang><zh-CN>逐标签断言只检查 compiler 实际页产物，不把源码字符串自身当作编译成功。</zh-CN><en>The tag-by-tag assertion checks the actual compiler page artifact and does not treat the source string itself as compile success.</en></lang>
+    assert.match(trialPageMarkup, new RegExp('<' + componentName + '(?:\\s|>)', 'u'), 'Installed-package trial page must compose ' + componentName + '.');
+  }
+
   // <lang><zh-CN>页面 JSON 的六个 mapping 必须指向已安装 package 的对应 leaf 名；不固定 node-modules 前缀，以免依赖 compiler 的内部输出布局。</zh-CN><en>All six mappings in page JSON must point to the matching leaf name in the installed package; the node-modules prefix remains unfixed to avoid depending on compiler-internal output layout.</en></lang>
   const trialPageConfiguration = await readTrialOutputJson(compilerOutputDirectory, trialPageConfigurationPath);
   for (const componentName of P66_FORM_COMPONENT_NAMES) {
@@ -1245,6 +1558,14 @@ try {
   // <lang><zh-CN>十个 P68 mapping 必须终止于安装 tarball 内对应 leaf SFC；路径前缀仍由临时 compiler 决定。</zh-CN><en>All ten P68 mappings must end at matching leaf SFCs inside the installed tarball; the temporary compiler still determines path prefixes.</en></lang>
   for (const componentName of P68_SURFACE_COMPONENT_NAMES) {
     // <lang><zh-CN>只验证稳定 package leaf 后缀，不记录临时绝对路径。</zh-CN><en>Verifies only the stable package-leaf suffix and records no temporary absolute path.</en></lang>
+    const componentMapping = trialPageConfiguration.usingComponents?.[componentName];
+    assert.equal(typeof componentMapping, 'string', 'Installed-package trial page must map ' + componentName + '.');
+    assert.ok(componentMapping.replaceAll('\\', '/').endsWith('/src/components/' + componentName + '/' + componentName), 'Installed-package trial mapping for ' + componentName + ' must end at its package leaf SFC.');
+  }
+
+  // <lang><zh-CN>十三个展示组件的页面 mapping 必须逐项终止于安装 tarball 的对应 leaf SFC；路径前缀仍由临时 compiler 决定。</zh-CN><en>Every page mapping for the thirteen display components must end at its matching leaf SFC in the installed tarball; the temporary compiler continues to choose the path prefix.</en></lang>
+  for (const componentName of P69_DISPLAY_COMPONENT_NAMES) {
+    // <lang><zh-CN>只规范化 Windows 分隔符并检查稳定 package leaf 后缀，不记录一次性绝对路径。</zh-CN><en>Normalizes only Windows separators and checks the stable package-leaf suffix without recording the one-use absolute path.</en></lang>
     const componentMapping = trialPageConfiguration.usingComponents?.[componentName];
     assert.equal(typeof componentMapping, 'string', 'Installed-package trial page must map ' + componentName + '.');
     assert.ok(componentMapping.replaceAll('\\', '/').endsWith('/src/components/' + componentName + '/' + componentName), 'Installed-package trial mapping for ' + componentName + ' must end at its package leaf SFC.');
@@ -1278,6 +1599,16 @@ try {
     }
   }
 
+  // <lang><zh-CN>十三个展示组件也必须各自从 tarball 经 Easycom 输出 JS/JSON/WXML/WXSS 四件套；root/global 类型成功不能替代小程序构件证据。</zh-CN><en>All thirteen display components must also emit their own JS/JSON/WXML/WXSS quartet from the tarball through Easycom; successful root/global typing cannot substitute for Mini Program artifact evidence.</en></lang>
+  for (const componentName of P69_DISPLAY_COMPONENT_NAMES) {
+    // <lang><zh-CN>四种后缀均锁定精确 leaf 名称，同时允许 compiler 自行选择临时 node-modules 前缀。</zh-CN><en>All four suffixes lock the exact leaf name while allowing the compiler to choose its temporary node-modules prefix.</en></lang>
+    for (const extension of ['js', 'json', 'wxml', 'wxss']) {
+      // <lang><zh-CN>expected suffix 只由冻结 component name 与固定扩展名组成，不接受调用方输入。</zh-CN><en>The expected suffix consists only of a frozen component name and fixed extension and accepts no caller input.</en></lang>
+      const expectedSuffix = join(componentName, componentName + '.' + extension);
+      assert.ok(findOutputFileBySuffix(compilerOutputFiles, expectedSuffix), 'Installed-package compiler must emit ' + componentName + '.' + extension + '.');
+    }
+  }
+
   // <lang><zh-CN>两个内部组合 JSON 进一步证明 UField 实际携带 UInput、UFormItem 实际携带校验消息组件，而非仅靠页面直接标签通过。</zh-CN><en>Two internal-composition JSON files further prove UField actually carries UInput and UFormItem carries the validation-message component rather than passing only through direct page tags.</en></lang>
   const fieldConfigurationPath = findOutputFileBySuffix(compilerOutputFiles, join('u-field', 'u-field.json'));
   const formItemConfigurationPath = findOutputFileBySuffix(compilerOutputFiles, join('u-form-item', 'u-form-item.json'));
@@ -1293,6 +1624,20 @@ try {
   assert.equal(typeof formItemMessageMapping, 'string', 'Installed-package UFormItem must map UValidationMessage.');
   assert.ok(fieldInputMapping.replaceAll('\\', '/').endsWith('/u-input/u-input'), 'Installed-package UField mapping must end at UInput.');
   assert.ok(formItemMessageMapping.replaceAll('\\', '/').endsWith('/u-validation-message/u-validation-message'), 'Installed-package UFormItem mapping must end at UValidationMessage.');
+
+  // <lang><zh-CN>UEmpty 的内部 JSON 必须存在，证明其已安装 leaf 实际完成编译，而非由页面标签占位。</zh-CN><en>The internal UEmpty JSON must exist, proving that its installed leaf actually compiled rather than being represented only by a page tag.</en></lang>
+  const emptyConfigurationPath = findOutputFileBySuffix(compilerOutputFiles, join('u-empty', 'u-empty.json'));
+  assert.ok(emptyConfigurationPath, 'Installed-package compiler must emit UEmpty JSON.');
+  // <lang><zh-CN>只从受控 compiler 输出读取 UEmpty 配置，检查两个已冻结直接 child mapping。</zh-CN><en>Reads UEmpty configuration only from controlled compiler output and checks its two frozen direct-child mappings.</en></lang>
+  const emptyConfiguration = await readTrialOutputJson(compilerOutputDirectory, emptyConfigurationPath);
+  // <lang><zh-CN>button mapping 是 UEmpty action control 的直接依赖，不是页面自身 button 标签的替代证据。</zh-CN><en>The button mapping is UEmpty's direct action-control dependency and is not substitute evidence from the page's own button tag.</en></lang>
+  const emptyButtonMapping = emptyConfiguration.usingComponents?.['u-button'];
+  // <lang><zh-CN>image mapping 是 UEmpty 可选 source 投影的直接依赖，不触发任何图片获取。</zh-CN><en>The image mapping is UEmpty's direct optional-source projection dependency and triggers no image fetch.</en></lang>
+  const emptyImageMapping = emptyConfiguration.usingComponents?.['u-image'];
+  assert.equal(typeof emptyButtonMapping, 'string', 'Installed-package UEmpty must map UButton.');
+  assert.equal(typeof emptyImageMapping, 'string', 'Installed-package UEmpty must map UImage.');
+  assert.ok(emptyButtonMapping.replaceAll('\\', '/').endsWith('/u-button/u-button'), 'Installed-package UEmpty button mapping must end at UButton.');
+  assert.ok(emptyImageMapping.replaceAll('\\', '/').endsWith('/u-image/u-image'), 'Installed-package UEmpty image mapping must end at UImage.');
 
   console.log('Private UI package tarball trial passed (offline install, typecheck, static mp-weixin Easycom compile, temporary cleanup pending).');
 } finally {

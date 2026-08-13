@@ -195,6 +195,43 @@
         <text class="fixture-p66-form__result" data-smoke="p66-form-result">{{ fixtureP66FormResult }}</text>
       </view>
 
+      <!--
+      @lang zh-CN 本段通过受限 Easycom 真实组合展示、媒体与列表批次的十三个组件；页面拥有全部文字、页码、图片来源、slot 与观察状态。
+      @lang en This section actually composes all thirteen display, media, and list components through bounded Easycom; the page owns every copy value, page number, image source, slot, and observation state.
+      <lang><zh-CN>空图片来源不触发网络，分页不发起查询，swipe option 只携带透明标量，空态 action 只更新本地 marker。</zh-CN><en>The empty image source starts no network access, pagination starts no query, swipe options carry transparent scalars only, and the empty-state action only updates a local marker.</en></lang>
+      -->
+      <view class="fixture-display-media-list" data-smoke="display-media-list">
+        <u-alert-tips :show="true" title="本地提示 / Local alert" :closable="true" @click="recordFixturePresentationIntent('alert-click')" @close="recordFixturePresentationIntent('alert-close')">
+          调用方提示 slot / Caller-owned alert slot
+        </u-alert-tips>
+        <u-cell-group title="本地信息行 / Local rows" :bordered="true">
+          <u-cell label="Facade 信息行 / Facade row" description="调用方文字 / Caller-owned copy" value="就绪 / Ready" :clickable="true" @click="recordFixturePresentationIntent('cell')" />
+          <u-cell-item title="迁移信息行 / Migration row" label="本地标签 / Local label" :clickable="true" @click="recordFixturePresentationIntent('cell-item')">
+            调用方尾部 slot / Caller-owned trailing slot
+          </u-cell-item>
+        </u-cell-group>
+        <u-stack direction="horizontal" gap="sm" wrap>
+          <u-icon name="•" label="本地符号 / Local symbol" @click="recordFixturePresentationIntent('icon')">◇</u-icon>
+          <u-image src="" alt="空本地图片来源 / Empty local image source" error-text="本地回退 / Local fallback" @click="recordFixturePresentationIntent('image')" />
+          <u-text type="secondary" @click="recordFixturePresentationIntent('text')">调用方文字 slot / Caller-owned text slot</u-text>
+          <u-tag :show="true" :visible="fixtureTagVisible" :closable="true" @click="recordFixturePresentationIntent('tag-click')" @close="hideFixtureTag">本地标签 slot / Local tag slot</u-tag>
+        </u-stack>
+        <u-button @click="recordFixturePresentationIntent('button')">调用方按钮 slot / Caller-owned button slot</u-button>
+        <u-skeleton :loading="false" :rows="2" :show-title="true">
+          <u-text text="调用方骨架结果 / Caller-owned skeleton result" />
+        </u-skeleton>
+        <u-pagination :current="fixturePageValue" :page-count="3" @update:current="updateFixturePageValue">
+          <template #default><text>本地页码摘要 / Local page summary</text></template>
+        </u-pagination>
+        <u-swipe-action :show="true" :options="fixtureSwipeOptions" @click="recordFixturePresentationIntent('swipe-action')" @close="recordFixturePresentationIntent('swipe-close')">
+          <u-text text="调用方 swipe 内容 / Caller-owned swipe content" />
+        </u-swipe-action>
+        <u-empty :show="true" title="本地空态 / Local empty state" description="调用方决定数据状态 / Caller decides the data state" action-text="本地观察 / Observe locally" @action="recordFixturePresentationIntent('empty-action')">
+          <template #bottom><u-text text="调用方 bottom slot / Caller-owned bottom slot" type="secondary" /></template>
+        </u-empty>
+        <text data-smoke="display-media-list-intent">{{ fixturePresentationIntent }}</text>
+      </view>
+
       <!-- @lang zh-CN 展示批次只组合本地文字符号、调用方图片来源、迁移文字、initials、有限标签、徽标、分隔、数字和静态进度；不产生资产、请求、导航或任务服务。 @lang en The display batch composes local text symbol, caller image source, migration copy, initials, finite tag, badge, divider, number, and static progress only; it creates no asset, request, routing, or task service. <lang><zh-CN>所有值与 click 观察均由页面 refs 拥有。</zh-CN><en>All values and click observations are owned by page refs.</en></lang> -->
       <u-stack class="fixture-display" gap="sm">
         <u-icon name="•" :label="0" @click="recordFixturePresentationIntent('icon')" />
@@ -350,6 +387,7 @@
         <!-- <lang><zh-CN>空态由页面根据派生数组决定；其 action 只请求页面重置本地 query，不加载、重试或滚动任何数据。</zh-CN><en>The page decides empty state from the derived array; its action only asks the page to reset local query and neither loads, retries, nor scrolls any data.</en></lang> -->
         <u-empty
           v-if="filteredCatalogRecords.length === 0"
+          class="fixture-catalog__empty"
           :show="true"
           src=""
           title="没有本地匹配项 / No local matches"

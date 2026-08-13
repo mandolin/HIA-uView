@@ -1,7 +1,7 @@
 /**
  * @module h5-fixture-output
- * @lang zh-CN 验证 H5 fixture 源码与输出包含本地应用、P68 十组件与显式 feedback scope/host、P66 表单组合、P67 十四组件真实组合、HIA-uView 样式和可复核 smoke 文本，不执行浏览器或网络。
- * @lang en Verifies that H5 fixture source and output contain the local app, the P68 ten-component composition with an explicit feedback scope/host, actual P66 form composition, actual P67 fourteen-component composition, HIA-uView style, and inspectable smoke text without browser or network execution.
+ * @lang zh-CN 验证 H5 fixture 源码与输出包含本地应用、P68 十组件与显式 feedback scope/host、P66 表单组合、P67 十四组件、P69 十三组件真实组合、HIA-uView 样式和可复核 smoke 文本，不执行浏览器或网络。
+ * @lang en Verifies that H5 fixture source and output contain the local app, the P68 ten-component composition with an explicit feedback scope/host, actual P66 form composition, actual P67 fourteen-component composition, actual P69 thirteen-component composition, HIA-uView style, and inspectable smoke text without browser or network execution.
  */
 
 import assert from 'node:assert/strict';
@@ -89,6 +89,46 @@ const P68_JAVASCRIPT_RUNTIME_MARKERS = Object.freeze([
   'u-notice-bar'
 ]);
 
+/**
+ * @lang zh-CN H5 页面必须在一个统一 marker 下通过 package root 具名入口真实组合的十三个展示、媒体与列表组件。
+ * @lang en Thirteen display, media, and list components that the H5 page must actually compose under one unified marker through named package-root exports.
+ */
+const P69_DISPLAY_MEDIA_LIST_COMPONENT_TAGS = Object.freeze([
+  'UButton',
+  'UCell',
+  'UCellGroup',
+  'UCellItem',
+  'UIcon',
+  'UImage',
+  'UPagination',
+  'USkeleton',
+  'USwipeAction',
+  'UText',
+  'UEmpty',
+  'UTag',
+  'UAlertTips'
+]);
+
+/**
+ * @lang zh-CN 每个 marker 来自对应 P69 组件的 JavaScript render 输出；验证不接受全量 CSS 入口替代真实组合。
+ * @lang en Every marker originates from the JavaScript render output of its corresponding P69 component; verification does not accept the complete CSS entry as a substitute for actual composition.
+ */
+const P69_JAVASCRIPT_RUNTIME_MARKERS = Object.freeze([
+  'u-button__loading-text',
+  'u-cell__content',
+  'u-cell-group--bordered',
+  'u-cell-item__trailing',
+  'u-icon__symbol',
+  'u-image__native',
+  'u-pagination__summary',
+  'u-skeleton__placeholder',
+  'u-swipe-action__content',
+  'u-text--',
+  'u-empty__description',
+  'u-tag__text',
+  'u-alert-tips__body'
+]);
+
 // <lang><zh-CN>统一 P68 marker、逐标签与显式 scope/host 绑定共同防止组件或 service 只被 import 而未在页面消费。</zh-CN><en>The unified P68 marker, tag-by-tag checks, and explicit scope/host bindings jointly prevent components or services from being imported without page consumption.</en></lang>
 assert.match(fixtureSource, /data-smoke="overlay-feedback-navigation"/u, 'H5 fixture source must retain the unified P68 composition marker.');
 assert.match(fixtureSource, /data-smoke="feedback-service-result"/u, 'H5 fixture source must retain the visible P68 service-result marker.');
@@ -98,6 +138,20 @@ for (const componentTag of P68_COMPONENT_TAGS) {
 assert.match(fixtureSource, /const feedbackScope = createUFeedbackScope\(\)/u, 'H5 fixture must create one explicit feedback scope.');
 assert.match(fixtureSource, /<UModal\s+:service-scope="feedbackScope"\s+:service-host="true"/u, 'H5 fixture must mount an explicit modal host.');
 assert.match(fixtureSource, /<UToast\s+:service-scope="feedbackScope"\s+:service-host="true"/u, 'H5 fixture must mount an explicit toast host.');
+
+// <lang><zh-CN>统一 P69 marker、逐标签与逐根入口导入共同排除只导入未消费、仅样式存在或隐式全局注册的假阳性。</zh-CN><en>The unified P69 marker, tag-by-tag checks, and package-root import checks jointly exclude false positives from unused imports, style-only presence, or implicit global registration.</en></lang>
+assert.match(fixtureSource, /data-smoke="display-media-list"/u, 'H5 fixture source must retain the unified P69 composition marker.');
+assert.match(fixtureSource, /data-smoke="display-media-list-intent"/u, 'H5 fixture source must retain the visible P69 intent marker.');
+for (const componentTag of P69_DISPLAY_MEDIA_LIST_COMPONENT_TAGS) {
+  // <lang><zh-CN>标签必须位于源码模板，且同名导出必须来自固定 package root；测试不接受全局 plugin 或任意 subpath。</zh-CN><en>The tag must occur in the source template and the same-named export must come from the fixed package root; the check accepts neither a global plugin nor an arbitrary subpath.</en></lang>
+  assert.match(fixtureSource, new RegExp('<' + componentTag + '(?:\\s|>)', 'u'), 'H5 fixture source must compose ' + componentTag + '.');
+  assert.match(fixtureSource, new RegExp("import\\s*\\{[^}]*\\b" + componentTag + "\\b[^}]*\\}\\s*from '../../../src/index\\.mjs';", 'u'), 'H5 fixture must import ' + componentTag + ' from the package root.');
+}
+// <lang><zh-CN>三个 slot 断言锁定本批新增的内容、分页摘要与空态补充投影；全部数据仍来自 fixture。</zh-CN><en>Three slot assertions lock this batch's content, pagination-summary, and empty-state supplementary projections; all data still comes from the fixture.</en></lang>
+assert.match(fixtureSource, /<UCellGroup[\s\S]+<UCell[\s\S]+<UCellItem/u, 'H5 fixture must retain the local cell-group composition.');
+assert.match(fixtureSource, /<UPagination[\s\S]+<template #default>Local page summary/u, 'H5 fixture must retain the caller-owned pagination slot.');
+assert.match(fixtureSource, /<UEmpty[\s\S]+<template #bottom><UText/u, 'H5 fixture must retain the caller-owned empty bottom slot.');
+assert.doesNotMatch(fixtureSource, /fetch\(|XMLHttpRequest|localStorage|sessionStorage/u, 'H5 fixture must not acquire network or browser-storage services.');
 
 // <lang><zh-CN>源码必须保留中性组合/结果 marker、model/rules 绑定和三个显式 form API；这些静态断言只防止 fixture 漂移，行为仍由 runtime 测试证明。</zh-CN><en>Source must retain neutral composition/result markers, model/rules bindings, and three explicit form APIs; these static assertions only prevent fixture drift while runtime tests still prove behavior.</en></lang>
 assert.match(fixtureSource, /data-smoke="p66-form-composition"/);
@@ -150,6 +204,8 @@ assert.match(combinedJavaScript, /p67-controlled-composition/, 'H5 JavaScript mu
 assert.match(combinedJavaScript, /p67-adapter-state/, 'H5 JavaScript must retain the visible P67 adapter-state marker.');
 assert.match(combinedJavaScript, /overlay-feedback-navigation/, 'H5 JavaScript must retain the unified P68 composition marker.');
 assert.match(combinedJavaScript, /feedback-service-result/, 'H5 JavaScript must retain the visible P68 service-result marker.');
+assert.match(combinedJavaScript, /display-media-list/, 'H5 JavaScript must retain the unified P69 composition marker.');
+assert.match(combinedJavaScript, /display-media-list-intent/, 'H5 JavaScript must retain the visible P69 intent marker.');
 
 // <lang><zh-CN>六个 class marker 分别来自实际渲染函数；它们与双 data marker 共同证明本地页面真实引入目标组件，而非仅加载其 CSS。</zh-CN><en>The six class markers each originate from an actual render function; together with the two data markers they prove the local page really imports the target components rather than loading only their CSS.</en></lang>
 for (const runtimeMarker of [
@@ -173,4 +229,8 @@ for (const runtimeMarker of P68_JAVASCRIPT_RUNTIME_MARKERS) {
 }
 assert.match(combinedJavaScript, /Local scoped toast/, 'H5 JavaScript must retain the explicit-scope toast invocation.');
 assert.match(combinedJavaScript, /Local scoped modal/, 'H5 JavaScript must retain the explicit-scope modal invocation.');
+// <lang><zh-CN>十三个 P69 marker 必须全部来自 freshly-built JavaScript；这证明 package root 具名导出进入真实 render 闭包，而不是只出现在源码或 CSS。</zh-CN><en>All thirteen P69 markers must come from freshly built JavaScript; this proves named package-root exports entered the actual render closure rather than appearing only in source or CSS.</en></lang>
+for (const runtimeMarker of P69_JAVASCRIPT_RUNTIME_MARKERS) {
+  assert.ok(combinedJavaScript.includes(runtimeMarker), 'H5 JavaScript must contain the P69 runtime marker ' + runtimeMarker + '.');
+}
 console.log('HIA-uView H5 fixture output contract passed.');
