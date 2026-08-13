@@ -8,6 +8,20 @@ HIA-uView 当前为 `mp-weixin` profile 提供下列**私有、预发布**的 Un
 
 `UToast` 与 `UModal` 还可作为调用方拥有的[反馈 scope](feedback-services.md) 的显式 opt-in host。这些 composable service 不是额外组件、全局 singleton、页面发现或业务框架 API。
 
+## Display, media, list, and local-action delivery / 展示、媒体、列表与局部操作交付
+
+The following 13-component surface has package-owned precise props/events/instance types, repository runtime tests, H5 and `mp-weixin` compiler composition, and an offline private-package consumption trial. These are bounded delivery facts, not a claim of complete uView-Pro behavior, a published package, DevTools/device support, accessibility certification, or cross-platform runtime support. Read each component page before migration because a `mapped` API can be fully runtime-tested while still requiring payload, default, slot, or ownership adaptation.
+
+下列 13 组件表面具备 package 自有精确 props/events/instance 类型、仓内 runtime 测试、H5 与 `mp-weixin` compiler 组合，以及离线私有包消费 trial。这些是受限交付事实，并不表示完整 uView-Pro 行为、已发布 package、开发者工具/真机支持、无障碍认证或跨端 runtime 支持。迁移前必须阅读每个组件页，因为 `mapped` API 即使已有完整 runtime 测试，仍可能需要 payload、default、slot 或所有权适配。
+
+| Family / 家族 | Component contracts / 组件契约 | Review focus / 复核重点 |
+| --- | --- | --- |
+| Local action and content / 局部操作与内容 | [`UButton`](button.md), [`UIcon`](icon.md), [`UText`](text.md), [`UTag`](tag.md), [`UAlertTips`](alert-tips.md) | Original-event versus payload-free/scalar events, slot fallback, visibility and disabled/loading guards. / 原始事件与无 payload/标量事件、slot 回退、可见性及 disabled/loading guard。 |
+| Information rows and empty/loading state / 信息行与空态/加载态 | [`UCell`](cell.md), [`UCellGroup`](cell-group.md), [`UCellItem`](cell-item.md), [`UEmpty`](empty.md), [`USkeleton`](skeleton.md) | HIA-only facade, caller-owned child/content state, slot/value precedence, bounded placeholders, and no inferred data lifecycle. / HIA 自有 facade、调用方自有子项/内容状态、slot/value 优先级、受限占位及不推断数据生命周期。 |
+| Media, pagination, and explicit row actions / 媒体、分页与显式行操作 | [`UImage`](image.md), [`UPagination`](pagination.md), [`USwipeAction`](swipe-action.md) | Source recovery, numeric event order, scalar action payloads, and absence of built-in network/query/swipe behavior. / 来源恢复、数值事件顺序、标量操作载荷，以及不包含内建网络/查询/swipe 行为。 |
+
+## Complete component index / 完整组件索引
+
 | Template name / 模板名称 | Named export / 命名导出 | Contract / 契约 | Bounded role / 受限职责 |
 | --- | --- | --- | --- |
 | `u-button` | `UButton` | [UButton](button.md) | Caller-controlled local action intent / 调用方受控的本地操作意图 |

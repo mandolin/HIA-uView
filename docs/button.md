@@ -103,3 +103,31 @@ The initial fixture compiles the states above with the locked local official CLI
 This initial contract does not create an icon button, a form submit/reset wrapper, `open-type` capability proxy, raw-style escape hatch, business command, network request, or upstream compatibility layer. Each would widen the platform or business boundary and needs its own reviewed contract.
 
 此初始契约不创建图标按钮、表单提交/重置封装、`open-type` 能力代理、原始样式逃生口、业务命令、网络请求或上游兼容层。上述任一能力都会扩大平台或业务边界，必须各自拥有经过审阅的契约。
+
+## Migration from uView-Pro 0.6.15 / 从 uView-Pro 0.6.15 迁移
+
+`disabled`, `loading`, and `text` are reviewed compatible inputs. The `click` event and default slot have runtime-tested matching payload/content ownership, but remain conservatively `mapped` within the complete component boundary. HIA's `size` uses `sm | md | lg`, `variant` replaces neither upstream `type` nor `plain`, and `label`/`leading` are HIA-owned composition surfaces.
+
+`disabled`、`loading` 与 `text` 是已复核的 compatible 输入。`click` 事件与默认 slot 已具备 payload/内容所有权相符的 runtime 测试，但在完整组件边界内仍保守保持 `mapped`。HIA 的 `size` 使用 `sm | md | lg`，`variant` 既不替代上游 `type`，也不替代 `plain`；`label`/`leading` 是 HIA 自有组合表面。
+
+| Upstream assumption / 上游假设 | Required migration / 必需迁移 |
+| --- | --- |
+| `type`, `plain`, `shape`, raw color/style or ripple props select appearance / 多种上游 prop 选择外观 | Map deliberately to finite `variant`/`size` and documented tokens; unsupported props must not be silently dropped. / 明确映射到有限 `variant`/`size` 与已记录 token；不得静默丢弃未支持 prop。 |
+| native `openType`, form or authorization callbacks / 原生 `openType`、form 或授权 callback | Move to a separately reviewed platform adapter/control; `UButton` does not proxy them. / 移到另行审阅的平台 adapter/control；`UButton` 不代理这些能力。 |
+| upstream throttling or app-parameter behavior / 上游节流或 app-parameter 行为 | Implement policy in caller code and keep the button as one local intent source. / 在调用方代码中实现策略，并让按钮只作为一个本地意图来源。 |
+
+## Usage examples / 使用示例
+
+```vue
+<u-button variant="primary" size="md" text="Save / 保存" :loading="saving" @click="saveDraft" />
+```
+
+```vue
+<!-- Incorrect: HIA does not proxy native authorization or infer submission. -->
+<!-- 错误：HIA 不代理原生授权，也不推断提交行为。 -->
+<u-button open-type="getPhoneNumber" form-type="submit" @getphonenumber="acceptPhone" />
+```
+
+Runtime tests prove original-event identity, disabled/loading zero-event behavior, label/text/default-slot precedence, and close isolation for the related local content surfaces. Package-owned types constrain props/events. H5 and `mp-weixin` fixtures remain compiler evidence, not DevTools, device, accessibility-tree, authorization-flow, or cross-platform certification.
+
+Runtime 测试证明原始事件 identity、disabled/loading 零事件、label/text/default-slot 优先级，以及相关局部内容表面的隔离。package 自有类型约束 props/events。H5 与 `mp-weixin` fixture 仍只提供 compiler 证据，不是开发者工具、真机、无障碍树、授权流程或跨端认证。

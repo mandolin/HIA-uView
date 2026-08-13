@@ -42,3 +42,33 @@ The label is required as visible text. Disabled state adds a dashed boundary and
 Before release, fixtures must cover label-only, description/value, enabled clickable, disabled clickable, non-clickable, one enabled `click`, zero disabled/non-clickable events, and long Chinese/English text. They must disclose the current absence of a native navigation or link capability.
 
 发布前，fixture 必须覆盖仅标签、说明/值、启用可点击、禁用可点击、不可点击、一次启用 `click`、禁用/不可点击零事件以及较长的中英文文字；还必须披露当前没有原生导航或链接能力。
+
+## HIA facade and migration boundary / HIA facade 与迁移边界
+
+`UCell` is an HIA-owned smaller facade and is not one of the 99 names shared with the fixed uView-Pro comparison. It must not be presented as the upstream row component or as an alias for [`UCellItem`](cell-item.md). Use it when the application needs only a label/description/value row and an optional original-event click intent.
+
+`UCell` 是 HIA 自有的小型 facade，不属于与固定 uView-Pro 比较同名的 99 项。不得把它描述为上游信息行组件，也不得把它当作 [`UCellItem`](cell-item.md) 的 alias。应用只需要 label/description/value 信息行和可选原始事件 click 意图时，才使用它。
+
+| Need / 需求 | Choice / 选择 |
+| --- | --- |
+| Plain information row / 纯信息行 | Use `UCell` with `clickable=false`. / 使用 `clickable=false` 的 `UCell`。 |
+| Local action row / 局部操作行 | Set `clickable=true`, handle the original event, and keep route/business consequences outside. / 设置 `clickable=true`、处理原始事件，并把 route/业务后果留在组件外。 |
+| uView-family `u-cell-item` migration / 迁移 uView 系 `u-cell-item` | Use `UCellItem` and review its payload/slot differences; do not substitute `UCell` by name. / 使用 `UCellItem` 并复核其载荷/slot 差异；不要按名称用 `UCell` 替代。 |
+
+## Examples / 示例
+
+```vue
+<u-cell label="Status / 状态" description="Caller-owned copy / 调用方自有文字" value="Ready / 就绪" />
+```
+
+```vue
+<!-- Incorrect: UCell accepts no route and does not navigate. -->
+<!-- 错误：UCell 不接受 route，也不会导航。 -->
+<u-cell label="Details" clickable to="/pages/details" />
+```
+
+## Limits and evidence / 限制与证据
+
+Vue runtime tests and package-owned precise types cover enabled original-event forwarding and disabled/non-clickable zero-event behavior. Compiler fixtures are not navigation, device, keyboard, screen-reader, or cross-platform evidence.
+
+Vue runtime 测试与 package 自有精确类型覆盖启用时的原始事件转发，以及 disabled/non-clickable 零事件行为。compiler fixture 不构成导航、真机、键盘、读屏或跨端证据。
