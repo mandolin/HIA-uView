@@ -11,6 +11,7 @@
   <view :class="rootClasses" role="img" :aria-label="alt || errorText" @click="handleClick">
     <image
       v-if="!hasError || !showError"
+      :key="src"
       class="u-image__native"
       :src="src"
       :mode="safeMode"
@@ -23,7 +24,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, toRef, watch } from 'vue';
 
 // <lang><zh-CN>模板名保持 u-image 迁移熟悉度，但 src、alt、点击含义和错误后续均由调用方拥有。</zh-CN><en>Retains the u-image migration name while the caller owns src, alt, click meaning, and all error follow-up.</en></lang>
 defineOptions({ name: 'u-image' });
@@ -55,6 +56,22 @@ const emit = defineEmits(['load', 'error', 'click']);
 
 // <lang><zh-CN>错误状态只属于当前组件实例，加载成功会清除它；状态不写入调用方来源、缓存或全局 store。</zh-CN><en>Error state belongs only to the current component instance and a successful load clears it; it writes neither caller source, cache, nor global store.</en></lang>
 const hasError = ref(false);
+
+// <lang><zh-CN>来源 ref 只为观察调用方 src identity 边界；它不解析 URL、不启动请求，也不缓存历史来源。</zh-CN><en>The source ref observes only the caller src identity boundary; it parses no URL, starts no request, and caches no source history.</en></lang>
+const sourceRef = toRef(props, 'src');
+
+/**
+ * @lang zh-CN 在调用方更换 src 时清除当前来源的错误呈现，使 keyed 原生图片节点能够重新建立。
+ * @lang en Clears error presentation for the current source when the caller changes src so the keyed native image node can be recreated.
+ * @returns {void} <lang><zh-CN>无返回值；只重置当前实例的本地错误状态。</zh-CN><en>No return value; resets only this instance's local error state.</en></lang>
+ */
+function resetErrorForSourceChange() {
+  // <lang><zh-CN>来源变化是明确的恢复边界；组件不声称识别所有平台迟到的旧来源事件竞态。</zh-CN><en>A source change is the explicit recovery boundary; the component does not claim to identify every late old-source platform-event race.</en></lang>
+  hasError.value = false;
+}
+
+// <lang><zh-CN>watch 只响应 src 值变化；相同字符串不会隐式重试或重建。</zh-CN><en>The watch responds only to a changed src value; the same string causes no implicit retry or recreation.</en></lang>
+watch(sourceRef, resetErrorForSourceChange);
 
 // <lang><zh-CN>仅允许已知原生 mode，未知值回退到 aspectFill。</zh-CN><en>Allows only known native modes and falls back to aspectFill for unknown values.</en></lang>
 const safeMode = computed(() => ['scaleToFill', 'aspectFit', 'aspectFill', 'widthFix', 'heightFix', 'top', 'bottom', 'center', 'left', 'right'].includes(props.mode) ? props.mode : 'aspectFill');

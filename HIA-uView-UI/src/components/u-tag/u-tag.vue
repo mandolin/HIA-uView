@@ -10,10 +10,10 @@
   -->
   <view v-if="isVisible" :class="rootClasses" role="button" @click="handleClick">
     <!--
-    @lang zh-CN 文字只显示调用方的 string/number 值；数字零被保留，不生成类别名称或默认业务文案。
-    @lang en Text displays only the caller string/number value; numeric zero is retained and no category name or default business copy is generated.
+    @lang zh-CN 默认 slot 优先呈现调用方内容；缺少 slot 时才显示 string/number `text`，数字零被保留且不生成类别名称或默认业务文案。
+    @lang en The default slot presents caller content first; only without that slot does string/number `text` appear, preserving numeric zero and generating no category name or default business copy.
     -->
-    <text class="u-tag__text">{{ displayText }}</text>
+    <text class="u-tag__text"><slot>{{ displayText }}</slot></text>
     <button v-if="closable" class="u-tag__close" type="button" :disabled="disabled" @click.stop="handleClose">×</button>
   </view>
 </template>

@@ -46,6 +46,12 @@ import { computed } from 'vue';
  */
 const supportedActionTypes = Object.freeze(['primary', 'warning', 'danger']);
 
+/**
+ * @lang zh-CN 单个 swipe-action 实例允许投影的最大操作数，阻止调用方数组无界扩张模板 surface。
+ * @lang en Maximum action count one swipe-action instance may project, preventing a caller array from expanding the template surface without bound.
+ */
+const maximumActionCount = 16;
+
 // <lang><zh-CN>声明稳定组件名，保持既有模板/manifest/显式 plugin registry 的解析一致。</zh-CN><en>Declares the stable component name, keeping parsing consistent across existing templates, manifest, and explicit plugin registry.</en></lang>
 defineOptions({ name: 'u-swipe-action' });
 
@@ -71,38 +77,167 @@ const emit = defineEmits(['action', 'click', 'close', 'update:open']);
 // <lang><zh-CN>open 优先、show 回退的有限规则确保旧入口不被迁移值意外覆盖；组件不合并为共享状态。</zh-CN><en>The finite rule of open precedence with show fallback ensures the old entry is not accidentally overridden by a migration value; the component merges nothing into shared state.</en></lang>
 const isOpen = computed(() => props.open ?? props.show);
 
-// <lang><zh-CN>操作输入来源只选择一个受控数组，避免 actions/options 同时产生重复或相互冲突的按钮。</zh-CN><en>The action input source selects only one controlled array, avoiding duplicate or conflicting buttons from actions/options together.</en></lang>
-const actionInputs = computed(() => props.actions.length > 0 ? props.actions : props.options);
-
 /**
- * @lang zh-CN 将一个调用方 action/options 值归一为有限可呈现 record；未知输入只转换为安全文字，不执行或保留原始对象能力。
- * @lang en Normalizes one caller action/options value into a finite presentable record; unknown input becomes safe copy only and neither executes nor retains original-object capability.
- * @param {unknown} raw <lang><zh-CN>调用方提供的数组项。</zh-CN><en>Array item supplied by the caller.</en></lang>
- * @param {number} index <lang><zh-CN>受控输入数组中的稳定位置。</zh-CN><en>Stable position in the controlled input array.</en></lang>
- * @returns {{ key: string, value: string|number, label: string, type: string, disabled: boolean }} <lang><zh-CN>可安全呈现和回传的有限 record。</zh-CN><en>Finite record that can be safely rendered and returned.</en></lang>
+ * @lang zh-CN 选择唯一 caller-owned 操作数组；非空 actions 严格优先于 options，两个来源从不合并。
+ * @lang en Selects the sole caller-owned action array; nonempty actions strictly take precedence over options and the two sources are never merged.
+ * @returns {unknown[]} <lang><zh-CN>被选择的原始数组引用；后续步骤才创建有限 own-data 快照。</zh-CN><en>The selected raw array reference; a later step creates the bounded own-data snapshot.</en></lang>
  */
-function normalizeAction(raw, index) {
-  // <lang><zh-CN>仅识别非空对象；原始标量只作为 label/value 候选，不获得对象字段语义。</zh-CN><en>Recognizes only non-null objects; a raw scalar is only a label/value candidate and acquires no object-field semantics.</en></lang>
-  const isObject = typeof raw === 'object' && raw !== null;
-
-  // <lang><zh-CN>value 按受限回退选择，使空/未知对象仍有稳定 key 而不泄漏对象本身。</zh-CN><en>Selects value through bounded fallback so an empty/unknown object still has a stable key without leaking the object itself.</en></lang>
-  const value = isObject ? (raw.value ?? raw.label ?? raw.text ?? index) : raw;
-
-  // <lang><zh-CN>label 接受当前 HIA label 与迁移 text；最终转换只产生可见文字，不渲染 HTML。</zh-CN><en>Label accepts the current HIA label and migration text; final conversion produces visible copy only and renders no HTML.</en></lang>
-  const label = String(isObject ? (raw.label ?? raw.text ?? value) : raw);
-
-  // <lang><zh-CN>未知 type 回退 primary，阻断任意 CSS class 注入。</zh-CN><en>An unknown type falls back to primary, blocking arbitrary CSS-class injection.</en></lang>
-  const type = isObject && supportedActionTypes.includes(raw.type) ? raw.type : 'primary';
-
-  // <lang><zh-CN>disabled 只从布尔 truthiness 归一，组件不执行 action 对象中的其他字段。</zh-CN><en>Disabled normalizes only Boolean truthiness; the component executes no other field in an action object.</en></lang>
-  const disabled = Boolean(isObject && raw.disabled);
-
-  // <lang><zh-CN>key 由有限 value 与数组位置组成；不会使用对象 identity、随机值或时间。</zh-CN><en>Key consists of finite value and array position; it uses no object identity, randomness, or time.</en></lang>
-  return Object.freeze({ key: `${String(value)}-${index}`, value, label, type, disabled });
+function selectActionSource() {
+  // <lang><zh-CN>props 类型约束保证两项为数组；这里只观察普通数组 length，不读取任何 action 记录字段。</zh-CN><en>Prop typing guarantees both values are arrays; this observes only ordinary array length and reads no action-record field.</en></lang>
+  return props.actions.length > 0 ? props.actions : props.options;
 }
 
-// <lang><zh-CN>对唯一受控 action 输入逐项归一；computed 不写入、排序、过滤或修改调用方数组。</zh-CN><en>Normalizes the sole controlled action input item by item; the computed value writes, sorts, filters, and mutates no caller array.</en></lang>
-const safeActions = computed(() => actionInputs.value.map((raw, index) => normalizeAction(raw, index)));
+// <lang><zh-CN>操作来源 computed 只选择一个数组，不排序、拼接、写入或执行其中的值。</zh-CN><en>The action-source computed selects one array and never sorts, concatenates, writes, or executes its values.</en></lang>
+const actionSource = computed(selectActionSource);
+
+/**
+ * @lang zh-CN 安全读取记录的 own data descriptor；accessor、继承字段和 descriptor 异常都按缺失处理，普通 getter 不会执行。
+ * @lang en Safely reads a record's own data descriptor; accessors, inherited fields, and descriptor errors are treated as absent, and ordinary getters never execute.
+ * @param {object} record <lang><zh-CN>待检查的调用方记录。</zh-CN><en>Caller record to inspect.</en></lang>
+ * @param {string} field <lang><zh-CN>允许读取的固定字段名。</zh-CN><en>Fixed allowlisted field name to read.</en></lang>
+ * @returns {unknown} <lang><zh-CN>own data descriptor 的值，或字段不可安全读取时的 undefined。</zh-CN><en>The own data-descriptor value, or undefined when the field cannot be read safely.</en></lang>
+ */
+function readOwnDataValue(record, field) {
+  try {
+    // <lang><zh-CN>descriptor 查询不会调用普通属性 getter；只接受含 value 的 data descriptor。</zh-CN><en>Descriptor lookup does not invoke an ordinary property getter; only a data descriptor containing value is accepted.</en></lang>
+    const descriptor = Object.getOwnPropertyDescriptor(record, field);
+
+    // <lang><zh-CN>accessor descriptor 没有 own value，因此与继承或缺失字段一样被忽略。</zh-CN><en>An accessor descriptor has no own value and is therefore ignored like an inherited or absent field.</en></lang>
+    return descriptor && Object.prototype.hasOwnProperty.call(descriptor, 'value') ? descriptor.value : undefined;
+  } catch {
+    // <lang><zh-CN>异常 descriptor/proxy 只令该字段缺失，不传播调用方对象能力或破坏整个操作行。</zh-CN><en>An exceptional descriptor/proxy only makes this field absent and neither propagates caller-object capability nor breaks the entire action row.</en></lang>
+    return undefined;
+  }
+}
+
+/**
+ * @lang zh-CN 判断值能否成为有限事件 payload 或可见文字来源。
+ * @lang en Determines whether a value may become a bounded event payload or visible-copy source.
+ * @param {unknown} value <lang><zh-CN>待验证的调用方值。</zh-CN><en>Caller value to validate.</en></lang>
+ * @returns {value is string|number} <lang><zh-CN>仅非空字符串或有限数字返回 true。</zh-CN><en>True only for a nonempty string or finite number.</en></lang>
+ */
+function isSafeActionScalar(value) {
+  // <lang><zh-CN>空字符串不能形成有标签的操作；有限数字包括零但排除 NaN 与 Infinity。</zh-CN><en>An empty string cannot form a labeled action; finite numbers include zero but exclude NaN and Infinity.</en></lang>
+  return (typeof value === 'string' && value.length > 0) || (typeof value === 'number' && Number.isFinite(value));
+}
+
+/**
+ * @lang zh-CN 从调用方数组创建最多 maximumActionCount 项的 own data 快照；数组 accessor 与稀疏/继承项不执行也不进入结果。
+ * @lang en Creates an own-data snapshot of at most maximumActionCount entries from a caller array; array accessors and sparse/inherited entries neither execute nor enter the result.
+ * @param {unknown[]} source <lang><zh-CN>唯一被选择的 caller-owned 操作数组。</zh-CN><en>The sole selected caller-owned action array.</en></lang>
+ * @returns {Array<{ raw: unknown, index: number }>} <lang><zh-CN>保持原位置的有限 data-entry 快照。</zh-CN><en>A bounded data-entry snapshot retaining original positions.</en></lang>
+ */
+function snapshotActionInputs(source) {
+  // <lang><zh-CN>普通数组 length 裁剪为固定上限，防止模板创建无界 control 集合。</zh-CN><en>Ordinary array length is clamped to a fixed limit, preventing the template from creating an unbounded control collection.</en></lang>
+  const boundedLength = Math.min(source.length, maximumActionCount);
+
+  // <lang><zh-CN>快照只收集 own data 数组项，不通过 source[index] 触发 accessor。</zh-CN><en>The snapshot collects only own data array entries and does not trigger accessors through source[index].</en></lang>
+  const snapshot = [];
+
+  // <lang><zh-CN>按原索引顺序检查有限范围，保持按钮顺序和 key 可预测。</zh-CN><en>Checks the bounded range in original index order, keeping button order and keys predictable.</en></lang>
+  for (let index = 0; index < boundedLength; index += 1) {
+    try {
+      // <lang><zh-CN>数组索引也只通过 own descriptor 读取，稀疏项、继承值和 accessor 均不会执行。</zh-CN><en>Array indices are also read only through own descriptors, so sparse entries, inherited values, and accessors never execute.</en></lang>
+      const descriptor = Object.getOwnPropertyDescriptor(source, String(index));
+
+      // <lang><zh-CN>只有 data descriptor 才复制其值和原索引；accessor 或空洞直接跳过。</zh-CN><en>Only a data descriptor contributes its value and original index; an accessor or hole is skipped directly.</en></lang>
+      if (descriptor && Object.prototype.hasOwnProperty.call(descriptor, 'value')) {
+        snapshot.push({ raw: descriptor.value, index });
+      }
+    } catch {
+      // <lang><zh-CN>单项 descriptor 异常只跳过该项，不读取 fallback 属性或中断其他安全操作。</zh-CN><en>A descriptor error for one entry skips only that entry and neither reads a fallback property nor interrupts other safe actions.</en></lang>
+    }
+  }
+
+  // <lang><zh-CN>返回新数组而非调用方引用，后续归一化无法重排或写入原始集合。</zh-CN><en>Returns a new array rather than the caller reference, so later normalization cannot reorder or write the original collection.</en></lang>
+  return snapshot;
+}
+
+/**
+ * @lang zh-CN 将一个调用方 action/options 快照值归一为有限可呈现 record；只读取 allowlisted own data 字段，未知输入不执行或保留原始对象能力。
+ * @lang en Normalizes one caller action/options snapshot value into a finite presentable record; it reads only allowlisted own data fields and neither executes nor retains unknown input capability.
+ * @param {unknown} raw <lang><zh-CN>调用方提供的数组项。</zh-CN><en>Array item supplied by the caller.</en></lang>
+ * @param {number} index <lang><zh-CN>受控输入数组中的稳定位置。</zh-CN><en>Stable position in the controlled input array.</en></lang>
+ * @returns {{ key: string, value: string|number, label: string, type: string, disabled: boolean }|null} <lang><zh-CN>可安全呈现和回传的有限 record；无安全文字时返回 null。</zh-CN><en>A finite record safe to render and return, or null when no safe copy exists.</en></lang>
+ */
+function normalizeAction(raw, index) {
+  // <lang><zh-CN>安全字符串/有限数字标量可直接同时成为 label 与 payload；其他非对象值没有可执行或可见语义，直接跳过。</zh-CN><en>A safe string or finite-number scalar may directly become both label and payload; other nonobject values have no executable or visible meaning and are skipped.</en></lang>
+  if (isSafeActionScalar(raw)) {
+    return Object.freeze({
+      key: `${typeof raw}:${String(raw)}-${index}`,
+      value: raw,
+      label: String(raw),
+      type: 'primary',
+      disabled: false
+    });
+  }
+
+  // <lang><zh-CN>函数、null 与其他非对象值不读取字段、不转字符串，也不创建无标签按钮。</zh-CN><en>Functions, null, and other nonobject values have no fields read, are not stringified, and create no unlabeled button.</en></lang>
+  if (typeof raw !== 'object' || raw === null) {
+    return null;
+  }
+
+  // <lang><zh-CN>当前 HIA label 优先于迁移 text，但两者都只允许 own data 的字符串或有限数字。</zh-CN><en>The current HIA label takes precedence over migration text, while both permit only an own-data string or finite number.</en></lang>
+  const rawLabel = readOwnDataValue(raw, 'label');
+  const rawText = readOwnDataValue(raw, 'text');
+  const copyCandidate = isSafeActionScalar(rawLabel) ? rawLabel : (isSafeActionScalar(rawText) ? rawText : undefined);
+
+  // <lang><zh-CN>value 只接受 own data 的安全标量；对象、函数、symbol、bigint、NaN 与 Infinity 不会成为事件 payload。</zh-CN><en>Value accepts only a safe own-data scalar; objects, functions, symbols, bigints, NaN, and Infinity never become event payloads.</en></lang>
+  const rawValue = readOwnDataValue(raw, 'value');
+  const safeValue = isSafeActionScalar(rawValue) ? rawValue : undefined;
+
+  // <lang><zh-CN>缺少安全 label/text 时可用安全 value 作为可见文字；两类值均缺失则完整跳过记录。</zh-CN><en>When safe label/text is absent, a safe value may supply visible copy; if both categories are absent, the record is skipped completely.</en></lang>
+  const labelSource = copyCandidate ?? safeValue;
+  if (labelSource === undefined) {
+    return null;
+  }
+
+  // <lang><zh-CN>非法或缺失 value 回退到同一安全文字标量，因此最终 payload 始终为 string|number。</zh-CN><en>An invalid or absent value falls back to the same safe copy scalar, so the final payload is always string|number.</en></lang>
+  const value = safeValue ?? labelSource;
+
+  // <lang><zh-CN>可见 label 只做纯文字转换，不渲染 HTML，也不保留对象 identity。</zh-CN><en>The visible label undergoes only plain-text conversion, renders no HTML, and retains no object identity.</en></lang>
+  const label = String(labelSource);
+
+  // <lang><zh-CN>未知或 accessor type 回退 primary，阻断 getter 执行与任意 CSS class 注入。</zh-CN><en>An unknown or accessor type falls back to primary, blocking getter execution and arbitrary CSS-class injection.</en></lang>
+  const rawType = readOwnDataValue(raw, 'type');
+  const type = supportedActionTypes.includes(rawType) ? rawType : 'primary';
+
+  // <lang><zh-CN>只有严格布尔 true 的 own data disabled 才禁用该项；truthy 对象或字符串不扩大状态语义。</zh-CN><en>Only strict Boolean true from own-data disabled disables the item; truthy objects or strings do not broaden state meaning.</en></lang>
+  const disabled = readOwnDataValue(raw, 'disabled') === true;
+
+  // <lang><zh-CN>key 由有限 value 与数组位置组成；不会使用对象 identity、随机值或时间。</zh-CN><en>Key consists of finite value and array position; it uses no object identity, randomness, or time.</en></lang>
+  return Object.freeze({ key: `${typeof value}:${String(value)}-${index}`, value, label, type, disabled });
+}
+
+/**
+ * @lang zh-CN 从唯一来源构建有限、不可执行、仅含安全 payload 的展示记录集合。
+ * @lang en Builds a bounded, non-executable presentation-record collection containing only safe payloads from the sole source.
+ * @returns {Array<{ key: string, value: string|number, label: string, type: string, disabled: boolean }>} <lang><zh-CN>按原索引顺序保留的安全操作集合。</zh-CN><en>Safe actions retained in original-index order.</en></lang>
+ */
+function buildSafeActions() {
+  // <lang><zh-CN>先取得有限 own-data 数组快照，后续循环从不访问原始 source[index]。</zh-CN><en>First obtains a bounded own-data array snapshot; the later loop never accesses raw source[index].</en></lang>
+  const inputs = snapshotActionInputs(actionSource.value);
+
+  // <lang><zh-CN>结果仅接收成功归一的 record；null 项表示无安全 label/payload 并被跳过。</zh-CN><en>The result accepts only successfully normalized records; a null entry means no safe label/payload and is skipped.</en></lang>
+  const actions = [];
+
+  // <lang><zh-CN>按快照顺序逐项归一，同时保留原数组索引用于稳定 key。</zh-CN><en>Normalizes in snapshot order while retaining original array indices for stable keys.</en></lang>
+  for (const input of inputs) {
+    // <lang><zh-CN>归一化只读 allowlisted own data descriptor，不执行 callback 或普通 getter。</zh-CN><en>Normalization reads only allowlisted own data descriptors and executes no callback or ordinary getter.</en></lang>
+    const normalized = normalizeAction(input.raw, input.index);
+
+    // <lang><zh-CN>无安全内容的记录不创建按钮，也不会产生任何事件 payload。</zh-CN><en>A record without safe content creates no button and can produce no event payload.</en></lang>
+    if (normalized !== null) {
+      actions.push(normalized);
+    }
+  }
+
+  // <lang><zh-CN>冻结集合防止模板或内部后续步骤改变顺序；调用方原数组始终未写入。</zh-CN><en>Freezes the collection so neither the template nor later internal steps can change order; the caller array is never written.</en></lang>
+  return Object.freeze(actions);
+}
+
+// <lang><zh-CN>安全操作 computed 仅在 caller-owned 来源变化时重建有限快照，不建立内部业务状态。</zh-CN><en>The safe-actions computed rebuilds a bounded snapshot only when the caller-owned source changes and creates no internal business state.</en></lang>
+const safeActions = computed(buildSafeActions);
 
 // <lang><zh-CN>根 class 仅表示有限 open/disabled 呈现，不代表手势完成、动画进度或业务操作。</zh-CN><en>Root classes represent only finite open/disabled presentation and do not represent gesture completion, animation progress, or business action.</en></lang>
 const rootClasses = computed(() => [

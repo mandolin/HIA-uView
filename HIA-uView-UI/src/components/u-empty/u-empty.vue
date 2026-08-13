@@ -30,6 +30,13 @@
       :label="actionText"
       @click="handleAction"
     />
+
+    <!--
+    @lang zh-CN bottom slot 在内建 action 之后原样投影调用方补充内容。
+    @lang en The bottom slot projects caller supplementary content unchanged after the built-in action.
+    <lang><zh-CN>slot 不参与 action guard，不捕获其事件，也不被解释为重试、分页、路由或下一状态；没有 slot 时不会生成空包装节点。</zh-CN><en>The slot participates in no action guard, captures none of its events, and is not interpreted as retry, paging, routing, or a next state; when absent it creates no empty wrapper node.</en></lang>
+    -->
+    <slot name="bottom" />
   </view>
 </template>
 

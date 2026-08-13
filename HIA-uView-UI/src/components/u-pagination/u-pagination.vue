@@ -90,8 +90,8 @@ const pages = computed(() => Array.from({ length: safePageCount.value }, (_, ind
  * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
  */
 function changePage(page) {
-  // <lang><zh-CN>越界或重复页码保持零事件，避免点击边界 control 生成无意义的调用方状态写回。</zh-CN><en>An out-of-range or repeated page retains zero events, avoiding a boundary-control click generating meaningless caller-state write-back.</en></lang>
-  if (page < 1 || page > safePageCount.value || page === safeCurrent.value) return;
+  // <lang><zh-CN>非整数、越界或重复页码保持零事件，避免畸形候选或边界 control 生成无意义的调用方状态写回。</zh-CN><en>A noninteger, out-of-range, or repeated page retains zero events, avoiding malformed candidates or boundary controls generating meaningless caller-state write-back.</en></lang>
+  if (!Number.isInteger(page) || page < 1 || page > safePageCount.value || page === safeCurrent.value) return;
 
   // <lang><zh-CN>同时报告既有 HIA 和迁移受控更新事件，二者均只携带候选页码，调用方可按自身绑定选择处理。</zh-CN><en>Reports both existing HIA and migration controlled-update events; both carry only a candidate page and the caller may handle them according to its own binding.</en></lang>
   emit('update:current', page);
