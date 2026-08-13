@@ -69,6 +69,7 @@ import UView, {
   type UCalendarInstance,
   type UCalendarProps,
   type UCellEmits,
+  type UCellGroupEmits,
   type UCellGroupInstance,
   type UCellGroupProps,
   type UCellInstance,
@@ -149,6 +150,7 @@ import UView, {
   type USelectConfirmResult,
   type USelectInstance,
   type USelectProps,
+  type USkeletonEmits,
   type USkeletonInstance,
   type USkeletonProps,
   type USliderInstance,
@@ -384,7 +386,7 @@ const swipeOption: USwipeActionOption = { disabled: false, label: 'Archive', typ
 const swipeInputs: ReadonlyArray<USwipeActionInput> = [swipeOption, 7];
 const swipeActionProps: USwipeActionProps = { actions: swipeInputs, closeText: 'Close', disabled: false, open: true, options: ['fallback'], show: false };
 
-// <lang><zh-CN>显式事件别名正例保证这些公开 contracts 可独立用于包装器声明，同时保持 payload 和参数顺序。</zh-CN><en>Explicit event-alias positives ensure these public contracts can independently type wrapper declarations while retaining payloads and argument order.</en></lang>
+// <lang><zh-CN>带事件组件的显式事件别名正例保证这些公开 contracts 可独立用于包装器声明，同时保持 payload 和参数顺序。</zh-CN><en>Explicit event-alias positives for event-bearing components ensure these public contracts can independently type wrapper declarations while retaining payloads and argument order.</en></lang>
 const buttonEmits: UButtonEmits = { click: (_event) => undefined };
 const cellEmits: UCellEmits = { click: (_event) => undefined };
 const cellItemEmits: UCellItemEmits = { click: (_event) => undefined };
@@ -396,6 +398,16 @@ const textEmits: UTextEmits = { click: (_event) => undefined };
 const emptyEmits: UEmptyEmits = { action: (_event) => undefined };
 const tagEmits: UTagEmits = { click: (_event) => undefined, close: () => undefined };
 const alertTipsEmits: UAlertTipsEmits = { click: () => undefined, close: () => undefined };
+
+/**
+ * @lang zh-CN 只接受 `never` 的编译期断言，用于防止无事件别名退化为 Vue 的任意字符串事件签名。
+ * @lang en Compile-time assertion that accepts only `never`, preventing event-free aliases from degrading into Vue's arbitrary string-event signature.
+ */
+type AssertNoPublicEmits<Emits extends never> = Emits;
+
+// <lang><zh-CN>两个无事件别名必须保持为不可实例化的 `never`；若回退到 `{}` 或空 record，此处会立即编译失败。</zh-CN><en>Both event-free aliases must remain uninhabitable `never`; reverting to `{}` or an empty record makes these assertions fail immediately.</en></lang>
+type CellGroupHasNoPublicEmits = AssertNoPublicEmits<UCellGroupEmits>;
+type SkeletonHasNoPublicEmits = AssertNoPublicEmits<USkeletonEmits>;
 
 // <lang><zh-CN>建立调用方拥有的嵌套模型，证明类型不会把 dotted path 误写成扁平业务模型。</zh-CN><en>Creates a caller-owned nested model, proving the types do not rewrite a dotted path into a flat business model.</en></lang>
 const formModel: UFormModel = {
@@ -620,6 +632,11 @@ alertTipsRef.$emit('close');
 // <lang><zh-CN>无事件组件的实例仍保留精确 props 读取，证明它们没有退回 generic component。</zh-CN><en>Instances of event-free components still retain precise prop reads, proving they have not regressed to generic components.</en></lang>
 const cellGroupTitle: string | undefined = cellGroupRef.$props.title;
 const skeletonRows: number | undefined = skeletonRef.$props.rows;
+
+// @ts-expect-error <lang><zh-CN>UCellGroup 没有公开事件，实例 `$emit` 不能接受任意字符串。</zh-CN><en>UCellGroup has no public events, so its instance `$emit` cannot accept an arbitrary string.</en></lang>
+cellGroupRef.$emit('anything');
+// @ts-expect-error <lang><zh-CN>USkeleton 没有公开事件，实例 `$emit` 不能接受任意字符串。</zh-CN><en>USkeleton has no public events, so its instance `$emit` cannot accept an arbitrary string.</en></lang>
+skeletonRef.$emit('anything');
 
 // <lang><zh-CN>invalid-rule 是 runtime 对非法 pattern 配置返回的公开代码，必须可由消费方穷举处理。</zh-CN><en>invalid-rule is the public code returned by runtime for an invalid pattern configuration and must be available for exhaustive consumer handling.</en></lang>
 const invalidRuleError: UFormValidationError = {

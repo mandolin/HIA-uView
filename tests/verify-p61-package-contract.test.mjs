@@ -84,8 +84,8 @@ test('declares every current runtime component exactly once without overclaiming
   // <lang><zh-CN>运行时/声明名称集合必须精确相同；这个静态比较不会加载 component implementation 或执行任何 Vue code。</zh-CN><en>Runtime/declaration name sets must be exactly equal; this static comparison loads no component implementation or executes Vue code.</en></lang>
   assert.deepEqual(readDeclarationComponentNames(declarationSource), readRuntimeComponentNames(runtimeSource));
 
-  // <lang><zh-CN>仍采用直接 DefineComponent 的八个既有审计表面继续保持精确 props；已升级到 instance/event helper 的 notice-bar 与 tabbar 在下方门禁覆盖。</zh-CN><en>The eight existing audited surfaces that still use direct DefineComponent retain precise props; notice-bar and tabbar, upgraded to the instance/event helper, are covered by the gate below.</en></lang>
-  for (const componentName of ['UAlertTips', 'UCheckbox', 'UCheckboxGroup', 'UPicker', 'URadio', 'URadioGroup', 'USwitch', 'UTag']) {
+  // <lang><zh-CN>仍采用直接 DefineComponent 的六个既有审计表面继续保持精确 props；已升级到 instance/event helper 的 alert、tag、notice-bar 与 tabbar 在对应批次门禁覆盖。</zh-CN><en>The six existing audited surfaces that still use direct DefineComponent retain precise props; alert, tag, notice-bar, and tabbar, upgraded to the instance/event helper, are covered by their respective batch gates.</en></lang>
+  for (const componentName of ['UCheckbox', 'UCheckboxGroup', 'UPicker', 'URadio', 'URadioGroup', 'USwitch']) {
     assert.match(declarationSource, new RegExp(`export declare const ${componentName}: DefineComponent<`, 'u'));
   }
 

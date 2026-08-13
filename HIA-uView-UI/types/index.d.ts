@@ -2040,6 +2040,12 @@ export interface UCellGroupProps {
 }
 
 /**
+ * @lang zh-CN 表示 `UCellGroup` 明确不发出公开事件的精确事件表面。
+ * @lang en Represents the precise event surface of `UCellGroup`, which emits no public events.
+ */
+export type UCellGroupEmits = never;
+
+/**
  * @lang zh-CN 描述 `UCellItem` 的 caller-owned 文字与有限本地交互输入。
  * @lang en Describes caller-owned copy and finite local interaction inputs of `UCellItem`.
  */
@@ -2209,6 +2215,12 @@ export interface USkeletonProps {
   /** 中文：是否呈现头像 placeholder。English: Whether to present the avatar placeholder. */
   showAvatar?: boolean;
 }
+
+/**
+ * @lang zh-CN 表示 `USkeleton` 明确不发出公开事件的精确事件表面。
+ * @lang en Represents the precise event surface of `USkeleton`, which emits no public events.
+ */
+export type USkeletonEmits = never;
 
 /**
  * @lang zh-CN 表示 `USwipeAction` 唯一可回传的透明标量。
@@ -2525,7 +2537,7 @@ export declare const UCell: UViewTypedComponent<UCellProps, {}, UCellEmits>;
 /** @lang zh-CN UCell 的公开组件实例类型。 @lang en Public component-instance type of UCell. */
 export type UCellInstance = InstanceType<typeof UCell>;
 /** @lang zh-CN 无 child registry 的局部信息行容器。 @lang en Local information-row container with no child registry. */
-export declare const UCellGroup: UViewTypedComponent<UCellGroupProps>;
+export declare const UCellGroup: UViewTypedComponent<UCellGroupProps, {}, UCellGroupEmits>;
 /** @lang zh-CN UCellGroup 的公开组件实例类型。 @lang en Public component-instance type of UCellGroup. */
 export type UCellGroupInstance = InstanceType<typeof UCellGroup>;
 /** @lang zh-CN caller-controlled 信息行项目。 @lang en Caller-controlled information-row item. */
@@ -2545,7 +2557,7 @@ export declare const UPagination: UViewTypedComponent<UPaginationProps, {}, UPag
 /** @lang zh-CN UPagination 的公开组件实例类型。 @lang en Public component-instance type of UPagination. */
 export type UPaginationInstance = InstanceType<typeof UPagination>;
 /** @lang zh-CN caller-controlled placeholder 投影。 @lang en Caller-controlled placeholder projection. */
-export declare const USkeleton: UViewTypedComponent<USkeletonProps>;
+export declare const USkeleton: UViewTypedComponent<USkeletonProps, {}, USkeletonEmits>;
 /** @lang zh-CN USkeleton 的公开组件实例类型。 @lang en Public component-instance type of USkeleton. */
 export type USkeletonInstance = InstanceType<typeof USkeleton>;
 /** @lang zh-CN 显式、非手势的有限操作投影。 @lang en Explicit finite action projection with no gesture engine. */

@@ -348,7 +348,7 @@ test('locks immutable provenance, declared-scope API counts, and local component
   assert.equal(manifest.issues.length, 4);
   assert.deepEqual(manifest.semanticReview, {
     path: 'HIA-uView-UI/hia-uview.api-semantic-review.json',
-    digest: 'sha256:2c41744b7dd39d3e81ab85c3ad2f1fb3325a0ab45da3b5779cf6389b35645253',
+    digest: 'sha256:bd23cc556232744235f6d2c22b0bbffb328b046d0cabfba37d11943b6d6a353d',
     itemCount: 127,
     serviceCount: 2
   });
@@ -356,12 +356,12 @@ test('locks immutable provenance, declared-scope API counts, and local component
   // <lang><zh-CN>从四类 API inventory 现场汇集 P0 项，避免仅信任 semanticReview.itemCount 自报值。</zh-CN><en>Collect P0 items live from the four API inventories rather than trusting the self-reported semanticReview.itemCount.</en></lang>
   const p0Items = manifest.components.flatMap((component) => ['props', 'events', 'slots', 'imperativeApis']
     .flatMap((dimension) => component[dimension].items.filter((item) => item.priority === 'P0')));
-  // <lang><zh-CN>证据层级和待补 runtime parity 分别计算，以锁定“已审计”不等于“已运行时等价”。</zh-CN><en>Count evidence levels and pending runtime parity separately, locking that “reviewed” does not mean “runtime equivalent.”</en></lang>
+  // <lang><zh-CN>证据层级和待补 runtime parity 分别计算；当前 127 项 P0 必须全部具有运行时证据且不留待办。</zh-CN><en>Count evidence levels and pending runtime parity separately; all 127 P0 items must now carry runtime evidence with no remaining task.</en></lang>
   assert.equal(p0Items.length, 127);
   assert.equal(p0Items.filter((item) => item.semantics.reviewState === 'complete').length, 127);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 108);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 19);
-  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 19);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 127);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 0);
+  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 0);
 
   // <lang><zh-CN>service 从 imperative API 中独立汇集；useModal/useToast 只映射到已运行时验证的显式 scope/host target，不进入 1,740 项分母或自动升级 compatible。</zh-CN><en>Collect services separately from imperative APIs; useModal/useToast map only to runtime-tested explicit scope/host targets, enter neither the 1,740-item denominator nor automatic compatible status.</en></lang>
   const services = manifest.components.flatMap((component) => component.services.items
@@ -448,8 +448,8 @@ test('inspects the real matrix deterministically without host paths or source bo
     componentCount: 99,
     itemCount: 1740,
     priorities: { P0: 30, P1: 42, P2: 27 },
-    dispositions: { compatible: 47, mapped: 336, unsupported: 1357 },
-    p0Semantics: { itemCount: 127, reviewed: 127, sourceReviewed: 19, runtimeTested: 108, runtimeParityRemaining: 19 },
+    dispositions: { compatible: 47, mapped: 339, unsupported: 1354 },
+    p0Semantics: { itemCount: 127, reviewed: 127, sourceReviewed: 0, runtimeTested: 127, runtimeParityRemaining: 0 },
     services: { componentCount: 2, itemCount: 2, compatible: 0, mapped: 2, unsupported: 0 },
     unresolvedInventories: 0,
     issueCount: 4
@@ -476,7 +476,7 @@ test('inspects the real matrix deterministically without host paths or source bo
   assert.equal(secondTextOutput, firstTextOutput);
   assert.match(firstTextOutput, /uview-pro@0\.6\.15; bec4b39cd3195354d65c1fc8722745d72052bd8c/u);
   assert.match(firstTextOutput, /99 components; 1740 API items/u);
-  assert.match(firstTextOutput, /P0 semantics: 127\/127 reviewed; 108 runtime-tested; 19 source-reviewed; 19 require runtime parity/u);
+  assert.match(firstTextOutput, /P0 semantics: 127\/127 reviewed; 127 runtime-tested; 0 source-reviewed; 0 require runtime parity/u);
   assert.match(firstTextOutput, /services: 2 items across 2 components; 0 compatible; 2 mapped; 0 unsupported/u);
 
   // <lang><zh-CN>JSON 由同一已校验 report 格式化两次，防止 serializer 注入非确定字段。</zh-CN><en>Format JSON twice from the same validated report so the serializer cannot inject nondeterministic fields.</en></lang>
@@ -718,10 +718,11 @@ test('rejects malformed matrix facts through stable diagnostics', () => {
     disabledProp.semantics.remainingEvidence = ['runtime-parity'];
   }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
 
-  // <lang><zh-CN>仅源码审阅的 mapped 项必须保留 runtime-parity 待办，不能靠删除数组伪装成已通过运行时验证。</zh-CN><en>A source-reviewed mapped item must retain the runtime-parity remainder and cannot masquerade as runtime-verified by deleting the array entry.</en></lang>
+  // <lang><zh-CN>即使生产基线已经清零，validator 仍必须拒绝“仅源码审阅且无 runtime-parity 待办”的 mapped 组合。</zh-CN><en>Even after the production baseline reaches zero, the validator must still reject a mapped item that is source-reviewed without a runtime-parity remainder.</en></lang>
   assertMutationRejected('source-reviewed mapped item omits runtime parity', (manifest) => {
-    // <lang><zh-CN>u-button.click 保持既有 source-reviewed mapped 状态；仅清空待办以验证反向组合。</zh-CN><en>u-button.click retains its existing source-reviewed mapped state; clearing only the remainder verifies the inverse combination.</en></lang>
+    // <lang><zh-CN>把已验证的 u-button.click 降回 source-reviewed，同时保持空待办，以隔离反向证据组合门禁。</zh-CN><en>Demote the verified u-button.click to source-reviewed while retaining an empty remainder to isolate the inverse evidence-profile gate.</en></lang>
     const clickEvent = requireComponent(manifest, 'u-button').events.items.find((item) => item.id === 'event:click');
+    clickEvent.semantics.evidenceLevel = 'source-reviewed';
     clickEvent.semantics.remainingEvidence = [];
   }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
 
@@ -739,6 +740,13 @@ test('rejects malformed matrix facts through stable diagnostics', () => {
     const clickEvent = requireComponent(manifest, 'u-button').events.items.find((item) => item.id === 'event:click');
     clickEvent.semantics.evidenceRefs[0] = 'comparison:../outside.vue';
   }, 'API_COMPATIBILITY_SEMANTICS_INVALID');
+
+  // <lang><zh-CN>组件类型交付状态必须与稳定迁移 reason 成对；已交付精确 HIA 类型不能继续伪装成“类型未交付”。</zh-CN><en>Component-type delivery status must agree with its stable migration reason; a delivered precise HIA type cannot still masquerade as “types not delivered.”</en></lang>
+  assertMutationRejected('delivered HIA type retains missing-delivery reason', (manifest) => {
+    // <lang><zh-CN>只把 u-button 的 reason 降回旧缺失值，保留 delivered 状态以隔离交付交叉门禁。</zh-CN><en>Change only u-button's reason back to the former missing value while retaining delivered status, isolating the delivery cross-check.</en></lang>
+    const button = requireComponent(manifest, 'u-button');
+    button.types.migration.reasonCode = 'HIA_COMPONENT_TYPES_NOT_DELIVERED';
+  }, 'API_COMPATIBILITY_DELIVERY_INVALID');
 
   // <lang><zh-CN>service item ID 必须精确绑定已审计的公开 composable entry，不能将 useModal 事实重标为其他服务。</zh-CN><en>A service item ID must bind exactly to the reviewed public composable entry and cannot relabel useModal facts as another service.</en></lang>
   assertMutationRejected('service id and entry mismatch', (manifest) => {

@@ -193,6 +193,25 @@ const P1_COMPONENTS = new Set([
 const SERVICE_COMPONENTS = new Set(['u-modal', 'u-toast']);
 
 /**
+ * @lang zh-CN P69 已通过根入口声明、全局增强、正反类型 fixture 与离线 tarball consumer 共同验证的比较组件类型集合；HIA 自有 `u-cell` facade 不属于 99 组件矩阵。
+ * @lang en Comparison-component type set verified in P69 through root declarations, global augmentation, positive/negative type fixtures, and an offline tarball consumer; the HIA-owned `u-cell` facade is outside the 99-component matrix.
+ */
+const P69_DELIVERED_COMPONENT_TYPES = new Set([
+  'u-alert-tips',
+  'u-button',
+  'u-cell-group',
+  'u-cell-item',
+  'u-empty',
+  'u-icon',
+  'u-image',
+  'u-pagination',
+  'u-skeleton',
+  'u-swipe-action',
+  'u-tag',
+  'u-text'
+]);
+
+/**
  * @lang zh-CN 只有经过人工语义审计、独立实现和回归测试的精确规则才能产生 `compatible`。未列入的结构同名能力仍是待复核映射候选。
  * @lang en Only exact rules that passed semantic audit, independent implementation, and regression tests may produce `compatible`. Structural name matches not listed here remain review candidates.
  */
@@ -2753,6 +2772,8 @@ async function buildComponent(componentName, upstream, local) {
   );
   const issueIds = [...new Set([...parserIssueIds, ...typesIssueIds])].sort(compareCodePointStrings);
   const issues = parserIssueIds.map((issueId) => createComponentIssue(issueId, componentName));
+  // <lang><zh-CN>类型交付只来自本批明确审计白名单；组件目录存在或上游 types.ts 均不能自动产生本地类型承诺。</zh-CN><en>Type delivery comes only from this batch's explicitly audited allowlist; neither a component directory nor an upstream types.ts may automatically create a local type promise.</en></lang>
+  const hiaTypesDelivered = P69_DELIVERED_COMPONENT_TYPES.has(componentName);
   // <lang><zh-CN>上游路径全部相对仓库根且使用正斜杠；不写入本地 checkout 绝对位置。</zh-CN><en>Every upstream path is repository-relative with forward slashes; the local checkout's absolute location is never written.</en></lang>
   const upstreamSourceRelative = `${CURRENT_COMPARISON.componentsPath}/${componentName}/${componentName}.vue`;
   const upstreamTypesRelative = `${CURRENT_COMPARISON.componentsPath}/${componentName}/types.ts`;
@@ -2802,8 +2823,11 @@ async function buildComponent(componentName, upstream, local) {
         upstreamTypes === null
           ? { status: 'not-declared' }
           : { status: 'available', path: upstreamTypesRelative, digest: digest(upstreamTypes) },
-      hia: { status: 'not-delivered' },
-      migration: { disposition: 'unsupported', reasonCode: 'HIA_COMPONENT_TYPES_NOT_DELIVERED' },
+      hia: { status: hiaTypesDelivered ? 'delivered' : 'not-delivered' },
+      // <lang><zh-CN>“已交付精确 HIA contract”不等于“与上游类型逐字段兼容”；未做完整 type parity 前，该独立迁移维度继续诚实保持 unsupported。</zh-CN><en>A delivered precise HIA contract does not imply field-for-field upstream type compatibility; this independent migration dimension remains honestly unsupported until complete type parity is reviewed.</en></lang>
+      migration: hiaTypesDelivered
+        ? { disposition: 'unsupported', reasonCode: 'HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED' }
+        : { disposition: 'unsupported', reasonCode: 'HIA_COMPONENT_TYPES_NOT_DELIVERED' },
       issueIds: typesIssueIds
     },
     platforms: {

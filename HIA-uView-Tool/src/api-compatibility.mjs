@@ -1664,6 +1664,15 @@ function validateDeliveryDimensions(component, profile, issuesById, componentIss
     }
     // <lang><zh-CN>类型迁移结论以无 target 的交付事实校验，不把类型路径当作 API target。</zh-CN><en>Type migration is validated as a targetless delivery fact and never treats a type path as an API target.</en></lang>
     validateApiMigration(component.types.migration, [], `${context}.types.migration`, diagnostics);
+    // <lang><zh-CN>本地状态与稳定 reason 必须成对：已交付精确 HIA contract 仍因未完成上游 type parity 而 unsupported，未交付则使用独立缺失原因。</zh-CN><en>The local status and stable reason must agree: a delivered precise HIA contract remains unsupported because upstream type parity is unassessed, while an absent contract uses the separate missing-delivery reason.</en></lang>
+    const expectedTypeReason = component.types.hia?.status === 'delivered'
+      ? 'HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED'
+      : 'HIA_COMPONENT_TYPES_NOT_DELIVERED';
+
+    if (component.types.migration?.disposition !== 'unsupported'
+      || component.types.migration?.reasonCode !== expectedTypeReason) {
+      addDiagnostic(diagnostics, 'API_COMPATIBILITY_DELIVERY_INVALID', `${context}.types.migration must match the HIA type-delivery status.`);
+    }
   }
 
   // <lang><zh-CN>平台结论只限声明的 active profile；上游声明数组绝不升级为 HIA 验证或设备证据。</zh-CN><en>Platform conclusions remain limited to the declared active profile; an upstream declaration array never becomes HIA validation or device evidence.</en></lang>

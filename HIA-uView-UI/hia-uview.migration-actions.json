@@ -46,7 +46,7 @@
       "component": "u-button",
       "itemId": "event:click",
       "priority": "P0",
-      "sourceFingerprint": "sha256:dda4b6c0034c48fa2b4bd77908c432f76e99eb515efb694b27f2506101e25c5d",
+      "sourceFingerprint": "sha256:ceda894e3a0b80ea27667f9c3f01a314bac325403d9abea8024aad0c97f00280",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -127,7 +127,7 @@
       "component": "u-button",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:db689d70bf20f07ca38c137f8b689a1ca03261a6413d2199f1bc8ff7c38ee42b",
+      "sourceFingerprint": "sha256:128d4418c0fd58cd138c4cf22b42981d41d44ed0b18ad86cc8d6b09ca4a72d2e",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -148,7 +148,7 @@
       "component": "u-cell-group",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:c2c435d73770ff7bb619bf0a7f16d870ad28238978a2c6bfdbb7facd4dc94d90",
+      "sourceFingerprint": "sha256:46f54de5c6e904f908c93b762d5dec5630751e4f4a64b0130ed362017be8baa2",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -169,7 +169,7 @@
       "component": "u-cell-item",
       "itemId": "event:click",
       "priority": "P0",
-      "sourceFingerprint": "sha256:61bfadacc032591d4a993a0df60b1ca1b8cd3abd5f7d4fd9a3465c7bfef18a3c",
+      "sourceFingerprint": "sha256:a077f967bebcbc30075a0e33b18f578fb263e4f018a6eb0938085ba7a0b17eaf",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -250,7 +250,7 @@
       "component": "u-cell-item",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:8774246a7b35bc52e4b21a0090d6f535bfd4a320f4b68961bc11b9039e4d1ab5",
+      "sourceFingerprint": "sha256:17b6676a14dc1cfdb3e27089382e279c0cae508c796bab65e76f55e657398bd4",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -889,7 +889,7 @@
       "component": "u-icon",
       "itemId": "event:click",
       "priority": "P0",
-      "sourceFingerprint": "sha256:cc222950b60520b104e270a5aacce30dd8725a9830114dae43b48179fd4f29b2",
+      "sourceFingerprint": "sha256:7e5819bcd94bba475f4c61038bd775c1f952b7e87a4bb0914ca21412f05ea508",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -930,7 +930,7 @@
       "component": "u-image",
       "itemId": "event:click",
       "priority": "P0",
-      "sourceFingerprint": "sha256:586b04f4061f7860303f47d6744d7fc171e726cd99ab4225fe1951c9c7be3ade",
+      "sourceFingerprint": "sha256:6245f279b8efdb81ecba7fdb6ee1ee422abe0488d35a19e5585a8a74c0db2741",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1322,7 +1322,7 @@
       "component": "u-pagination",
       "itemId": "event:change",
       "priority": "P0",
-      "sourceFingerprint": "sha256:345c8279b47d8aa4103058ba36d5af814dacff92065288342d7172a7b1b3a253",
+      "sourceFingerprint": "sha256:6126a88f2b4b28bd678f2589de105bd031a69041b1afdc9adfb2a8d52802e8f3",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1343,7 +1343,7 @@
       "component": "u-pagination",
       "itemId": "event:update:modelValue",
       "priority": "P0",
-      "sourceFingerprint": "sha256:e0070de95daccea4d3160342d3e5b698f16d5a76cc0f522cc764ae0692a3e5b5",
+      "sourceFingerprint": "sha256:091b47f1cbcca7b7db345565416349dacde5d8d5dfaa99061712f391748e3b8e",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1424,7 +1424,7 @@
       "component": "u-pagination",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:334b8bcb5d00ac1610c08d873145ff67507e4e3538d72b9797320371bd7dfaee",
+      "sourceFingerprint": "sha256:f1fa99693964106772caf91c7e14d81ee503aa553a301cb9cf61e101273b5fa4",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1965,7 +1965,7 @@
       "component": "u-skeleton",
       "itemId": "prop:loading",
       "priority": "P0",
-      "sourceFingerprint": "sha256:2ca68878c254a2d98eede20781fca77103bc6b637e54b8a87e8790378c4c9b51",
+      "sourceFingerprint": "sha256:8f26de91d7f8e8bd08c48d971ca2137eef2ac4e85a651b474b4f0a25455a45a3",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -1986,7 +1986,7 @@
       "component": "u-skeleton",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:da52ec03adb774d85940346a1199bba04f5cdaf23596ecde3aaf50daabb9e483",
+      "sourceFingerprint": "sha256:65ced00e09c192d7a34e33ff13cc34c66d0426c8eeb3c95f35021baf91744d1f",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -2007,7 +2007,7 @@
       "component": "u-swipe-action",
       "itemId": "event:click",
       "priority": "P0",
-      "sourceFingerprint": "sha256:fd7c10095f2fe4630c42695dcf26927a6b676933d77838b6cb0d142eb9b49dee",
+      "sourceFingerprint": "sha256:37288d72bf496ca92d7addeb9a52c8c03872e2fb26b67481dec364d8e4f5e108",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -2028,7 +2028,7 @@
       "component": "u-swipe-action",
       "itemId": "event:close",
       "priority": "P0",
-      "sourceFingerprint": "sha256:f25335cd7df01467d2ecbb947f905ea542ff9524cae0b9630369850dbf222154",
+      "sourceFingerprint": "sha256:5ff6b5e2ad661c6be6779d05c16ace6de491d87b3e7cde95205cba4f591f1bfc",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -2069,7 +2069,7 @@
       "component": "u-swipe-action",
       "itemId": "prop:options",
       "priority": "P0",
-      "sourceFingerprint": "sha256:96abe12e5609701a26b2c7b07e5494f4d77130db7353123f193b8723f1544d39",
+      "sourceFingerprint": "sha256:545d0c243fe40744f8c31e6247bf0adee9ce1a86b17a8b106c3ff81d3009c49a",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -2090,7 +2090,7 @@
       "component": "u-swipe-action",
       "itemId": "prop:show",
       "priority": "P0",
-      "sourceFingerprint": "sha256:741a9d32fcf8952c71399f7a4805944aa7fc564ff7d72035f431fc005f886b17",
+      "sourceFingerprint": "sha256:f999e729140634f7f5a95fd7c56224fd9f896cc3f3bad4a7abfedc792a18e12b",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -2111,7 +2111,7 @@
       "component": "u-swipe-action",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:e9fae759f0d4ac9079419beff9734b3fbbe88df85ac876201ae3bc8bc5600717",
+      "sourceFingerprint": "sha256:fbee98293a16affdaae62bf944843a3c69991a1fa167d85ca401ae6d46413fe9",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -2359,7 +2359,7 @@
       "component": "u-text",
       "itemId": "event:click",
       "priority": "P0",
-      "sourceFingerprint": "sha256:52b37bdb7412136c8639298b31e9cbb6525fa76fff3634c0d247a8f5d67e9fa6",
+      "sourceFingerprint": "sha256:21a59fde54f59b1550e98d9b3e36009b492a5d804cd5ee6f93ced85a2b618d5e",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {
@@ -2420,7 +2420,7 @@
       "component": "u-text",
       "itemId": "slot:default",
       "priority": "P0",
-      "sourceFingerprint": "sha256:681261a9dc460a51cd6823f2f22fb41c686321909883f50109e02798f81e281a",
+      "sourceFingerprint": "sha256:8090abc1aca184ffeae446533e3b656d84aff14295d91a08089f19f8368b2456",
       "disposition": "mapped",
       "operation": "adapt-call-site",
       "guidance": {

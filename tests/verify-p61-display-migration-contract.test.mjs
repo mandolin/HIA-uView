@@ -59,10 +59,10 @@ test('keeps display migration props finite, caller-controlled, and locally conve
   assert.match(tagSource, /const isVisible = computed\(\(\) => props\.visible && props\.show\);/u);
   assert.match(tagSource, /const displayText = computed\(\(\) => String\(props\.text\)\);/u);
 
-  // <lang><zh-CN>alert 的 show 只控制局部 v-if，close 继续只是 caller-owned intent；不能出现 timer/global service 或自动状态写回。</zh-CN><en>The alert show controls only local v-if and close remains caller-owned intent; timer/global service or automatic state writeback cannot appear.</en></lang>
+  // <lang><zh-CN>alert 的 show 只控制局部 v-if，click/close 继续只是 caller-owned intent；不能出现 timer/global service 或自动状态写回。</zh-CN><en>The alert show controls only local v-if and click/close remain caller-owned intents; timer/global service or automatic state writeback cannot appear.</en></lang>
   assert.match(alertSource, /v-if="props\.show"/u);
   assert.match(alertSource, /show:\s*\{\s*type:\s*Boolean,\s*default:\s*true\s*\}/su);
-  assert.match(alertSource, /defineEmits\(\['close'\]\)/u);
+  assert.match(alertSource, /defineEmits\(\['click', 'close'\]\)/u);
   assert.doesNotMatch(alertSource, /setTimeout|setInterval|fetch\(|uni\.request|localStorage|defineExpose\(/u);
 });
 
@@ -84,8 +84,8 @@ test('keeps display documentation, package types, and compiler fixture aligned',
   // <lang><zh-CN>package declarations只承诺四项已审计 prop；全局增强仍是显式 opt-in，不构成 runtime 自动注册。</zh-CN><en>Package declarations promise only the four audited props; global augmentation remains explicit opt-in and creates no runtime auto-registration.</en></lang>
   assert.match(typeSource, /export interface UAlertTipsProps/u);
   assert.match(typeSource, /export interface UTagProps/u);
-  assert.match(typeSource, /export declare const UAlertTips: DefineComponent<UAlertTipsProps>;/u);
-  assert.match(typeSource, /export declare const UTag: DefineComponent<UTagProps>;/u);
+  assert.match(typeSource, /export declare const UAlertTips: UViewTypedComponent<UAlertTipsProps, \{\}, UAlertTipsEmits>;/u);
+  assert.match(typeSource, /export declare const UTag: UViewTypedComponent<UTagProps, \{\}, UTagEmits>;/u);
 
   // <lang><zh-CN>fixture 静态组合双 tag 可见性输入、数字 text、禁用状态和 alert show，不引入网络或业务 handler。</zh-CN><en>The fixture statically composes dual tag visibility inputs, numeric text, disabled state, and alert show without introducing network or business handlers.</en></lang>
   assert.match(fixtureSource, /<u-tag :visible="fixtureTagVisible" :show="true" :text="7" :disabled="false"/u);
@@ -94,8 +94,8 @@ test('keeps display documentation, package types, and compiler fixture aligned',
 });
 
 /**
- * @lang zh-CN 验证只有已审计的四项 prop 可被 matrix 标为 compatible；所有事件与 slot 继续保守展示映射或未支持事实。
- * @lang en Verifies that only the four audited props may be marked compatible in the matrix; every event and slot remains a conservative display mapping or unsupported fact.
+ * @lang zh-CN 验证只有已审计的四项 prop 可被 matrix 标为 compatible；事件与 slot 即使后续交付，也继续保持保守 mapped 而不冒充等价。
+ * @lang en Verifies that only the four audited props may be marked compatible in the matrix; events and slots remain conservatively mapped rather than masquerading as equivalent even when delivered later.
  */
 test('promotes only audited display props to compatible in the matrix', () => {
   for (const [componentName, propNames] of Object.entries(expectedCompatibleProps)) {
@@ -114,10 +114,10 @@ test('promotes only audited display props to compatible in the matrix', () => {
     }
   }
 
-  // <lang><zh-CN>names-only 事件/slot 不因同名或 compiler 通过被升格；这些声明仍要求调用方复核实际 payload/slot binding/行为。</zh-CN><en>Names-only events/slots are not promoted merely by same name or compiler success; these declarations still require callers to review real payload, slot binding, and behavior.</en></lang>
+  // <lang><zh-CN>names-only 事件/slot 不因同名、compiler 或后续 runtime 证据被升为 compatible；调用方仍需复核 payload、slot binding 与行为。</zh-CN><en>Names-only events/slots are not promoted to compatible by a shared name, compiler evidence, or later runtime evidence; callers must still review payload, slot binding, and behavior.</en></lang>
   assert.equal(requireMatrixComponent('u-tag').events.items.find((item) => item.id === 'event:click').migration.disposition, 'mapped');
   assert.equal(requireMatrixComponent('u-tag').events.items.find((item) => item.id === 'event:close').migration.disposition, 'mapped');
-  assert.equal(requireMatrixComponent('u-tag').slots.items.find((item) => item.id === 'slot:default').migration.disposition, 'unsupported');
+  assert.equal(requireMatrixComponent('u-tag').slots.items.find((item) => item.id === 'slot:default').migration.disposition, 'mapped');
   assert.equal(requireMatrixComponent('u-alert-tips').events.items.find((item) => item.id === 'event:close').migration.disposition, 'mapped');
-  assert.equal(requireMatrixComponent('u-alert-tips').events.items.find((item) => item.id === 'event:click').migration.disposition, 'unsupported');
+  assert.equal(requireMatrixComponent('u-alert-tips').events.items.find((item) => item.id === 'event:click').migration.disposition, 'mapped');
 });

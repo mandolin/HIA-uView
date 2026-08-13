@@ -86,7 +86,12 @@ test('keeps feedback migration implementations controlled and explicitly scoped'
   // <lang><zh-CN>swipe-action 必须以 show/options 作为受控迁移入口，归一 text/label 并保持无原生手势或数据操作边界。</zh-CN><en>Swipe-action must use show/options as controlled migration entries, normalize text/label, and retain no-native-gesture or data-operation boundaries.</en></lang>
   assert.match(swipeActionSource, /show: \{ type: Boolean, default: false \}/u);
   assert.match(swipeActionSource, /options: \{ type: Array, default: \(\) => \[\] \}/u);
-  assert.match(swipeActionSource, /raw\.label \?\? raw\.text \?\? value/u);
+  // <lang><zh-CN>P69 后 label/text/value 必须通过 own-data descriptor 与安全标量门禁；旧直接属性读取会执行 getter，因此不再接受。</zh-CN><en>After P69, label/text/value must pass own-data-descriptor and safe-scalar gates; the former direct property read could execute getters and is no longer accepted.</en></lang>
+  assert.match(swipeActionSource, /const rawLabel = readOwnDataValue\(raw, 'label'\);/u);
+  assert.match(swipeActionSource, /const rawText = readOwnDataValue\(raw, 'text'\);/u);
+  assert.match(swipeActionSource, /const rawValue = readOwnDataValue\(raw, 'value'\);/u);
+  assert.match(swipeActionSource, /const value = safeValue \?\? labelSource;/u);
+  assert.doesNotMatch(swipeActionSource, /raw\.label \?\? raw\.text/u);
   assert.match(swipeActionSource, /const emit = defineEmits\(\['action', 'click', 'close', 'update:open'\]\);/u);
   assert.doesNotMatch(swipeActionSource, /touchstart|touchmove|touchend|transform:/u);
 });

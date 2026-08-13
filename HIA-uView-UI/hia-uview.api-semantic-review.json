@@ -17,14 +17,13 @@
       "itemId": "event:click",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-button/u-button.vue",
-          "local:HIA-uView-UI/src/components/u-button/u-button.vue"
+          "local:HIA-uView-UI/src/components/u-button/u-button.vue",
+          "test:tests/runtime/hia-uview-p69-action-content.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -283,14 +282,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-button/u-button.vue",
-          "local:HIA-uView-UI/src/components/u-button/u-button.vue"
+          "local:HIA-uView-UI/src/components/u-button/u-button.vue",
+          "test:tests/runtime/hia-uview-p69-action-content.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -315,14 +313,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-cell-group/u-cell-group.vue",
-          "local:HIA-uView-UI/src/components/u-cell-group/u-cell-group.vue"
+          "local:HIA-uView-UI/src/components/u-cell-group/u-cell-group.vue",
+          "test:tests/runtime/hia-uview-p69-list-state.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -347,14 +344,13 @@
       "itemId": "event:click",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-cell-item/u-cell-item.vue",
-          "local:HIA-uView-UI/src/components/u-cell-item/u-cell-item.vue"
+          "local:HIA-uView-UI/src/components/u-cell-item/u-cell-item.vue",
+          "test:tests/runtime/hia-uview-p69-list-state.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -621,14 +617,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-cell-item/u-cell-item.vue",
-          "local:HIA-uView-UI/src/components/u-cell-item/u-cell-item.vue"
+          "local:HIA-uView-UI/src/components/u-cell-item/u-cell-item.vue",
+          "test:tests/runtime/hia-uview-p69-list-state.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -2419,14 +2414,13 @@
       "itemId": "event:click",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-icon/u-icon.vue",
-          "local:HIA-uView-UI/src/components/u-icon/u-icon.vue"
+          "local:HIA-uView-UI/src/components/u-icon/u-icon.vue",
+          "test:tests/runtime/hia-uview-p69-action-content.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -2545,14 +2539,13 @@
       "itemId": "event:click",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-image/u-image.vue",
-          "local:HIA-uView-UI/src/components/u-image/u-image.vue"
+          "local:HIA-uView-UI/src/components/u-image/u-image.vue",
+          "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -3576,14 +3569,13 @@
       "itemId": "event:change",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-pagination/u-pagination.vue",
-          "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue"
+          "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue",
+          "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -3626,14 +3618,13 @@
       "itemId": "event:update:modelValue",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-pagination/u-pagination.vue",
-          "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue"
+          "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue",
+          "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -3890,14 +3881,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-pagination/u-pagination.vue",
-          "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue"
+          "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue",
+          "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -3915,7 +3905,7 @@
               "shape": "number"
             },
             {
-              "name": "page-count",
+            "name": "pageCount",
               "shape": "number"
             }
           ],
@@ -5348,15 +5338,14 @@
       "itemId": "prop:loading",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-skeleton/types.ts",
           "comparison:src/uni_modules/uview-pro/components/u-skeleton/u-skeleton.vue",
-          "local:HIA-uView-UI/src/components/u-skeleton/u-skeleton.vue"
+          "local:HIA-uView-UI/src/components/u-skeleton/u-skeleton.vue",
+          "test:tests/runtime/hia-uview-p69-list-state.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "prop",
@@ -5421,14 +5410,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-skeleton/u-skeleton.vue",
-          "local:HIA-uView-UI/src/components/u-skeleton/u-skeleton.vue"
+          "local:HIA-uView-UI/src/components/u-skeleton/u-skeleton.vue",
+          "test:tests/runtime/hia-uview-p69-list-state.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -5453,14 +5441,13 @@
       "itemId": "event:click",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-swipe-action/u-swipe-action.vue",
-          "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue"
+          "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue",
+          "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -5486,12 +5473,12 @@
           "status": "delivered",
           "kind": "event",
           "trigger": "user-activation",
-          "parameters": [
-            {
-              "name": "action",
-              "shape": "action-object"
-            }
-          ],
+        "parameters": [
+          {
+            "name": "value",
+            "shape": "string-or-number"
+          }
+        ],
           "delivery": "synchronous-emit",
           "cancellable": false,
           "modelRelation": "none",
@@ -5507,14 +5494,13 @@
       "itemId": "event:close",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-swipe-action/u-swipe-action.vue",
-          "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue"
+          "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue",
+          "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -5624,15 +5610,14 @@
       "itemId": "prop:options",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-swipe-action/types.ts",
           "comparison:src/uni_modules/uview-pro/components/u-swipe-action/u-swipe-action.vue",
-          "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue"
+          "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue",
+          "test:tests/runtime/hia-uview-feedback.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "prop",
@@ -5695,15 +5680,14 @@
       "itemId": "prop:show",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-swipe-action/types.ts",
           "comparison:src/uni_modules/uview-pro/components/u-swipe-action/u-swipe-action.vue",
-          "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue"
+          "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue",
+          "test:tests/runtime/hia-uview-feedback.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "prop",
@@ -5768,14 +5752,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-swipe-action/u-swipe-action.vue",
-          "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue"
+          "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue",
+          "test:tests/runtime/hia-uview-feedback.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",
@@ -6493,14 +6476,13 @@
       "itemId": "event:click",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-text/u-text.vue",
-          "local:HIA-uView-UI/src/components/u-text/u-text.vue"
+          "local:HIA-uView-UI/src/components/u-text/u-text.vue",
+          "test:tests/runtime/hia-uview-p69-action-content.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "event",
@@ -6686,14 +6668,13 @@
       "itemId": "slot:default",
       "semantics": {
         "reviewState": "complete",
-        "evidenceLevel": "source-reviewed",
+        "evidenceLevel": "runtime-tested",
         "evidenceRefs": [
           "comparison:src/uni_modules/uview-pro/components/u-text/u-text.vue",
-          "local:HIA-uView-UI/src/components/u-text/u-text.vue"
+          "local:HIA-uView-UI/src/components/u-text/u-text.vue",
+          "test:tests/runtime/hia-uview-p69-action-content.runtime.test.mjs"
         ],
-        "remainingEvidence": [
-          "runtime-parity"
-        ],
+        "remainingEvidence": [],
         "upstream": {
           "status": "delivered",
           "kind": "slot",

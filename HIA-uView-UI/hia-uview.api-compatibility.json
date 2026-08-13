@@ -142,7 +142,7 @@
   },
   "semanticReview": {
     "path": "HIA-uView-UI/hia-uview.api-semantic-review.json",
-    "digest": "sha256:2c41744b7dd39d3e81ab85c3ad2f1fb3325a0ab45da3b5779cf6389b35645253",
+    "digest": "sha256:bd23cc556232744235f6d2c22b0bbffb328b046d0cabfba37d11943b6d6a353d",
     "itemCount": 127,
     "serviceCount": 2
   },
@@ -1939,12 +1939,17 @@
               "name": "click"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "click"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "click"
             }
           },
           {
@@ -2016,11 +2021,11 @@
           "digest": "sha256:3824caf487a0a02c959a2db0a7b30fd1eb766bdb36d86851cbfd2b2fbd5ace2b"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },
@@ -2060,8 +2065,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 1,
-          "mapped": 4,
-          "unsupported": 13,
+          "mapped": 5,
+          "unsupported": 12,
           "unresolved": 0
         }
       },
@@ -5124,14 +5129,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-button/u-button.vue",
-                "local:HIA-uView-UI/src/components/u-button/u-button.vue"
+                "local:HIA-uView-UI/src/components/u-button/u-button.vue",
+                "test:tests/runtime/hia-uview-p69-action-content.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -5279,14 +5283,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-button/u-button.vue",
-                "local:HIA-uView-UI/src/components/u-button/u-button.vue"
+                "local:HIA-uView-UI/src/components/u-button/u-button.vue",
+                "test:tests/runtime/hia-uview-p69-action-content.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -5349,11 +5352,11 @@
           "digest": "sha256:8a7090e20ec5610347661dc96362e4116059ca8476e715a08277b7fcbdf88409"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },
@@ -8628,14 +8631,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-cell-group/u-cell-group.vue",
-                "local:HIA-uView-UI/src/components/u-cell-group/u-cell-group.vue"
+                "local:HIA-uView-UI/src/components/u-cell-group/u-cell-group.vue",
+                "test:tests/runtime/hia-uview-p69-list-state.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -8698,11 +8700,11 @@
           "digest": "sha256:8d00a95bc9495608d3cf961ab9885abf4658821933f3f5d6092df67bc8076a13"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },
@@ -9736,14 +9738,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-cell-item/u-cell-item.vue",
-                "local:HIA-uView-UI/src/components/u-cell-item/u-cell-item.vue"
+                "local:HIA-uView-UI/src/components/u-cell-item/u-cell-item.vue",
+                "test:tests/runtime/hia-uview-p69-list-state.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -9807,14 +9808,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-cell-item/u-cell-item.vue",
-                "local:HIA-uView-UI/src/components/u-cell-item/u-cell-item.vue"
+                "local:HIA-uView-UI/src/components/u-cell-item/u-cell-item.vue",
+                "test:tests/runtime/hia-uview-p69-list-state.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -9933,11 +9933,11 @@
           "digest": "sha256:8791fe57d5d77ea42597ae456a83c629923070a596bfb4025a6324c624af437f"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },
@@ -19969,12 +19969,17 @@
               "name": "bottom"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "bottom"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "bottom"
             }
           }
         ],
@@ -20021,11 +20026,11 @@
           "digest": "sha256:bfdbe68a8b24049743aef01db4bce339e9e71abf68b692a82b668618a2440ec6"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },
@@ -20065,8 +20070,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 3,
-          "mapped": 0,
-          "unsupported": 12,
+          "mapped": 1,
+          "unsupported": 11,
           "unresolved": 0
         }
       },
@@ -26391,14 +26396,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-icon/u-icon.vue",
-                "local:HIA-uView-UI/src/components/u-icon/u-icon.vue"
+                "local:HIA-uView-UI/src/components/u-icon/u-icon.vue",
+                "test:tests/runtime/hia-uview-p69-action-content.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -26499,11 +26503,11 @@
           "digest": "sha256:4a595b1b003c05024bb3c73bfb4ab624b8703b6c2fc5ccdbc31d46938b5eaa06"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },
@@ -27307,14 +27311,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-image/u-image.vue",
-                "local:HIA-uView-UI/src/components/u-image/u-image.vue"
+                "local:HIA-uView-UI/src/components/u-image/u-image.vue",
+                "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -27478,11 +27481,11 @@
           "digest": "sha256:2a2ccb750313b4733eeaf1b277cbe9ace5d3734e91d9bc2e4657284d1b417140"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },
@@ -39962,14 +39965,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-pagination/u-pagination.vue",
-                "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue"
+                "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue",
+                "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -40026,14 +40028,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-pagination/u-pagination.vue",
-                "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue"
+                "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue",
+                "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -40097,14 +40098,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-pagination/u-pagination.vue",
-                "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue"
+                "local:HIA-uView-UI/src/components/u-pagination/u-pagination.vue",
+                "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -40122,7 +40122,7 @@
                     "shape": "number"
                   },
                   {
-                    "name": "page-count",
+                    "name": "pageCount",
                     "shape": "number"
                   }
                 ],
@@ -40176,11 +40176,11 @@
           "digest": "sha256:5d35700896c77f1350ab8dc0d63e4b942d6ce3fc84775d756a1533b4169700a7"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },
@@ -50026,15 +50026,14 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-skeleton/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-skeleton/u-skeleton.vue",
-                "local:HIA-uView-UI/src/components/u-skeleton/u-skeleton.vue"
+                "local:HIA-uView-UI/src/components/u-skeleton/u-skeleton.vue",
+                "test:tests/runtime/hia-uview-p69-list-state.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "prop",
@@ -50327,14 +50326,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-skeleton/u-skeleton.vue",
-                "local:HIA-uView-UI/src/components/u-skeleton/u-skeleton.vue"
+                "local:HIA-uView-UI/src/components/u-skeleton/u-skeleton.vue",
+                "test:tests/runtime/hia-uview-p69-list-state.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -50397,11 +50395,11 @@
           "digest": "sha256:8892c90463e9bcd4a59d3a1d620f63ed188dea43dcc39ddbe533fd708770d25e"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },
@@ -53834,15 +53832,14 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-swipe-action/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-swipe-action/u-swipe-action.vue",
-                "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue"
+                "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue",
+                "test:tests/runtime/hia-uview-feedback.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "prop",
@@ -53947,15 +53944,14 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-swipe-action/types.ts",
                 "comparison:src/uni_modules/uview-pro/components/u-swipe-action/u-swipe-action.vue",
-                "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue"
+                "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue",
+                "test:tests/runtime/hia-uview-feedback.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "prop",
@@ -54069,14 +54065,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-swipe-action/u-swipe-action.vue",
-                "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue"
+                "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue",
+                "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -54104,8 +54099,8 @@
                 "trigger": "user-activation",
                 "parameters": [
                   {
-                    "name": "action",
-                    "shape": "action-object"
+                    "name": "value",
+                    "shape": "string-or-number"
                   }
                 ],
                 "delivery": "synchronous-emit",
@@ -54137,14 +54132,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-swipe-action/u-swipe-action.vue",
-                "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue"
+                "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue",
+                "test:tests/runtime/hia-uview-p69-media-pagination-swipe.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -54231,14 +54225,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-swipe-action/u-swipe-action.vue",
-                "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue"
+                "local:HIA-uView-UI/src/components/u-swipe-action/u-swipe-action.vue",
+                "test:tests/runtime/hia-uview-feedback.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -54301,11 +54294,11 @@
           "digest": "sha256:9cd29b744521800c830ee4ce3c118161af5b51ece39434a79d778edee60a5dc8"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },
@@ -59965,12 +59958,17 @@
               "name": "default"
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "default"
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "STRUCTURAL_MATCH_REQUIRES_SEMANTIC_REVIEW",
+              "target": "default"
             }
           }
         ],
@@ -60017,11 +60015,11 @@
           "digest": "sha256:6e6c94de7fd8378dc1005e7f63b7b3efd4eeb849784602a061a999a6fe4d0c70"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },
@@ -60061,8 +60059,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 3,
-          "mapped": 4,
-          "unsupported": 11,
+          "mapped": 5,
+          "unsupported": 10,
           "unresolved": 0
         }
       },
@@ -61511,14 +61509,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-text/u-text.vue",
-                "local:HIA-uView-UI/src/components/u-text/u-text.vue"
+                "local:HIA-uView-UI/src/components/u-text/u-text.vue",
+                "test:tests/runtime/hia-uview-p69-action-content.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "event",
@@ -61661,14 +61658,13 @@
             },
             "semantics": {
               "reviewState": "complete",
-              "evidenceLevel": "source-reviewed",
+              "evidenceLevel": "runtime-tested",
               "evidenceRefs": [
                 "comparison:src/uni_modules/uview-pro/components/u-text/u-text.vue",
-                "local:HIA-uView-UI/src/components/u-text/u-text.vue"
+                "local:HIA-uView-UI/src/components/u-text/u-text.vue",
+                "test:tests/runtime/hia-uview-p69-action-content.runtime.test.mjs"
               ],
-              "remainingEvidence": [
-                "runtime-parity"
-              ],
+              "remainingEvidence": [],
               "upstream": {
                 "status": "delivered",
                 "kind": "slot",
@@ -61731,11 +61727,11 @@
           "digest": "sha256:49402e569bec6f220f7328bef76fe1e2afa7f8e7b17b2c6be3a6735a2b482339"
         },
         "hia": {
-          "status": "not-delivered"
+          "status": "delivered"
         },
         "migration": {
           "disposition": "unsupported",
-          "reasonCode": "HIA_COMPONENT_TYPES_NOT_DELIVERED"
+          "reasonCode": "HIA_COMPONENT_TYPE_PARITY_NOT_ASSESSED"
         },
         "issueIds": []
       },

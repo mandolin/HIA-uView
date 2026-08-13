@@ -329,8 +329,8 @@ test('locks the exact nineteen runtime evidence and HIA payload records', () => 
 });
 
 /**
- * @lang zh-CN 锁定三十一项 P1 结构映射、十四组件内的 54/54 边界和全矩阵确定性统计，同时拒绝给 P1 附加 P0 semantics。
- * @lang en Locks the thirty-one P1 structural mappings, the 54/54 boundary within fourteen components, and deterministic whole-matrix statistics while rejecting P0 semantics on P1.
+ * @lang zh-CN 锁定三十一项选择/日期/上传 P1 结构映射、十四组件内的 54/54 边界和更新后的全矩阵确定性统计，同时拒绝给 P1 附加 P0 semantics。
+ * @lang en Locks the thirty-one selection/date/upload P1 structural mappings, the 54/54 boundary within fourteen components, and updated deterministic whole-matrix statistics while rejecting P0 semantics on P1.
  */
 test('keeps P1 promotions structural and preserves deterministic matrix totals', () => {
   // <lang><zh-CN>从稳定复合索引现场汇集全部 P1，不能信任单独维护的计数。</zh-CN><en>Collect all P1 items live from the stable composite index rather than trusting separately maintained counts.</en></lang>
@@ -342,8 +342,8 @@ test('keeps P1 promotions structural and preserves deterministic matrix totals',
   assert.equal(PROMOTED_P1_IDS.length, 31);
   assert.equal(p1Entries.length, 536);
   assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'compatible').length, 4);
-  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'mapped').length, 164);
-  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'unsupported').length, 368);
+  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'mapped').length, 167);
+  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'unsupported').length, 365);
   assert.equal(controlledP1Entries.length, 108);
   assert.equal(controlledP1Entries.filter(([, item]) => item.migration.disposition === 'mapped').length, 54);
   assert.equal(controlledP1Entries.filter(([, item]) => item.migration.disposition === 'unsupported').length, 54);
@@ -366,8 +366,8 @@ test('keeps P1 promotions structural and preserves deterministic matrix totals',
 });
 
 /**
- * @lang zh-CN 单独披露两个 USelect P2 映射，并锁定完整矩阵的 47/336/1357 与 P0 108/19/19 证据事实；新增 feedback/navigation/overlay 映射不改变本批选择组件断言。
- * @lang en Separately discloses the two USelect P2 mappings and locks whole-matrix 47/336/1357 plus P0 108/19/19 evidence facts; newly delivered feedback/navigation/overlay mappings do not change this selection-component batch assertion.
+ * @lang zh-CN 单独披露两个 USelect P2 映射，并锁定完整矩阵的 47/339/1354 与 P0 127/0/0 证据事实；后续展示/媒体/列表映射不改变本批选择组件断言。
+ * @lang en Separately discloses the two USelect P2 mappings and locks whole-matrix 47/339/1354 plus P0 127/0/0 evidence facts; later display/media/list mappings do not change this selection-component batch assertion.
  */
 test('isolates the two select P2 mappings from P0 and P1 semantics', () => {
   // <lang><zh-CN>所有组件项现场按 disposition/P0 evidence 分类；service 不在复合索引中。</zh-CN><en>Classify all component items live by disposition and P0 evidence; services are absent from the composite index.</en></lang>
@@ -382,11 +382,11 @@ test('isolates the two select P2 mappings from P0 and P1 semantics', () => {
 
   assert.equal(allItems.length, 1740);
   assert.equal(allItems.filter((item) => item.migration.disposition === 'compatible').length, 47);
-  assert.equal(allItems.filter((item) => item.migration.disposition === 'mapped').length, 336);
-  assert.equal(allItems.filter((item) => item.migration.disposition === 'unsupported').length, 1357);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 108);
-  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 19);
-  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 19);
+  assert.equal(allItems.filter((item) => item.migration.disposition === 'mapped').length, 339);
+  assert.equal(allItems.filter((item) => item.migration.disposition === 'unsupported').length, 1354);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 127);
+  assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 0);
+  assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 0);
   assert.deepEqual(selectP2MappedIds, [...EXTRA_SELECT_P2_IDS].sort());
 
   // <lang><zh-CN>两个额外映射逐项保持 P2、无 semantics、具名同名 target 且不进入动作包。</zh-CN><en>Each extra mapping stays P2, carries no semantics, has a named same-name target, and stays outside the action packet.</en></lang>
