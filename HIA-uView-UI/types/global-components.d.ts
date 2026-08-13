@@ -7,21 +7,29 @@
 import type {
   UActionSheet,
   UAlertTips,
+  UButton,
   UCalendar,
+  UCell,
+  UCellGroup,
+  UCellItem,
   UCheckbox,
   UCheckboxGroup,
   UDropdown,
   UDropdownItem,
+  UEmpty,
   UField,
   UForm,
   UFormItem,
   UInput,
+  UIcon,
+  UImage,
   UMask,
   UModal,
   UNavbar,
   UNoticeBar,
   UNumberBox,
   UPicker,
+  UPagination,
   UPopup,
   URadio,
   URadioGroup,
@@ -29,10 +37,13 @@ import type {
   USearch,
   USelect,
   USlider,
+  USkeleton,
   USwitch,
+  USwipeAction,
   UTabbar,
   UTabs,
   UTag,
+  UText,
   UTextarea,
   UToast,
   UTransition,
@@ -49,8 +60,16 @@ declare module 'vue' {
     UActionSheet: typeof UActionSheet;
     /** 中文：caller-controlled 局部提示条。English: Caller-controlled local alert strip. */
     UAlertTips: typeof UAlertTips;
+    /** 中文：caller-controlled 本地操作按钮。English: Caller-controlled local action button. */
+    UButton: typeof UButton;
     /** 中文：受控单月 Gregorian 日历。English: Controlled single-month Gregorian calendar. */
     UCalendar: typeof UCalendar;
+    /** 中文：HIA 自有受限信息行 facade。English: HIA-owned constrained information-row facade. */
+    UCell: typeof UCell;
+    /** 中文：无 child registry 的局部信息行容器。English: Local information-row container with no child registry. */
+    UCellGroup: typeof UCellGroup;
+    /** 中文：caller-controlled 信息行项目。English: Caller-controlled information-row item. */
+    UCellItem: typeof UCellItem;
     /** 中文：受控 checkbox。English: Controlled checkbox. */
     UCheckbox: typeof UCheckbox;
     /** 中文：受控 checkbox group。English: Controlled checkbox group. */
@@ -59,6 +78,8 @@ declare module 'vue' {
     UDropdown: typeof UDropdown;
     /** 中文：独立 legacy 或 registry options 下拉子项。English: Independent legacy or registry-options dropdown child. */
     UDropdownItem: typeof UDropdownItem;
+    /** 中文：caller-controlled 空态投影。English: Caller-controlled empty-state projection. */
+    UEmpty: typeof UEmpty;
     /** 中文：内建受控输入或 caller-owned slot 字段。English: Field with a built-in controlled input or caller-owned slot. */
     UField: typeof UField;
     /** 中文：表单 owner、registry 与校验编排。English: Form owner, registry, and validation orchestration. */
@@ -67,6 +88,10 @@ declare module 'vue' {
     UFormItem: typeof UFormItem;
     /** 中文：受控单行输入。English: Controlled single-line input. */
     UInput: typeof UInput;
+    /** 中文：无字体或 registry 的文字符号。English: Text symbol with no font or registry. */
+    UIcon: typeof UIcon;
+    /** 中文：caller-owned 原生图片投影。English: Caller-owned native-image projection. */
+    UImage: typeof UImage;
     /** 中文：caller-controlled 局部 mask。English: Caller-controlled local mask. */
     UMask: typeof UMask;
     /** 中文：caller-controlled 与显式 scoped-service modal。English: Caller-controlled and explicit scoped-service modal. */
@@ -79,6 +104,8 @@ declare module 'vue' {
     UNumberBox: typeof UNumberBox;
     /** 中文：有限单列/多列 picker。English: Finite single-/multi-column picker. */
     UPicker: typeof UPicker;
+    /** 中文：受控有限页码意图。English: Controlled finite page-number intent. */
+    UPagination: typeof UPagination;
     /** 中文：caller-controlled 局部 popup。English: Caller-controlled local popup. */
     UPopup: typeof UPopup;
     /** 中文：受控 radio。English: Controlled radio. */
@@ -93,14 +120,20 @@ declare module 'vue' {
     USelect: typeof USelect;
     /** 中文：相对 min 十进制网格受控 slider。English: Min-relative decimal-grid controlled slider. */
     USlider: typeof USlider;
+    /** 中文：caller-controlled placeholder 投影。English: Caller-controlled placeholder projection. */
+    USkeleton: typeof USkeleton;
     /** 中文：受控 switch。English: Controlled switch. */
     USwitch: typeof USwitch;
+    /** 中文：显式、非手势的有限操作投影。English: Explicit finite action projection with no gesture engine. */
+    USwipeAction: typeof USwipeAction;
     /** 中文：局部、非路由 tabbar。English: Local non-routing tabbar. */
     UTabbar: typeof UTabbar;
     /** 中文：有限、非路由 tabs。English: Finite non-routing tabs. */
     UTabs: typeof UTabs;
     /** 中文：有限 token 化文字标签。English: Finite tokenized text tag. */
     UTag: typeof UTag;
+    /** 中文：caller-controlled 有限文字投影。English: Caller-controlled finite text projection. */
+    UText: typeof UText;
     /** 中文：受控多行输入。English: Controlled multiline input. */
     UTextarea: typeof UTextarea;
     /** 中文：受控、component-ref 与显式 scoped-service toast。English: Controlled, component-ref, and explicit scoped-service toast. */

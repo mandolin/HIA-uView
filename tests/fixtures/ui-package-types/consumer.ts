@@ -6,21 +6,29 @@
 
 import UView, {
   UActionSheet,
+  UAlertTips,
+  UButton,
   UCalendar,
+  UCell,
+  UCellGroup,
+  UCellItem,
   UCheckbox,
   UCheckboxGroup,
   UDropdown,
   UDropdownItem,
+  UEmpty,
   UField,
   UForm,
   UFormItem,
+  UIcon,
+  UImage,
   UInput,
-  UAlertTips,
   UMask,
   UModal,
   UNavbar,
   UNoticeBar,
   UNumberBox,
+  UPagination,
   UPicker,
   UPopup,
   URadio,
@@ -28,11 +36,14 @@ import UView, {
   URate,
   USearch,
   USelect,
+  USkeleton,
   USlider,
+  USwipeAction,
   USwitch,
   UTabbar,
   UTabs,
   UTag,
+  UText,
   UTextarea,
   UToast,
   UTransition,
@@ -46,9 +57,25 @@ import UView, {
   type UActionSheetItem,
   type UActionSheetProps,
   type UActionSheetSelectDetail,
+  type UAlertTipsEmits,
+  type UAlertTipsInstance,
+  type UAlertTipsProps,
+  type UButtonEmits,
+  type UButtonInstance,
+  type UButtonProps,
+  type UButtonSize,
+  type UButtonVariant,
   type UCalendarChangeDetail,
   type UCalendarInstance,
   type UCalendarProps,
+  type UCellEmits,
+  type UCellGroupInstance,
+  type UCellGroupProps,
+  type UCellInstance,
+  type UCellItemEmits,
+  type UCellItemInstance,
+  type UCellItemProps,
+  type UCellProps,
   type UCheckboxGroupInstance,
   type UCheckboxGroupProps,
   type UCheckboxInstance,
@@ -57,6 +84,9 @@ import UView, {
   type UDropdownItemInstance,
   type UDropdownItemProps,
   type UDropdownProps,
+  type UEmptyEmits,
+  type UEmptyInstance,
+  type UEmptyProps,
   type UFieldInstance,
   type UFieldProps,
   type UFormFieldPath,
@@ -71,6 +101,15 @@ import UView, {
   type UFormValidationError,
   type UInputInstance,
   type UInputProps,
+  type UIconEmits,
+  type UIconInstance,
+  type UIconProps,
+  type UIconSize,
+  type UIconTone,
+  type UImageEmits,
+  type UImageInstance,
+  type UImageMode,
+  type UImageProps,
   type UFeedbackCommandResult,
   type UFeedbackScope,
   type UMaskInstance,
@@ -87,6 +126,9 @@ import UView, {
   type UNoticeBarProps,
   type UNumberBoxInstance,
   type UNumberBoxProps,
+  type UPaginationEmits,
+  type UPaginationInstance,
+  type UPaginationProps,
   type UPickerCancelDetail,
   type UPickerColumnChangeDetail,
   type UPickerConfirmDetail,
@@ -107,8 +149,16 @@ import UView, {
   type USelectConfirmResult,
   type USelectInstance,
   type USelectProps,
+  type USkeletonInstance,
+  type USkeletonProps,
   type USliderInstance,
   type USliderProps,
+  type USwipeActionEmits,
+  type USwipeActionInput,
+  type USwipeActionInstance,
+  type USwipeActionOption,
+  type USwipeActionProps,
+  type USwipeActionValue,
   type USwitchInstance,
   type USwitchProps,
   type UTabbarItem,
@@ -117,8 +167,12 @@ import UView, {
   type UTabsInstance,
   type UTabsItem,
   type UTabsProps,
-  type UAlertTipsProps,
+  type UTagEmits,
+  type UTagInstance,
   type UTagProps,
+  type UTextEmits,
+  type UTextInstance,
+  type UTextProps,
   type UTextareaInstance,
   type UTextareaProps,
   type UToastController,
@@ -303,6 +357,46 @@ const tagProps: UTagProps = {
   visible: true
 };
 
+// <lang><zh-CN>P69 操作与内容 props 正例锁定有限 token、caller-owned 文字和纯本地 guard；显式 type alias 赋值证明根入口导出了相应有限 union。</zh-CN><en>P69 action and content props positives lock finite tokens, caller-owned copy, and purely local guards; explicit type-alias assignments prove that the root entry exports the corresponding finite unions.</en></lang>
+const buttonVariant: UButtonVariant = 'primary';
+const buttonSize: UButtonSize = 'md';
+const buttonProps: UButtonProps = { block: true, disabled: false, label: 'Continue', loading: false, loadingText: 'Working', size: buttonSize, variant: buttonVariant };
+const iconSize: UIconSize = 'medium';
+const iconTone: UIconTone = 'primary';
+const iconProps: UIconProps = { disabled: false, label: 'Information', name: 'info', size: iconSize, tone: iconTone };
+const textProps: UTextProps = { ellipsis: true, lines: 2, show: true, size: 'md', text: 'Caller-owned copy', type: 'secondary' };
+
+// <lang><zh-CN>P69 信息行、分组和空态 props 正例只描述局部展示与意图启用，不赋予路由、数据查询或加载判断能力。</zh-CN><en>P69 information-row, group, and empty-state props positives describe only local presentation and intent eligibility, without granting routing, data-query, or loading-decision capability.</en></lang>
+const cellProps: UCellProps = { clickable: true, description: 'Local description', disabled: false, label: 'Profile', value: 'Ready' };
+const cellGroupProps: UCellGroupProps = { bordered: true, title: 'Local group' };
+const cellItemProps: UCellItemProps = { arrow: true, clickable: true, disabled: false, label: 2, required: true, title: 'Status', value: 8 };
+const emptyProps: UEmptyProps = { actionText: 'Retry', description: 'No local records', show: true, src: '/static/empty.png', text: 'Fallback', title: 'Nothing here' };
+
+// <lang><zh-CN>P69 媒体、分页和 placeholder 正例锁定原生 image mode、有限页面输入与局部 skeleton 几何；它们不声明远端加载器或数据源。</zh-CN><en>P69 media, pagination, and placeholder positives lock native image modes, finite page inputs, and local skeleton geometry; they declare neither a remote loader nor a data source.</en></lang>
+const imageMode: UImageMode = 'aspectFill';
+const imageProps: UImageProps = { alt: 'Local venue', errorText: 'Unavailable', fluid: true, lazyLoad: true, mode: imageMode, shape: 'rounded', showError: true, size: 'large', src: '/static/venue.png' };
+const paginationProps: UPaginationProps = { current: 2, modelValue: 2, nextText: 'Next', pageCount: 5, pageSize: 10, prevText: 'Previous', total: 42 };
+const skeletonProps: USkeletonProps = { loading: true, rows: 3, showAvatar: true, showTitle: true };
+
+// <lang><zh-CN>SwipeAction 正例验证 scalar shorthand 与有限 data-record 可共同输入，而事件值始终收束到 string 或 number。</zh-CN><en>The SwipeAction positive verifies that scalar shorthand and finite data records can be supplied together while event values always narrow to string or number.</en></lang>
+const swipeValue: USwipeActionValue = 'archive';
+const swipeOption: USwipeActionOption = { disabled: false, label: 'Archive', type: 'primary', value: swipeValue };
+const swipeInputs: ReadonlyArray<USwipeActionInput> = [swipeOption, 7];
+const swipeActionProps: USwipeActionProps = { actions: swipeInputs, closeText: 'Close', disabled: false, open: true, options: ['fallback'], show: false };
+
+// <lang><zh-CN>显式事件别名正例保证这些公开 contracts 可独立用于包装器声明，同时保持 payload 和参数顺序。</zh-CN><en>Explicit event-alias positives ensure these public contracts can independently type wrapper declarations while retaining payloads and argument order.</en></lang>
+const buttonEmits: UButtonEmits = { click: (_event) => undefined };
+const cellEmits: UCellEmits = { click: (_event) => undefined };
+const cellItemEmits: UCellItemEmits = { click: (_event) => undefined };
+const iconEmits: UIconEmits = { click: (_event) => undefined };
+const imageEmits: UImageEmits = { click: (_event) => undefined, error: (_event) => undefined, load: (_event) => undefined };
+const paginationEmits: UPaginationEmits = { change: (_page) => undefined, 'update:current': (_page) => undefined, 'update:modelValue': (_page) => undefined };
+const swipeActionEmits: USwipeActionEmits = { action: (_value) => undefined, click: (_value) => undefined, close: () => undefined, 'update:open': (_open) => undefined };
+const textEmits: UTextEmits = { click: (_event) => undefined };
+const emptyEmits: UEmptyEmits = { action: (_event) => undefined };
+const tagEmits: UTagEmits = { click: (_event) => undefined, close: () => undefined };
+const alertTipsEmits: UAlertTipsEmits = { click: () => undefined, close: () => undefined };
+
 // <lang><zh-CN>建立调用方拥有的嵌套模型，证明类型不会把 dotted path 误写成扁平业务模型。</zh-CN><en>Creates a caller-owned nested model, proving the types do not rewrite a dotted path into a flat business model.</en></lang>
 const formModel: UFormModel = {
   profile: {
@@ -385,6 +479,21 @@ declare const navbarRef: UNavbarInstance;
 declare const tabbarRef: UTabbarInstance;
 declare const tabsRef: UTabsInstance;
 declare const noticeBarRef: UNoticeBarInstance;
+
+// <lang><zh-CN>P69 组件 ref 仅验证精确 InstanceType 的 props、$emit 和无 expose 边界，不实例化组件或触发平台事件。</zh-CN><en>P69 component refs verify only precise InstanceType props, $emit, and no-expose boundaries; they neither instantiate components nor trigger platform events.</en></lang>
+declare const buttonRef: UButtonInstance;
+declare const cellRef: UCellInstance;
+declare const cellGroupRef: UCellGroupInstance;
+declare const cellItemRef: UCellItemInstance;
+declare const iconRef: UIconInstance;
+declare const imageRef: UImageInstance;
+declare const paginationRef: UPaginationInstance;
+declare const skeletonRef: USkeletonInstance;
+declare const swipeActionRef: USwipeActionInstance;
+declare const textRef: UTextInstance;
+declare const emptyRef: UEmptyInstance;
+declare const tagRef: UTagInstance;
+declare const alertTipsRef: UAlertTipsInstance;
 
 // <lang><zh-CN>UForm InstanceType 必须暴露七个精确方法，并保持 validate/validateField 始终返回 Promise<boolean>。</zh-CN><en>UForm InstanceType must expose seven precise methods while validate/validateField always return Promise<boolean>.</en></lang>
 const allValidationResult: Promise<boolean> = formRef.validate((valid, errors) => {
@@ -485,6 +594,32 @@ tabsRef.clickTab(0);
 tabsRef.clickTab('details');
 noticeBarRef.$emit('click', localClickEvent, 1);
 noticeBarRef.$emit('close', localClickEvent);
+
+// <lang><zh-CN>P69 实例正例锁定原始事件、无 payload intent、分页 number 顺序表面和 SwipeAction 标量边界；调用次序与 runtime 发出次序相同。</zh-CN><en>P69 instance positives lock raw events, payload-free intents, the pagination number-order surface, and the SwipeAction scalar boundary; call order mirrors runtime emission order.</en></lang>
+buttonRef.$emit('click', localClickEvent);
+cellRef.$emit('click', localClickEvent);
+cellItemRef.$emit('click', localClickEvent);
+iconRef.$emit('click', localClickEvent);
+imageRef.$emit('load', localClickEvent);
+imageRef.$emit('error', localClickEvent);
+imageRef.$emit('click', localClickEvent);
+paginationRef.$emit('update:current', 3);
+paginationRef.$emit('update:modelValue', 3);
+paginationRef.$emit('change', 3);
+swipeActionRef.$emit('click', swipeValue);
+swipeActionRef.$emit('action', swipeValue);
+swipeActionRef.$emit('update:open', false);
+swipeActionRef.$emit('close');
+textRef.$emit('click', localClickEvent);
+emptyRef.$emit('action', localClickEvent);
+tagRef.$emit('click', localClickEvent);
+tagRef.$emit('close');
+alertTipsRef.$emit('click');
+alertTipsRef.$emit('close');
+
+// <lang><zh-CN>无事件组件的实例仍保留精确 props 读取，证明它们没有退回 generic component。</zh-CN><en>Instances of event-free components still retain precise prop reads, proving they have not regressed to generic components.</en></lang>
+const cellGroupTitle: string | undefined = cellGroupRef.$props.title;
+const skeletonRows: number | undefined = skeletonRef.$props.rows;
 
 // <lang><zh-CN>invalid-rule 是 runtime 对非法 pattern 配置返回的公开代码，必须可由消费方穷举处理。</zh-CN><en>invalid-rule is the public code returned by runtime for an invalid pattern configuration and must be available for exhaustive consumer handling.</en></lang>
 const invalidRuleError: UFormValidationError = {
@@ -637,6 +772,94 @@ modalController.show({ confirmText: 'Continue' });
 // @ts-expect-error <lang><zh-CN>confirm helper 除双 control 标签外仍必须提供 title 或 content。</zh-CN><en>The confirm helper still requires title or content in addition to both control labels.</en></lang>
 modalController.confirm({ confirmText: 'Continue', cancelText: 'Cancel' });
 
+// <lang><zh-CN>P69 有限 union 反例覆盖视觉 token 与原生 mode；任何回退到 string/unknown 都会让 expect-error 失效。</zh-CN><en>P69 finite-union negatives cover visual tokens and native modes; any regression to string/unknown makes the expect-error directives fail.</en></lang>
+const invalidButtonProps: UButtonProps = {
+  // @ts-expect-error <lang><zh-CN>button variant 仅允许 primary、secondary 或 text。</zh-CN><en>Button variant is limited to primary, secondary, or text.</en></lang>
+  variant: 'danger'
+};
+const invalidIconProps: UIconProps = {
+  // @ts-expect-error <lang><zh-CN>icon size 只接受三个受控文字几何 token。</zh-CN><en>Icon size accepts only the three controlled text-geometry tokens.</en></lang>
+  size: 'xl'
+};
+const invalidImageProps: UImageProps = {
+  // @ts-expect-error <lang><zh-CN>UImage 不发明 viewport cover mode，只透传已声明的原生模式。</zh-CN><en>UImage invents no viewport cover mode and forwards only declared native modes.</en></lang>
+  mode: 'cover'
+};
+const invalidTextProps: UTextProps = {
+  // @ts-expect-error <lang><zh-CN>文字 type 只允许五种有限语义 tone。</zh-CN><en>Text type is limited to five finite semantic tones.</en></lang>
+  type: 'info'
+};
+const invalidTagProps: UTagProps = {
+  // @ts-expect-error <lang><zh-CN>tag shape 只允许 square、rounded 或 pill。</zh-CN><en>Tag shape is limited to square, rounded, or pill.</en></lang>
+  shape: 'circle'
+};
+const invalidAlertTipsProps: UAlertTipsProps = {
+  // @ts-expect-error <lang><zh-CN>alert type 使用 error 而非未声明的 danger alias。</zh-CN><en>Alert type uses error rather than an undeclared danger alias.</en></lang>
+  type: 'danger'
+};
+
+// <lang><zh-CN>P69 单事件 payload 反例锁定 number、boolean 与原始事件差异，避免包装器把不同 intent 合并为宽泛 any。</zh-CN><en>P69 single-event payload negatives lock number, boolean, and raw-event distinctions, preventing wrappers from merging different intents into broad any.</en></lang>
+// @ts-expect-error <lang><zh-CN>分页写回只携带 number，不携带包装对象。</zh-CN><en>Pagination writeback carries only a number, not a wrapper object.</en></lang>
+paginationRef.$emit('update:current', { page: 3 });
+// @ts-expect-error <lang><zh-CN>分页 change 同样只携带 number。</zh-CN><en>Pagination change likewise carries only a number.</en></lang>
+paginationRef.$emit('change', '3');
+// @ts-expect-error <lang><zh-CN>SwipeAction 的 update:open 是 boolean caller writeback，不是字符串状态。</zh-CN><en>SwipeAction update:open is a boolean caller writeback, not a string state.</en></lang>
+swipeActionRef.$emit('update:open', 'false');
+// @ts-expect-error <lang><zh-CN>button click 要求原始事件参数，不能省略。</zh-CN><en>Button click requires its raw-event argument and cannot omit it.</en></lang>
+buttonRef.$emit('click');
+// @ts-expect-error <lang><zh-CN>UEmpty action 要求原始 control 事件参数。</zh-CN><en>UEmpty action requires the raw control-event argument.</en></lang>
+emptyRef.$emit('action');
+
+// <lang><zh-CN>SwipeAction 反例锁定 options 输入和两个操作事件都只能归一化为 string 或 number，拒绝 object payload 泄漏。</zh-CN><en>SwipeAction negatives lock option input and both action events to string-or-number normalization, rejecting object-payload leakage.</en></lang>
+const invalidSwipeActionProps: USwipeActionProps = {
+  options: [
+    {
+      // @ts-expect-error <lang><zh-CN>option value 不接受对象；runtime 只快照透明标量。</zh-CN><en>Option value rejects objects; runtime snapshots only transparent scalars.</en></lang>
+      value: { id: 'unsafe' }
+    }
+  ]
+};
+// @ts-expect-error <lang><zh-CN>SwipeAction click 只携带 string 或 number。</zh-CN><en>SwipeAction click carries only a string or number.</en></lang>
+swipeActionRef.$emit('click', { value: 'archive' });
+// @ts-expect-error <lang><zh-CN>SwipeAction action 不回传完整 option record。</zh-CN><en>SwipeAction action does not return the complete option record.</en></lang>
+swipeActionRef.$emit('action', swipeOption);
+
+// <lang><zh-CN>Alert 与 Tag 的无 payload 反例防止 close/click 被误扩展为原始事件或业务值。</zh-CN><en>Payload-free Alert and Tag negatives prevent close/click from being broadened into raw events or business values.</en></lang>
+// @ts-expect-error <lang><zh-CN>alert click 明确无 payload。</zh-CN><en>Alert click explicitly has no payload.</en></lang>
+alertTipsRef.$emit('click', localClickEvent);
+// @ts-expect-error <lang><zh-CN>alert close 明确无 payload。</zh-CN><en>Alert close explicitly has no payload.</en></lang>
+alertTipsRef.$emit('close', 'dismiss');
+// @ts-expect-error <lang><zh-CN>tag close 明确无 payload，caller 自行更新 visible/show。</zh-CN><en>Tag close explicitly has no payload; the caller updates visible/show itself.</en></lang>
+tagRef.$emit('close', localClickEvent);
+
+// <lang><zh-CN>P69 实例都没有 defineExpose 能力；这些反例防止通用组件类型意外开放命令式方法。</zh-CN><en>P69 instances have no defineExpose capabilities; these negatives prevent a generic component type from accidentally opening imperative methods.</en></lang>
+// @ts-expect-error <lang><zh-CN>UButton 不公开 click 命令；交互只能来自平台事件。</zh-CN><en>UButton exposes no click command; interaction originates only from platform events.</en></lang>
+buttonRef.click();
+// @ts-expect-error <lang><zh-CN>UCell 不公开 activate 命令；clickable 只控制本地 intent。</zh-CN><en>UCell exposes no activate command; clickable only controls local intent eligibility.</en></lang>
+cellRef.activate();
+// @ts-expect-error <lang><zh-CN>UCellGroup 不注册或公开 addItem 方法。</zh-CN><en>UCellGroup neither registers nor exposes an addItem method.</en></lang>
+cellGroupRef.addItem(cellItemRef);
+// @ts-expect-error <lang><zh-CN>UCellItem 不公开 navigate 命令；arrow 不具有路由语义。</zh-CN><en>UCellItem exposes no navigate command; arrow carries no routing semantics.</en></lang>
+cellItemRef.navigate();
+// @ts-expect-error <lang><zh-CN>UIcon 不公开 register 命令，也不拥有字体 registry。</zh-CN><en>UIcon exposes no register command and owns no font registry.</en></lang>
+iconRef.register('custom');
+// @ts-expect-error <lang><zh-CN>UImage 不公开 reload；来源和重试由调用方拥有。</zh-CN><en>UImage exposes no reload; the caller owns source and retry decisions.</en></lang>
+imageRef.reload();
+// @ts-expect-error <lang><zh-CN>UPagination 不公开 next 命令；调用方通过 props 和事件受控更新。</zh-CN><en>UPagination exposes no next command; the caller controls updates through props and events.</en></lang>
+paginationRef.next();
+// @ts-expect-error <lang><zh-CN>USkeleton 不公开 stop 命令；loading 始终由 caller prop 控制。</zh-CN><en>USkeleton exposes no stop command; loading always remains caller-controlled through a prop.</en></lang>
+skeletonRef.stop();
+// @ts-expect-error <lang><zh-CN>USwipeAction 不公开 close 命令，只发出 caller-owned 关闭意图。</zh-CN><en>USwipeAction exposes no close command and only emits a caller-owned close intent.</en></lang>
+swipeActionRef.close();
+// @ts-expect-error <lang><zh-CN>UText 不公开 expand 命令；lines 仅是 caller-owned 展示候选。</zh-CN><en>UText exposes no expand command; lines is only a caller-owned presentation candidate.</en></lang>
+textRef.expand();
+// @ts-expect-error <lang><zh-CN>UEmpty 不公开 retry 命令；组件只发出 action intent。</zh-CN><en>UEmpty exposes no retry command; the component emits only an action intent.</en></lang>
+emptyRef.retry();
+// @ts-expect-error <lang><zh-CN>UTag 不公开 hide 命令；visible/show 由 caller 更新。</zh-CN><en>UTag exposes no hide command; visible/show are updated by the caller.</en></lang>
+tagRef.hide();
+// @ts-expect-error <lang><zh-CN>UAlertTips 不公开 dismiss 命令；close 只是 caller-owned intent。</zh-CN><en>UAlertTips exposes no dismiss command; close is only a caller-owned intent.</en></lang>
+alertTipsRef.dismiss();
+
 // <lang><zh-CN>验证显式 runtime export、plugin、可选 global declaration 与 locale helper 的静态形状；没有产生 import-time 副作用。</zh-CN><en>Verifies the static shapes of explicit runtime exports, plugin, optional global declaration, and locale helper; no import-time side effect occurs.</en></lang>
 const plugin: Plugin = UView;
 const globalCheckbox: GlobalComponents['UCheckbox'] = UCheckbox;
@@ -650,9 +873,23 @@ const globalRadioGroup: GlobalComponents['URadioGroup'] = URadioGroup;
 const globalSwitch: GlobalComponents['USwitch'] = USwitch;
 // <lang><zh-CN>picker 的可选 global 映射与具名导出保持同一组件类型。</zh-CN><en>The optional picker global mapping retains the same component type as the named export.</en></lang>
 const globalPicker: GlobalComponents['UPicker'] = UPicker;
-// <lang><zh-CN>可选 global augmentation 中的展示与表单/输入组件只检查类型映射，不执行组件注册。</zh-CN><en>Display and form/input components in optional global augmentation check only type mappings and execute no component registration.</en></lang>
-const globalActionSheet: GlobalComponents['UActionSheet'] = UActionSheet;
+// <lang><zh-CN>P69 十三个展示组件的可选 global augmentation 必须与精确具名导出保持同一类型；赋值只检查映射，不执行注册。</zh-CN><en>The optional global augmentation of all thirteen P69 display components must retain the same types as their precise named exports; assignments check mappings only and perform no registration.</en></lang>
+const globalButton: GlobalComponents['UButton'] = UButton;
+const globalCell: GlobalComponents['UCell'] = UCell;
+const globalCellGroup: GlobalComponents['UCellGroup'] = UCellGroup;
+const globalCellItem: GlobalComponents['UCellItem'] = UCellItem;
+const globalIcon: GlobalComponents['UIcon'] = UIcon;
+const globalImage: GlobalComponents['UImage'] = UImage;
+const globalPagination: GlobalComponents['UPagination'] = UPagination;
+const globalSkeleton: GlobalComponents['USkeleton'] = USkeleton;
+const globalSwipeAction: GlobalComponents['USwipeAction'] = USwipeAction;
+const globalText: GlobalComponents['UText'] = UText;
+const globalEmpty: GlobalComponents['UEmpty'] = UEmpty;
+const globalTag: GlobalComponents['UTag'] = UTag;
 const globalAlertTips: GlobalComponents['UAlertTips'] = UAlertTips;
+
+// <lang><zh-CN>其余可选 global augmentation 中的展示与表单/输入组件继续只检查类型映射，不执行组件注册。</zh-CN><en>Remaining display and form/input components in optional global augmentation continue to check only type mappings and execute no component registration.</en></lang>
+const globalActionSheet: GlobalComponents['UActionSheet'] = UActionSheet;
 const globalCalendar: GlobalComponents['UCalendar'] = UCalendar;
 const globalDropdown: GlobalComponents['UDropdown'] = UDropdown;
 const globalDropdownItem: GlobalComponents['UDropdownItem'] = UDropdownItem;
@@ -672,7 +909,6 @@ const globalSelect: GlobalComponents['USelect'] = USelect;
 const globalSlider: GlobalComponents['USlider'] = USlider;
 const globalTabbar: GlobalComponents['UTabbar'] = UTabbar;
 const globalTabs: GlobalComponents['UTabs'] = UTabs;
-const globalTag: GlobalComponents['UTag'] = UTag;
 const globalTextarea: GlobalComponents['UTextarea'] = UTextarea;
 const globalToast: GlobalComponents['UToast'] = UToast;
 const globalTransition: GlobalComponents['UTransition'] = UTransition;
@@ -685,35 +921,56 @@ void [
   actionSheetProps,
   actionSheetSelection,
   actionNarrowingUploadAdapter,
+  alertTipsEmits,
   alertTipsProps,
   allValidationResult,
+  buttonEmits,
+  buttonProps,
+  buttonSize,
+  buttonVariant,
   calendarChange,
   calendarProps,
+  cellEmits,
+  cellGroupProps,
+  cellGroupTitle,
+  cellItemEmits,
+  cellItemProps,
+  cellProps,
   checkboxGroupProps,
   checkboxProps,
   dropdownClosed,
   dropdownItemProps,
   dropdownOpened,
   dropdownProps,
+  emptyEmits,
+  emptyProps,
   fieldProps,
   feedbackScope,
   forgedFeedbackScopeProps,
   globalActionSheet,
   globalAlertTips,
+  globalButton,
   globalCalendar,
+  globalCell,
+  globalCellGroup,
+  globalCellItem,
   globalCheckbox,
   globalCheckboxGroup,
   globalDropdown,
   globalDropdownItem,
+  globalEmpty,
   globalField,
   globalForm,
   globalFormItem,
   globalInput,
+  globalIcon,
+  globalImage,
   globalMask,
   globalModal,
   globalNavbar,
   globalNoticeBar,
   globalNumberBox,
+  globalPagination,
   globalPicker,
   globalRadio,
   globalRadioGroup,
@@ -721,11 +978,14 @@ void [
   globalPopup,
   globalSearch,
   globalSelect,
+  globalSkeleton,
   globalSlider,
   globalSwitch,
+  globalSwipeAction,
   globalTabbar,
   globalTabs,
   globalTag,
+  globalText,
   globalTextarea,
   globalToast,
   globalTransition,
@@ -734,9 +994,20 @@ void [
   formProps,
   formItemProps,
   formRules,
+  iconEmits,
+  iconProps,
+  iconSize,
+  iconTone,
+  imageEmits,
+  imageMode,
+  imageProps,
   inputProps,
+  invalidAlertTipsProps,
+  invalidButtonProps,
   invalidCalendarChange,
   invalidFormProps,
+  invalidIconProps,
+  invalidImageProps,
   invalidModalCallback,
   invalidNoticeTone,
   invalidPatternRule,
@@ -744,6 +1015,9 @@ void [
   invalidRuleError,
   invalidRuleType,
   invalidSelectConfirm,
+  invalidSwipeActionProps,
+  invalidTagProps,
+  invalidTextProps,
   invalidUploadAdapter,
   invalidUploadFile,
   invalidUploadState,
@@ -767,6 +1041,8 @@ void [
   nestedRules,
   numberBoxProps,
   noticeBarProps,
+  paginationEmits,
+  paginationProps,
   pickerCancel,
   pickerColumnChange,
   pickerConfirm,
@@ -782,15 +1058,25 @@ void [
   selectConfirm,
   selectProps,
   selectedValidationResult,
+  skeletonProps,
+  skeletonRows,
   sliderProps,
   switchProps,
   subpathFeedbackScope,
   subpathModalResult,
   subpathToastResult,
+  swipeActionEmits,
+  swipeActionProps,
+  swipeInputs,
+  swipeOption,
+  swipeValue,
   tabbarProps,
   tabsItems,
   tabsProps,
+  tagEmits,
   textareaProps,
+  textEmits,
+  textProps,
   toastCloseResult,
   toastLoadingResult,
   toastOptions,
@@ -799,19 +1085,28 @@ void [
   transitionProps,
   transitionRef,
   UActionSheet,
+  UAlertTips,
+  UButton,
   UCalendar,
+  UCell,
+  UCellGroup,
+  UCellItem,
   UCheckboxGroup,
   UDropdown,
   UDropdownItem,
+  UEmpty,
   UField,
   UForm,
   UFormItem,
+  UIcon,
+  UImage,
   UInput,
   UMask,
   UModal,
   UNavbar,
   UNoticeBar,
   UNumberBox,
+  UPagination,
   UPicker,
   UPopup,
   URadio,
@@ -819,12 +1114,16 @@ void [
   URate,
   USearch,
   USelect,
+  USkeleton,
   USlider,
+  USwipeAction,
   USwitch,
   UTabbar,
   UTabs,
   tabItems,
   tagProps,
+  UTag,
+  UText,
   UTextarea,
   UToast,
   UTransition,

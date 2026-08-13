@@ -1959,44 +1959,439 @@ export type UUploadEmits = {
 };
 
 /**
- * @lang zh-CN 描述 `UAlertTips` 的局部、caller-controlled 可见性和有限文字表面；它不是全局反馈或自动关闭服务。
- * @lang en Describes the local caller-controlled visibility and finite text surface of `UAlertTips`; it is not a global feedback or auto-dismiss service.
+ * @lang zh-CN 表示 `UButton` 唯一允许的 token 化视觉变体。
+ * @lang en Represents the only tokenized visual variants accepted by `UButton`.
  */
-export interface UAlertTipsProps {
-  /** 中文：是否投影当前局部提示条。English: Whether to project the current local alert strip. */
-  show?: boolean;
-  /** 中文：有限视觉类型。English: Finite visual type. */
-  type?: 'primary' | 'success' | 'warning' | 'error' | string;
-  /** 中文：调用方提供的标题。English: Caller-provided title. */
-  title?: string;
-  /** 中文：调用方提供的说明。English: Caller-provided description. */
-  description?: string;
-  /** 中文：是否显示局部 close intent control。English: Whether to show a local close-intent control. */
-  closable?: boolean;
+export type UButtonVariant = 'primary' | 'secondary' | 'text';
+
+/**
+ * @lang zh-CN 表示 `UButton` 的三档有限几何尺寸。
+ * @lang en Represents the three finite geometry sizes of `UButton`.
+ */
+export type UButtonSize = 'sm' | 'md' | 'lg';
+
+/**
+ * @lang zh-CN 描述 `UButton` 的 caller-owned 文字、可用性与有限展示输入。
+ * @lang en Describes caller-owned copy, availability, and finite presentation inputs of `UButton`.
+ */
+export interface UButtonProps {
+  /** 中文：有限视觉变体。English: Finite visual variant. */
+  variant?: UButtonVariant;
+  /** 中文：有限几何尺寸。English: Finite geometry size. */
+  size?: UButtonSize;
+  /** 中文：是否占满父级明确提供的宽度。English: Whether to fill an explicitly provided parent width. */
+  block?: boolean;
+  /** 中文：调用方拥有的禁用状态。English: Caller-owned disabled state. */
+  disabled?: boolean;
+  /** 中文：调用方拥有的加载展示状态。English: Caller-owned loading presentation state. */
+  loading?: boolean;
+  /** 中文：调用方本地化的加载文字。English: Caller-localized loading copy. */
+  loadingText?: string;
+  /** 中文：首选可见操作标签。English: Preferred visible action label. */
+  label?: string;
+  /** 中文：label 为空时的迁移文字回退。English: Migration-copy fallback used when label is empty. */
+  text?: string;
 }
 
 /**
- * @lang zh-CN 描述 `UTag` 的有限 token 化标签表面；`show` 与既有 `visible` 共同控制投影，任一为 false 都会隐藏本地标签。
- * @lang en Describes the finite tokenized tag surface of `UTag`; `show` and existing `visible` jointly control projection, and either false hides the local tag.
+ * @lang zh-CN 描述 `UButton` 的原始本地点击意图。
+ * @lang en Describes the original local click intent emitted by `UButton`.
+ */
+export type UButtonEmits = {
+  /** 中文：仅在未禁用且未加载时回传原始平台事件。English: Returns the original platform event only while neither disabled nor loading. */
+  click: (event: unknown) => void;
+};
+
+/**
+ * @lang zh-CN 描述 HIA 自有 `UCell` 信息行 facade 的有限文字和交互输入。
+ * @lang en Describes finite copy and interaction inputs of the HIA-owned `UCell` information-row facade.
+ */
+export interface UCellProps {
+  /** 中文：调用方提供的主标签。English: Caller-provided primary label. */
+  label?: string;
+  /** 中文：调用方提供的次级说明。English: Caller-provided secondary description. */
+  description?: string;
+  /** 中文：调用方提供的尾部值。English: Caller-provided trailing value. */
+  value?: string;
+  /** 中文：是否显式启用本地 click intent。English: Whether local click intent is explicitly enabled. */
+  clickable?: boolean;
+  /** 中文：是否阻止已启用的本地 click intent。English: Whether to prevent an enabled local click intent. */
+  disabled?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `UCell` 的原始本地点击事件。
+ * @lang en Describes the original local click event emitted by `UCell`.
+ */
+export type UCellEmits = {
+  /** 中文：合法激活时的原始平台事件。English: Original platform event from an eligible activation. */
+  click: (event: unknown) => void;
+};
+
+/**
+ * @lang zh-CN 描述不注册子项的 `UCellGroup` 局部结构输入。
+ * @lang en Describes local structural inputs of `UCellGroup`, which registers no children.
+ */
+export interface UCellGroupProps {
+  /** 中文：可选调用方标题。English: Optional caller-provided title. */
+  title?: string;
+  /** 中文：是否呈现 token 化边界。English: Whether to present a tokenized boundary. */
+  bordered?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `UCellItem` 的 caller-owned 文字与有限本地交互输入。
+ * @lang en Describes caller-owned copy and finite local interaction inputs of `UCellItem`.
+ */
+export interface UCellItemProps {
+  /** 中文：主要可见标题。English: Primary visible title. */
+  title?: string;
+  /** 中文：有限次级文字。English: Finite secondary copy. */
+  label?: string | number;
+  /** 中文：优先于默认 slot 的尾部值。English: Trailing value that takes precedence over the default slot. */
+  value?: string | number;
+  /** 中文：是否只呈现必填星号提示。English: Whether to present only a required asterisk cue. */
+  required?: boolean;
+  /** 中文：是否呈现无路由语义的尾部箭头。English: Whether to present a trailing arrow with no routing semantics. */
+  arrow?: boolean;
+  /** 中文：是否显式启用本地 click intent。English: Whether local click intent is explicitly enabled. */
+  clickable?: boolean;
+  /** 中文：是否阻止本地 click intent。English: Whether to prevent local click intent. */
+  disabled?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `UCellItem` 的原始本地点击事件；它不声明上游 index payload 等价。
+ * @lang en Describes the original local click event of `UCellItem`; it does not claim upstream index-payload equivalence.
+ */
+export type UCellItemEmits = {
+  /** 中文：合法激活时的原始平台事件。English: Original platform event from an eligible activation. */
+  click: (event: unknown) => void;
+};
+
+/**
+ * @lang zh-CN 表示 `UIcon` 的有限文字几何。
+ * @lang en Represents the finite text-symbol geometry of `UIcon`.
+ */
+export type UIconSize = 'small' | 'medium' | 'large';
+
+/**
+ * @lang zh-CN 表示 `UIcon` 的有限 token tone。
+ * @lang en Represents the finite token tones of `UIcon`.
+ */
+export type UIconTone = 'neutral' | 'primary' | 'accent';
+
+/**
+ * @lang zh-CN 描述不加载字体或 registry 的 `UIcon` 文字符号表面。
+ * @lang en Describes the text-symbol surface of `UIcon`, which loads no font or registry.
+ */
+export interface UIconProps {
+  /** 中文：作为文字 fallback 的名称。English: Name used as a text fallback. */
+  name?: string;
+  /** 中文：无障碍可见标签。English: Accessibility-visible label. */
+  label?: string | number;
+  /** 中文：有限符号尺寸。English: Finite symbol size. */
+  size?: UIconSize;
+  /** 中文：有限符号 tone。English: Finite symbol tone. */
+  tone?: UIconTone;
+  /** 中文：是否阻止本地 click intent。English: Whether to prevent local click intent. */
+  disabled?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `UIcon` 的原始本地点击事件。
+ * @lang en Describes the original local click event emitted by `UIcon`.
+ */
+export type UIconEmits = {
+  /** 中文：未禁用时回传的原始平台事件。English: Original platform event returned while enabled. */
+  click: (event: unknown) => void;
+};
+
+/**
+ * @lang zh-CN 表示 `UImage` 允许透传的原生缩放模式。
+ * @lang en Represents native scaling modes that `UImage` may forward.
+ */
+export type UImageMode =
+  | 'scaleToFill'
+  | 'aspectFit'
+  | 'aspectFill'
+  | 'widthFix'
+  | 'heightFix'
+  | 'top'
+  | 'bottom'
+  | 'center'
+  | 'left'
+  | 'right';
+
+/**
+ * @lang zh-CN 描述 `UImage` 的有限原生图片投影；来源始终由调用方拥有。
+ * @lang en Describes the finite native-image projection of `UImage`; its source always belongs to the caller.
+ */
+export interface UImageProps {
+  /** 中文：调用方拥有的图片来源字符串。English: Caller-owned image-source string. */
+  src?: string;
+  /** 中文：调用方提供的替代文字。English: Caller-provided alternative copy. */
+  alt?: string;
+  /** 中文：有限原生缩放模式。English: Finite native scaling mode. */
+  mode?: UImageMode;
+  /** 中文：有限根形状。English: Finite root shape. */
+  shape?: 'square' | 'rounded' | 'circle';
+  /** 中文：有限固定尺寸。English: Finite fixed size. */
+  size?: 'small' | 'medium' | 'large';
+  /** 中文：是否填充父级明确几何。English: Whether to fill explicit parent geometry. */
+  fluid?: boolean;
+  /** 中文：是否只向原生 image 透传 lazy-load。English: Whether to forward lazy-load only to the native image. */
+  lazyLoad?: boolean;
+  /** 中文：是否以文字 fallback 替换当前错误图片。English: Whether to replace the current errored image with a text fallback. */
+  showError?: boolean;
+  /** 中文：调用方本地化的错误 fallback。English: Caller-localized error fallback. */
+  errorText?: string;
+}
+
+/**
+ * @lang zh-CN 描述 `UImage` 的原始 load、error 与 click 观察事件。
+ * @lang en Describes original load, error, and click observation events of `UImage`.
+ */
+export type UImageEmits = {
+  /** 中文：当前原生图片加载事件。English: Current native-image load event. */
+  load: (event: unknown) => void;
+  /** 中文：当前原生图片错误事件。English: Current native-image error event. */
+  error: (event: unknown) => void;
+  /** 中文：图片根的本地点击事件。English: Local click event from the image root. */
+  click: (event: unknown) => void;
+};
+
+/**
+ * @lang zh-CN 描述 `UPagination` 的 caller-owned 当前页与有限页数输入。
+ * @lang en Describes caller-owned current-page and finite page-count inputs of `UPagination`.
+ */
+export interface UPaginationProps {
+  /** 中文：首选 HIA 当前页。English: Preferred HIA current page. */
+  current?: number;
+  /** 中文：首选 HIA 本地页数。English: Preferred HIA local page count. */
+  pageCount?: number;
+  /** 中文：current 缺省时的迁移当前页。English: Migration current page used when current is absent. */
+  modelValue?: number;
+  /** 中文：只用于本地 total→pageCount 换算的页大小。English: Page size used only for local total-to-pageCount conversion. */
+  pageSize?: number;
+  /** 中文：调用方拥有的有限总数。English: Caller-owned finite total. */
+  total?: number;
+  /** 中文：调用方本地化的上一页文字。English: Caller-localized previous-page copy. */
+  prevText?: string;
+  /** 中文：调用方本地化的下一页文字。English: Caller-localized next-page copy. */
+  nextText?: string;
+}
+
+/**
+ * @lang zh-CN 描述 `UPagination` 的三个严格有序页码意图事件。
+ * @lang en Describes the three strictly ordered page-number intent events of `UPagination`.
+ */
+export type UPaginationEmits = {
+  /** 中文：首个 HIA current 写回意图。English: First HIA current writeback intent. */
+  'update:current': (page: number) => void;
+  /** 中文：第二个标准 v-model 写回意图。English: Second standard v-model writeback intent. */
+  'update:modelValue': (page: number) => void;
+  /** 中文：最后报告的有限页码变化意图。English: Finite page-change intent reported last. */
+  change: (page: number) => void;
+};
+
+/**
+ * @lang zh-CN 描述仅拥有局部 placeholder 投影的 `USkeleton`。
+ * @lang en Describes `USkeleton`, which owns only a local placeholder projection.
+ */
+export interface USkeletonProps {
+  /** 中文：是否投影 placeholder 而不是 caller slot。English: Whether to project placeholders instead of the caller slot. */
+  loading?: boolean;
+  /** 中文：运行时收束到 0–8 的行数候选。English: Row-count candidate bounded to 0–8 at runtime. */
+  rows?: number;
+  /** 中文：是否呈现标题 placeholder。English: Whether to present the title placeholder. */
+  showTitle?: boolean;
+  /** 中文：是否呈现头像 placeholder。English: Whether to present the avatar placeholder. */
+  showAvatar?: boolean;
+}
+
+/**
+ * @lang zh-CN 表示 `USwipeAction` 唯一可回传的透明标量。
+ * @lang en Represents the only transparent scalar that `USwipeAction` may return.
+ */
+export type USwipeActionValue = string | number;
+
+/**
+ * @lang zh-CN 描述 `USwipeAction` 可快照的有限 data-record 输入；运行时拒绝 accessor 和非标量 payload。
+ * @lang en Describes a finite data-record input that `USwipeAction` may snapshot; runtime rejects accessors and nonscalar payloads.
+ */
+export interface USwipeActionOption {
+  /** 中文：透明事件值。English: Transparent event value. */
+  readonly value?: USwipeActionValue;
+  /** 中文：首选可见标签。English: Preferred visible label. */
+  readonly label?: USwipeActionValue;
+  /** 中文：label 缺省时的迁移文字。English: Migration copy used when label is absent. */
+  readonly text?: USwipeActionValue;
+  /** 中文：有限视觉类型。English: Finite visual type. */
+  readonly type?: 'primary' | 'warning' | 'danger';
+  /** 中文：是否禁用本操作。English: Whether this action is disabled. */
+  readonly disabled?: boolean;
+}
+
+/**
+ * @lang zh-CN 表示 `USwipeAction` 的标量或有限 data-record 输入。
+ * @lang en Represents a scalar or finite data-record input of `USwipeAction`.
+ */
+export type USwipeActionInput = USwipeActionValue | USwipeActionOption;
+
+/**
+ * @lang zh-CN 描述显式操作投影 `USwipeAction` 的 caller-owned 输入；它不是手势引擎。
+ * @lang en Describes caller-owned inputs of the explicit action projection `USwipeAction`; it is not a gesture engine.
+ */
+export interface USwipeActionProps {
+  /** 中文：显式提供时优先的 HIA 打开状态。English: HIA open state that takes precedence when explicit. */
+  open?: boolean;
+  /** 中文：open 缺省时的迁移可见性。English: Migration visibility used when open is absent. */
+  show?: boolean;
+  /** 中文：非空时优先的 HIA 操作数组。English: HIA action array that takes precedence when nonempty. */
+  actions?: ReadonlyArray<USwipeActionInput>;
+  /** 中文：actions 为空时的迁移操作数组。English: Migration action array used when actions is empty. */
+  options?: ReadonlyArray<USwipeActionInput>;
+  /** 中文：调用方本地化的关闭文字。English: Caller-localized close copy. */
+  closeText?: string;
+  /** 中文：是否阻止全部本地操作和关闭意图。English: Whether to prevent all local action and close intents. */
+  disabled?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `USwipeAction` 的有限标量操作与 caller-owned 关闭意图。
+ * @lang en Describes finite scalar actions and caller-owned close intents of `USwipeAction`.
+ */
+export type USwipeActionEmits = {
+  /** 中文：首先报告的迁移操作值。English: Migration action value reported first. */
+  click: (value: USwipeActionValue) => void;
+  /** 中文：随后报告的既有 HIA 操作值。English: Existing HIA action value reported afterward. */
+  action: (value: USwipeActionValue) => void;
+  /** 中文：关闭 control 请求 caller 写回 false。English: Close control requests the caller to write back false. */
+  'update:open': (open: boolean) => void;
+  /** 中文：写回请求后的无 payload 关闭意图。English: Payload-free close intent after the writeback request. */
+  close: () => void;
+};
+
+/**
+ * @lang zh-CN 描述 caller-owned 有限文字投影 `UText`。
+ * @lang en Describes the caller-owned finite text projection `UText`.
+ */
+export interface UTextProps {
+  /** 中文：是否投影当前文字根。English: Whether to project the current text root. */
+  show?: boolean;
+  /** 中文：默认 slot 缺省时的文字。English: Copy used when the default slot is absent. */
+  text?: string | number;
+  /** 中文：有限语义 tone。English: Finite semantic tone. */
+  type?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
+  /** 中文：有限排版尺寸。English: Finite typography size. */
+  size?: 'sm' | 'md' | 'lg';
+  /** 中文：运行时收束到 0–6 的行数候选。English: Line-count candidate bounded to 0–6 at runtime. */
+  lines?: number;
+  /** 中文：保留的有限省略外观开关。English: Retained finite ellipsis-presentation switch. */
+  ellipsis?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `UText` 的原始本地点击事件。
+ * @lang en Describes the original local click event emitted by `UText`.
+ */
+export type UTextEmits = {
+  /** 中文：文字根的原始平台事件。English: Original platform event from the text root. */
+  click: (event: unknown) => void;
+};
+
+/**
+ * @lang zh-CN 描述 caller-owned 的 `UEmpty` 空态投影；组件不判断数据或加载状态。
+ * @lang en Describes the caller-owned `UEmpty` empty-state projection; the component decides neither data nor loading state.
+ */
+export interface UEmptyProps {
+  /** 中文：是否投影当前空态。English: Whether to project the current empty state. */
+  show?: boolean;
+  /** 中文：可选调用方图片来源。English: Optional caller-owned image source. */
+  src?: string;
+  /** 中文：主要空态标题。English: Primary empty-state title. */
+  title?: string;
+  /** 中文：优先的次级说明。English: Preferred secondary description. */
+  description?: string;
+  /** 中文：description 为空时的迁移文字。English: Migration copy used when description is empty. */
+  text?: string;
+  /** 中文：非空时呈现 action control 的标签。English: Label that presents an action control when nonempty. */
+  actionText?: string;
+}
+
+/**
+ * @lang zh-CN 描述 `UEmpty` 的 caller-owned 本地 action 意图。
+ * @lang en Describes the caller-owned local action intent emitted by `UEmpty`.
+ */
+export type UEmptyEmits = {
+  /** 中文：合法 action control 的原始平台事件。English: Original platform event from an eligible action control. */
+  action: (event: unknown) => void;
+};
+
+/**
+ * @lang zh-CN 描述 `UTag` 的有限 token 化标签表面；`show` 与既有 `visible` 共同控制投影。
+ * @lang en Describes the finite tokenized tag surface of `UTag`; `show` and existing `visible` jointly control projection.
  */
 export interface UTagProps {
-  /** 中文：调用方可见文字，数字零保持可见。English: Caller-visible text; numeric zero remains visible. */
+  /** 中文：默认 slot 缺省时的可见文字。English: Visible copy used when the default slot is absent. */
   text?: string | number;
   /** 中文：有限主题 tone。English: Finite theme tone. */
-  tone?: 'neutral' | 'primary' | 'accent' | string;
+  tone?: 'neutral' | 'primary' | 'accent';
   /** 中文：有限本地尺寸。English: Finite local size. */
-  size?: 'small' | 'medium' | 'large' | string;
+  size?: 'small' | 'medium' | 'large';
   /** 中文：有限本地形状。English: Finite local shape. */
-  shape?: 'square' | 'rounded' | 'pill' | string;
+  shape?: 'square' | 'rounded' | 'pill';
+  /** 中文：有限 solid/outline 表面。English: Finite solid/outline surface. */
+  appearance?: 'solid' | 'outline';
   /** 中文：是否呈现 local close intent control。English: Whether to present a local close-intent control. */
   closable?: boolean;
   /** 中文：既有 HIA 可见性输入。English: Existing HIA visibility input. */
   visible?: boolean;
   /** 中文：迁移用可见性输入；不替代 visible。English: Migration visibility input; it does not replace visible. */
   show?: boolean;
-  /** 中文：本地交互 guard；非空字符串和 true 都会阻止 click/close intent。English: Local interaction guard; a nonempty string and true both prevent click/close intent. */
+  /** 中文：本地交互 guard；非空字符串和 true 都阻止 click/close。English: Local interaction guard; a nonempty string and true both prevent click/close. */
   disabled?: boolean | string;
 }
+
+/**
+ * @lang zh-CN 描述 `UTag` 的 caller-owned click 与 close 意图。
+ * @lang en Describes caller-owned click and close intents emitted by `UTag`.
+ */
+export type UTagEmits = {
+  /** 中文：标签根的原始平台事件。English: Original platform event from the tag root. */
+  click: (event: unknown) => void;
+  /** 中文：不自行隐藏的无 payload 关闭意图。English: Payload-free close intent that does not hide itself. */
+  close: () => void;
+};
+
+/**
+ * @lang zh-CN 描述 `UAlertTips` 的局部 caller-controlled 可见性和有限文字表面。
+ * @lang en Describes local caller-controlled visibility and finite copy surface of `UAlertTips`.
+ */
+export interface UAlertTipsProps {
+  /** 中文：是否投影当前局部提示条。English: Whether to project the current local alert strip. */
+  show?: boolean;
+  /** 中文：有限视觉类型。English: Finite visual type. */
+  type?: 'primary' | 'success' | 'warning' | 'error';
+  /** 中文：调用方提供的标题。English: Caller-provided title. */
+  title?: string;
+  /** 中文：默认 slot 缺省时的说明。English: Description used when the default slot is absent. */
+  description?: string;
+  /** 中文：是否显示局部 close intent control。English: Whether to show a local close-intent control. */
+  closable?: boolean;
+}
+
+/**
+ * @lang zh-CN 描述 `UAlertTips` 分离的内容点击与关闭意图。
+ * @lang en Describes separate body-click and close intents emitted by `UAlertTips`.
+ */
+export type UAlertTipsEmits = {
+  /** 中文：内容区的无 payload 点击意图。English: Payload-free click intent from the body region. */
+  click: () => void;
+  /** 中文：不自行隐藏的无 payload关闭意图。English: Payload-free close intent that does not hide itself. */
+  close: () => void;
+};
 
 /**
  * @lang zh-CN 当前受审计的 choice、picker/date、dropdown、numeric、upload、navigation、feedback 与 form/input 组件保持精确 props、事件和必要实例声明；其余导出采用 `UViewComponent` 基线，等待逐项 API 审计。
@@ -2121,26 +2516,70 @@ export type USliderInstance = InstanceType<typeof USlider>;
 export declare const UUpload: UViewTypedComponent<UUploadProps, {}, UUploadEmits>;
 /** @lang zh-CN UUpload 的公开组件实例类型；它没有文件或 adapter expose 方法。 @lang en Public UUpload component-instance type; it exposes no file or adapter methods. */
 export type UUploadInstance = InstanceType<typeof UUpload>;
-/** @lang zh-CN caller-controlled 局部提示条组件。 @lang en Caller-controlled local alert-strip component. */
-export declare const UAlertTips: DefineComponent<UAlertTipsProps>;
+/** @lang zh-CN caller-controlled 本地操作按钮。 @lang en Caller-controlled local action button. */
+export declare const UButton: UViewTypedComponent<UButtonProps, {}, UButtonEmits>;
+/** @lang zh-CN UButton 的公开组件实例类型。 @lang en Public component-instance type of UButton. */
+export type UButtonInstance = InstanceType<typeof UButton>;
+/** @lang zh-CN HIA 自有受限信息行 facade。 @lang en HIA-owned constrained information-row facade. */
+export declare const UCell: UViewTypedComponent<UCellProps, {}, UCellEmits>;
+/** @lang zh-CN UCell 的公开组件实例类型。 @lang en Public component-instance type of UCell. */
+export type UCellInstance = InstanceType<typeof UCell>;
+/** @lang zh-CN 无 child registry 的局部信息行容器。 @lang en Local information-row container with no child registry. */
+export declare const UCellGroup: UViewTypedComponent<UCellGroupProps>;
+/** @lang zh-CN UCellGroup 的公开组件实例类型。 @lang en Public component-instance type of UCellGroup. */
+export type UCellGroupInstance = InstanceType<typeof UCellGroup>;
+/** @lang zh-CN caller-controlled 信息行项目。 @lang en Caller-controlled information-row item. */
+export declare const UCellItem: UViewTypedComponent<UCellItemProps, {}, UCellItemEmits>;
+/** @lang zh-CN UCellItem 的公开组件实例类型。 @lang en Public component-instance type of UCellItem. */
+export type UCellItemInstance = InstanceType<typeof UCellItem>;
+/** @lang zh-CN 无字体或 registry 的文字符号组件。 @lang en Text-symbol component with no font or registry. */
+export declare const UIcon: UViewTypedComponent<UIconProps, {}, UIconEmits>;
+/** @lang zh-CN UIcon 的公开组件实例类型。 @lang en Public component-instance type of UIcon. */
+export type UIconInstance = InstanceType<typeof UIcon>;
+/** @lang zh-CN caller-owned 原生图片投影组件。 @lang en Caller-owned native-image projection component. */
+export declare const UImage: UViewTypedComponent<UImageProps, {}, UImageEmits>;
+/** @lang zh-CN UImage 的公开组件实例类型。 @lang en Public component-instance type of UImage. */
+export type UImageInstance = InstanceType<typeof UImage>;
+/** @lang zh-CN 受控有限页码意图组件。 @lang en Controlled finite page-number intent component. */
+export declare const UPagination: UViewTypedComponent<UPaginationProps, {}, UPaginationEmits>;
+/** @lang zh-CN UPagination 的公开组件实例类型。 @lang en Public component-instance type of UPagination. */
+export type UPaginationInstance = InstanceType<typeof UPagination>;
+/** @lang zh-CN caller-controlled placeholder 投影。 @lang en Caller-controlled placeholder projection. */
+export declare const USkeleton: UViewTypedComponent<USkeletonProps>;
+/** @lang zh-CN USkeleton 的公开组件实例类型。 @lang en Public component-instance type of USkeleton. */
+export type USkeletonInstance = InstanceType<typeof USkeleton>;
+/** @lang zh-CN 显式、非手势的有限操作投影。 @lang en Explicit finite action projection with no gesture engine. */
+export declare const USwipeAction: UViewTypedComponent<USwipeActionProps, {}, USwipeActionEmits>;
+/** @lang zh-CN USwipeAction 的公开组件实例类型。 @lang en Public component-instance type of USwipeAction. */
+export type USwipeActionInstance = InstanceType<typeof USwipeAction>;
+/** @lang zh-CN caller-controlled 有限文字投影。 @lang en Caller-controlled finite text projection. */
+export declare const UText: UViewTypedComponent<UTextProps, {}, UTextEmits>;
+/** @lang zh-CN UText 的公开组件实例类型。 @lang en Public component-instance type of UText. */
+export type UTextInstance = InstanceType<typeof UText>;
+/** @lang zh-CN caller-controlled 空态投影。 @lang en Caller-controlled empty-state projection. */
+export declare const UEmpty: UViewTypedComponent<UEmptyProps, {}, UEmptyEmits>;
+/** @lang zh-CN UEmpty 的公开组件实例类型。 @lang en Public component-instance type of UEmpty. */
+export type UEmptyInstance = InstanceType<typeof UEmpty>;
 /** @lang zh-CN 有限 token 化文字标签组件。 @lang en Finite tokenized text-tag component. */
-export declare const UTag: DefineComponent<UTagProps>;
+export declare const UTag: UViewTypedComponent<UTagProps, {}, UTagEmits>;
+/** @lang zh-CN UTag 的公开组件实例类型。 @lang en Public component-instance type of UTag. */
+export type UTagInstance = InstanceType<typeof UTag>;
+/** @lang zh-CN caller-controlled 局部提示条组件。 @lang en Caller-controlled local alert-strip component. */
+export declare const UAlertTips: UViewTypedComponent<UAlertTipsProps, {}, UAlertTipsEmits>;
+/** @lang zh-CN UAlertTips 的公开组件实例类型。 @lang en Public component-instance type of UAlertTips. */
+export type UAlertTipsInstance = InstanceType<typeof UAlertTips>;
 
 /**
- * @lang zh-CN 以下运行时命名导出均已存在，但尚未承诺逐 prop、事件 payload、slot props、expose signature、父子 context 或全局 bus 的完整 TypeScript 形状。
- * @lang en The following runtime named exports already exist, but do not yet promise complete TypeScript shapes for every prop, event payload, slot prop, expose signature, parent-child context, or global bus.
+ * @lang zh-CN 以下其余运行时命名导出均已存在，但尚未承诺逐 prop、事件 payload、slot props、expose signature、父子 context 或全局 bus 的完整 TypeScript 形状。
+ * @lang en The remaining runtime named exports below already exist, but do not yet promise complete TypeScript shapes for every prop, event payload, slot prop, expose signature, parent-child context, or global bus.
  */
 export declare const UActionSheetItem: UViewComponent;
 export declare const UAvatar: UViewComponent;
 export declare const UAvatarCropper: UViewComponent;
 export declare const UBackTop: UViewComponent;
 export declare const UBadge: UViewComponent;
-export declare const UButton: UViewComponent;
 export declare const UCard: UViewComponent;
 export declare const UCarKeyboard: UViewComponent;
-export declare const UCell: UViewComponent;
-export declare const UCellGroup: UViewComponent;
-export declare const UCellItem: UViewComponent;
 export declare const UCircleProgress: UViewComponent;
 export declare const UCitySelect: UViewComponent;
 export declare const UCol: UViewComponent;
@@ -2151,14 +2590,11 @@ export declare const UConfigProvider: UViewComponent;
 export declare const UCountDown: UViewComponent;
 export declare const UCountTo: UViewComponent;
 export declare const UDivider: UViewComponent;
-export declare const UEmpty: UViewComponent;
 export declare const UFab: UViewComponent;
 export declare const UFullScreen: UViewComponent;
 export declare const UGap: UViewComponent;
 export declare const UGrid: UViewComponent;
 export declare const UGridItem: UViewComponent;
-export declare const UIcon: UViewComponent;
-export declare const UImage: UViewComponent;
 export declare const UIndexAnchor: UViewComponent;
 export declare const UIndexList: UViewComponent;
 export declare const UKeyboard: UViewComponent;
@@ -2176,7 +2612,6 @@ export declare const UNavBar: UViewComponent;
 export declare const UNoNetwork: UViewComponent;
 export declare const UNotice: UViewComponent;
 export declare const UNumberKeyboard: UViewComponent;
-export declare const UPagination: UViewComponent;
 export declare const UReadMore: UViewComponent;
 export declare const URootPortal: UViewComponent;
 export declare const URow: UViewComponent;
@@ -2184,19 +2619,16 @@ export declare const URowNotice: UViewComponent;
 export declare const USafeBottom: UViewComponent;
 export declare const UScrollList: UViewComponent;
 export declare const USection: UViewComponent;
-export declare const USkeleton: UViewComponent;
 export declare const UStack: UViewComponent;
 export declare const UStatusBar: UViewComponent;
 export declare const UStep: UViewComponent;
 export declare const USteps: UViewComponent;
 export declare const USticky: UViewComponent;
 export declare const USubsection: UViewComponent;
-export declare const USwipeAction: UViewComponent;
 export declare const USwiper: UViewComponent;
 export declare const UTable: UViewComponent;
 export declare const UTabsSwiper: UViewComponent;
 export declare const UTd: UViewComponent;
-export declare const UText: UViewComponent;
 export declare const UTh: UViewComponent;
 export declare const UTimeLine: UViewComponent;
 export declare const UTimeLineItem: UViewComponent;
