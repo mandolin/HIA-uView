@@ -1,7 +1,7 @@
 <!--
 @component UTabbar
-@lang zh-CN 提供受控底部 tab 项、label 与切换 intent；不执行 router、权限判断、身份推断、微信 custom tabBar 生命周期或全局导航 service。
-@lang en Provides controlled bottom tabs, labels, and change intent; it performs no router, authorization, identity inference, WeChat custom-tab-bar lifecycle, or global navigation service.
+@lang zh-CN 提供受控底部 tab 项、label、有限图片 locator 与切换 intent；不执行 router、权限判断、身份推断、微信 custom tabBar 生命周期或全局导航 service。
+@lang en Provides controlled bottom tabs, labels, finite image locators, and change intent; it performs no router, authorization, identity inference, WeChat custom-tab-bar lifecycle, or global navigation service.
 -->
 <template>
   <!--
@@ -14,13 +14,18 @@
       v-for="item in safeItems"
       :key="item.key"
       class="u-tabbar__item"
-      :class="{ 'u-tabbar__item--active': isActive(item), 'u-tabbar__item--disabled': item.disabled }"
+      :class="{ 'u-tabbar__item--active': isActive(item), 'u-tabbar__item--disabled': item.disabled, 'u-tabbar__item--with-icon': item.hasIcon }"
       type="button"
       :disabled="item.disabled"
       role="tab"
       :aria-selected="isActive(item)"
       @click="handleSelect(item)"
     >
+      <!--
+      @lang zh-CN icon 只在规范化 locator 非空时投影，并从无障碍树隐藏；同项可见 label 始终承担完整名称。
+      @lang en The icon projects only for a nonempty normalized locator and remains hidden from the accessibility tree; the visible label in the same item always carries the complete name.
+      -->
+      <image v-if="resolveItemIcon(item)" class="u-tabbar__icon" :src="resolveItemIcon(item)" mode="aspectFit" aria-hidden="true" />
       <text class="u-tabbar__label">{{ item.label }}</text>
     </button>
   </view>
@@ -29,7 +34,7 @@
 <script setup>
 import { computed } from 'vue';
 
-// <lang><zh-CN>tabbar 只提供局部底部选择表面，图标、徽标、路由与平台 tab 生命周期均由调用方另行组合。</zh-CN><en>Tabbar provides a local bottom-selection surface only; caller separately composes icons, badges, routing, and platform-tab lifecycle.</en></lang>
+// <lang><zh-CN>tabbar 只提供局部底部选择表面和 caller-owned 图片 locator；徽标、路由、资产许可与平台 tab 生命周期均由调用方另行组合。</zh-CN><en>Tabbar provides only a local bottom-selection surface and caller-owned image locators; the caller separately composes badges, routing, asset licensing, and platform-tab lifecycle.</en></lang>
 defineOptions({ name: 'u-tabbar' });
 
 // <lang><zh-CN>visible 是既有 HIA 显式可见性 alias；未声明时使用上游熟悉的 show，保持调用方决定优先级。</zh-CN><en>Visible is the existing explicit HIA visibility alias; when absent, the upstream-familiar show applies while retaining caller-controlled precedence.</en></lang>
@@ -40,7 +45,7 @@ const props = defineProps({
   show: { type: Boolean, default: true },
   // <lang><zh-CN>modelValue 保留上游默认索引 0；字符串 key 仍可由调用方用于本地、非路由式 tab 标识。</zh-CN><en>ModelValue retains the upstream default index 0; callers may still use string keys for local non-routing tab identity.</en></lang>
   modelValue: { type: [String, Number], default: 0 },
-  // <lang><zh-CN>items 仅接收调用方有限静态数组；组件不发现页面、图标、徽标或远端导航配置。</zh-CN><en>Items accepts only a caller finite static array; the component discovers no pages, icons, badges, or remote navigation configuration.</en></lang>
+  // <lang><zh-CN>items 仅接收调用方有限静态数组；可选 icon locator 只供显示，组件不发现页面、徽标或远端导航配置。</zh-CN><en>Items accepts only a caller finite static array; optional icon locators are display-only and the component discovers no pages, badges, or remote navigation configuration.</en></lang>
   items: { type: Array, default: () => [] },
   // <lang><zh-CN>熟悉的 list alias 仅在 items 为空时成为有限条目来源；它同样不承载页面或原生 tab 配置。</zh-CN><en>The familiar list alias becomes the finite item source only while items is empty; it likewise carries no page or native-tab configuration.</en></lang>
   list: { type: Array, default: () => [] }
@@ -55,7 +60,7 @@ const isVisible = computed(() => (props.visible === undefined ? props.show : pro
 // <lang><zh-CN>非空 items 保持既有 HIA 数据源优先；只有空 items 才采用 list alias，二者都只是调用方有限数组。</zh-CN><en>Nonempty items retain the existing HIA data-source precedence; only empty items adopts the list alias, and both remain caller finite arrays.</en></lang>
 const sourceItems = computed(() => (props.items.length > 0 ? props.items : props.list));
 
-// <lang><zh-CN>把有限调用方 item 投影为只含 label/value/disabled/key 的本地记录，避免 mutation 或保留任意附带字段。</zh-CN><en>Projects finite caller items into local records containing only label/value/disabled/key, avoiding mutation or retaining arbitrary attached fields.</en></lang>
+// <lang><zh-CN>把有限调用方 item 投影为只含 label/value/disabled/key 与两个显示 locator 的本地记录，避免 mutation 或保留任意附带字段。</zh-CN><en>Projects finite caller items into local records containing only label/value/disabled/key and two display locators, avoiding mutation or retaining arbitrary attached fields.</en></lang>
 const safeItems = computed(() => sourceItems.value
   .map((item, index) => {
     // <lang><zh-CN>字符串 item 是 label/value 同值的简写；其他非对象输入收束为空对象。</zh-CN><en>A string item abbreviates equal label/value; every other non-object input is constrained to an empty object.</en></lang>
@@ -73,7 +78,16 @@ const safeItems = computed(() => sourceItems.value
     // <lang><zh-CN>disabled 只控制本地 button 选择边界，不影响任何外部导航可用性。</zh-CN><en>Disabled controls only the local button-selection boundary and affects no external navigation availability.</en></lang>
     const disabled = Boolean(source.disabled);
 
-    return Object.freeze({ key, label, value, disabled });
+    // <lang><zh-CN>icon 只接受非空 string locator；组件不拼接路径、不探测协议，也不在记录中保留其他输入。</zh-CN><en>Icon accepts only a nonempty string locator; the component concatenates no path, inspects no protocol, and retains no other input in the record.</en></lang>
+    const icon = typeof source.icon === 'string' ? source.icon.trim() : '';
+
+    // <lang><zh-CN>activeIcon 采用相同有限形状；缺省时由渲染 helper 回退 icon，而不是生成网络或主题资源。</zh-CN><en>ActiveIcon uses the same finite shape; when absent, the render helper falls back to icon instead of generating a network or theme asset.</en></lang>
+    const activeIcon = typeof source.activeIcon === 'string' ? source.activeIcon.trim() : '';
+
+    // <lang><zh-CN>hasIcon 只控制纵向图文几何，不承担图片加载成功或 tab 可用性的事实。</zh-CN><en>HasIcon controls only vertical icon-label geometry and does not assert successful image loading or tab availability.</en></lang>
+    const hasIcon = icon.length > 0 || activeIcon.length > 0;
+
+    return Object.freeze({ key, label, value, disabled, icon, activeIcon, hasIcon });
   })
   .filter((item) => item.label.length > 0));
 
@@ -86,6 +100,17 @@ const safeItems = computed(() => sourceItems.value
 function isActive(item) {
   // <lang><zh-CN>受控 modelValue 是唯一选中事实来源；组件不从页面、路由或 native tab state 反推结果。</zh-CN><en>The controlled modelValue is the sole selection fact; the component derives no result from pages, routes, or native-tab state.</en></lang>
   return props.modelValue === item.value;
+}
+
+/**
+ * @lang zh-CN 为当前 tab 状态解析 caller-owned 图片 locator；选中图缺省时稳定回退普通图。
+ * @lang en Resolves the caller-owned image locator for the current tab state and stably falls back to the regular icon when the active icon is absent.
+ * @param {{icon: string, activeIcon: string, value: string|number}} item <lang><zh-CN>已规范化的局部 tab 项。</zh-CN><en>Normalized local tab item.</en></lang>
+ * @returns {string} <lang><zh-CN>有限图片 locator 或空字符串。</zh-CN><en>Finite image locator or an empty string.</en></lang>
+ */
+function resolveItemIcon(item) {
+  // <lang><zh-CN>选中态优先 activeIcon；普通态和缺失 activeIcon 均使用同一 caller-owned icon，不创建默认图标。</zh-CN><en>The selected state prefers activeIcon; the regular state and a missing activeIcon both use the same caller-owned icon and create no default icon.</en></lang>
+  return isActive(item) && item.activeIcon.length > 0 ? item.activeIcon : item.icon;
 }
 
 /**

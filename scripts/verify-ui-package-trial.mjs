@@ -540,7 +540,7 @@ async function writeConsumerFixture(consumerDirectory, tarballPath, easycomFragm
       <u-swipe-action :open="p69SwipeOpen" :actions="p69SwipeActions" close-text="Close" @action="recordP69Action" @update:open="updateP69SwipeOpen" @close="recordP69Intent('swipe-close')"><text>Caller swipe slot</text></u-swipe-action>
       <u-text :show="true" text="Fallback text" type="primary" size="md" @click="recordP69Intent('text-click')">Caller text slot</u-text>
       <u-empty :show="true" title="Local empty state" description="Caller-owned description" action-text="Observe" @action="recordP69Intent('empty-action')">
-        <template #bottom><u-tag text="Fallback tag" tone="primary" :closable="true" @click="recordP69Intent('tag-click')" @close="recordP69Intent('tag-close')">Caller tag slot</u-tag></template>
+        <template #bottom><u-tag text="Fallback tag" tone="primary" :clickable="true" :closable="true" @click="recordP69Intent('tag-click')" @close="recordP69Intent('tag-close')">Caller tag slot</u-tag></template>
       </u-empty>
       <text data-smoke="display-media-list-result">{{ p69Intent }}</text>
     </view>
@@ -656,7 +656,7 @@ const navigationTabbarValue = ref('first');
 // <lang><zh-CN>四个集合均冻结且仅含有限可见文字、透明值与 disabled；不携带 callback 或命令。</zh-CN><en>All four collections are frozen and contain only finite visible copy, transparent values, and disabled flags, with no callback or command.</en></lang>
 const navigationNoticeItems = Object.freeze(['First local notice', 'Second local notice']);
 const navigationTabItems = Object.freeze([Object.freeze({ label: 'First', value: 'first' }), Object.freeze({ label: 'Second', value: 'second' })]);
-const navigationTabbarItems = Object.freeze([Object.freeze({ label: 'First', value: 'first' }), Object.freeze({ label: 'Second', value: 'second' })]);
+const navigationTabbarItems = Object.freeze([Object.freeze({ label: 'First', value: 'first', icon: '/first.png', activeIcon: '/first-active.png' }), Object.freeze({ label: 'Second', value: 'second', icon: '/second.png' })]);
 const overlayActionItems = Object.freeze([Object.freeze({ label: 'Observe', value: 'observe' }), Object.freeze({ label: 'Disabled', value: 'disabled', disabled: true })]);
 
 /**
@@ -1087,7 +1087,7 @@ const p69TextProps: UTextProps = { show: true, text: 'Local text', type: 'primar
 // <lang><zh-CN>empty props 验证调用方显式决定空态、说明与 action label。</zh-CN><en>Empty props verify that the caller explicitly decides empty state, description, and action label.</en></lang>
 const p69EmptyProps: UEmptyProps = { show: true, title: 'Local empty state', description: 'No remote data', actionText: 'Observe' };
 // <lang><zh-CN>tag props 验证有限 token 表面、双可见性输入和本地 close intent 开关。</zh-CN><en>Tag props verify a finite token surface, dual visibility inputs, and the local close-intent switch.</en></lang>
-const p69TagProps: UTagProps = { text: 'Local tag', tone: 'primary', size: 'medium', appearance: 'outline', visible: true, show: true, closable: true };
+const p69TagProps: UTagProps = { text: 'Local tag', tone: 'primary', size: 'medium', appearance: 'outline', visible: true, show: true, clickable: true, closable: true };
 
 // <lang><zh-CN>checkbox leaf 类型证明透明键与受控布尔 model 从 tarball declaration 解析。</zh-CN><en>The checkbox leaf type proves transparent keys and the controlled Boolean model resolve from tarball declarations.</en></lang>
 const checkboxProps: UCheckboxProps = { value: 'trial', modelValue: false };

@@ -1144,6 +1144,10 @@ export interface UTabbarItem {
   value?: UChoiceValue;
   /** 中文：是否阻止该本地项的选择。English: Whether to prevent selection of this local item. */
   disabled?: boolean;
+  /** 中文：调用方拥有的普通态图片 locator；不含路由或资产许可声明。English: Caller-owned regular-state image locator containing no route or asset-license assertion. */
+  icon?: string;
+  /** 中文：调用方拥有的选中态图片 locator；缺省时回退 icon。English: Caller-owned selected-state image locator; falls back to icon when absent. */
+  activeIcon?: string;
 }
 
 /**
@@ -2356,6 +2360,8 @@ export interface UTagProps {
   shape?: 'square' | 'rounded' | 'pill';
   /** 中文：有限 solid/outline 表面。English: Finite solid/outline surface. */
   appearance?: 'solid' | 'outline';
+  /** 中文：是否显式提供标签主体 action；默认信息标签保持非交互。English: Whether to explicitly provide a tag-body action; an informational tag is non-interactive by default. */
+  clickable?: boolean;
   /** 中文：是否呈现 local close intent control。English: Whether to present a local close-intent control. */
   closable?: boolean;
   /** 中文：既有 HIA 可见性输入。English: Existing HIA visibility input. */

@@ -154,7 +154,7 @@ describe('P69 controlled action and content runtime contracts', () => {
 
     // <lang><zh-CN>可关闭实例同时提供 fallback 和默认 slot，用于验证 slot 优先级及 caller-owned close。</zh-CN><en>The closable instance supplies both fallback and default slot to verify slot precedence and caller-owned close.</en></lang>
     const wrapper = mount(UTag, {
-      props: { text: 'Hidden fallback', closable: true, show: true, visible: true },
+      props: { text: 'Hidden fallback', clickable: true, closable: true, show: true, visible: true },
       slots: {
         // <lang><zh-CN>默认 slot 只提供标签可见内容，分类含义和后续操作仍由调用方解释。</zh-CN><en>The default slot supplies visible tag content only; category meaning and subsequent action remain caller-interpreted.</en></lang>
         default: () => h('span', { class: 'caller-tag-copy' }, 'Caller tag')
@@ -164,7 +164,7 @@ describe('P69 controlled action and content runtime contracts', () => {
     expect(wrapper.text()).not.toContain('Hidden fallback');
 
     // <lang><zh-CN>根 click 原样回传事件，不附加 index、文字或类别 payload。</zh-CN><en>The root click returns the event unchanged and attaches no index, copy, or category payload.</en></lang>
-    const rootEvent = await dispatchRawClick(wrapper.get('.u-tag').element);
+    const rootEvent = await dispatchRawClick(wrapper.get('.u-tag__action').element);
     expect(wrapper.emitted('click')).toEqual([[rootEvent]]);
 
     // <lang><zh-CN>close control 报告无 payload close；stop 使该事件不新增根 click，组件也不自行隐藏。</zh-CN><en>The close control reports a payload-free close; stop prevents an extra root click and the component does not hide itself.</en></lang>
@@ -175,7 +175,7 @@ describe('P69 controlled action and content runtime contracts', () => {
 
     // <lang><zh-CN>禁用后根与 close control 均不得新增 intent；调用方可见性 prop 保持原值。</zh-CN><en>After disablement, neither root nor close control may add intent; caller visibility props retain their values.</en></lang>
     await wrapper.setProps({ disabled: true });
-    await dispatchRawClick(wrapper.get('.u-tag').element);
+    await dispatchRawClick(wrapper.get('.u-tag__action').element);
     await dispatchRawClick(wrapper.get('.u-tag__close').element);
     expect(wrapper.emitted('click')).toHaveLength(1);
     expect(wrapper.emitted('close')).toHaveLength(1);

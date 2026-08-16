@@ -214,7 +214,7 @@
           <u-icon name="•" label="本地符号 / Local symbol" @click="recordFixturePresentationIntent('icon')">◇</u-icon>
           <u-image src="" alt="空本地图片来源 / Empty local image source" error-text="本地回退 / Local fallback" @click="recordFixturePresentationIntent('image')" />
           <u-text type="secondary" @click="recordFixturePresentationIntent('text')">调用方文字 slot / Caller-owned text slot</u-text>
-          <u-tag :show="true" :visible="fixtureTagVisible" :closable="true" @click="recordFixturePresentationIntent('tag-click')" @close="hideFixtureTag">本地标签 slot / Local tag slot</u-tag>
+          <u-tag :show="true" :visible="fixtureTagVisible" :clickable="true" :closable="true" @click="recordFixturePresentationIntent('tag-click')" @close="hideFixtureTag">本地标签 slot / Local tag slot</u-tag>
         </u-stack>
         <u-button @click="recordFixturePresentationIntent('button')">调用方按钮 slot / Caller-owned button slot</u-button>
         <u-skeleton :loading="false" :rows="2" :show-title="true">

@@ -62,6 +62,9 @@ test('keeps platform-facing aliases local and does not acquire platform lifecycl
   assert.match(tabbarSource, /visible: \{ type: Boolean, default: undefined \}/u);
   assert.match(tabbarSource, /modelValue: \{ type: \[String, Number\], default: 0 \}/u);
   assert.match(tabbarSource, /props\.visible === undefined \? props\.show : props\.visible/u);
+  assert.match(tabbarSource, /const icon = typeof source\.icon === 'string' \? source\.icon\.trim\(\) : '';/u);
+  assert.match(tabbarSource, /const activeIcon = typeof source\.activeIcon === 'string' \? source\.activeIcon\.trim\(\) : '';/u);
+  assert.match(tabbarSource, /<image v-if="resolveItemIcon\(item\)" class="u-tabbar__icon"/u);
   assert.doesNotMatch(tabbarSource, /uni\.hideTabBar|uni\.switchTab|getCurrentPages|navigateTo|redirectTo/u);
 
   // <lang><zh-CN>notice 的 show alias 和 click 必须只是 caller-controlled intent，不出现 timer、轮播或全局 service。</zh-CN><en>Notice show alias and click must be caller-controlled intent only, with no timer, rotation, or global service.</en></lang>
@@ -80,6 +83,8 @@ test('documents the picker semantic boundary and compiles explicit show inputs',
 
   // <lang><zh-CN>公开合同与编译 fixture 都必须呈现 show/visible 边界；fixture 不编入平台 tab lifecycle 或业务 service。</zh-CN><en>Public contracts and compiler fixture must both present show/visible boundaries; fixture must not compile platform-tab lifecycle or business service.</en></lang>
   assert.match(tabbarDocumentation, /official custom tabBar/u);
+  assert.match(tabbarDocumentation, /13 px labels/u);
+  assert.match(tabbarDocumentation, /optional 27 px images/u);
   assert.match(noticeDocumentation, /`click` returns the local platform click observation/u);
   assert.match(fixtureSource, /<u-notice-bar :show="true"/u);
   assert.match(fixtureSource, /<u-tabbar :show="true"/u);

@@ -13,14 +13,24 @@ describe('P61 bounded platform-adjacent runtime behavior', () => {
   /** @lang zh-CN 验证 tabbar 的 show/visible 优先级、默认索引与零副作用切换。 @lang en Verifies tabbar show/visible precedence, default index, and side-effect-free switching. @returns {Promise<void>} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang> */
   it('keeps tabbar local while honoring show and explicit visible', async () => {
     // <lang><zh-CN>未提供 modelValue 时，默认 0 选中第一个调用方 item；items 不包含页面路径或路由数据。</zh-CN><en>Without modelValue, default 0 selects the first caller item; items contain no page path or routing data.</en></lang>
-    const tabbar = mount(UTabbar, { props: { items: [{ label: 'First', value: 0 }, { label: 'Second', value: 1 }] } });
+    const tabbar = mount(UTabbar, { props: { items: [
+      { label: 'First', value: 0, icon: '/first.png', activeIcon: '/first-active.png' },
+      { label: 'Second', value: 1, icon: '/second.png' }
+    ] } });
     const initialTabs = tabbar.findAll('button.u-tabbar__item');
     expect(initialTabs[0].classes()).toContain('u-tabbar__item--active');
+    // <lang><zh-CN>选中项使用 activeIcon，普通项使用 icon；图片保持装饰语义，完整名称继续由 label 提供。</zh-CN><en>The selected item uses activeIcon and the regular item uses icon; images remain decorative while labels retain the complete names.</en></lang>
+    expect(initialTabs[0].get('.u-tabbar__icon').attributes('src')).toBe('/first-active.png');
+    expect(initialTabs[1].get('.u-tabbar__icon').attributes('src')).toBe('/second.png');
 
     // <lang><zh-CN>点击第二项只报告下一个本地 key，不改变 wrapper prop、路由或平台 tab 状态。</zh-CN><en>Clicking the second item reports only the next local key and changes neither wrapper prop, route, nor platform-tab state.</en></lang>
     await initialTabs[1].trigger('click');
     expect(tabbar.emitted('update:modelValue')).toEqual([[1]]);
     expect(tabbar.emitted('change')).toEqual([[1]]);
+
+    // <lang><zh-CN>受控 modelValue 改为第二项后，没有 activeIcon 的项稳定回退普通 icon，不产生默认或远端 locator。</zh-CN><en>After controlled modelValue changes to the second item, an item without activeIcon stably falls back to its regular icon and creates no default or remote locator.</en></lang>
+    await tabbar.setProps({ modelValue: 1 });
+    expect(tabbar.findAll('button.u-tabbar__item')[1].get('.u-tabbar__icon').attributes('src')).toBe('/second.png');
 
     // <lang><zh-CN>show=false 隐藏当前局部 tree；显式 visible=true 随后覆盖 show，但不表示 native tabBar 被重建。</zh-CN><en>Show=false hides the current local tree; explicit visible=true subsequently overrides show without meaning a native tab bar is rebuilt.</en></lang>
     await tabbar.setProps({ show: false });

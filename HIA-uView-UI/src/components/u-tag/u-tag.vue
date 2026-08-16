@@ -1,19 +1,26 @@
 <!--
 @component UTag
-@lang zh-CN 提供有限 tone/size/shape 的中性文字标签和可选 close intent；不拥有分类 registry 或任意样式脚本。
-@lang en Provides a neutral text tag with finite tone/size/shape and optional close intent; it owns no category registry or arbitrary style script.
+@lang zh-CN 提供有限 tone/size/shape 的中性文字标签、显式 clickable action 与可选 close intent；不拥有分类 registry 或任意样式脚本。
+@lang en Provides a neutral text tag with finite tone/size/shape, an explicit clickable action, and optional close intent; it owns no category registry or arbitrary style script.
 -->
 <template>
   <!--
   @lang zh-CN 根仅在两个受控可见性输入均允许时投影；标签不根据分类、路由或业务状态自行隐藏。
   @lang en The root projects only when both controlled visibility inputs allow it; the tag never hides itself from category, routing, or business state.
   -->
-  <view v-if="isVisible" :class="rootClasses" role="button" @click="handleClick">
+  <view v-if="isVisible" :class="rootClasses">
     <!--
     @lang zh-CN 默认 slot 优先呈现调用方内容；缺少 slot 时才显示 string/number `text`，数字零被保留且不生成类别名称或默认业务文案。
     @lang en The default slot presents caller content first; only without that slot does string/number `text` appear, preserving numeric zero and generating no category name or default business copy.
     -->
-    <text class="u-tag__text"><slot>{{ displayText }}</slot></text>
+    <!--
+    @lang zh-CN 只有调用方显式开启 clickable 时才创建原生 button；默认标签保持纯信息语义，closable 与 clickable 同时存在时两个 control 仍是兄弟节点而非嵌套按钮。
+    @lang en A native button exists only when the caller explicitly enables clickable; the default tag remains informational, and close plus click controls stay siblings rather than nested buttons when both are present.
+    -->
+    <button v-if="props.clickable" class="u-tag__action" type="button" :disabled="Boolean(props.disabled)" @click="handleClick">
+      <text class="u-tag__text"><slot>{{ displayText }}</slot></text>
+    </button>
+    <text v-else class="u-tag__text"><slot>{{ displayText }}</slot></text>
     <button v-if="closable" class="u-tag__close" type="button" :disabled="disabled" @click.stop="handleClose">×</button>
   </view>
 </template>
@@ -36,6 +43,8 @@ const props = defineProps({
   shape: { type: String, default: 'rounded' },
   // <lang><zh-CN>`appearance` 只选择实心或描边两种受控表面；描边继续使用所选 tone 的文字颜色，不接受任意颜色。</zh-CN><en>`appearance` selects only controlled solid or outline surfaces; outline continues using the chosen tone's text color and accepts no arbitrary color.</en></lang>
   appearance: { type: String, default: 'solid' },
+  // <lang><zh-CN>`clickable` 必须由调用方显式开启才提供标签主体 action；默认 false 保持状态 badge、分类文字和说明标签的非交互语义。</zh-CN><en>`clickable` must be explicitly enabled by the caller to provide a body action; default false preserves non-interactive semantics for status badges, category copy, and explanatory tags.</en></lang>
+  clickable: { type: Boolean, default: false },
   // <lang><zh-CN>`closable` 只决定是否提供本地关闭意图 control；组件不会自行修改可见性。</zh-CN><en>`closable` decides only whether to provide a local close-intent control; the component never changes visibility itself.</en></lang>
   closable: { type: Boolean, default: false },
   // <lang><zh-CN>`visible` 是既有 HIA 输入；它与 `show` 以交集规则共存，避免破坏已有调用方的隐藏语义。</zh-CN><en>`visible` is the existing HIA input; it coexists with `show` through an intersection rule, avoiding disruption of existing caller hide semantics.</en></lang>
@@ -46,7 +55,7 @@ const props = defineProps({
   disabled: { type: [Boolean, String], default: false }
 });
 
-// <lang><zh-CN>两个事件只报告调用方拥有的局部 intent；组件不写状态、不导航，也不执行分类或业务流程。</zh-CN><en>The two events report only caller-owned local intent; the component writes no state, navigates nowhere, and executes no category or business flow.</en></lang>
+// <lang><zh-CN>两个事件只报告调用方显式开放的局部 intent；组件不写状态、不导航，也不执行分类或业务流程。</zh-CN><en>The two events report only caller-explicit local intent; the component writes no state, navigates nowhere, and executes no category or business flow.</en></lang>
 const emit = defineEmits(['click', 'close']);
 // <lang><zh-CN>可见性取交集确保新增 `show` 默认不改变既有 `visible` 调用；任一显式 false 都保持为稳定的本地隐藏控制。</zh-CN><en>Visibility intersection ensures the new default `show` does not change existing `visible` calls; either explicit false remains a stable local hide control.</en></lang>
 const isVisible = computed(() => props.visible && props.show);
@@ -62,19 +71,19 @@ const rootClasses = computed(() => {
   const shape = ['square', 'rounded', 'pill'].includes(props.shape) ? props.shape : 'rounded';
   // <lang><zh-CN>未知 appearance 回退 solid，保持既有调用方视觉并拒绝任意 class 片段。</zh-CN><en>An unknown appearance falls back to solid, preserving existing caller visuals and rejecting arbitrary class fragments.</en></lang>
   const appearance = ['solid', 'outline'].includes(props.appearance) ? props.appearance : 'solid';
-  // <lang><zh-CN>返回稳定 BEM class 列表；disabled 只表示局部交互 guard。</zh-CN><en>Returns a stable BEM class list; disabled represents only a local interaction guard.</en></lang>
-  return ['u-tag', `u-tag--${tone}`, `u-tag--${size}`, `u-tag--${shape}`, `u-tag--${appearance}`, { 'u-tag--disabled': props.disabled }];
+  // <lang><zh-CN>返回稳定 BEM class 列表；clickable 只表示存在主体 action，disabled 只表示局部交互 guard。</zh-CN><en>Returns a stable BEM class list; clickable only denotes a body action, while disabled represents only a local interaction guard.</en></lang>
+  return ['u-tag', `u-tag--${tone}`, `u-tag--${size}`, `u-tag--${shape}`, `u-tag--${appearance}`, { 'u-tag--clickable': props.clickable, 'u-tag--disabled': props.disabled }];
 });
 
 /**
- * @lang zh-CN 报告标签本地 click intent；禁用时保持零事件。
- * @lang en Reports local tag click intent and retains zero events while disabled.
+ * @lang zh-CN 报告显式 clickable 标签的本地 click intent；非 clickable 或禁用时保持零事件。
+ * @lang en Reports local click intent for an explicitly clickable tag and retains zero events while non-clickable or disabled.
  * @param {unknown} event <lang><zh-CN>本地点击事件。</zh-CN><en>Local click event.</en></lang>
  * @returns {void} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang>
  */
 function handleClick(event) {
-  // <lang><zh-CN>禁用 guard 先于 emit，保证字符串或 Boolean disabled 都不会泄露局部 intent。</zh-CN><en>The disabled guard precedes emit, ensuring neither string nor Boolean disabled leaks local intent.</en></lang>
-  if (props.disabled) return;
+  // <lang><zh-CN>显式 clickable 与禁用 guard 均先于 emit，默认信息标签和任一 disabled 形状都不会泄露局部 intent。</zh-CN><en>Explicit clickable and disabled guards both precede emit, so a default informational tag and either disabled shape leak no local intent.</en></lang>
+  if (!props.clickable || props.disabled) return;
   // <lang><zh-CN>保留原始本地事件给调用方；标签不解释点击的后续动作。</zh-CN><en>Preserves the original local event for the caller; the tag does not interpret the click's follow-up action.</en></lang>
   emit('click', event);
 }

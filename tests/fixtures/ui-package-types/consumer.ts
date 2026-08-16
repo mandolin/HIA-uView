@@ -216,9 +216,9 @@ const radioProps: URadioProps = { checked: false, label: 'Radio', labelDisabled:
 const radioGroupProps: URadioGroupProps = { disabled: false, labelDisabled: false, modelValue: 7 };
 const switchProps: USwitchProps = { activeValue: 'enabled', inactiveValue: 0, label: 'State', loading: false, modelValue: 'enabled' };
 
-// <lang><zh-CN>验证 tabbar 项只接受有限 label/value/disabled 结构，不包含路由或原生 tab 生命周期字段。</zh-CN><en>Verifies that tabbar items accept only finite label/value/disabled shape and contain no route or native-tab-lifecycle fields.</en></lang>
+// <lang><zh-CN>验证 tabbar 项只接受有限 label/value/disabled 与图片 locator 结构，不包含路由或原生 tab 生命周期字段。</zh-CN><en>Verifies that tabbar items accept only finite label/value/disabled plus image-locator shape and contain no route or native-tab-lifecycle fields.</en></lang>
 const tabItems: ReadonlyArray<UTabbarItem> = [
-  { label: 'Home', value: 0 },
+  { activeIcon: '/home-active.png', icon: '/home.png', label: 'Home', value: 0 },
   { disabled: true, text: 'Profile', value: 'profile' }
 ];
 
@@ -353,6 +353,7 @@ const alertTipsProps: UAlertTipsProps = {
 
 // <lang><zh-CN>验证 tag 同时接受数字文字、双可见性和局部字符串 disabled guard；这些值不附带类别、权限或业务含义。</zh-CN><en>Verifies that tag accepts numeric text, dual visibility, and local string disabled guard; these values carry no category, authorization, or business meaning.</en></lang>
 const tagProps: UTagProps = {
+  clickable: true,
   disabled: 'disabled',
   show: true,
   text: 0,
@@ -809,6 +810,10 @@ const invalidTextProps: UTextProps = {
 const invalidTagProps: UTagProps = {
   // @ts-expect-error <lang><zh-CN>tag shape 只允许 square、rounded 或 pill。</zh-CN><en>Tag shape is limited to square, rounded, or pill.</en></lang>
   shape: 'circle'
+};
+const invalidTabbarItem: UTabbarItem = {
+  // @ts-expect-error <lang><zh-CN>tabbar icon 是 caller-owned string locator，不接受任意对象或动态命令。</zh-CN><en>A tabbar icon is a caller-owned string locator and accepts no arbitrary object or dynamic command.</en></lang>
+  icon: { source: '/home.png' }
 };
 const invalidAlertTipsProps: UAlertTipsProps = {
   // @ts-expect-error <lang><zh-CN>alert type 使用 error 而非未声明的 danger alias。</zh-CN><en>Alert type uses error rather than an undeclared danger alias.</en></lang>

@@ -16,7 +16,7 @@ The following 13-component surface has package-owned precise props/events/instan
 
 | Family / 家族 | Component contracts / 组件契约 | Review focus / 复核重点 |
 | --- | --- | --- |
-| Local action and content / 局部操作与内容 | [`UButton`](button.md), [`UIcon`](icon.md), [`UText`](text.md), [`UTag`](tag.md), [`UAlertTips`](alert-tips.md) | Original-event versus payload-free/scalar events, slot fallback, visibility and disabled/loading guards. / 原始事件与无 payload/标量事件、slot 回退、可见性及 disabled/loading guard。 |
+| Local action and content / 局部操作与内容 | [`UButton`](button.md), [`UIcon`](icon.md), [`UText`](text.md), [`UTag`](tag.md), [`UAlertTips`](alert-tips.md) | Original-event versus payload-free/scalar events, explicit tag action semantics, slot fallback, visibility and disabled/loading guards. / 原始事件与无 payload/标量事件、显式标签 action 语义、slot 回退、可见性及 disabled/loading guard。 |
 | Information rows and empty/loading state / 信息行与空态/加载态 | [`UCell`](cell.md), [`UCellGroup`](cell-group.md), [`UCellItem`](cell-item.md), [`UEmpty`](empty.md), [`USkeleton`](skeleton.md) | HIA-only facade, caller-owned child/content state, slot/value precedence, bounded placeholders, and no inferred data lifecycle. / HIA 自有 facade、调用方自有子项/内容状态、slot/value 优先级、受限占位及不推断数据生命周期。 |
 | Media, pagination, and explicit row actions / 媒体、分页与显式行操作 | [`UImage`](image.md), [`UPagination`](pagination.md), [`USwipeAction`](swipe-action.md) | Source recovery, numeric event order, scalar action payloads, and absence of built-in network/query/swipe behavior. / 来源恢复、数值事件顺序、标量操作载荷，以及不包含内建网络/查询/swipe 行为。 |
 
@@ -101,7 +101,7 @@ The following 13-component surface has package-owned precise props/events/instan
 | `u-switch` | `USwitch` | [USwitch](switch.md) | Controlled active/inactive value mapping / 受控 active/inactive 值映射 |
 | `u-tabs` | `UTabs` | [UTabs](tabs.md) | Controlled tab strip / 受控标签栏 |
 | `u-tabs-swiper` | `UTabsSwiper` | [UTabsSwiper](tabs-swiper.md) | Controlled static tab-panel projection / 受控静态 tab-panel 投影 |
-| `u-tabbar` | `UTabbar` | [UTabbar](tabbar.md) | Local bottom tab selection / 局部底部标签选择 |
+| `u-tabbar` | `UTabbar` | [UTabbar](tabbar.md) | Local bottom tab selection with optional caller icons / 带可选调用方图标的局部底部标签选择 |
 | `u-table` | `UTable` | [UTable](table.md) | View-based caller slot table container / 基于 view 的调用方 slot 表格容器 |
 | `u-tag` | `UTag` | [UTag](tag.md) | Finite-tone text tag / 有限 tone 文字标签 |
 | `u-text` | `UText` | [UText](text.md) | Finite text presentation / 有限文字呈现 |

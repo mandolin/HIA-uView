@@ -6,6 +6,10 @@
 
 `UAlertTips` 以有限 type、可选标题/正文、受控可见性和可选关闭 control 呈现调用方拥有的局部反馈。它不创建定时器、全局 toast、页面发现、请求、错误码映射、导航或业务后果。
 
+The default `primary` treatment is a low-saturation cobalt information surface with a light information border. It is suitable for explanatory local content but does not itself claim success, failure, authority, or network state. Other finite types retain their explicit outcome colors.
+
+默认 `primary` 样式是低饱和钴蓝信息表面与浅色信息边框，适合说明性局部内容，但自身不声明成功、失败、权威来源或网络状态。其他有限 type 保留各自明确的结果色。
+
 ## Public API / 公开 API
 
 | Prop / 属性 | Type / 类型 | Default / 默认值 | Contract / 契约 |

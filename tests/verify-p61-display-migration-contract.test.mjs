@@ -56,6 +56,9 @@ test('keeps display migration props finite, caller-controlled, and locally conve
   assert.match(tagSource, /text:\s*\{\s*type:\s*\[String,\s*Number\],\s*default:\s*''\s*\}/su);
   assert.match(tagSource, /show:\s*\{\s*type:\s*Boolean,\s*default:\s*true\s*\}/su);
   assert.match(tagSource, /disabled:\s*\{\s*type:\s*\[Boolean,\s*String\],\s*default:\s*false\s*\}/su);
+  assert.match(tagSource, /clickable:\s*\{\s*type:\s*Boolean,\s*default:\s*false\s*\}/su);
+  assert.match(tagSource, /<button v-if="props\.clickable" class="u-tag__action"/u);
+  assert.doesNotMatch(tagSource, /role="button"/u);
   assert.match(tagSource, /const isVisible = computed\(\(\) => props\.visible && props\.show\);/u);
   assert.match(tagSource, /const displayText = computed\(\(\) => String\(props\.text\)\);/u);
 
@@ -74,6 +77,8 @@ test('keeps display documentation, package types, and compiler fixture aligned',
   // <lang><zh-CN>公开文档必须写明 show/visible 交集、禁用边界和 alert 的 caller-owned close，避免调用方猜测优先级或自动隐藏。</zh-CN><en>Public documentation must state show/visible intersection, disabled boundary, and alert caller-owned close so consumers do not guess precedence or automatic hiding.</en></lang>
   assert.match(tagDocumentation, /either explicit `false` hides the local tag/u);
   assert.match(tagDocumentation, /`disabled` accepts `boolean \| string`/u);
+  assert.match(tagDocumentation, /informational by default/u);
+  assert.match(tagDocumentation, /`clickable=true`/u);
   assert.match(alertDocumentation, /`show` only controls projection/u);
   assert.match(alertDocumentation, /caller decides whether to update `show`/u);
   // <lang><zh-CN>提示条根必须继承宿主字体，公开 contract 同时明确组件不拥有字体资产或字体主题 API。</zh-CN><en>The alert root must inherit the host font, while the public contract states that the component owns neither font assets nor a font theme API.</en></lang>

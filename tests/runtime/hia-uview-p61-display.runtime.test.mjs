@@ -18,6 +18,14 @@ describe('bounded display migration runtime behavior', () => {
     // <lang><zh-CN>可见状态下根和数字零均必须存在；此断言不涉及主题、布局或无障碍平台认证。</zh-CN><en>Both root and numeric zero must exist while visible; this assertion covers no theme, layout, or accessibility-platform certification.</en></lang>
     expect(wrapper.find('.u-tag').exists()).toBe(true);
     expect(wrapper.text()).toContain('0');
+    // <lang><zh-CN>默认标签不创建主体 button，也不会把状态文字伪装成可操作角色。</zh-CN><en>The default tag creates no body button and does not masquerade status copy as an actionable role.</en></lang>
+    expect(wrapper.find('button.u-tag__action').exists()).toBe(false);
+    await wrapper.find('.u-tag').trigger('click');
+    expect(wrapper.emitted('click')).toBeUndefined();
+
+    // <lang><zh-CN>只有调用方显式开启 clickable 才创建原生 action；它保留浏览器键盘语义并报告原始事件。</zh-CN><en>Only explicit caller-enabled clickable creates a native action; it retains browser keyboard semantics and reports the raw event.</en></lang>
+    await wrapper.setProps({ clickable: true });
+    expect(wrapper.find('button.u-tag__action').exists()).toBe(true);
 
     // <lang><zh-CN>描边 appearance 只增加受控根类，并保留同一有限 tone、文字和事件边界。</zh-CN><en>Outline appearance only adds the controlled root class while retaining the same finite tone, copy, and event boundary.</en></lang>
     await wrapper.setProps({ appearance: 'outline' });
@@ -35,10 +43,10 @@ describe('bounded display migration runtime behavior', () => {
   /** @lang zh-CN 验证非空字符串 disabled 同时阻止 click 与 close intent。 @lang en Verifies that nonempty-string disabled blocks both click and close intent. @returns {Promise<void>} <lang><zh-CN>无返回值。</zh-CN><en>No return value.</en></lang> */
   it('keeps tag disabled as a local intent guard', async () => {
     // <lang><zh-CN>使用 closable tag 与上游允许的字符串 disabled，测试不挂载授权、表单或业务状态。</zh-CN><en>Uses a closable tag with upstream-allowed string disabled and mounts no authorization, form, or business state.</en></lang>
-    const wrapper = mount(UTag, { props: { closable: true, disabled: 'disabled' } });
+    const wrapper = mount(UTag, { props: { clickable: true, closable: true, disabled: 'disabled' } });
 
     // <lang><zh-CN>直接触发根与 close control 后仍必须保持零 emit，避免只依赖原生按钮 disabled 属性。</zh-CN><en>After direct triggering of root and close control, emitted events must remain empty, avoiding reliance only on the native button disabled attribute.</en></lang>
-    await wrapper.find('.u-tag').trigger('click');
+    await wrapper.find('.u-tag__action').trigger('click');
     await wrapper.find('.u-tag__close').trigger('click');
     expect(wrapper.emitted()).toEqual({});
   });

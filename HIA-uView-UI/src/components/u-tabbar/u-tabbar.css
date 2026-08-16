@@ -1,39 +1,51 @@
 /**
  * @component UTabbar
- * @lang zh-CN 局部底部标签栏样式；不声明 router、icon registry 或安全区适配。
- * @lang en Local bottom-tab-bar styles; declares no router, icon registry, or safe-area adaptation.
+ * @lang zh-CN 局部底部标签栏样式；只呈现 caller-owned 图片 locator，不声明 router、icon registry 或安全区适配。
+ * @lang en Local bottom-tab-bar styles; present only caller-owned image locators and declare no router, icon registry, or safe-area adaptation.
  */
-.u-tabbar { background: var(--u-comp-tabbar-surface); border-top: 1px solid var(--u-comp-tabbar-divider); display: flex; gap: var(--u-comp-tabbar-gap); padding: var(--u-comp-tabbar-padding); width: 100%; }
-.u-tabbar__item { background: transparent; border: 0; border-radius: var(--u-comp-tabbar-item-radius); color: var(--u-comp-tabbar-foreground); flex: 1; font-size: var(--u-comp-tabbar-item-size); margin: 0; min-height: var(--u-comp-tabbar-item-min-height); padding: var(--u-comp-tabbar-item-padding); }
+.u-tabbar { background: var(--u-comp-tabbar-surface); border-top: 1px solid var(--u-comp-tabbar-divider); box-sizing: border-box; display: flex; gap: var(--u-comp-tabbar-gap); padding: var(--u-comp-tabbar-padding); width: 100%; }
+.u-tabbar__item { appearance: none; background: transparent; border: 0; border-radius: var(--u-comp-tabbar-item-radius); box-sizing: border-box; color: var(--u-comp-tabbar-foreground); flex: 1; font-family: inherit; font-size: var(--u-comp-tabbar-item-size); line-height: var(--u-comp-tabbar-label-line-height); margin: 0; min-height: var(--u-comp-tabbar-item-min-height); min-width: 0; padding: var(--u-comp-tabbar-item-padding); }
+.u-tabbar__item--with-icon { align-items: center; display: flex; flex-direction: column; gap: var(--u-comp-tabbar-icon-gap); justify-content: center; }
 .u-tabbar__item--active { background: var(--u-comp-tabbar-active-surface); color: var(--u-comp-tabbar-active-foreground); font-weight: 600; }
 .u-tabbar__item--disabled { color: var(--u-comp-tabbar-disabled-foreground); }
-.u-tabbar__label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.u-tabbar__icon { display: block; flex: none; height: var(--u-comp-tabbar-icon-size); width: var(--u-comp-tabbar-icon-size); }
+.u-tabbar__label { display: block; max-width: 100%; overflow: hidden; font-family: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; text-overflow: ellipsis; white-space: nowrap; }
 
 /* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
 /* #ifdef MP-WEIXIN */
 /* HIA-uView MP-Weixin literal fallback start: generated, do not edit manually. */
 .u-tabbar {
   background: #ffffff;
-  border-top: 1px solid #f7f9fc;
-  gap: 4px;
-  padding: 6px;
+  border-top: 1px solid #dfe5ec;
+  gap: 0px;
+  padding: 5px 0px;
 }
 
 .u-tabbar__item {
-  border-radius: 6px;
+  border-radius: 0px;
   color: #27364a;
-  font-size: 12px;
-  min-height: 44px;
-  padding: 8px 4px;
+  font-size: 13px;
+  line-height: 18px;
+  min-height: 52px;
+  padding: 2px 0px 3px;
+}
+
+.u-tabbar__item--with-icon {
+  gap: 2px;
 }
 
 .u-tabbar__item--active {
-  background: #f7f9fc;
+  background: transparent;
   color: #0047ab;
 }
 
 .u-tabbar__item--disabled {
   color: #27364a;
+}
+
+.u-tabbar__icon {
+  height: 27px;
+  width: 27px;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
 /* #endif */
