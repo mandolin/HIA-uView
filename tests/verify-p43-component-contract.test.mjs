@@ -97,6 +97,8 @@ test('keeps P43 source inside overlay and navigation boundaries', async () => {
   assert.match(styleSources[0], /font-family:\s*inherit/u);
   assert.match(styleSources[0], /env\(safe-area-inset-bottom\)/u);
   assert.match(styleSources[0], /overflow-y:\s*auto/u);
+  assert.match(styleSources[0], /\.u-action-sheet__item::after,\s*\.u-action-sheet__cancel::after\s*\{\s*border:\s*0;/u);
+  assert.match(styleSources[0], /border-top:\s*var\(--u-comp-action-sheet-cancel-gap\) solid var\(--u-comp-action-sheet-cancel-divider\)/u);
   assert.doesNotMatch(styleSources[0], /\.u-action-sheet__item\s*\[disabled\]/u);
   assert.match(componentSources[1], /u-loading-page__indicator/);
   assert.match(componentSources[2], /Array\.from/);

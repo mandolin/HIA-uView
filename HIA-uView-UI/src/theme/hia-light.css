@@ -459,7 +459,8 @@
   --u-comp-action-sheet-selected-check-size: 14px;
   --u-comp-action-sheet-selected-text-foreground: var(--u-sys-color-text-secondary);
   --u-comp-action-sheet-selected-text-size: 13px;
-  --u-comp-action-sheet-cancel-surface: var(--u-sys-color-surface-subtle);
+  --u-comp-action-sheet-cancel-surface: var(--u-sys-color-surface);
+  --u-comp-action-sheet-cancel-divider: var(--u-sys-color-surface-subtle);
   --u-comp-action-sheet-cancel-gap: 8px;
   --u-comp-action-sheet-cancel-weight: 600;
 

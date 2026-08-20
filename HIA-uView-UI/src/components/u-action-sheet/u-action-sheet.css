@@ -10,6 +10,8 @@
 /* <lang><zh-CN>原生 scroll-view 只滚动 slot 与有限 items；panel 的 title、cancel 和 CSS safe-area padding 保持固定。</zh-CN><en>The native scroll-view scrolls only the slot and finite items; the panel title, cancel control, and CSS safe-area padding remain fixed.</en></lang> */
 .u-action-sheet__options { display: block; flex: 1 1 auto; min-height: 0; overflow-y: auto; width: 100%; }
 .u-action-sheet__item, .u-action-sheet__cancel { background: var(--u-comp-action-sheet-option-surface); border: 0; border-bottom: 1px solid var(--u-comp-action-sheet-option-divider); border-radius: 0; box-sizing: border-box; color: var(--u-comp-action-sheet-option-foreground); font-family: inherit; font-size: var(--u-comp-action-sheet-option-size); line-height: var(--u-comp-action-sheet-option-line-height); margin: 0; min-height: var(--u-comp-action-sheet-option-min-height); padding: var(--u-comp-action-sheet-option-padding); width: 100%; }
+/* <lang><zh-CN>UniApp 会为原生 button 绘制额外伪元素轮廓；显式清除后，普通选项只保留 token 化分隔线，selected 圆角也只有一个来源。</zh-CN><en>UniApp draws an extra pseudo-element outline for native buttons; clearing it leaves ordinary options with only the tokenized divider and gives selected rounding a single source.</en></lang> */
+.u-action-sheet__item::after, .u-action-sheet__cancel::after { border: 0; }
 .u-action-sheet__item { align-items: center; display: flex; gap: var(--u-comp-action-sheet-selected-gap); text-align: left; }
 /* <lang><zh-CN>selected 类只投影首个受控当前项；独立勾选与状态文案确保选择含义不依赖背景色。</zh-CN><en>The selected class projects only the first controlled current item; the independent check and status copy keep selection meaning independent of background color.</en></lang> */
 .u-action-sheet__item--selected { background: var(--u-comp-action-sheet-selected-surface); border-radius: var(--u-comp-action-sheet-selected-radius); color: var(--u-comp-action-sheet-selected-foreground); }
@@ -18,7 +20,7 @@
 .u-action-sheet__selected-check { align-items: center; background: var(--u-comp-action-sheet-selected-check-surface); border-radius: 50%; color: var(--u-comp-action-sheet-selected-check-foreground); display: flex; flex: none; font-family: inherit; font-size: var(--u-comp-action-sheet-selected-check-size); font-weight: 700; height: var(--u-comp-action-sheet-selected-check-box); justify-content: center; line-height: var(--u-comp-action-sheet-selected-check-box); text-align: center; width: var(--u-comp-action-sheet-selected-check-box); }
 .u-action-sheet__label { color: inherit; display: block; flex: 1 1 auto; font-family: inherit; min-width: 0; overflow-wrap: break-word; }
 .u-action-sheet__selected-text { color: var(--u-comp-action-sheet-selected-text-foreground); display: block; flex: none; font-family: inherit; font-size: var(--u-comp-action-sheet-selected-text-size); margin-left: auto; white-space: nowrap; }
-.u-action-sheet__cancel { background: var(--u-comp-action-sheet-cancel-surface); display: block; flex: none; font-weight: var(--u-comp-action-sheet-cancel-weight); margin-top: var(--u-comp-action-sheet-cancel-gap); text-align: center; }
+.u-action-sheet__cancel { background: var(--u-comp-action-sheet-cancel-surface); border-bottom: 0; border-top: var(--u-comp-action-sheet-cancel-gap) solid var(--u-comp-action-sheet-cancel-divider); display: block; flex: none; font-weight: var(--u-comp-action-sheet-cancel-weight); text-align: center; }
 
 /* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
 /* #ifdef MP-WEIXIN */
@@ -85,9 +87,9 @@
 }
 
 .u-action-sheet__cancel {
-  background: #f7f9fc;
+  background: #ffffff;
+  border-top: 8px solid #f7f9fc;
   font-weight: 600;
-  margin-top: 8px;
 }
 /* HIA-uView MP-Weixin literal fallback end. */
 /* #endif */
