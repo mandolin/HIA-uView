@@ -430,23 +430,38 @@
   --u-comp-popup-content-foreground: var(--u-sys-color-text);
   --u-comp-popup-content-gap: 12px;
 
-  /* <lang><zh-CN>UActionSheet token 组只定义有限 item、mask 和 cancel 几何，不执行 command 或导航。</zh-CN><en>The UActionSheet token group defines finite item, mask, and cancel geometry only and executes no command or navigation.</en></lang> */
-  --u-comp-action-sheet-z-index: 21;
+  /* <lang><zh-CN>UActionSheet token 组定义有限 item、受控当前项、mask、滚动 panel 与 cancel 几何，不执行 command 或导航。</zh-CN><en>The UActionSheet token group defines finite items, a controlled current item, mask, scrollable panel, and cancel geometry and executes no command or navigation.</en></lang> */
+  --u-comp-action-sheet-z-index: 1000;
   --u-comp-action-sheet-mask: rgba(0, 27, 46, 0.36);
   --u-comp-action-sheet-surface: var(--u-sys-color-surface);
+  --u-comp-action-sheet-radius: 20px;
+  --u-comp-action-sheet-max-height: 75vh;
   --u-comp-action-sheet-padding: 12px;
-  --u-comp-action-sheet-title-foreground: var(--u-sys-color-text-secondary);
-  --u-comp-action-sheet-title-size: 14px;
+  --u-comp-action-sheet-title-foreground: var(--u-sys-color-text);
+  --u-comp-action-sheet-title-size: 18px;
+  --u-comp-action-sheet-title-weight: 700;
   --u-comp-action-sheet-title-padding: 8px;
-  --u-comp-action-sheet-item-surface: var(--u-sys-color-surface);
-  --u-comp-action-sheet-item-foreground: var(--u-sys-color-text);
-  --u-comp-action-sheet-item-size: 16px;
-  --u-comp-action-sheet-item-min-height: 48px;
-  --u-comp-action-sheet-item-padding: 12px;
-  --u-comp-action-sheet-divider: var(--u-ref-color-neutral-50);
-  --u-comp-action-sheet-disabled-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-action-sheet-option-surface: var(--u-sys-color-surface);
+  --u-comp-action-sheet-option-foreground: var(--u-sys-color-text);
+  --u-comp-action-sheet-option-size: 16px;
+  --u-comp-action-sheet-option-line-height: 22px;
+  --u-comp-action-sheet-option-min-height: 52px;
+  --u-comp-action-sheet-option-padding: 12px;
+  --u-comp-action-sheet-option-divider: var(--u-ref-color-neutral-50);
+  --u-comp-action-sheet-option-disabled-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-action-sheet-selected-surface: var(--u-sys-color-information-surface);
+  --u-comp-action-sheet-selected-foreground: var(--u-sys-color-action-primary);
+  --u-comp-action-sheet-selected-radius: 10px;
+  --u-comp-action-sheet-selected-gap: 12px;
+  --u-comp-action-sheet-selected-check-surface: var(--u-sys-color-action-primary);
+  --u-comp-action-sheet-selected-check-foreground: var(--u-sys-color-on-action-primary);
+  --u-comp-action-sheet-selected-check-box: 22px;
+  --u-comp-action-sheet-selected-check-size: 14px;
+  --u-comp-action-sheet-selected-text-foreground: var(--u-sys-color-text-secondary);
+  --u-comp-action-sheet-selected-text-size: 13px;
   --u-comp-action-sheet-cancel-surface: var(--u-sys-color-surface-subtle);
   --u-comp-action-sheet-cancel-gap: 8px;
+  --u-comp-action-sheet-cancel-weight: 600;
 
   /* <lang><zh-CN>UToast token 组定义局部 feedback 的有限 tone；不包含计时、队列或全局 service。</zh-CN><en>The UToast token group defines finite tones for local feedback; it includes no timer, queue, or global service.</en></lang> */
   --u-comp-toast-border: var(--u-ref-color-neutral-700);

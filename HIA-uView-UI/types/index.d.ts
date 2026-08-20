@@ -903,6 +903,8 @@ export interface UActionSheetItem {
   value?: unknown;
   /** 中文：是否阻止该项产生选择事件。English: Whether the item is prevented from producing selection events. */
   disabled?: boolean;
+  /** 中文：是否声明该项为当前项；多个 true 时只呈现首个。English: Whether the item declares itself current; only the first true item is presented as selected. */
+  selected?: boolean;
 }
 
 /**
@@ -937,6 +939,8 @@ export interface UActionSheetProps {
   items?: ReadonlyArray<string | UActionSheetItem>;
   /** 中文：非空时创建取消 control。English: Creates a cancel control when nonempty. */
   cancelText?: string;
+  /** 中文：首个 selected 项旁的调用方状态文案；空值不生成默认文字。English: Caller status copy beside the first selected item; an empty value invents no default text. */
+  selectedText?: string;
   /** 中文：是否允许遮罩请求关闭。English: Whether the mask may request closure. */
   maskClosable?: boolean;
 }

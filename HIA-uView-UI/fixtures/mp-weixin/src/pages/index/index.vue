@@ -32,7 +32,7 @@
       <u-transition :show="fixtureOverlayTransitionVisible" mode="fade" :duration="120"><text>有限过渡 / Finite transition</text></u-transition>
       <u-mask :show="fixtureOverlayMaskVisible" :clickable="true" @click="hideFixtureOverlayMask"><text>本地遮罩 slot / Local mask slot</text></u-mask>
       <u-popup v-model="fixtureOverlayPopupVisible" title="本地弹层 / Local popup" close-text="关闭 / Close" :mask-closable="true" @close="recordFixturePopupClose"><text>调用方弹层 slot / Caller popup slot</text></u-popup>
-      <u-action-sheet v-model="fixtureOverlayActionSheetVisible" title="本地操作 / Local actions" :items="fixtureOverlayActionItems" cancel-text="取消 / Cancel" :mask-closable="true" @select="recordFixtureFeedbackIntent('action-select')" @close="recordFixtureActionSheetClose"><text>调用方操作 slot / Caller action slot</text></u-action-sheet>
+      <u-action-sheet v-model="fixtureOverlayActionSheetVisible" title="本地操作 / Local actions" :items="fixtureOverlayActionItems" cancel-text="取消 / Cancel" selected-text="当前 / Current" :mask-closable="true" @select="recordFixtureFeedbackIntent('action-select')" @close="recordFixtureActionSheetClose"><text>调用方操作 slot / Caller action slot</text></u-action-sheet>
       <u-modal :service-scope="fixtureFeedbackScope" :service-host="true" @confirm="recordFixtureFeedbackIntent('modal-confirm')" @cancel="recordFixtureFeedbackIntent('modal-cancel')" />
       <u-toast :service-scope="fixtureFeedbackScope" :service-host="true" @close="recordFixtureFeedbackIntent('toast-close')" />
       <text data-smoke="feedback-service-result">{{ fixtureFeedbackIntent }}</text>
@@ -480,9 +480,9 @@ const fixtureNavigationTabbarItems = Object.freeze([
   Object.freeze({ label: '第一项 / First', value: 'first' }),
   Object.freeze({ label: '第二项 / Second', value: 'second' })
 ]);
-// <lang><zh-CN>action sheet 的有限 items 不携带 handler、URL、权限或业务命令。</zh-CN><en>The action sheet's finite items carry no handler, URL, authorization, or business command.</en></lang>
+// <lang><zh-CN>action sheet 的有限 items 不携带 handler、URL、权限或业务命令；首项 selected 只验证当前项呈现和平台编译。</zh-CN><en>The action sheet's finite items carry no handler, URL, authorization, or business command; first-item selected verifies current-item presentation and platform compilation only.</en></lang>
 const fixtureOverlayActionItems = Object.freeze([
-  Object.freeze({ label: '观察 / Observe', value: 'observe' }),
+  Object.freeze({ label: '观察 / Observe', value: 'observe', selected: true }),
   Object.freeze({ label: '已禁用 / Disabled', value: 'disabled', disabled: true })
 ]);
 

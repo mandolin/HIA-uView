@@ -175,6 +175,26 @@ describe('UMask and UTransition P68 overlay primitives', () => {
  */
 describe('UActionSheet P68 overlay runtime behavior', () => {
   /**
+   * @lang zh-CN 以无行为 div stub 挂载 UniApp scroll-view，使 DOM runtime 只验证组件状态机而不伪造平台滚动能力。
+   * @lang en Mounts UniApp scroll-view through a behavior-free div stub so the DOM runtime verifies only the component state machine without fabricating platform scrolling capability.
+   * @param {Record<string, unknown>} options <lang><zh-CN>传给 Vue Test Utils 的局部 mount options。</zh-CN><en>Local mount options passed to Vue Test Utils.</en></lang>
+   * @returns {object} <lang><zh-CN>已挂载的局部 action-sheet wrapper。</zh-CN><en>Mounted local action-sheet wrapper.</en></lang>
+   */
+  function mountActionSheet(options = {}) {
+    // <lang><zh-CN>调用方若提供其他 global/stub 仍予保留；scroll-view 始终收束为不含滚动断言的 slot 容器。</zh-CN><en>Any other caller global/stub entries are retained; scroll-view is always constrained to a slot container with no scrolling assertion.</en></lang>
+    return mount(UActionSheet, {
+      ...options,
+      global: {
+        ...options.global,
+        stubs: {
+          ...options.global?.stubs,
+          'scroll-view': { template: '<div><slot /></div>' }
+        }
+      }
+    });
+  }
+
+  /**
    * @lang zh-CN 验证 select payload 严格先于 click(index)，且 disabled/无标签 item 不产生事件或自动关闭。
    * @lang en Verifies the select payload strictly precedes click(index), while disabled/unlabeled items produce no event or automatic close.
    * @returns {Promise<void>} <lang><zh-CN>无返回值；item click 触发完成后解决。</zh-CN><en>No return value; resolves after item click triggers complete.</en></lang>
@@ -182,10 +202,10 @@ describe('UActionSheet P68 overlay runtime behavior', () => {
   it('reports bounded selections without executing or closing them', async () => {
     // <lang><zh-CN>监听序列验证跨 select/click 的精确顺序；输入还包含应过滤的空 label 与应 guard 的 disabled item。</zh-CN><en>The listener sequence verifies exact order across select/click; input also contains an empty label to filter and a disabled item to guard.</en></lang>
     const selectionSequence = [];
-    const sheet = mount(UActionSheet, {
+    const sheet = mountActionSheet({
       props: {
         modelValue: true,
-        items: [{ label: 'Available', value: 'available' }, { label: '', value: 'hidden' }, { label: 'Disabled', value: 'disabled', disabled: true }, 'String item'],
+        items: [{ label: 'Available', value: 'available' }, { label: '', value: 'hidden' }, { label: 'Disabled current', value: 'disabled', disabled: true, selected: true }, 'String item'],
         onSelect: (payload) => selectionSequence.push(['select', payload]),
         onClick: (index) => selectionSequence.push(['click', index])
       },
@@ -195,11 +215,15 @@ describe('UActionSheet P68 overlay runtime behavior', () => {
     // <lang><zh-CN>过滤后只渲染三个有标签 item；首项依次报告结构化 select 与迁移 click(0)。</zh-CN><en>After filtering, only three labeled items render; the first reports structured select then migration click(0).</en></lang>
     const itemControls = sheet.findAll('button.u-action-sheet__item');
     expect(itemControls).toHaveLength(3);
-    // <lang><zh-CN>启用项不携带状态类或原生禁用属性；禁用项必须同时携带两者，使语义 guard 与 WXSS 类选择器保持一致。</zh-CN><en>The enabled item carries neither the state class nor native disabled attribute; the disabled item must carry both so the semantic guard and WXSS class selector remain aligned.</en></lang>
+    // <lang><zh-CN>启用项不携带状态类或原生禁用属性；禁用当前项必须同时携带 disabled、selected、aria-pressed 与独立勾选，并继续保持零事件。</zh-CN><en>The enabled item carries neither state class nor native disabled attribute; the disabled current item must carry disabled, selected, aria-pressed, and an independent check while remaining event-free.</en></lang>
     expect(itemControls[0].classes()).not.toContain('u-action-sheet__item--disabled');
     expect(itemControls[0].attributes()).not.toHaveProperty('disabled');
     expect(itemControls[1].classes()).toContain('u-action-sheet__item--disabled');
+    expect(itemControls[1].classes()).toContain('u-action-sheet__item--selected');
     expect(itemControls[1].attributes()).toHaveProperty('disabled');
+    expect(itemControls[1].attributes('aria-pressed')).toBe('true');
+    expect(itemControls[1].find('.u-action-sheet__selected-check').exists()).toBe(true);
+    expect(itemControls[1].find('.u-action-sheet__selected-text').exists()).toBe(false);
     expect(sheet.text()).toContain('Caller sheet slot');
     expect(sheet.text()).not.toContain('hidden');
     await itemControls[0].trigger('click');
@@ -211,6 +235,47 @@ describe('UActionSheet P68 overlay runtime behavior', () => {
     await itemControls[1].trigger('click');
     expect(selectionSequence).toHaveLength(2);
     expect(sheet.find('.u-action-sheet').exists()).toBe(true);
+  });
+
+  /**
+   * @lang zh-CN 验证多个 selected 声明只投影首项，并以独立勾选、caller 状态文案和合法 button aria-pressed 呈现；显式 undefined value 仍原样报告。
+   * @lang en Verifies that multiple selected declarations project only the first through an independent check, caller status copy, and legal button aria-pressed, while an explicit undefined value is still reported unchanged.
+   * @returns {Promise<void>} <lang><zh-CN>无返回值；当前项 click 与全部呈现断言完成后解决。</zh-CN><en>No return value; resolves after the current-item click and all presentation assertions complete.</en></lang>
+   */
+  it('projects one caller-selected item without changing transparent values', async () => {
+    // <lang><zh-CN>前两项都声明 selected，用于锁定“首个安全可见项胜出”；首项 value 是显式自有 undefined，不等同于缺失。</zh-CN><en>The first two items both declare selected to lock first-safe-visible-wins; the first value is an explicit own undefined and is not equivalent to absence.</en></lang>
+    const sheet = mountActionSheet({
+      props: {
+        modelValue: true,
+        selectedText: 'Current',
+        items: [
+          { label: 'Any', value: undefined, selected: true },
+          { label: 'Duplicate claim', value: 'duplicate', selected: true },
+          { label: 'Ordinary', value: 'ordinary' }
+        ]
+      }
+    });
+
+    // <lang><zh-CN>三个原生 button 都使用 aria-pressed；只有首项取得 selected class、独立隐藏勾选和可见 caller 状态文案。</zh-CN><en>All three native buttons use aria-pressed; only the first receives the selected class, independent hidden check, and visible caller status copy.</en></lang>
+    const controls = sheet.findAll('button.u-action-sheet__item');
+    expect(controls).toHaveLength(3);
+    expect(controls.map((control) => control.attributes('aria-pressed'))).toEqual(['true', 'false', 'false']);
+    expect(controls[0].classes()).toContain('u-action-sheet__item--selected');
+    expect(controls[1].classes()).not.toContain('u-action-sheet__item--selected');
+    expect(controls[0].attributes()).not.toHaveProperty('aria-selected');
+    expect(controls[0].get('.u-action-sheet__selected-check').attributes('aria-hidden')).toBe('true');
+    expect(controls[0].get('.u-action-sheet__selected-text').text()).toBe('Current');
+    expect(controls[1].find('.u-action-sheet__selected-check').exists()).toBe(false);
+    expect(controls[1].find('.u-action-sheet__selected-text').exists()).toBe(false);
+
+    // <lang><zh-CN>点击当前项保持既有 select→click 且不关闭；payload 必须真实拥有 value 字段并保留 undefined。</zh-CN><en>Clicking the current item preserves select-to-click without closing; the payload must genuinely own the value field and retain undefined.</en></lang>
+    await controls[0].trigger('click');
+    const selection = sheet.emitted('select')?.[0]?.[0];
+    expect(Object.prototype.hasOwnProperty.call(selection, 'value')).toBe(true);
+    expect(selection).toEqual({ value: undefined, index: 0 });
+    expect(sheet.emitted('click')).toEqual([[0]]);
+    expect(sheet.emitted('update:modelValue')).toBeUndefined();
+    expect(sheet.emitted('close')).toBeUndefined();
   });
 
   /**
@@ -236,10 +301,18 @@ describe('UActionSheet P68 overlay runtime behavior', () => {
         return 'unsafe getter value';
       }
     });
+    // <lang><zh-CN>selected accessor 与 value accessor 共用同一计数器；两者都只能被 descriptor 审计为非 data property，绝不能执行。</zh-CN><en>The selected accessor shares the same counter as the value accessor; both may only be audited as non-data properties and must never execute.</en></lang>
+    Object.defineProperty(accessorItem, 'selected', {
+      enumerable: true,
+      get() {
+        getterCalls += 1;
+        return true;
+      }
+    });
 
     // <lang><zh-CN>收集结构化选择，不比较 DOM key 实现细节。</zh-CN><en>Collects structured selections without comparing DOM-key implementation details.</en></lang>
     const selections = [];
-    const sheet = mount(UActionSheet, {
+    const sheet = mountActionSheet({
       props: {
         modelValue: true,
         items: [
@@ -263,6 +336,7 @@ describe('UActionSheet P68 overlay runtime behavior', () => {
     expect(selections[1].value).toBe(opaqueValue);
     expect(selections[1].index).toBe(1);
     expect(selections[2]).toEqual({ value: 'Accessor fallback', index: 2 });
+    expect(controls[2].attributes('aria-pressed')).toBe('false');
 
     // <lang><zh-CN>显式卸载局部 sheet，不保留响应式 effect。</zh-CN><en>Explicitly unmounts the local sheet and retains no reactive effect.</en></lang>
     sheet.unmount();
@@ -276,7 +350,7 @@ describe('UActionSheet P68 overlay runtime behavior', () => {
   it('orders eligible close paths and rejects hidden or unauthorized paths', async () => {
     // <lang><zh-CN>同一可见实例依次触发 mask、cancel 与 programmatic，以验证每条路径都复用严格事件对。</zh-CN><en>The same visible instance triggers mask, cancel, and programmatic paths in sequence to verify each reuses the strict event pair.</en></lang>
     const closeSequence = [];
-    const sheet = mount(UActionSheet, {
+    const sheet = mountActionSheet({
       props: {
         modelValue: true,
         maskClosable: true,
@@ -295,13 +369,13 @@ describe('UActionSheet P68 overlay runtime behavior', () => {
     ]);
 
     // <lang><zh-CN>未授权 mask click 与缺失 cancel 文字均保持零事件；模板不会创建无标签取消 control。</zh-CN><en>An unauthorized mask click and missing cancel copy both retain zero events; the template creates no unlabeled cancel control.</en></lang>
-    const guardedSheet = mount(UActionSheet, { props: { modelValue: true, maskClosable: false, cancelText: '' } });
+    const guardedSheet = mountActionSheet({ props: { modelValue: true, maskClosable: false, cancelText: '' } });
     await guardedSheet.get('.u-action-sheet__mask').trigger('click');
     expect(guardedSheet.find('.u-action-sheet__cancel').exists()).toBe(false);
     expect(guardedSheet.emitted()).toEqual({});
 
     // <lang><zh-CN>显式 visible=false 压过 modelValue=true；陈旧 component-ref close 不产生更新或关闭。</zh-CN><en>Explicit visible=false overrides modelValue=true; stale component-ref close produces neither update nor close.</en></lang>
-    const hiddenSheet = mount(UActionSheet, { props: { visible: false, modelValue: true } });
+    const hiddenSheet = mountActionSheet({ props: { visible: false, modelValue: true } });
     hiddenSheet.vm.close();
     expect(hiddenSheet.find('.u-action-sheet').exists()).toBe(false);
     expect(hiddenSheet.emitted()).toEqual({});

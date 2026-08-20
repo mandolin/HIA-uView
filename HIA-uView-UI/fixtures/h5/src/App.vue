@@ -30,7 +30,7 @@
       <UTransition :show="overlayTransitionVisible" mode="fade" :duration="120"><UText text="Finite transition / 有限过渡" /></UTransition>
       <UMask :show="overlayMaskVisible" :clickable="true" @click="hideOverlayMask"><UText text="Local mask slot / 本地遮罩 slot" /></UMask>
       <UPopup v-model="overlayPopupVisible" title="Local popup / 本地弹层" close-text="Close / 关闭" :mask-closable="true" @close="recordPopupClose"><UText text="Caller-owned popup slot / 调用方拥有的弹层 slot" /></UPopup>
-      <UActionSheet v-model="overlayActionSheetVisible" title="Local actions / 本地操作" :items="overlayActionItems" cancel-text="Cancel / 取消" :mask-closable="true" @select="recordFeedbackIntent('action-select')" @close="recordActionSheetClose"><UText text="Caller-owned action slot / 调用方拥有的操作 slot" /></UActionSheet>
+      <UActionSheet v-model="overlayActionSheetVisible" title="Local actions / 本地操作" :items="overlayActionItems" cancel-text="Cancel / 取消" selected-text="Current / 当前" :mask-closable="true" @select="recordFeedbackIntent('action-select')" @close="recordActionSheetClose"><UText text="Caller-owned action slot / 调用方拥有的操作 slot" /></UActionSheet>
       <UModal :service-scope="feedbackScope" :service-host="true" @confirm="recordFeedbackIntent('modal-confirm')" @cancel="recordFeedbackIntent('modal-cancel')" />
       <UToast :service-scope="feedbackScope" :service-host="true" @close="recordFeedbackIntent('toast-close')" />
       <p data-smoke="feedback-service-result">{{ feedbackIntent }}</p>
@@ -293,9 +293,9 @@ const navigationTabbarItems = Object.freeze([
   Object.freeze({ label: 'First / 第一项', value: 'first' }),
   Object.freeze({ label: 'Second / 第二项', value: 'second' })
 ]);
-// <lang><zh-CN>action-sheet items 仅作为本地选择投影；组件不会执行其 value。</zh-CN><en>Action-sheet items are local selection projections only; the component never executes their values.</en></lang>
+// <lang><zh-CN>action-sheet items 仅作为本地选择投影；首项 selected 只验证当前项呈现，组件不会执行其 value。</zh-CN><en>Action-sheet items are local selection projections only; first-item selected verifies current-item presentation, and the component never executes their values.</en></lang>
 const overlayActionItems = Object.freeze([
-  Object.freeze({ label: 'Observe / 观察', value: 'observe' }),
+  Object.freeze({ label: 'Observe / 观察', value: 'observe', selected: true }),
   Object.freeze({ label: 'Disabled / 已禁用', value: 'disabled', disabled: true })
 ]);
 

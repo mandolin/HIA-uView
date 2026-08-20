@@ -228,9 +228,10 @@ const maskProps: UMaskProps = { clickable: true, layer: 1000, opacity: 0.56, sho
 const transitionProps: UTransitionProps = { duration: 180, mode: 'slide-up', visible: true };
 const actionSheetItems: ReadonlyArray<string | UActionSheetItem> = [
   'Default action',
-  { disabled: false, label: 'Local action', value: { id: 'caller-owned' } }
+  { disabled: false, label: 'Local action', selected: true, value: { id: 'caller-owned' } },
+  { label: 'Explicit undefined', selected: false, value: undefined }
 ];
-const actionSheetProps: UActionSheetProps = { cancelText: 'Cancel', items: actionSheetItems, maskClosable: true, modelValue: true, title: 'Actions' };
+const actionSheetProps: UActionSheetProps = { cancelText: 'Cancel', items: actionSheetItems, maskClosable: true, modelValue: true, selectedText: 'Current', title: 'Actions' };
 const actionSheetSelection: UActionSheetSelectDetail = { index: 1, value: { id: 'caller-owned' } };
 const navbarProps: UNavbarProps = { backText: 'Back', disabled: false, isBack: true, rightText: 'Done', title: 'Local page', visible: true };
 const tabbarProps: UTabbarProps = { items: tabItems, list: [{ label: 'Fallback', value: 'fallback' }], modelValue: 0, show: true };
@@ -772,6 +773,15 @@ const invalidNoticeTone: UNoticeBarProps = {
 popupRef.$emit('close', localClickEvent, 'outside');
 // @ts-expect-error <lang><zh-CN>action-sheet select 需要结构化 value/index，不接受裸索引。</zh-CN><en>Action-sheet selection requires structured value/index and does not accept a bare index.</en></lang>
 actionSheetRef.$emit('select', 1);
+const invalidActionSheetItem: UActionSheetItem = {
+  label: 'Invalid selected',
+  // @ts-expect-error <lang><zh-CN>selected 必须是 Boolean data state，不能使用字符串模拟。</zh-CN><en>Selected must be Boolean data state and cannot be imitated by a string.</en></lang>
+  selected: 'true'
+};
+const invalidActionSheetProps: UActionSheetProps = {
+  // @ts-expect-error <lang><zh-CN>selectedText 只接受调用方字符串文案，不能接受数值状态码。</zh-CN><en>SelectedText accepts caller string copy only and rejects numeric status codes.</en></lang>
+  selectedText: 1
+};
 // @ts-expect-error <lang><zh-CN>modal service confirm metadata 必须包含数值 requestId。</zh-CN><en>Modal service-confirm metadata must include a numeric request ID.</en></lang>
 modalRef.$emit('confirm', localClickEvent, { source: 'service' });
 // @ts-expect-error <lang><zh-CN>toast close metadata 的 reason 只能为 control。</zh-CN><en>The reason in toast-close metadata can only be control.</en></lang>
@@ -947,6 +957,8 @@ void [
   actionSheetItems,
   actionSheetProps,
   actionSheetSelection,
+  invalidActionSheetItem,
+  invalidActionSheetProps,
   actionNarrowingUploadAdapter,
   alertTipsEmits,
   alertTipsProps,

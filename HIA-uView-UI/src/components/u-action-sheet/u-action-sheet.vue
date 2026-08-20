@@ -1,7 +1,7 @@
 <!--
 @component UActionSheet
-@lang zh-CN 提供调用方声明的有限 action 列表、default slot、受控 modelValue 与有序 select/click/close intent/component-ref close；不执行命令、导航、权限或异步 provider。
-@lang en Provides a caller-declared finite action list, default slot, controlled modelValue, and ordered select/click/close intent/component-ref close; it executes no command, navigation, authorization, or async provider.
+@lang zh-CN 提供调用方声明的有限 action 列表、首个受控 selected 投影、default slot、受控 modelValue 与有序 select/click/close intent/component-ref close；不执行命令、导航、权限或异步 provider。
+@lang en Provides a caller-declared finite action list, first controlled selected projection, default slot, controlled modelValue, and ordered select/click/close intent/component-ref close; it executes no command, navigation, authorization, or async provider.
 -->
 <template>
   <!--
@@ -13,21 +13,33 @@
     <view class="u-action-sheet__mask" @click="handleMaskClick" />
     <view class="u-action-sheet__panel">
       <text v-if="title" class="u-action-sheet__title">{{ title }}</text>
-      <view class="u-action-sheet__content"><slot /></view>
       <!--
-      @lang zh-CN 每个条目同时保留原生 disabled attribute 与显式状态类，兼顾 control 语义及不支持 attribute selector 的小程序样式编译器。
-      @lang en Every item retains both the native disabled attribute and an explicit state class, preserving control semantics and compatibility with Mini Program style compilers that reject attribute selectors.
-      <lang><zh-CN>状态类只镜像规范化后的 Boolean guard，不改变条目排序、选择事件或关闭行为。</zh-CN><en>The state class only mirrors the normalized Boolean guard and changes no item order, selection event, or close behavior.</en></lang>
+      @lang zh-CN 可滚动选项区同时承载调用方 slot 与有限 item；title、cancel 和底部安全区不随长列表滚动。
+      @lang en The scrollable options region contains both the caller slot and finite items; the title, cancel control, and bottom safe area remain outside long-list scrolling.
+      <lang><zh-CN>滚动只解决有限列表在较矮视口中的呈现，不请求远端数据、虚拟化记录或解释 item 值。</zh-CN><en>Scrolling only presents a finite list in shorter viewports and neither requests remote data, virtualizes records, nor interprets item values.</en></lang>
       -->
-      <button
-        v-for="(item, index) in safeItems"
-        :key="item.key"
-        class="u-action-sheet__item"
-        :class="{ 'u-action-sheet__item--disabled': item.disabled }"
-        type="button"
-        :disabled="item.disabled"
-        @click="handleSelect(item, index)"
-      >{{ item.label }}</button>
+      <scroll-view class="u-action-sheet__options" scroll-y>
+        <view class="u-action-sheet__content"><slot /></view>
+        <!--
+        @lang zh-CN 每个条目保留原生 disabled、合法 button aria-pressed 与显式状态类；只有规范化后的首个 selected 条目呈现当前态。
+        @lang en Every item retains native disabled, legal button aria-pressed, and explicit state classes; only the first normalized selected item presents the current state.
+        <lang><zh-CN>独立勾选与 selectedText 不进入业务 label 或 select payload；选中呈现不改变条目顺序、透明 value、事件顺序或关闭行为。</zh-CN><en>The independent check and selectedText enter neither the business label nor the select payload; selected presentation changes no item order, transparent value, event order, or close behavior.</en></lang>
+        -->
+        <button
+          v-for="(item, index) in safeItems"
+          :key="item.key"
+          class="u-action-sheet__item"
+          :class="{ 'u-action-sheet__item--disabled': item.disabled, 'u-action-sheet__item--selected': item.selected }"
+          type="button"
+          :disabled="item.disabled"
+          :aria-pressed="item.selected"
+          @click="handleSelect(item, index)"
+        >
+          <text v-if="item.selected" class="u-action-sheet__selected-check" aria-hidden="true">✓</text>
+          <text class="u-action-sheet__label">{{ item.label }}</text>
+          <text v-if="item.selected && selectedText" class="u-action-sheet__selected-text">{{ selectedText }}</text>
+        </button>
+      </scroll-view>
       <button v-if="cancelText" class="u-action-sheet__cancel" type="button" @click="handleCancel">{{ cancelText }}</button>
     </view>
   </view>
@@ -39,7 +51,7 @@ import { computed } from 'vue';
 // <lang><zh-CN>action sheet 只消费声明式 items，不读取菜单服务或执行 item 语义。</zh-CN><en>The action sheet consumes declarative items only and reads no menu service or executes item meaning.</en></lang>
 defineOptions({ name: 'u-action-sheet' });
 
-// <lang><zh-CN>输入仅包含调用方拥有的受控可见性、有限文字列表和显式遮罩关闭许可。</zh-CN><en>Inputs contain only caller-owned controlled visibility, a finite text list, and explicit mask-close permission.</en></lang>
+// <lang><zh-CN>输入仅包含调用方拥有的受控可见性、有限文字列表、当前项状态文案和显式遮罩关闭许可。</zh-CN><en>Inputs contain only caller-owned controlled visibility, a finite text list, current-item status copy, and explicit mask-close permission.</en></lang>
 const props = defineProps({
   // <lang><zh-CN>已有 HIA visible 若明确提供则优先；undefined 才允许回退 modelValue。</zh-CN><en>The existing HIA visible takes precedence when explicitly supplied; only undefined permits falling back to modelValue.</en></lang>
   visible: { type: Boolean, default: undefined },
@@ -51,6 +63,8 @@ const props = defineProps({
   items: { type: Array, default: () => [] },
   // <lang><zh-CN>非空 cancelText 才创建有名称的取消 control，组件不制造默认文案。</zh-CN><en>Only nonempty cancelText creates a named cancel control, and the component invents no default copy.</en></lang>
   cancelText: { type: String, default: '' },
+  // <lang><zh-CN>selectedText 是首个 selected item 旁的调用方状态文案；空值仍保留独立勾选和 aria-pressed，不生成默认语言。</zh-CN><en>SelectedText is caller status copy beside the first selected item; an empty value retains the independent check and aria-pressed without inventing default language.</en></lang>
+  selectedText: { type: String, default: '' },
   // <lang><zh-CN>maskClosable 仅授权 mask 产生受控关闭意图，不自动隐藏 sheet。</zh-CN><en>MaskClosable only authorizes the mask to produce controlled close intent and never hides the sheet automatically.</en></lang>
   maskClosable: { type: Boolean, default: false }
 });
@@ -66,13 +80,13 @@ const isVisible = computed(() => props.visible ?? props.modelValue);
  * @lang en Constrains one declarative action-sheet item to a plain-data view; it reads only own data descriptors and preserves explicit `null`/object values without coercing or executing them.
  * @param {unknown} item <lang><zh-CN>调用方数组条目。</zh-CN><en>Caller array item.</en></lang>
  * @param {number} index <lang><zh-CN>原数组中的稳定索引。</zh-CN><en>Stable index in the original array.</en></lang>
- * @returns {Readonly<{key:string,label:string,value:unknown,disabled:boolean}>|null} <lang><zh-CN>有限条目或不可安全呈现标记。</zh-CN><en>Finite item or an unsafe-to-render marker.</en></lang>
+ * @returns {Readonly<{key:string,label:string,value:unknown,disabled:boolean,selected:boolean}>|null} <lang><zh-CN>有限条目或不可安全呈现标记。</zh-CN><en>Finite item or an unsafe-to-render marker.</en></lang>
  */
 function normalizeActionSheetItem(item, index) {
   // <lang><zh-CN>字符串是唯一 primitive 简写，文字和值保持同一 primitive。</zh-CN><en>A string is the sole primitive shorthand, retaining the same primitive as copy and value.</en></lang>
   if (typeof item === 'string') {
     return item.length > 0
-      ? Object.freeze({ key: String(index), label: item, value: item, disabled: false })
+      ? Object.freeze({ key: String(index), label: item, value: item, disabled: false, selected: false })
       : null;
   }
 
@@ -82,12 +96,13 @@ function normalizeActionSheetItem(item, index) {
   }
 
   try {
-    // <lang><zh-CN>一次取得自有 descriptor，避免 label/text/value/disabled getter 或 Proxy trap 在模板求值中执行。</zh-CN><en>Obtains own descriptors once so label/text/value/disabled getters or Proxy traps cannot execute during template evaluation.</en></lang>
+    // <lang><zh-CN>一次取得自有 descriptor，避免 label/text/value/disabled/selected getter 或 Proxy trap 在模板求值中执行。</zh-CN><en>Obtains own descriptors once so label/text/value/disabled/selected getters or Proxy traps cannot execute during template evaluation.</en></lang>
     const descriptors = Object.getOwnPropertyDescriptors(item);
     const labelDescriptor = descriptors.label;
     const textDescriptor = descriptors.text;
     const valueDescriptor = descriptors.value;
     const disabledDescriptor = descriptors.disabled;
+    const selectedDescriptor = descriptors.selected;
 
     // <lang><zh-CN>只接受 string data label，并在缺失时读取同为 string data 的 text alias。</zh-CN><en>Accepts only a string data label and reads the string data text alias only when label is absent.</en></lang>
     const label = labelDescriptor && Object.prototype.hasOwnProperty.call(labelDescriptor, 'value') && typeof labelDescriptor.value === 'string'
@@ -104,18 +119,42 @@ function normalizeActionSheetItem(item, index) {
     // <lang><zh-CN>disabled 只接受显式 Boolean true；accessor 与其他类型不会被执行或 coercion。</zh-CN><en>Disabled accepts only explicit Boolean true; accessors and other types are neither executed nor coerced.</en></lang>
     const disabled = Boolean(disabledDescriptor && Object.prototype.hasOwnProperty.call(disabledDescriptor, 'value') && disabledDescriptor.value === true);
 
+    // <lang><zh-CN>selected 同样只接受显式 Boolean true；多项冲突会在列表投影层确定性收束为首项。</zh-CN><en>Selected likewise accepts only explicit Boolean true; the list projection deterministically constrains conflicting claims to the first item.</en></lang>
+    const selected = Boolean(selectedDescriptor && Object.prototype.hasOwnProperty.call(selectedDescriptor, 'value') && selectedDescriptor.value === true);
+
     // <lang><zh-CN>渲染 key 只使用内部索引，绝不对透明 value 调用 String/toString。</zh-CN><en>The render key uses only the internal index and never calls String/toString on the transparent value.</en></lang>
-    return Object.freeze({ key: String(index), label, value, disabled });
+    return Object.freeze({ key: String(index), label, value, disabled, selected });
   } catch {
     // <lang><zh-CN>Descriptor/Proxy 异常收束为忽略该项，不泄漏异常或执行替代逻辑。</zh-CN><en>A descriptor/Proxy exception collapses to ignoring the item without leaking the exception or executing fallback logic.</en></lang>
     return null;
   }
 }
 
-// <lang><zh-CN>items 规范化只保留可安全呈现的稳定条目；过滤不改变原数组或透明 value。</zh-CN><en>Item normalization retains only safely renderable stable items; filtering changes neither the original array nor transparent values.</en></lang>
-const safeItems = computed(() => props.items
-  .map((item, index) => normalizeActionSheetItem(item, index))
-  .filter((item) => item !== null));
+// <lang><zh-CN>items 规范化只保留可安全呈现的稳定条目，并把多个 selected 声明收束为首个；过滤和投影都不改变原数组或透明 value。</zh-CN><en>Item normalization retains only safely renderable stable items and constrains multiple selected declarations to the first; filtering and projection change neither the original array nor transparent values.</en></lang>
+const safeItems = computed(() => {
+  // <lang><zh-CN>先完成单项 descriptor 审计；不可读条目不占用“首个 selected”资格或可见索引。</zh-CN><en>Audits individual descriptors first; unreadable items consume neither first-selected eligibility nor a visible index.</en></lang>
+  const normalizedItems = props.items
+    .map((item, index) => normalizeActionSheetItem(item, index))
+    .filter((item) => item !== null);
+
+  // <lang><zh-CN>局部标记只记录本次纯投影是否已接受一个 selected，不写回 caller item。</zh-CN><en>The local marker records only whether this pure projection has accepted one selected item and never writes to a caller item.</en></lang>
+  let hasSelectedItem = false;
+
+  // <lang><zh-CN>输出数组包含新的冻结视图，确保后续重复 selected 只降为普通可交互项。</zh-CN><en>The output array contains new frozen views so every later duplicate selected claim becomes an ordinary interactive item.</en></lang>
+  const projectedItems = normalizedItems.map((item) => {
+    // <lang><zh-CN>只有当前声明为 true 且尚无前项取得资格时才保留 selected。</zh-CN><en>Selected is retained only when the current claim is true and no earlier item has taken eligibility.</en></lang>
+    const selected = item.selected && !hasSelectedItem;
+
+    // <lang><zh-CN>一旦接受首项便封闭本次列表的其余 selected 声明；false 路径保持标记不变。</zh-CN><en>Accepting the first item closes the remaining selected claims for this list; the false path leaves the marker unchanged.</en></lang>
+    if (selected) hasSelectedItem = true;
+
+    // <lang><zh-CN>展开原规范化视图只复制安全 data property；透明 value identity 与显式 undefined 均保持不变。</zh-CN><en>Spreading the normalized view copies only safe data properties; transparent value identity and explicit undefined both remain unchanged.</en></lang>
+    return Object.freeze({ ...item, selected });
+  });
+
+  // <lang><zh-CN>冻结有限数组，防止模板或测试误把内部投影当成可写 store。</zh-CN><en>Freezes the finite array so neither the template nor tests can mistake the internal projection for a writable store.</en></lang>
+  return Object.freeze(projectedItems);
+});
 
 /**
  * @lang zh-CN 对当前可见 sheet 先请求 modelValue=false，再保留 raw event 首参并报告有限 close reason；不改写任何 prop。

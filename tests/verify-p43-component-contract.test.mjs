@@ -81,10 +81,22 @@ test('keeps P43 source inside overlay and navigation boundaries', async () => {
     assert.match(componentSource, /<lang><zh-CN>/, p43ComponentRecords[index].name);
   }
   assert.match(componentSources[0], /safeItems/);
-  // <lang><zh-CN>Action sheet 禁用呈现必须由显式状态类承担，同时继续保留模板原生 disabled；CSS 不得恢复微信 WXSS 不支持的 attribute selector。</zh-CN><en>Action-sheet disabled presentation must use an explicit state class while the template retains native disabled; CSS must not restore the attribute selector rejected by WeChat WXSS.</en></lang>
-  assert.match(componentSources[0], /:class="\{ 'u-action-sheet__item--disabled': item\.disabled \}"/u);
+  // <lang><zh-CN>Action sheet 的禁用/首项 selected 必须使用显式状态类，同时保留原生 disabled 和 button aria-pressed；不得退回 aria-selected 或微信 WXSS 不支持的 attribute selector。</zh-CN><en>Action-sheet disabled/first-selected presentation must use explicit state classes while retaining native disabled and button aria-pressed; it must regress to neither aria-selected nor the attribute selector rejected by WeChat WXSS.</en></lang>
+  assert.match(componentSources[0], /'u-action-sheet__item--disabled': item\.disabled/u);
+  assert.match(componentSources[0], /'u-action-sheet__item--selected': item\.selected/u);
   assert.match(componentSources[0], /:disabled="item\.disabled"/u);
+  assert.match(componentSources[0], /:aria-pressed="item\.selected"/u);
+  assert.doesNotMatch(componentSources[0], /aria-selected/u);
+  assert.match(componentSources[0], /class="u-action-sheet__selected-check" aria-hidden="true">✓<\/text>/u);
+  assert.match(componentSources[0], /item\.selected && selectedText/u);
+  assert.match(componentSources[0], /<scroll-view class="u-action-sheet__options" scroll-y>/u);
   assert.match(styleSources[0], /\.u-action-sheet__item--disabled\s*\{/u);
+  assert.match(styleSources[0], /\.u-action-sheet__item--selected\s*\{/u);
+  assert.match(styleSources[0], /\.u-action-sheet__selected-check\s*\{/u);
+  assert.match(styleSources[0], /\.u-action-sheet__selected-text\s*\{/u);
+  assert.match(styleSources[0], /font-family:\s*inherit/u);
+  assert.match(styleSources[0], /env\(safe-area-inset-bottom\)/u);
+  assert.match(styleSources[0], /overflow-y:\s*auto/u);
   assert.doesNotMatch(styleSources[0], /\.u-action-sheet__item\s*\[disabled\]/u);
   assert.match(componentSources[1], /u-loading-page__indicator/);
   assert.match(componentSources[2], /Array\.from/);
@@ -107,4 +119,9 @@ test('defines P43 token families in the default theme', async () => {
   for (const componentRecord of p43ComponentRecords) {
     assert.match(themeCss, new RegExp(`${componentRecord.token}[^:]*:`));
   }
+  // <lang><zh-CN>Action sheet 使用 modal 同类层但不得越过更高 feedback/portal scale；内建 option token 与独立 UActionSheetItem token 必须保持不同命名。</zh-CN><en>The action sheet uses the modal-class layer without crossing the higher feedback/portal scale; built-in option tokens must remain distinctly named from standalone UActionSheetItem tokens.</en></lang>
+  assert.match(themeCss, /--u-comp-action-sheet-z-index:\s*1000;/u);
+  assert.match(themeCss, /--u-comp-action-sheet-option-min-height:\s*52px;/u);
+  assert.match(themeCss, /--u-comp-action-sheet-max-height:\s*75vh;/u);
+  assert.match(themeCss, /--u-comp-action-sheet-selected-surface:/u);
 });

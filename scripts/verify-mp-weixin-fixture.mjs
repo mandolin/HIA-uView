@@ -343,7 +343,7 @@ async function verifyMpWeixinFixture() {
     assert.equal(fieldConfiguration.usingComponents?.['u-input'], '../u-input/u-input', 'Generated UField must statically compose its built-in UInput.');
     assert.equal(formItemConfiguration.usingComponents?.['u-validation-message'], '../u-validation-message/u-validation-message', 'Generated UFormItem must statically compose UValidationMessage.');
 
-    // <lang><zh-CN>同时读取代表性默认回退样式、USearch 装饰及 UActionSheet 禁用态的 leaf WXML/WXSS；这些文本只来自本轮受控临时产物。</zh-CN><en>Reads representative default-fallback styles plus USearch decoration and UActionSheet disabled-state leaf WXML/WXSS together; these texts come only from this run's controlled temporary output.</en></lang>
+    // <lang><zh-CN>同时读取代表性默认回退样式、USearch 装饰及 UActionSheet 禁用/首项 selected/滚动安全区的 leaf WXML/WXSS；这些文本只来自本轮受控临时产物。</zh-CN><en>Reads representative default-fallback styles plus USearch decoration and UActionSheet disabled/first-selected/scroll-safe-area leaf WXML/WXSS together; these texts come only from this run's controlled temporary output.</en></lang>
     const [buttonStyles, tagStyles, searchMarkup, searchStyles, actionSheetMarkup, actionSheetStyles] = await Promise.all([
       readFile(resolve(outputDirectory, 'src/components/u-button/u-button.wxss'), 'utf8'),
       readFile(resolve(outputDirectory, 'src/components/u-tag/u-tag.wxss'), 'utf8'),
@@ -364,10 +364,25 @@ async function verifyMpWeixinFixture() {
     assert.match(searchStyles, /\.u-search__leading-icon-ring\{/u, 'Generated USearch WXSS must retain the ring geometry rule.');
     assert.match(searchStyles, /\.u-search__leading-icon-handle\{/u, 'Generated USearch WXSS must retain the handle geometry rule.');
 
-    // <lang><zh-CN>UActionSheet leaf 模板必须同时保留原生 disabled 绑定和显式状态类；WXSS 只能使用状态类，不得回退到小程序编译器不接受的 `[disabled]` selector。</zh-CN><en>The UActionSheet leaf template must retain both the native disabled binding and explicit state class; WXSS may use only the state class and must not regress to the Mini Program compiler-rejected `[disabled]` selector.</en></lang>
+    // <lang><zh-CN>UActionSheet leaf 必须保留原生 disabled、button aria-pressed、独立 selected 内容与 scroll-view；WXSS 锁定 modal 层、顶部圆角、有限滚动、安全区、字体继承和状态类，且不得回退 `[disabled]` selector。</zh-CN><en>The UActionSheet leaf must retain native disabled, button aria-pressed, independent selected content, and scroll-view; WXSS locks the modal layer, top rounding, bounded scrolling, safe area, font inheritance, and state classes without regressing to a `[disabled]` selector.</en></lang>
     assert.match(actionSheetMarkup, /u-action-sheet__item--disabled/u, 'Generated UActionSheet WXML must retain the explicit disabled-state class.');
+    assert.match(actionSheetMarkup, /u-action-sheet__item--selected/u, 'Generated UActionSheet WXML must retain the explicit selected-state class.');
     assert.match(actionSheetMarkup, /disabled="\{\{item\.[A-Za-z]+\}\}"/u, 'Generated UActionSheet WXML must retain the native disabled binding.');
+    assert.match(actionSheetMarkup, /aria-pressed="\{\{item\.[A-Za-z]+\}\}"/u, 'Generated UActionSheet WXML must retain button aria-pressed binding.');
+    assert.doesNotMatch(actionSheetMarkup, /aria-selected/u, 'Generated UActionSheet WXML must not apply aria-selected to native buttons.');
+    assert.match(actionSheetMarkup, /u-action-sheet__selected-check/u, 'Generated UActionSheet WXML must retain the independent selected check.');
+    assert.match(actionSheetMarkup, /u-action-sheet__selected-text/u, 'Generated UActionSheet WXML must retain caller-provided selected-state copy.');
+    assert.match(actionSheetMarkup, /<scroll-view[^>]*class="u-action-sheet__options"[^>]*scroll-y/u, 'Generated UActionSheet WXML must retain the finite vertical scroll region.');
     assert.match(actionSheetStyles, /\.u-action-sheet__item--disabled\{/u, 'Generated UActionSheet WXSS must retain the explicit disabled-state class rule.');
+    assert.match(actionSheetStyles, /\.u-action-sheet__item--selected\{/u, 'Generated UActionSheet WXSS must retain the explicit selected-state class rule.');
+    assert.match(actionSheetStyles, /\.u-action-sheet\{[^}]*z-index:1000/u, 'Generated UActionSheet WXSS must place the modal sheet above persistent local tabs.');
+    // <lang><zh-CN>结构规则与 MP 浅色字面值覆盖会被编译为两条同名规则，因此分别校验裁剪能力与主题尺寸，避免误把规则合并顺序当成产品契约。</zh-CN><en>The structural rule and MP default-light literal override compile into two rules with the same selector, so clipping and theme dimensions are asserted separately instead of treating rule-merging order as a product contract.</en></lang>
+    assert.match(actionSheetStyles, /\.u-action-sheet__panel\{[^}]*overflow:hidden/u, 'Generated UActionSheet WXSS must retain bounded panel clipping.');
+    assert.match(actionSheetStyles, /\.u-action-sheet__panel\{[^}]*border-radius:20px 20px 0 0[^}]*max-height:75vh/u, 'Generated UActionSheet WXSS must retain top rounding and the bounded panel height.');
+    assert.match(actionSheetStyles, /\.u-action-sheet__panel\{[^}]*padding-bottom:calc\(12px \+ env\(safe-area-inset-bottom\)\)/u, 'Generated UActionSheet WXSS must retain CSS safe-area bottom padding.');
+    assert.match(actionSheetStyles, /\.u-action-sheet__options\{[^}]*overflow-y:auto/u, 'Generated UActionSheet WXSS must keep the option region scrollable.');
+    assert.match(actionSheetStyles, /\.u-action-sheet__item,\.u-action-sheet__cancel\{[^}]*font-family:inherit/u, 'Generated UActionSheet WXSS must preserve caller font inheritance on native buttons.');
+    assert.match(actionSheetStyles, /\.u-action-sheet__item,\.u-action-sheet__cancel\{[^}]*min-height:52px/u, 'Generated UActionSheet WXSS must retain the 52px minimum option and cancel height.');
     assert.doesNotMatch(actionSheetStyles, /\[disabled\]/u, 'Generated UActionSheet WXSS must not contain a disabled attribute selector.');
 
     // <lang><zh-CN>应用 WXSS 仍需包含完整主题与全局组件规则；组件的独立 WXSS 与此共同构成小程序端可用的样式证据。</zh-CN><en>The app WXSS must still contain the complete theme and global component rules; its combination with component-local WXSS forms the usable Mini Program style evidence.</en></lang>
