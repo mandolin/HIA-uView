@@ -13,3 +13,7 @@ An eligible item emits `select({ value, index })` and then migration `click(inde
 The component creates no portal, router, permission check, async provider, command executor, or global service. The root namespace is `u-action-sheet` and consumes `--u-comp-action-sheet-*`.
 
 组件不创建 portal、router、权限判断、异步 provider、命令执行器或全局服务。根命名空间为 `u-action-sheet`，消费 `--u-comp-action-sheet-*`。
+
+Disabled items retain the native `disabled` attribute and mirror the same normalized Boolean state through an internal `u-action-sheet__item--disabled` class. The class replaces an attribute-selector styling dependency for Mini Program compiler compatibility; it adds no public prop, event, or behavioral difference.
+
+禁用条目保留原生 `disabled` attribute，并通过内部 `u-action-sheet__item--disabled` 类镜像同一规范化 Boolean 状态。该类替代 attribute selector 样式依赖以兼容小程序编译器；它不增加公开 prop、事件或行为差异。

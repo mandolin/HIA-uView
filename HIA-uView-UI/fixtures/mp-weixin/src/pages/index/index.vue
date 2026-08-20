@@ -146,7 +146,7 @@
       <!--
       @lang zh-CN 本段使用独立中性模型真实组合 P66 六个表单/输入组件，并通过组件 ref 提供 validate/clear/reset 的本地可见观察；它不复用目录 query 或任何业务字段。
       @lang en This section uses an independent neutral model to compose all six P66 form/input components and provides local visible validate/clear/reset observation through a component ref; it reuses neither the catalog query nor any business field.
-      <lang><zh-CN>UField 采用无 default slot 的内建 UInput 模式，另一个 UFormItem 直接组合 UInput，以同时证明两条消费路径。</zh-CN><en>UField uses its built-in UInput mode without a default slot, while another UFormItem composes UInput directly, proving both consumption paths.</en></lang>
+      <lang><zh-CN>UField 采用无 default slot 的内建 UInput 模式，另一个 UFormItem 直接组合 UInput；USearch 显式选入受限 `search` 装饰，为小程序编译产物提供真实消费证据。</zh-CN><en>UField uses its built-in UInput mode without a default slot while another UFormItem composes UInput directly; USearch explicitly opts into the bounded `search` decoration to provide actual Mini Program compiler-consumption evidence.</en></lang>
       -->
       <view class="fixture-p66-form" data-smoke="p66-form-composition">
         <text class="fixture-p66-form__title">本地表单组合 / Local form composition</text>
@@ -178,6 +178,7 @@
           <u-form-item prop="searchText" label="查询文字 / Search text">
             <u-search
               :model-value="fixtureP66FormModel.searchText"
+              search-icon="search"
               placeholder="输入本地查询 / Enter local query"
               :show-action="true"
               action-text="观察 / Observe"

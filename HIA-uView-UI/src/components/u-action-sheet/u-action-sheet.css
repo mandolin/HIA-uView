@@ -8,7 +8,8 @@
 .u-action-sheet__panel { background: var(--u-comp-action-sheet-surface); bottom: 0; box-sizing: border-box; left: 0; padding: var(--u-comp-action-sheet-padding); position: absolute; right: 0; }
 .u-action-sheet__title { color: var(--u-comp-action-sheet-title-foreground); display: block; font-size: var(--u-comp-action-sheet-title-size); padding: var(--u-comp-action-sheet-title-padding); text-align: center; }
 .u-action-sheet__item, .u-action-sheet__cancel { background: var(--u-comp-action-sheet-item-surface); border: 0; border-bottom: 1px solid var(--u-comp-action-sheet-divider); border-radius: 0; color: var(--u-comp-action-sheet-item-foreground); display: block; font-size: var(--u-comp-action-sheet-item-size); margin: 0; min-height: var(--u-comp-action-sheet-item-min-height); padding: var(--u-comp-action-sheet-item-padding); width: 100%; }
-.u-action-sheet__item[disabled] { color: var(--u-comp-action-sheet-disabled-foreground); }
+/* <lang><zh-CN>显式状态类与原生 disabled attribute 同步，避免生成微信 WXSS 不支持的 attribute selector。</zh-CN><en>The explicit state class stays synchronized with the native disabled attribute, avoiding an attribute selector unsupported by WeChat WXSS.</en></lang> */
+.u-action-sheet__item--disabled { color: var(--u-comp-action-sheet-disabled-foreground); }
 .u-action-sheet__cancel { background: var(--u-comp-action-sheet-cancel-surface); margin-top: var(--u-comp-action-sheet-cancel-gap); }
 
 /* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
@@ -42,7 +43,7 @@
   padding: 12px;
 }
 
-.u-action-sheet__item[disabled] {
+.u-action-sheet__item--disabled {
   color: #27364a;
 }
 

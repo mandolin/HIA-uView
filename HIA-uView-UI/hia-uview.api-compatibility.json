@@ -47875,12 +47875,31 @@
               }
             },
             "hia": {
-              "targets": []
+              "targets": [
+                {
+                  "name": "searchIcon",
+                  "typeKinds": [
+                    "String"
+                  ],
+                  "typeOrder": [
+                    "String"
+                  ],
+                  "default": {
+                    "kind": "literal",
+                    "value": ""
+                  },
+                  "required": false,
+                  "validator": {
+                    "kind": "absent"
+                  }
+                }
+              ]
             },
             "priority": "P1",
             "migration": {
-              "disposition": "unsupported",
-              "reasonCode": "HIA_API_NOT_DELIVERED"
+              "disposition": "mapped",
+              "reasonCode": "SAME_NAME_DIFFERENT_SHAPE",
+              "target": "searchIcon"
             }
           },
           {
@@ -48424,8 +48443,8 @@
         "reasonCode": "API_SURFACE_HAS_UNSUPPORTED_MEMBERS",
         "counts": {
           "compatible": 0,
-          "mapped": 14,
-          "unsupported": 19,
+          "mapped": 15,
+          "unsupported": 18,
           "unresolved": 0
         }
       },

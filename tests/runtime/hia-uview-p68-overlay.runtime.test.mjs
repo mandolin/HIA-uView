@@ -195,6 +195,11 @@ describe('UActionSheet P68 overlay runtime behavior', () => {
     // <lang><zh-CN>过滤后只渲染三个有标签 item；首项依次报告结构化 select 与迁移 click(0)。</zh-CN><en>After filtering, only three labeled items render; the first reports structured select then migration click(0).</en></lang>
     const itemControls = sheet.findAll('button.u-action-sheet__item');
     expect(itemControls).toHaveLength(3);
+    // <lang><zh-CN>启用项不携带状态类或原生禁用属性；禁用项必须同时携带两者，使语义 guard 与 WXSS 类选择器保持一致。</zh-CN><en>The enabled item carries neither the state class nor native disabled attribute; the disabled item must carry both so the semantic guard and WXSS class selector remain aligned.</en></lang>
+    expect(itemControls[0].classes()).not.toContain('u-action-sheet__item--disabled');
+    expect(itemControls[0].attributes()).not.toHaveProperty('disabled');
+    expect(itemControls[1].classes()).toContain('u-action-sheet__item--disabled');
+    expect(itemControls[1].attributes()).toHaveProperty('disabled');
     expect(sheet.text()).toContain('Caller sheet slot');
     expect(sheet.text()).not.toContain('hidden');
     await itemControls[0].trigger('click');

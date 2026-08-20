@@ -1,7 +1,7 @@
 /**
  * @component USearch
- * @lang zh-CN USearch 的局部组合样式；不加载图标、请求或结果服务。
- * @lang en Local composition styles for USearch; they load no icon, request, or result service.
+ * @lang zh-CN USearch 的局部组合与纯 CSS 搜索装饰样式；不加载字体图标、图片、请求或结果服务。
+ * @lang en Local composition and pure-CSS search-decoration styles for USearch; they load no font icon, image, request, or result service.
  */
 
 /* <lang><zh-CN>搜索行保持输入、清除和 action 的局部排列。</zh-CN><en>The search row keeps input, clear, and action in local layout.</en></lang> */
@@ -16,6 +16,41 @@
   min-height: var(--u-comp-search-min-height);
   padding: var(--u-comp-search-padding);
   width: 100%;
+}
+
+/* <lang><zh-CN>装饰容器使用现有前景 token，并退出指针命中和 flex 收缩；它不成为 control，模板另以 aria-hidden 请求从无障碍树排除。</zh-CN><en>The decoration container uses the existing foreground token and leaves pointer targeting and flex shrinking; it does not become a control, while the template separately declares aria-hidden to request accessibility-tree exclusion.</en></lang> */
+.u-search__leading-icon {
+  color: var(--u-comp-search-foreground);
+  flex: none;
+  height: 18px;
+  pointer-events: none;
+  position: relative;
+  width: 18px;
+}
+
+/* <lang><zh-CN>放大镜圆环由边框构成，避免引入字体、SVG、位图或平台 icon registry。</zh-CN><en>The magnifier ring is formed by a border, avoiding fonts, SVG, bitmaps, or a platform icon registry.</en></lang> */
+.u-search__leading-icon-ring {
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  box-sizing: border-box;
+  height: 11px;
+  left: 1px;
+  position: absolute;
+  top: 1px;
+  width: 11px;
+}
+
+/* <lang><zh-CN>放大镜手柄使用同一 currentColor，并保持整数像素端点以降低小程序模拟器中的模糊。</zh-CN><en>The magnifier handle uses the same currentColor and integer-pixel endpoints to reduce blur in the Mini Program simulator.</en></lang> */
+.u-search__leading-icon-handle {
+  background: currentColor;
+  border-radius: 1px;
+  height: 2px;
+  left: 10px;
+  position: absolute;
+  top: 11px;
+  transform: rotate(45deg);
+  transform-origin: left center;
+  width: 7px;
 }
 
 /* <lang><zh-CN>输入消费中性 token，搜索语义通过外部 event 而不是内部请求表达。</zh-CN><en>The input consumes neutral tokens; search meaning is expressed through external events rather than an internal request.</en></lang> */
@@ -60,6 +95,10 @@
   gap: 8px;
   min-height: 44px;
   padding: 8px 12px;
+}
+
+.u-search__leading-icon {
+  color: #001b2e;
 }
 
 .u-search__input {

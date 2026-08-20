@@ -342,8 +342,8 @@ test('keeps P1 promotions structural and preserves deterministic matrix totals',
   assert.equal(PROMOTED_P1_IDS.length, 31);
   assert.equal(p1Entries.length, 536);
   assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'compatible').length, 4);
-  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'mapped').length, 167);
-  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'unsupported').length, 365);
+  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'mapped').length, 168);
+  assert.equal(p1Entries.filter(([, item]) => item.migration.disposition === 'unsupported').length, 364);
   assert.equal(controlledP1Entries.length, 108);
   assert.equal(controlledP1Entries.filter(([, item]) => item.migration.disposition === 'mapped').length, 54);
   assert.equal(controlledP1Entries.filter(([, item]) => item.migration.disposition === 'unsupported').length, 54);
@@ -366,8 +366,8 @@ test('keeps P1 promotions structural and preserves deterministic matrix totals',
 });
 
 /**
- * @lang zh-CN 单独披露两个 USelect P2 映射，并锁定完整矩阵的 47/339/1354 与 P0 127/0/0 证据事实；后续展示/媒体/列表映射不改变本批选择组件断言。
- * @lang en Separately discloses the two USelect P2 mappings and locks whole-matrix 47/339/1354 plus P0 127/0/0 evidence facts; later display/media/list mappings do not change this selection-component batch assertion.
+ * @lang zh-CN 单独披露两个 USelect P2 映射，并锁定完整矩阵的 47/340/1353 与 P0 127/0/0 证据事实；后续展示/媒体/列表/搜索装饰映射不改变本批选择组件断言。
+ * @lang en Separately discloses the two USelect P2 mappings and locks whole-matrix 47/340/1353 plus P0 127/0/0 evidence facts; later display/media/list/search-decoration mappings do not change this selection-component batch assertion.
  */
 test('isolates the two select P2 mappings from P0 and P1 semantics', () => {
   // <lang><zh-CN>所有组件项现场按 disposition/P0 evidence 分类；service 不在复合索引中。</zh-CN><en>Classify all component items live by disposition and P0 evidence; services are absent from the composite index.</en></lang>
@@ -382,8 +382,8 @@ test('isolates the two select P2 mappings from P0 and P1 semantics', () => {
 
   assert.equal(allItems.length, 1740);
   assert.equal(allItems.filter((item) => item.migration.disposition === 'compatible').length, 47);
-  assert.equal(allItems.filter((item) => item.migration.disposition === 'mapped').length, 339);
-  assert.equal(allItems.filter((item) => item.migration.disposition === 'unsupported').length, 1354);
+  assert.equal(allItems.filter((item) => item.migration.disposition === 'mapped').length, 340);
+  assert.equal(allItems.filter((item) => item.migration.disposition === 'unsupported').length, 1353);
   assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'runtime-tested').length, 127);
   assert.equal(p0Items.filter((item) => item.semantics.evidenceLevel === 'source-reviewed').length, 0);
   assert.equal(p0Items.filter((item) => item.semantics.remainingEvidence.includes('runtime-parity')).length, 0);

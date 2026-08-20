@@ -365,8 +365,8 @@ export type UTextareaEmits = {
 };
 
 /**
- * @lang zh-CN 描述 USearch 的受控 query、调用方文字和有限 action 显示开关。
- * @lang en Describes USearch controlled query, caller copy, and finite action-visibility switches.
+ * @lang zh-CN 描述 USearch 的受控 query、调用方文字、默认关闭的前置装饰与有限 action 显示开关。
+ * @lang en Describes USearch controlled query, caller copy, the default-off leading decoration, and finite action-visibility switches.
  */
 export interface USearchProps {
   /** 中文：调用方拥有的 query 字符串。English: Caller-owned query string. */
@@ -377,6 +377,8 @@ export interface USearchProps {
   disabled?: boolean;
   /** 中文：调用方控制的聚焦开关。English: Caller-controlled focus switch. */
   focus?: boolean;
+  /** 中文：空串关闭装饰；`search` 显示固定、无事件的 CSS 放大镜。English: Empty string disables decoration; `search` shows the fixed, event-free CSS magnifier. */
+  searchIcon?: '' | 'search';
   /** 中文：是否在非空值时显示 clear control。English: Whether to show the clear control for a nonempty value. */
   showClear?: boolean;
   /** 中文：调用方本地化 clear 文字。English: Caller-localized clear copy. */

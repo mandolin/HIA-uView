@@ -14,10 +14,16 @@
     <view class="u-action-sheet__panel">
       <text v-if="title" class="u-action-sheet__title">{{ title }}</text>
       <view class="u-action-sheet__content"><slot /></view>
+      <!--
+      @lang zh-CN 每个条目同时保留原生 disabled attribute 与显式状态类，兼顾 control 语义及不支持 attribute selector 的小程序样式编译器。
+      @lang en Every item retains both the native disabled attribute and an explicit state class, preserving control semantics and compatibility with Mini Program style compilers that reject attribute selectors.
+      <lang><zh-CN>状态类只镜像规范化后的 Boolean guard，不改变条目排序、选择事件或关闭行为。</zh-CN><en>The state class only mirrors the normalized Boolean guard and changes no item order, selection event, or close behavior.</en></lang>
+      -->
       <button
         v-for="(item, index) in safeItems"
         :key="item.key"
         class="u-action-sheet__item"
+        :class="{ 'u-action-sheet__item--disabled': item.disabled }"
         type="button"
         :disabled="item.disabled"
         @click="handleSelect(item, index)"

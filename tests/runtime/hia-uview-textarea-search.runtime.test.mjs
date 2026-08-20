@@ -139,6 +139,31 @@ describe('P66 search runtime behavior', () => {
     await wrapper.get('.u-search__clear').trigger('click');
     expect(wrapper.vm.events).toEqual([]);
   });
+
+  /**
+   * @lang zh-CN 验证前置放大镜默认不存在，显式开启后仅形成声明 aria-hidden 的 CSS 几何且不产生组件事件。
+   * @lang en Verifies the leading magnifier is absent by default and, once enabled, forms only CSS geometry declaring aria-hidden without producing component events.
+   * @returns {void} <lang><zh-CN>无返回值；全部断言为同步呈现检查。</zh-CN><en>No return value; all assertions are synchronous presentation checks.</en></lang>
+   */
+  it('keeps the opt-in leading decoration presentational and inert', () => {
+    // <lang><zh-CN>默认实例锁定空串默认值，避免无意改变既有搜索框布局。</zh-CN><en>The default instance locks the empty-string default, preventing an unintended change to existing search layouts.</en></lang>
+    const defaultSearch = mount(USearch);
+    expect(defaultSearch.find('.u-search__leading-icon').exists()).toBe(false);
+
+    // <lang><zh-CN>显式实例只应增加一个隐藏装饰及其两个几何节点，不新增可聚焦 control 或 emit。</zh-CN><en>The explicit instance must add only one hidden decoration and its two geometry nodes, with no new focusable control or emission.</en></lang>
+    const decoratedSearch = mount(USearch, { props: { searchIcon: 'search' } });
+    const decoration = decoratedSearch.get('.u-search__leading-icon');
+    expect(decoration.attributes('aria-hidden')).toBe('true');
+    expect(decoration.attributes('tabindex')).toBeUndefined();
+    expect(decoration.find('.u-search__leading-icon-ring').exists()).toBe(true);
+    expect(decoration.find('.u-search__leading-icon-handle').exists()).toBe(true);
+    expect(decoratedSearch.emitted()).toEqual({});
+
+    // <lang><zh-CN>运行时未知字符串安全回退为无装饰，且不被解释为任意 icon key 或资产 locator。</zh-CN><en>An unknown runtime string safely falls back to no decoration and is not interpreted as an arbitrary icon key or asset locator.</en></lang>
+    const unknownSearch = mount(USearch, { props: { searchIcon: 'unknown-icon' } });
+    expect(unknownSearch.find('.u-search__leading-icon').exists()).toBe(false);
+    expect(unknownSearch.emitted()).toEqual({});
+  });
 });
 
 /**

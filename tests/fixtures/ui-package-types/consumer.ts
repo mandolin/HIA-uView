@@ -459,7 +459,7 @@ const formItemProps: UFormItemProps = { label: 'Name', prop: 'profile.name', rea
 const fieldProps: UFieldProps = { label: 'Name', modelValue: 'Local name', placeholder: 'Name', required: true, validationState: 'idle' };
 const inputProps: UInputProps = { disabled: false, modelValue: 1, placeholder: 'Value', readonly: false };
 const textareaProps: UTextareaProps = { autoHeight: true, focus: false, maxlength: 240, modelValue: 'Notes', showCount: true };
-const searchProps: USearchProps = { actionText: 'Search', clearText: 'Clear', modelValue: 'query', showAction: true, showClear: true };
+const searchProps: USearchProps = { actionText: 'Search', clearText: 'Clear', modelValue: 'query', searchIcon: 'search', showAction: true, showClear: true };
 
 // <lang><zh-CN>声明组件 ref 只用于编译期读取 InstanceType，不创建 Vue 实例或运行 expose 方法。</zh-CN><en>Declares component refs only for compile-time InstanceType reads and creates no Vue instance or exposed-method execution.</en></lang>
 declare const formRef: UFormInstance;
@@ -685,6 +685,11 @@ inputRef.$emit('update:modelValue', { value: 'invalid' });
 textareaRef.$emit('click', { type: 'click' });
 // @ts-expect-error <lang><zh-CN>USearch clear 明确无 payload。</zh-CN><en>USearch clear explicitly has no payload.</en></lang>
 searchRef.$emit('clear', 'invalid');
+// <lang><zh-CN>负向类型 fixture 锁定 USearch 只接受空串或固定 `search` 装饰键，不将任意字符串扩大为图标 registry。</zh-CN><en>This negative type fixture locks USearch to the empty string or fixed `search` decoration key and does not broaden arbitrary strings into an icon registry.</en></lang>
+const invalidSearchIconProps: USearchProps = {
+  // @ts-expect-error <lang><zh-CN>前置装饰只接受空串或固定 `search`，不开放任意 icon key。</zh-CN><en>The leading decoration accepts only the empty string or fixed `search` and exposes no arbitrary icon key.</en></lang>
+  searchIcon: 'custom-icon'
+};
 // @ts-expect-error <lang><zh-CN>checkbox change 的 value 只接受透明字符串/数字键。</zh-CN><en>A checkbox change value accepts only a transparent string/number key.</en></lang>
 checkboxRef.$emit('change', { checked: true, value: false });
 // @ts-expect-error <lang><zh-CN>switch 不接受对象作为 active/inactive 映射值。</zh-CN><en>A switch does not accept an object as an active/inactive mapped value.</en></lang>

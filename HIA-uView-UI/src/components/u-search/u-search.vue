@@ -1,10 +1,19 @@
 <!--
 @component USearch
-@lang zh-CN 提供受控查询文本与 search/clear 意图；组件不请求、去重、防抖、缓存、导航或生成结果。
-@lang en Provides controlled query text and search/clear intent; the component performs no request, deduplication, debounce, cache, navigation, or result generation.
+@lang zh-CN 提供受控查询文本、可选纯呈现前置搜索装饰与 search/clear 意图；组件不请求、去重、防抖、缓存、导航或生成结果。
+@lang en Provides controlled query text, an optional presentation-only leading search decoration, and search/clear intent; the component performs no request, deduplication, debounce, cache, navigation, or result generation.
 -->
 <template>
   <view :class="rootClasses" @click="handleClick">
+    <!--
+    @lang zh-CN 前置搜索装饰仅在调用方显式开启时呈现；它声明 aria-hidden 请求从无障碍树排除，并退出指针命中。
+    @lang en The leading search decoration renders only when explicitly enabled by the caller; it declares aria-hidden to request exclusion from the accessibility tree and leaves pointer targeting.
+    <lang><zh-CN>圆环与手柄由组件局部 CSS 几何构成；节点没有事件、文字、字体图标、图片或业务含义。</zh-CN><en>The ring and handle are component-local CSS geometry; the nodes have no event, copy, font icon, image, or business meaning.</en></lang>
+    -->
+    <view v-if="searchIcon === 'search'" class="u-search__leading-icon" aria-hidden="true">
+      <view class="u-search__leading-icon-ring" />
+      <view class="u-search__leading-icon-handle" />
+    </view>
     <input
       class="u-search__input"
       :value="modelValue"
@@ -29,12 +38,14 @@ import { U_FORM_ITEM_CONTEXT } from '../u-form/form-runtime.mjs';
 // <lang><zh-CN>稳定的 `u-search` 名称保持上游迁移熟悉度，但本实现不复用上游图标或请求服务。</zh-CN><en>The stable `u-search` name keeps upstream migration familiar while this implementation reuses no upstream icon or request service.</en></lang>
 defineOptions({ name: 'u-search' });
 
-// <lang><zh-CN>所有文字、显示开关和受控值由调用方提供，不产生内置 locale 或搜索协议。</zh-CN><en>All copy, display switches, and controlled value are supplied by the caller; no locale or search protocol is built in.</en></lang>
+// <lang><zh-CN>所有文字、显示开关和受控值由调用方提供；可选装饰默认关闭，且不产生内置 locale 或搜索协议。</zh-CN><en>All copy, display switches, and controlled value are supplied by the caller; the optional decoration is disabled by default and creates no built-in locale or search protocol.</en></lang>
 const props = defineProps({
   modelValue: { type: String, default: '' },
   placeholder: { type: String, default: '' },
   disabled: { type: Boolean, default: false },
   focus: { type: Boolean, default: false },
+  // <lang><zh-CN>只识别上游熟悉的空串或 `search`；空串及其他运行时字符串均不呈现装饰，也不改变输入焦点、点击或 search intent。</zh-CN><en>Only the upstream-familiar empty string or `search` is recognized; the empty string and every other runtime string render no decoration and change neither input focus, click, nor search intent.</en></lang>
+  searchIcon: { type: String, default: '' },
   showClear: { type: Boolean, default: true },
   clearText: { type: String, default: '×' },
   showAction: { type: Boolean, default: false },

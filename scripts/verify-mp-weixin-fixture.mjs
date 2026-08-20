@@ -139,6 +139,8 @@ async function verifyMpWeixinFixture() {
   for (const componentName of P66_FORM_COMPONENT_NAMES) {
     assert.match(fixturePageSource, new RegExp(`<${componentName}(?:\\s|>)`, 'u'), `The fixture source must compose ${componentName}.`);
   }
+  // <lang><zh-CN>P66 的 USearch 实例必须精确选入受限 `search` 装饰，防止 leaf 编译检查只观察到未被页面消费的可选分支。</zh-CN><en>The P66 USearch instance must opt into the exact bounded `search` decoration, preventing leaf compilation checks from observing only an optional branch that no page consumes.</en></lang>
+  assert.match(fixturePageSource, /<u-form-item prop="searchText"[\s\S]*?<u-search[\s\S]*?search-icon="search"[\s\S]*?@search="recordFixtureP66SearchIntent"\s*\/>/u, 'The fixture source must opt one actual USearch consumer into the bounded search decoration.');
 
   // <lang><zh-CN>三个函数声明分别证明 validate、clear 与 reset 由 fixture 调用方显式观察，而非只在组件内部不可达。</zh-CN><en>The three function declarations separately prove that validate, clear, and reset are explicitly observable by the fixture caller rather than remaining unreachable inside components.</en></lang>
   for (const actionName of P66_FORM_ACTION_NAMES) {
@@ -341,13 +343,32 @@ async function verifyMpWeixinFixture() {
     assert.equal(fieldConfiguration.usingComponents?.['u-input'], '../u-input/u-input', 'Generated UField must statically compose its built-in UInput.');
     assert.equal(formItemConfiguration.usingComponents?.['u-validation-message'], '../u-validation-message/u-validation-message', 'Generated UFormItem must statically compose UValidationMessage.');
 
-    // <lang><zh-CN>组件局部 WXSS 必须含由 MP-WEIXIN 条件编译得到的默认浅色字面值规则；它们覆盖小程序组件作用域缺失的 token，而 H5 不编译这些规则并保留动态主题语义。</zh-CN><en>Component-local WXSS must contain default-light literal rules produced by MP-WEIXIN conditional compilation; they cover tokens missing in Mini Program component scope while H5 does not compile these rules and retains dynamic-theme semantics.</en></lang>
-    const [buttonStyles, tagStyles] = await Promise.all([
+    // <lang><zh-CN>同时读取代表性默认回退样式、USearch 装饰及 UActionSheet 禁用态的 leaf WXML/WXSS；这些文本只来自本轮受控临时产物。</zh-CN><en>Reads representative default-fallback styles plus USearch decoration and UActionSheet disabled-state leaf WXML/WXSS together; these texts come only from this run's controlled temporary output.</en></lang>
+    const [buttonStyles, tagStyles, searchMarkup, searchStyles, actionSheetMarkup, actionSheetStyles] = await Promise.all([
       readFile(resolve(outputDirectory, 'src/components/u-button/u-button.wxss'), 'utf8'),
-      readFile(resolve(outputDirectory, 'src/components/u-tag/u-tag.wxss'), 'utf8')
+      readFile(resolve(outputDirectory, 'src/components/u-tag/u-tag.wxss'), 'utf8'),
+      readFile(resolve(outputDirectory, 'src/components/u-search/u-search.wxml'), 'utf8'),
+      readFile(resolve(outputDirectory, 'src/components/u-search/u-search.wxss'), 'utf8'),
+      readFile(resolve(outputDirectory, 'src/components/u-action-sheet/u-action-sheet.wxml'), 'utf8'),
+      readFile(resolve(outputDirectory, 'src/components/u-action-sheet/u-action-sheet.wxss'), 'utf8')
     ]);
+    // <lang><zh-CN>组件局部 WXSS 必须含由 MP-WEIXIN 条件编译得到的默认浅色字面值规则；它们覆盖小程序组件作用域缺失的 token，而 H5 不编译这些规则并保留动态主题语义。</zh-CN><en>Component-local WXSS must contain default-light literal rules produced by MP-WEIXIN conditional compilation; they cover tokens missing in Mini Program component scope while H5 does not compile these rules and retains dynamic-theme semantics.</en></lang>
     assert.match(buttonStyles, /\.u-button--primary\{background:#0047ab;color:#fff\}/, 'The generated UButton WXSS must include its MP-WEIXIN default-light literal primary rule.');
     assert.match(tagStyles, /\.u-tag--neutral\{background:#f7f9fc;color:#001b2e\}/, 'The generated UTag WXSS must include its MP-WEIXIN default-light literal neutral rule.');
+
+    // <lang><zh-CN>USearch leaf 模板必须保留请求隐藏的容器与两个纯 CSS 几何子节点，样式产物必须同时含三个固定类。</zh-CN><en>The USearch leaf template must retain the requested-hidden container and two pure-CSS geometry children, while its style output must contain all three fixed classes.</en></lang>
+    assert.match(searchMarkup, /class="u-search__leading-icon" aria-hidden="true"/u, 'Generated USearch WXML must retain the hidden leading-decoration container.');
+    assert.match(searchMarkup, /class="u-search__leading-icon-ring"/u, 'Generated USearch WXML must retain the CSS ring node.');
+    assert.match(searchMarkup, /class="u-search__leading-icon-handle"/u, 'Generated USearch WXML must retain the CSS handle node.');
+    assert.match(searchStyles, /\.u-search__leading-icon\{/u, 'Generated USearch WXSS must retain the leading-decoration container rule.');
+    assert.match(searchStyles, /\.u-search__leading-icon-ring\{/u, 'Generated USearch WXSS must retain the ring geometry rule.');
+    assert.match(searchStyles, /\.u-search__leading-icon-handle\{/u, 'Generated USearch WXSS must retain the handle geometry rule.');
+
+    // <lang><zh-CN>UActionSheet leaf 模板必须同时保留原生 disabled 绑定和显式状态类；WXSS 只能使用状态类，不得回退到小程序编译器不接受的 `[disabled]` selector。</zh-CN><en>The UActionSheet leaf template must retain both the native disabled binding and explicit state class; WXSS may use only the state class and must not regress to the Mini Program compiler-rejected `[disabled]` selector.</en></lang>
+    assert.match(actionSheetMarkup, /u-action-sheet__item--disabled/u, 'Generated UActionSheet WXML must retain the explicit disabled-state class.');
+    assert.match(actionSheetMarkup, /disabled="\{\{item\.[A-Za-z]+\}\}"/u, 'Generated UActionSheet WXML must retain the native disabled binding.');
+    assert.match(actionSheetStyles, /\.u-action-sheet__item--disabled\{/u, 'Generated UActionSheet WXSS must retain the explicit disabled-state class rule.');
+    assert.doesNotMatch(actionSheetStyles, /\[disabled\]/u, 'Generated UActionSheet WXSS must not contain a disabled attribute selector.');
 
     // <lang><zh-CN>应用 WXSS 仍需包含完整主题与全局组件规则；组件的独立 WXSS 与此共同构成小程序端可用的样式证据。</zh-CN><en>The app WXSS must still contain the complete theme and global component rules; its combination with component-local WXSS forms the usable Mini Program style evidence.</en></lang>
     const applicationStyles = await readFile(resolve(outputDirectory, 'app.wxss'), 'utf8');

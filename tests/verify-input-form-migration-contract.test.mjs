@@ -134,11 +134,18 @@ test('keeps the six-component runtime inside private and side-effect-free bounda
   assert.match(inputSource, /formItemContext\?\.notifyChange\(\);/u);
   assert.match(inputSource, /formItemContext\?\.notifyBlur\(\);/u);
 
-  // <lang><zh-CN>查询与多行输入使用同一私有 form-item context，并保留各自精确事件表面和宿主字体继承。</zh-CN><en>Search and multiline input use the same private form-item context while retaining their exact event surfaces and host-font inheritance.</en></lang>
+  // <lang><zh-CN>查询与多行输入使用同一私有 form-item context，并保留各自精确事件表面和宿主字体继承；查询前置装饰必须默认关闭且只使用本地 CSS 几何。</zh-CN><en>Search and multiline input use the same private form-item context while retaining their exact event surfaces and host-font inheritance; the search leading decoration must be default-off and use only local CSS geometry.</en></lang>
   assert.match(searchSource, /const formItemContext = inject\(U_FORM_ITEM_CONTEXT, null\);/u);
   assert.match(searchSource, /const emit = defineEmits\(\['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click', 'search', 'clear'\]\);/u);
+  assert.match(searchSource, /searchIcon:\s*\{\s*type:\s*String,\s*default:\s*''\s*\}/u);
+  assert.match(searchSource, /v-if="searchIcon === 'search'"[^>]+aria-hidden="true"/u);
   assert.match(searchStyles, /\.u-search__input\s*\{[\s\S]*?font-family:\s*inherit;/u);
   assert.match(searchStyles, /\.u-search__clear,\s*\n\.u-search__action\s*\{[\s\S]*?font-family:\s*inherit;/u);
+  assert.match(searchStyles, /\.u-search__leading-icon-ring\s*\{[\s\S]*?border:\s*2px solid currentColor;/u);
+  assert.match(searchStyles, /\.u-search__leading-icon-handle\s*\{[\s\S]*?background:\s*currentColor;/u);
+  assert.doesNotMatch(`${searchSource}\n${searchStyles}`, /@font-face|<svg\b|data:image\/|\.(?:svg|png|jpe?g|woff2?|ttf)\b/iu);
+  // <lang><zh-CN>搜索组件完整样式文本（含已提交的 MP-WEIXIN 字面值回退）不得使用 attribute selector、关系伪类、URL 或字体/图片资产。</zh-CN><en>The complete search stylesheet, including its committed MP-WEIXIN literal fallback, must use no attribute selector, relational pseudo-class, URL, or font/image asset.</en></lang>
+  assert.doesNotMatch(searchStyles, /\[|:has\s*\(|url\s*\(|@font-face|\.(?:svg|png|jpe?g|woff2?|ttf)\b/iu);
   assert.match(textareaSource, /const formItemContext = inject\(U_FORM_ITEM_CONTEXT, null\);/u);
   assert.match(textareaSource, /const emit = defineEmits\(\['update:modelValue', 'input', 'change', 'focus', 'blur', 'confirm', 'click'\]\);/u);
 
@@ -170,6 +177,8 @@ test('keeps public input explanations and the six-component compile fixture alig
   assert.match(inputDocumentation, /`confirm`/u);
   assert.match(searchDocumentation, /`change`/u);
   assert.match(searchDocumentation, /`click`/u);
+  assert.match(searchDocumentation, /`searchIcon`/u);
+  assert.match(searchDocumentation, /`searchIconColor` remains unsupported/u);
   assert.match(textareaDocumentation, /`change`/u);
   assert.match(textareaDocumentation, /`click`/u);
 
@@ -180,6 +189,8 @@ test('keeps public input explanations and the six-component compile fixture alig
   assert.match(fixtureSource, /<u-form-item prop="inputText"[\s\S]*?<u-input[\s\S]*?@update:model-value="updateFixtureP66InputText"\s*\/>/u);
   assert.match(fixtureSource, /<u-form-item prop="longText"[\s\S]*?<u-textarea[\s\S]*?@update:model-value="updateFixtureP66LongText"\s*\/>/u);
   assert.match(fixtureSource, /<u-form-item prop="searchText"[\s\S]*?<u-search[\s\S]*?@search="recordFixtureP66SearchIntent"\s*\/>/u);
+  // <lang><zh-CN>同一 USearch fixture 必须精确选入 `search` 装饰，使公开 prop 从源码声明进入实际 mp-weixin 编译闭环。</zh-CN><en>The same USearch fixture must opt into the exact `search` decoration so the public prop enters an actual mp-weixin compiler closure from its source declaration.</en></lang>
+  assert.match(fixtureSource, /<u-form-item prop="searchText"[\s\S]*?<u-search[\s\S]*?search-icon="search"[\s\S]*?@search="recordFixtureP66SearchIntent"\s*\/>/u);
 
   // <lang><zh-CN>fixture 的三个操作只通过组件 ref 调用 validate/clear/reset，并把有限结果写入本地 smoke marker。</zh-CN><en>The fixture's three actions call validate/clear/reset only through the component ref and write finite results into a local smoke marker.</en></lang>
   assert.match(fixtureSource, /const valid = await form\.validate\(\);/u);
@@ -189,6 +200,15 @@ test('keeps public input explanations and the six-component compile fixture alig
 });
 
 test('locks final runtime evidence for all six components in the migration matrix', () => {
+  // <lang><zh-CN>上游熟悉的 P1 searchIcon 必须映射到同名 HIA 受限装饰，并如实保留上游 `search` 与 HIA 空串默认值差异。</zh-CN><en>The upstream-familiar P1 searchIcon must map to the same-named bounded HIA decoration while faithfully retaining the upstream `search` versus HIA empty-string default difference.</en></lang>
+  const searchIconItem = requireMatrixItem('u-search', 'props', 'prop:searchIcon');
+  assert.equal(searchIconItem.priority, 'P1');
+  assert.equal(searchIconItem.migration.disposition, 'mapped');
+  assert.equal(searchIconItem.migration.reasonCode, 'SAME_NAME_DIFFERENT_SHAPE');
+  assert.equal(searchIconItem.migration.target, 'searchIcon');
+  assert.equal(searchIconItem.upstream.default.value, 'search');
+  assert.equal(searchIconItem.hia.targets[0].default.value, '');
+
   // <lang><zh-CN>逐项读取精确 compatible 白名单，确保每个结论都有同名 target 与生成器显式规则。</zh-CN><en>Reads the exact compatible allowlist item by item, ensuring every conclusion has a same-name target and an explicit generator rule.</en></lang>
   for (const [componentName, propNames] of Object.entries(expectedCompatibleProps)) {
     // <lang><zh-CN>组件边界独立解析，另一个组件的同名 prop 不能满足当前断言。</zh-CN><en>The component boundary is resolved independently so a same-named prop on another component cannot satisfy this assertion.</en></lang>

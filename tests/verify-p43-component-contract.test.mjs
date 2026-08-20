@@ -81,6 +81,11 @@ test('keeps P43 source inside overlay and navigation boundaries', async () => {
     assert.match(componentSource, /<lang><zh-CN>/, p43ComponentRecords[index].name);
   }
   assert.match(componentSources[0], /safeItems/);
+  // <lang><zh-CN>Action sheet 禁用呈现必须由显式状态类承担，同时继续保留模板原生 disabled；CSS 不得恢复微信 WXSS 不支持的 attribute selector。</zh-CN><en>Action-sheet disabled presentation must use an explicit state class while the template retains native disabled; CSS must not restore the attribute selector rejected by WeChat WXSS.</en></lang>
+  assert.match(componentSources[0], /:class="\{ 'u-action-sheet__item--disabled': item\.disabled \}"/u);
+  assert.match(componentSources[0], /:disabled="item\.disabled"/u);
+  assert.match(styleSources[0], /\.u-action-sheet__item--disabled\s*\{/u);
+  assert.doesNotMatch(styleSources[0], /\.u-action-sheet__item\s*\[disabled\]/u);
   assert.match(componentSources[1], /u-loading-page__indicator/);
   assert.match(componentSources[2], /Array\.from/);
   assert.match(componentSources[3], /maskClosable/);
