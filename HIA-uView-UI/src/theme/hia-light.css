@@ -31,6 +31,7 @@
   /* <lang><zh-CN>中性色提供表面、次级边界、次级文字和主文字的受限基础值；不直接表达业务状态。</zh-CN><en>Neutral colors provide constrained foundations for surfaces, secondary boundaries, secondary text, and primary text; they do not directly express business state.</en></lang> */
   --u-ref-color-neutral-0: #ffffff;
   --u-ref-color-neutral-50: #f7f9fc;
+  --u-ref-color-neutral-100: #f1f4f7;
   --u-ref-color-neutral-700: #27364a;
   --u-ref-color-neutral-950: #001b2e;
 
@@ -460,7 +461,7 @@
   --u-comp-action-sheet-selected-text-foreground: var(--u-sys-color-text-secondary);
   --u-comp-action-sheet-selected-text-size: 13px;
   --u-comp-action-sheet-cancel-surface: var(--u-sys-color-surface);
-  --u-comp-action-sheet-cancel-divider: var(--u-sys-color-surface-subtle);
+  --u-comp-action-sheet-cancel-divider: var(--u-ref-color-neutral-100);
   --u-comp-action-sheet-cancel-gap: 8px;
   --u-comp-action-sheet-cancel-weight: 600;
 

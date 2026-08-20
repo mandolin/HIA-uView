@@ -99,9 +99,11 @@ test('keeps P43 source inside overlay and navigation boundaries', async () => {
   assert.match(styleSources[0], /overflow-y:\s*auto/u);
   assert.match(styleSources[0], /\.u-action-sheet__item::after,\s*\.u-action-sheet__cancel::after\s*\{\s*border:\s*0;/u);
   assert.match(styleSources[0], /border-top:\s*var\(--u-comp-action-sheet-cancel-gap\) solid var\(--u-comp-action-sheet-cancel-divider\)/u);
-  // <lang><zh-CN>底部接管必须显式清除两侧圆角，并让取消项抵消 panel 横向 padding；安全区仍由 panel 保留，不能以移动文字来模拟。</zh-CN><en>Bottom takeover must explicitly clear both lower radii and let the cancel action offset horizontal panel padding; the panel must retain the safe area rather than imitating it by moving the label.</en></lang>
+  // <lang><zh-CN>底部接管必须显式清除两侧圆角；panel 的横向 padding 固定为零，只有标题/选项区拥有 gutter，因此取消项可自然保持 100% 宽且安全区仍由 panel 保留。</zh-CN><en>Bottom takeover must explicitly clear both lower radii; panel horizontal padding stays zero and only the title/options own gutters, so the cancel action naturally remains 100% wide while the panel retains the safe area.</en></lang>
   assert.match(styleSources[0], /border-bottom-left-radius:\s*0;[\s\S]*?border-bottom-right-radius:\s*0;/u);
-  assert.match(styleSources[0], /\.u-action-sheet__cancel\s*\{[\s\S]*?margin-left:\s*calc\(0px - var\(--u-comp-action-sheet-padding\)\);[\s\S]*?width:\s*calc\(100% \+ var\(--u-comp-action-sheet-padding\) \+ var\(--u-comp-action-sheet-padding\)\);/u);
+  assert.match(styleSources[0], /\.u-action-sheet__panel\s*\{[\s\S]*?padding-right:\s*0;[\s\S]*?padding-left:\s*0;/u);
+  assert.match(styleSources[0], /\.u-action-sheet__options\s*\{[\s\S]*?margin-left:\s*var\(--u-comp-action-sheet-padding\);[\s\S]*?margin-right:\s*var\(--u-comp-action-sheet-padding\);[\s\S]*?width:\s*auto;/u);
+  assert.doesNotMatch(styleSources[0], /\.u-action-sheet__cancel\s*\{[^}]*margin-left:/u);
   assert.doesNotMatch(styleSources[0], /\.u-action-sheet__item\s*\[disabled\]/u);
   assert.match(componentSources[1], /u-loading-page__indicator/);
   assert.match(componentSources[2], /Array\.from/);
@@ -129,4 +131,6 @@ test('defines P43 token families in the default theme', async () => {
   assert.match(themeCss, /--u-comp-action-sheet-option-min-height:\s*52px;/u);
   assert.match(themeCss, /--u-comp-action-sheet-max-height:\s*75vh;/u);
   assert.match(themeCss, /--u-comp-action-sheet-selected-surface:/u);
+  assert.match(themeCss, /--u-ref-color-neutral-100:\s*#f1f4f7;/u);
+  assert.match(themeCss, /--u-comp-action-sheet-cancel-divider:\s*var\(--u-ref-color-neutral-100\);/u);
 });

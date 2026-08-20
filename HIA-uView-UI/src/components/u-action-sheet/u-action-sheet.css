@@ -5,10 +5,10 @@
  */
 .u-action-sheet { inset: 0; position: fixed; z-index: var(--u-comp-action-sheet-z-index); }
 .u-action-sheet__mask { background: var(--u-comp-action-sheet-mask); inset: 0; position: absolute; }
-.u-action-sheet__panel { background: var(--u-comp-action-sheet-surface); border-radius: var(--u-comp-action-sheet-radius) var(--u-comp-action-sheet-radius) 0 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; bottom: 0; box-sizing: border-box; display: flex; flex-direction: column; left: 0; max-height: var(--u-comp-action-sheet-max-height); overflow: hidden; padding: var(--u-comp-action-sheet-padding); padding-bottom: calc(var(--u-comp-action-sheet-padding) + env(safe-area-inset-bottom)); position: absolute; right: 0; }
-.u-action-sheet__title { color: var(--u-comp-action-sheet-title-foreground); display: block; flex: none; font-size: var(--u-comp-action-sheet-title-size); font-weight: var(--u-comp-action-sheet-title-weight); padding: var(--u-comp-action-sheet-title-padding); text-align: center; }
+.u-action-sheet__panel { background: var(--u-comp-action-sheet-surface); border-radius: var(--u-comp-action-sheet-radius) var(--u-comp-action-sheet-radius) 0 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; bottom: 0; box-sizing: border-box; display: flex; flex-direction: column; left: 0; max-height: var(--u-comp-action-sheet-max-height); overflow: hidden; padding-top: var(--u-comp-action-sheet-padding); padding-right: 0; padding-bottom: calc(var(--u-comp-action-sheet-padding) + env(safe-area-inset-bottom)); padding-left: 0; position: absolute; right: 0; }
+.u-action-sheet__title { color: var(--u-comp-action-sheet-title-foreground); display: block; flex: none; font-size: var(--u-comp-action-sheet-title-size); font-weight: var(--u-comp-action-sheet-title-weight); margin-left: var(--u-comp-action-sheet-padding); margin-right: var(--u-comp-action-sheet-padding); padding: var(--u-comp-action-sheet-title-padding); text-align: center; }
 /* <lang><zh-CN>原生 scroll-view 只滚动 slot 与有限 items；panel 的 title、cancel 和 CSS safe-area padding 保持固定。</zh-CN><en>The native scroll-view scrolls only the slot and finite items; the panel title, cancel control, and CSS safe-area padding remain fixed.</en></lang> */
-.u-action-sheet__options { display: block; flex: 1 1 auto; min-height: 0; overflow-y: auto; width: 100%; }
+.u-action-sheet__options { display: block; flex: 1 1 auto; margin-left: var(--u-comp-action-sheet-padding); margin-right: var(--u-comp-action-sheet-padding); min-height: 0; overflow-y: auto; width: auto; }
 .u-action-sheet__item, .u-action-sheet__cancel { background: var(--u-comp-action-sheet-option-surface); border: 0; border-bottom: 1px solid var(--u-comp-action-sheet-option-divider); border-radius: 0; box-sizing: border-box; color: var(--u-comp-action-sheet-option-foreground); font-family: inherit; font-size: var(--u-comp-action-sheet-option-size); line-height: var(--u-comp-action-sheet-option-line-height); margin: 0; min-height: var(--u-comp-action-sheet-option-min-height); padding: var(--u-comp-action-sheet-option-padding); width: 100%; }
 /* <lang><zh-CN>UniApp 会为原生 button 绘制额外伪元素轮廓；显式清除后，普通选项只保留 token 化分隔线，selected 圆角也只有一个来源。</zh-CN><en>UniApp draws an extra pseudo-element outline for native buttons; clearing it leaves ordinary options with only the tokenized divider and gives selected rounding a single source.</en></lang> */
 .u-action-sheet__item::after, .u-action-sheet__cancel::after { border: 0; }
@@ -20,8 +20,8 @@
 .u-action-sheet__selected-check { align-items: center; background: var(--u-comp-action-sheet-selected-check-surface); border-radius: 50%; color: var(--u-comp-action-sheet-selected-check-foreground); display: flex; flex: none; font-family: inherit; font-size: var(--u-comp-action-sheet-selected-check-size); font-weight: 700; height: var(--u-comp-action-sheet-selected-check-box); justify-content: center; line-height: var(--u-comp-action-sheet-selected-check-box); text-align: center; width: var(--u-comp-action-sheet-selected-check-box); }
 .u-action-sheet__label { color: inherit; display: block; flex: 1 1 auto; font-family: inherit; min-width: 0; overflow-wrap: break-word; }
 .u-action-sheet__selected-text { color: var(--u-comp-action-sheet-selected-text-foreground); display: block; flex: none; font-family: inherit; font-size: var(--u-comp-action-sheet-selected-text-size); margin-left: auto; white-space: nowrap; }
-/* <lang><zh-CN>取消项保持既有内容高度与 panel 安全区，但横向抵消 panel padding，使隔离条和白色 surface 全宽接管底部而不透出遮罩后的页面。</zh-CN><en>The cancel action preserves its content height and the panel safe area while offsetting horizontal panel padding, allowing the divider and white surface to take over the full bottom width without exposing the masked page.</en></lang> */
-.u-action-sheet__cancel { background: var(--u-comp-action-sheet-cancel-surface); border-bottom: 0; border-top: var(--u-comp-action-sheet-cancel-gap) solid var(--u-comp-action-sheet-cancel-divider); display: block; flex: none; font-weight: var(--u-comp-action-sheet-cancel-weight); margin-left: calc(0px - var(--u-comp-action-sheet-padding)); text-align: center; width: calc(100% + var(--u-comp-action-sheet-padding) + var(--u-comp-action-sheet-padding)); }
+/* <lang><zh-CN>标题与选项区单独持有横向 gutter，取消项因此保持原生 100% 宽度，使隔离条和白色 surface 全宽接管底部而不透出遮罩后的页面。</zh-CN><en>The title and options own their horizontal gutters separately, so the cancel action retains a native 100% width and lets its divider and white surface take over the full bottom without exposing the masked page.</en></lang> */
+.u-action-sheet__cancel { background: var(--u-comp-action-sheet-cancel-surface); border-bottom: 0; border-top: var(--u-comp-action-sheet-cancel-gap) solid var(--u-comp-action-sheet-cancel-divider); display: block; flex: none; font-weight: var(--u-comp-action-sheet-cancel-weight); text-align: center; }
 
 /* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
 /* #ifdef MP-WEIXIN */
@@ -38,7 +38,7 @@
   background: #ffffff;
   border-radius: 20px 20px 0 0;
   max-height: 75vh;
-  padding: 12px;
+  padding-top: 12px;
   padding-bottom: calc(12px + env(safe-area-inset-bottom));
 }
 
@@ -46,7 +46,14 @@
   color: #001b2e;
   font-size: 18px;
   font-weight: 700;
+  margin-left: 12px;
+  margin-right: 12px;
   padding: 8px;
+}
+
+.u-action-sheet__options {
+  margin-left: 12px;
+  margin-right: 12px;
 }
 
 .u-action-sheet__item, .u-action-sheet__cancel {
@@ -89,10 +96,8 @@
 
 .u-action-sheet__cancel {
   background: #ffffff;
-  border-top: 8px solid #f7f9fc;
+  border-top: 8px solid #f1f4f7;
   font-weight: 600;
-  margin-left: calc(0px - 12px);
-  width: calc(100% + 12px + 12px);
 }
 /* HIA-uView MP-Weixin literal fallback end. */
 /* #endif */
