@@ -99,6 +99,9 @@ test('keeps P43 source inside overlay and navigation boundaries', async () => {
   assert.match(styleSources[0], /overflow-y:\s*auto/u);
   assert.match(styleSources[0], /\.u-action-sheet__item::after,\s*\.u-action-sheet__cancel::after\s*\{\s*border:\s*0;/u);
   assert.match(styleSources[0], /border-top:\s*var\(--u-comp-action-sheet-cancel-gap\) solid var\(--u-comp-action-sheet-cancel-divider\)/u);
+  // <lang><zh-CN>底部接管必须显式清除两侧圆角，并让取消项抵消 panel 横向 padding；安全区仍由 panel 保留，不能以移动文字来模拟。</zh-CN><en>Bottom takeover must explicitly clear both lower radii and let the cancel action offset horizontal panel padding; the panel must retain the safe area rather than imitating it by moving the label.</en></lang>
+  assert.match(styleSources[0], /border-bottom-left-radius:\s*0;[\s\S]*?border-bottom-right-radius:\s*0;/u);
+  assert.match(styleSources[0], /\.u-action-sheet__cancel\s*\{[\s\S]*?margin-left:\s*calc\(0px - var\(--u-comp-action-sheet-padding\)\);[\s\S]*?width:\s*calc\(100% \+ var\(--u-comp-action-sheet-padding\) \+ var\(--u-comp-action-sheet-padding\)\);/u);
   assert.doesNotMatch(styleSources[0], /\.u-action-sheet__item\s*\[disabled\]/u);
   assert.match(componentSources[1], /u-loading-page__indicator/);
   assert.match(componentSources[2], /Array\.from/);

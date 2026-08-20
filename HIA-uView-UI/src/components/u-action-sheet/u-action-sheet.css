@@ -5,7 +5,7 @@
  */
 .u-action-sheet { inset: 0; position: fixed; z-index: var(--u-comp-action-sheet-z-index); }
 .u-action-sheet__mask { background: var(--u-comp-action-sheet-mask); inset: 0; position: absolute; }
-.u-action-sheet__panel { background: var(--u-comp-action-sheet-surface); border-radius: var(--u-comp-action-sheet-radius) var(--u-comp-action-sheet-radius) 0 0; bottom: 0; box-sizing: border-box; display: flex; flex-direction: column; left: 0; max-height: var(--u-comp-action-sheet-max-height); overflow: hidden; padding: var(--u-comp-action-sheet-padding); padding-bottom: calc(var(--u-comp-action-sheet-padding) + env(safe-area-inset-bottom)); position: absolute; right: 0; }
+.u-action-sheet__panel { background: var(--u-comp-action-sheet-surface); border-radius: var(--u-comp-action-sheet-radius) var(--u-comp-action-sheet-radius) 0 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; bottom: 0; box-sizing: border-box; display: flex; flex-direction: column; left: 0; max-height: var(--u-comp-action-sheet-max-height); overflow: hidden; padding: var(--u-comp-action-sheet-padding); padding-bottom: calc(var(--u-comp-action-sheet-padding) + env(safe-area-inset-bottom)); position: absolute; right: 0; }
 .u-action-sheet__title { color: var(--u-comp-action-sheet-title-foreground); display: block; flex: none; font-size: var(--u-comp-action-sheet-title-size); font-weight: var(--u-comp-action-sheet-title-weight); padding: var(--u-comp-action-sheet-title-padding); text-align: center; }
 /* <lang><zh-CN>原生 scroll-view 只滚动 slot 与有限 items；panel 的 title、cancel 和 CSS safe-area padding 保持固定。</zh-CN><en>The native scroll-view scrolls only the slot and finite items; the panel title, cancel control, and CSS safe-area padding remain fixed.</en></lang> */
 .u-action-sheet__options { display: block; flex: 1 1 auto; min-height: 0; overflow-y: auto; width: 100%; }
@@ -20,7 +20,8 @@
 .u-action-sheet__selected-check { align-items: center; background: var(--u-comp-action-sheet-selected-check-surface); border-radius: 50%; color: var(--u-comp-action-sheet-selected-check-foreground); display: flex; flex: none; font-family: inherit; font-size: var(--u-comp-action-sheet-selected-check-size); font-weight: 700; height: var(--u-comp-action-sheet-selected-check-box); justify-content: center; line-height: var(--u-comp-action-sheet-selected-check-box); text-align: center; width: var(--u-comp-action-sheet-selected-check-box); }
 .u-action-sheet__label { color: inherit; display: block; flex: 1 1 auto; font-family: inherit; min-width: 0; overflow-wrap: break-word; }
 .u-action-sheet__selected-text { color: var(--u-comp-action-sheet-selected-text-foreground); display: block; flex: none; font-family: inherit; font-size: var(--u-comp-action-sheet-selected-text-size); margin-left: auto; white-space: nowrap; }
-.u-action-sheet__cancel { background: var(--u-comp-action-sheet-cancel-surface); border-bottom: 0; border-top: var(--u-comp-action-sheet-cancel-gap) solid var(--u-comp-action-sheet-cancel-divider); display: block; flex: none; font-weight: var(--u-comp-action-sheet-cancel-weight); text-align: center; }
+/* <lang><zh-CN>取消项保持既有内容高度与 panel 安全区，但横向抵消 panel padding，使隔离条和白色 surface 全宽接管底部而不透出遮罩后的页面。</zh-CN><en>The cancel action preserves its content height and the panel safe area while offsetting horizontal panel padding, allowing the divider and white surface to take over the full bottom width without exposing the masked page.</en></lang> */
+.u-action-sheet__cancel { background: var(--u-comp-action-sheet-cancel-surface); border-bottom: 0; border-top: var(--u-comp-action-sheet-cancel-gap) solid var(--u-comp-action-sheet-cancel-divider); display: block; flex: none; font-weight: var(--u-comp-action-sheet-cancel-weight); margin-left: calc(0px - var(--u-comp-action-sheet-padding)); text-align: center; width: calc(100% + var(--u-comp-action-sheet-padding) + var(--u-comp-action-sheet-padding)); }
 
 /* <lang><zh-CN>以下字面值规则由 sync-mp-weixin-css-fallbacks 依据默认主题生成，且仅在 MP-WEIXIN 条件编译中出现；其他平台保留原有 token 规则。</zh-CN><en>The literal rules below are generated from the default theme by sync-mp-weixin-css-fallbacks and appear only in MP-WEIXIN conditional compilation; other platforms retain the original token rules.</en></lang> */
 /* #ifdef MP-WEIXIN */
@@ -90,6 +91,8 @@
   background: #ffffff;
   border-top: 8px solid #f7f9fc;
   font-weight: 600;
+  margin-left: calc(0px - 12px);
+  width: calc(100% + 12px + 12px);
 }
 /* HIA-uView MP-Weixin literal fallback end. */
 /* #endif */

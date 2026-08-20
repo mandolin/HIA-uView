@@ -18,9 +18,9 @@ The component creates no portal, router, permission check, async provider, comma
 
 组件不创建 portal、router、权限判断、异步 provider、命令执行器或全局服务。根命名空间为 `u-action-sheet`，消费 `--u-comp-action-sheet-*`。
 
-The tokenized bottom panel has rounded upper corners, a bounded viewport height, a native vertical scroll region for the finite slot/items, and CSS safe-area bottom padding. Its default modal layer is above persistent local tab surfaces while remaining below higher feedback/portal layers. The title, cancel control, and safe-area padding remain outside item scrolling. Native item and cancel buttons inherit the caller's font family.
+The tokenized bottom panel has rounded upper corners, explicitly square lower corners, a bounded viewport height, a native vertical scroll region for the finite slot/items, and CSS safe-area bottom padding. Its default modal layer is above persistent local tab surfaces while remaining below higher feedback/portal layers. The title, cancel control, and safe-area padding remain outside item scrolling. When cancel copy is present, its separator and white surface extend across the complete panel width while the safe-area spacing remains owned by the panel. Native item and cancel buttons inherit the caller's font family.
 
-Token 化底部 panel 具有顶部圆角、受限视口高度、承载有限 slot/items 的原生纵向滚动区以及 CSS 底部安全区 padding。默认 modal 层高于持久局部 tab 表面，同时低于更高的 feedback/portal 层。标题、取消 control 与安全区 padding 不随 item 滚动。原生 item 与 cancel button 继承调用方字体族。
+Token 化底部 panel 具有顶部圆角、显式直角底边、受限视口高度、承载有限 slot/items 的原生纵向滚动区以及 CSS 底部安全区 padding。默认 modal 层高于持久局部 tab 表面，同时低于更高的 feedback/portal 层。标题、取消 control 与安全区 padding 不随 item 滚动。存在取消文案时，其隔离条和白色 surface 横跨完整 panel 宽度，安全区间距仍由 panel 持有。原生 item 与 cancel button 继承调用方字体族。
 
 This bounded presentation does not provide a portal, focus trap or restoration, Escape handling, page-scroll locking, device-inset measurement, or certified screen-reader/platform support. CSS safe-area and scroll behavior still require validation on each claimed target; `aria-pressed` supplements, rather than replaces, the visible check and status copy.
 
